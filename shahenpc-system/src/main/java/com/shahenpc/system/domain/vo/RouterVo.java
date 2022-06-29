@@ -52,6 +52,11 @@ public class RouterVo
     private MetaVo meta;
 
     /**
+     * 是否顶部显示
+     */
+    private String isTopNav;
+
+    /**
      * 子路由
      */
     private List<RouterVo> children;
@@ -144,5 +149,13 @@ public class RouterVo
     public void setChildren(List<RouterVo> children)
     {
         this.children = children;
+    }
+
+    public String getIsTopNav() {
+        return isTopNav;
+    }
+
+    public void setIsTopNav(String isTopNav) {
+        this.isTopNav = isTopNav;
     }
 }
