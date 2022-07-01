@@ -63,6 +63,9 @@ public class SysMenu extends BaseEntity
     /** 菜单图标 */
     private String icon;
 
+    /** 是否顶部导航 */
+    private String isTopNav;
+
     /** 子菜单 */
     private List<SysMenu> children = new ArrayList<SysMenu>();
 
@@ -255,5 +258,13 @@ public class SysMenu extends BaseEntity
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
             .toString();
+    }
+
+    public String getIsTopNav() {
+        return isTopNav;
+    }
+
+    public void setIsTopNav(String isTopNav) {
+        this.isTopNav = isTopNav;
     }
 }
