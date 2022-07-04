@@ -115,7 +115,7 @@ public class SwaggerConfig
                 // 设置标题
                 .title("标题：沙河人大管理系统_接口文档")
                 // 描述
-                .description("描述：用于管理集团旗下公司的人员信息,具体包括XXX,XXX模块...")
+                .description("描述：用于沙河市人民政府使用,具体包括不告诉你,XXX模块...")
                 // 作者信息
                 .contact(new Contact(ruoyiConfig.getName(), null, null))
                 // 版本
