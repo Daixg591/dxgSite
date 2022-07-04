@@ -60,7 +60,12 @@
             <groupId>com.shahenpc</groupId>
             <artifactId>shahenpc-generator</artifactId>
         </dependency>
-
+		
+		<dependency>
+            <groupId>com.shahenpc</groupId>
+            <artifactId>shahenpc-flowable</artifactId>
+        </dependency>
+		
     </dependencies>
 
     <build>

@@ -1,5 +1,7 @@
 package com.shahenpc.common.core.page;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import java.util.List;
  * 
  * @author ruoyi
  */
+@Data
 public class TableDataInfo implements Serializable
 {
     private static final long serialVersionUID = 1L;
@@ -16,7 +19,7 @@ public class TableDataInfo implements Serializable
     private long total;
 
     /** 列表数据 */
-    private List<?> rows;
+    private List<?> data;
 
     /** 消息状态码 */
     private int code;
@@ -39,7 +42,7 @@ public class TableDataInfo implements Serializable
      */
     public TableDataInfo(List<?> list, int total)
     {
-        this.rows = list;
+        this.data = list;
         this.total = total;
     }
 
@@ -53,14 +56,14 @@ public class TableDataInfo implements Serializable
         this.total = total;
     }
 
-    public List<?> getRows()
+    public List<?> getData()
     {
-        return rows;
+        return data;
     }
 
-    public void setRows(List<?> rows)
+    public void setData(List<?> data)
     {
-        this.rows = rows;
+        this.data = data;
     }
 
     public int getCode()
