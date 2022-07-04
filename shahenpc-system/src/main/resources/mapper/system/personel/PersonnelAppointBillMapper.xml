@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.personel.PersonnelAppointBillMapper">
+    
+    <resultMap type="PersonnelAppointBill" id="PersonnelAppointBillResult">
+        <result property="billId"    column="bill_id"    />
+        <result property="billTitle"    column="bill_title"    />
+        <result property="details"    column="details"    />
+        <result property="userId"    column="user_id"    />
+        <result property="fileList"    column="file_list"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="registerId"    column="register_id"    />
+    </resultMap>
+
+    <sql id="selectPersonnelAppointBillVo">
+        select bill_id, bill_title, details, user_id, file_list, remark, create_by, create_time, update_by, update_time, del_flag, register_id from personnel_appoint_bill
+    </sql>
+
+    <select id="selectPersonnelAppointBillList" parameterType="PersonnelAppointBill" resultMap="PersonnelAppointBillResult">
+        <include refid="selectPersonnelAppointBillVo"/>
+        <where>  
+            <if test="billTitle != null  and billTitle != ''"> and bill_title = #{billTitle}</if>
+            <if test="details != null  and details != ''"> and details = #{details}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="fileList != null  and fileList != ''"> and file_list = #{fileList}</if>
+            <if test="registerId != null "> and register_id = #{registerId}</if>
+        </where>
+    </select>
+    
+    <select id="selectPersonnelAppointBillByBillId" parameterType="Long" resultMap="PersonnelAppointBillResult">
+        <include refid="selectPersonnelAppointBillVo"/>
+        where bill_id = #{billId}
+    </select>
+        
+    <insert id="insertPersonnelAppointBill" parameterType="PersonnelAppointBill" useGeneratedKeys="true" keyProperty="billId">
+        insert into personnel_appoint_bill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="billTitle != null">bill_title,</if>
+            <if test="details != null">details,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="fileList != null">file_list,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="registerId != null">register_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="billTitle != null">#{billTitle},</if>
+            <if test="details != null">#{details},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="fileList != null">#{fileList},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="registerId != null">#{registerId},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePersonnelAppointBill" parameterType="PersonnelAppointBill">
+        update personnel_appoint_bill
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="billTitle != null">bill_title = #{billTitle},</if>
+            <if test="details != null">details = #{details},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="fileList != null">file_list = #{fileList},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="registerId != null">register_id = #{registerId},</if>
+        </trim>
+        where bill_id = #{billId}
+    </update>
+
+    <delete id="deletePersonnelAppointBillByBillId" parameterType="Long">
+        delete from personnel_appoint_bill where bill_id = #{billId}
+    </delete>
+
+    <delete id="deletePersonnelAppointBillByBillIds" parameterType="String">
+        delete from personnel_appoint_bill where bill_id in 
+        <foreach item="billId" collection="array" open="(" separator="," close=")">
+            #{billId}
+        </foreach>
+    </delete>
+</mapper>
