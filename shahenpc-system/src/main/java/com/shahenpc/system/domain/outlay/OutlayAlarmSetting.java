@@ -7,17 +7,17 @@ import com.shahenpc.common.annotation.Excel;
 import com.shahenpc.common.core.domain.BaseEntity;
 
 /**
- * 告警设置-规则对象 outlay_budget_alarm_setting
+ * 告警设置-规则对象 outlay_alarm_setting
  * 
  * @author ruoyi
- * @date 2022-07-01
+ * @date 2022-07-04
  */
-public class OutlayBudgetAlarmSetting extends BaseEntity
+public class OutlayAlarmSetting extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** id */
-    private Long alarmId;
+    private Long settingId;
 
     /**  */
     @Excel(name = "")
@@ -27,14 +27,14 @@ public class OutlayBudgetAlarmSetting extends BaseEntity
     @Excel(name = "")
     private BigDecimal ratio;
 
-    public void setAlarmId(Long alarmId) 
+    public void setSettingId(Long settingId) 
     {
-        this.alarmId = alarmId;
+        this.settingId = settingId;
     }
 
-    public Long getAlarmId() 
+    public Long getSettingId() 
     {
-        return alarmId;
+        return settingId;
     }
     public void setBudgetType(Integer budgetType) 
     {
@@ -58,7 +58,7 @@ public class OutlayBudgetAlarmSetting extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("alarmId", getAlarmId())
+            .append("settingId", getSettingId())
             .append("budgetType", getBudgetType())
             .append("ratio", getRatio())
             .append("remark", getRemark())

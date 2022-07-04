@@ -8,6 +8,7 @@ import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.flowable.common.enums.FlowComment;
 import com.shahenpc.common.utils.SecurityUtils;
+import com.shahenpc.flowable.domain.vo.FlowDefinitionAddVo;
 import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.flowable.factory.FlowServiceFactory;
 import com.shahenpc.flowable.service.IFlowDefinitionService;
@@ -204,6 +205,40 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
                 taskService.addComment(task.getId(), processInstance.getProcessInstanceId(), FlowComment.NORMAL.getType(), sysUser.getNickName() + "发起流程申请");
 //                taskService.setAssignee(task.getId(), sysUser.getUserId().toString());
                 taskService.complete(task.getId(), variables);
+            }
+            return AjaxResult.success("流程启动成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AjaxResult.error("流程启动错误");
+        }
+    }
+
+    /**
+     * 新版 大晓刚
+     * @param request
+     * @return
+     */
+    @Override
+    public AjaxResult newStartProcessInstanceById(FlowDefinitionAddVo request) {
+        try {
+            ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(request.getProcDefId())
+                    .latestVersion().singleResult();
+            if (Objects.nonNull(processDefinition) && processDefinition.isSuspended()) {
+                return AjaxResult.error("流程已被挂起,请先激活流程");
+            }
+//           variables.put("skip", true);
+//           variables.put(ProcessConstants.FLOWABLE_SKIP_EXPRESSION_ENABLED, true);
+            // 设置流程发起人Id到流程中
+            SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+            identityService.setAuthenticatedUserId(sysUser.getUserId().toString());
+            request.getVariables().put(ProcessConstants.PROCESS_INITIATOR, "");
+            ProcessInstance processInstance = runtimeService.startProcessInstanceById(request.getProcDefId(), request.getVariables());
+            // 给第一步申请人节点设置任务执行人和意见 todo:第一个节点不设置为申请人节点有点问题？
+            Task task = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId()).singleResult();
+            if (Objects.nonNull(task)) {
+                taskService.addComment(task.getId(), processInstance.getProcessInstanceId(), FlowComment.NORMAL.getType(), sysUser.getNickName() + "发起流程申请");
+//                taskService.setAssignee(task.getId(), sysUser.getUserId().toString());
+                taskService.complete(task.getId(), request.getVariables());
             }
             return AjaxResult.success("流程启动成功");
         } catch (Exception e) {

@@ -2,6 +2,7 @@ package com.shahenpc.flowable.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shahenpc.common.core.domain.AjaxResult;
+import com.shahenpc.flowable.domain.vo.FlowDefinitionAddVo;
 import com.shahenpc.system.domain.FlowProcDefDto;
 
 import java.io.IOException;
@@ -52,6 +53,7 @@ public interface IFlowDefinitionService {
 
     AjaxResult startProcessInstanceById(String procDefId, Map<String, Object> variables);
 
+    AjaxResult newStartProcessInstanceById(FlowDefinitionAddVo request);
 
     /**
      * 激活或挂起流程定义

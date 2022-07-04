@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.shahenpc.system.mapper.outlay.OutlayBudgetAlarmSettingMapper">
+<mapper namespace="com.shahenpc.system.mapper.outlay.OutlayAlarmSettingMapper">
     
-    <resultMap type="OutlayBudgetAlarmSetting" id="OutlayBudgetAlarmSettingResult">
-        <result property="alarmId"    column="alarm_id"    />
+    <resultMap type="OutlayAlarmSetting" id="OutlayAlarmSettingResult">
+        <result property="settingId"    column="setting_id"    />
         <result property="budgetType"    column="budget_type"    />
         <result property="ratio"    column="ratio"    />
         <result property="remark"    column="remark"    />
@@ -15,25 +15,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
-    <sql id="selectOutlayBudgetAlarmSettingVo">
-        select alarm_id, budget_type, ratio, remark, create_by, create_time, update_by, update_time from outlay_budget_alarm_setting
+    <sql id="selectOutlayAlarmSettingVo">
+        select setting_id, budget_type, ratio, remark, create_by, create_time, update_by, update_time from outlay_alarm_setting
     </sql>
 
-    <select id="selectOutlayBudgetAlarmSettingList" parameterType="OutlayBudgetAlarmSetting" resultMap="OutlayBudgetAlarmSettingResult">
-        <include refid="selectOutlayBudgetAlarmSettingVo"/>
+    <select id="selectOutlayAlarmSettingList" parameterType="OutlayAlarmSetting" resultMap="OutlayAlarmSettingResult">
+        <include refid="selectOutlayAlarmSettingVo"/>
         <where>  
             <if test="budgetType != null "> and budget_type = #{budgetType}</if>
             <if test="ratio != null "> and ratio = #{ratio}</if>
         </where>
     </select>
     
-    <select id="selectOutlayBudgetAlarmSettingByAlarmId" parameterType="Long" resultMap="OutlayBudgetAlarmSettingResult">
-        <include refid="selectOutlayBudgetAlarmSettingVo"/>
-        where alarm_id = #{alarmId}
+    <select id="selectOutlayAlarmSettingBySettingId" parameterType="Long" resultMap="OutlayAlarmSettingResult">
+        <include refid="selectOutlayAlarmSettingVo"/>
+        where setting_id = #{settingId}
     </select>
         
-    <insert id="insertOutlayBudgetAlarmSetting" parameterType="OutlayBudgetAlarmSetting" useGeneratedKeys="true" keyProperty="alarmId">
-        insert into outlay_budget_alarm_setting
+    <insert id="insertOutlayAlarmSetting" parameterType="OutlayAlarmSetting" useGeneratedKeys="true" keyProperty="settingId">
+        insert into outlay_alarm_setting
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="budgetType != null">budget_type,</if>
             <if test="ratio != null">ratio,</if>
@@ -54,8 +54,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateOutlayBudgetAlarmSetting" parameterType="OutlayBudgetAlarmSetting">
-        update outlay_budget_alarm_setting
+    <update id="updateOutlayAlarmSetting" parameterType="OutlayAlarmSetting">
+        update outlay_alarm_setting
         <trim prefix="SET" suffixOverrides=",">
             <if test="budgetType != null">budget_type = #{budgetType},</if>
             <if test="ratio != null">ratio = #{ratio},</if>
@@ -65,17 +65,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
-        where alarm_id = #{alarmId}
+        where setting_id = #{settingId}
     </update>
 
-    <delete id="deleteOutlayBudgetAlarmSettingByAlarmId" parameterType="Long">
-        delete from outlay_budget_alarm_setting where alarm_id = #{alarmId}
+    <delete id="deleteOutlayAlarmSettingBySettingId" parameterType="Long">
+        delete from outlay_alarm_setting where setting_id = #{settingId}
     </delete>
 
-    <delete id="deleteOutlayBudgetAlarmSettingByAlarmIds" parameterType="String">
-        delete from outlay_budget_alarm_setting where alarm_id in 
-        <foreach item="alarmId" collection="array" open="(" separator="," close=")">
-            #{alarmId}
+    <delete id="deleteOutlayAlarmSettingBySettingIds" parameterType="String">
+        delete from outlay_alarm_setting where setting_id in 
+        <foreach item="settingId" collection="array" open="(" separator="," close=")">
+            #{settingId}
         </foreach>
     </delete>
 </mapper>

@@ -21,8 +21,8 @@ import com.shahenpc.common.annotation.Log;
 import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.enums.BusinessType;
-import com.shahenpc.system.domain.outlay.OutlayBudgetAlarmSetting;
-import com.shahenpc.system.service.outlay.IOutlayBudgetAlarmSettingService;
+import com.shahenpc.system.domain.outlay.OutlayAlarmSetting;
+import com.shahenpc.system.service.outlay.IOutlayAlarmSettingService;
 import com.shahenpc.common.utils.poi.ExcelUtil;
 import com.shahenpc.common.core.page.TableDataInfo;
 
@@ -30,15 +30,15 @@ import com.shahenpc.common.core.page.TableDataInfo;
  * 告警设置-规则Controller
  * 
  * @author ruoyi
- * @date 2022-07-01
+ * @date 2022-07-04
  */
 @Api(tags = "预算告警管理")
 @RestController
 @RequestMapping("/system/setting")
-public class OutlayBudgetAlarmSettingController extends BaseController
+public class OutlayAlarmSettingController extends BaseController
 {
     @Autowired
-    private IOutlayBudgetAlarmSettingService outlayBudgetAlarmSettingService;
+    private IOutlayAlarmSettingService outlayAlarmSettingService;
 
     /**
      * 查询告警设置-规则列表
@@ -46,42 +46,43 @@ public class OutlayBudgetAlarmSettingController extends BaseController
     @ApiOperation("告警规则列表")
     @PreAuthorize("@ss.hasPermi('system:setting:list')")
     @GetMapping("/list")
-    public TableDataInfo list(OutlayBudgetAlarmSetting outlayBudgetAlarmSetting)
+    public TableDataInfo list(OutlayAlarmSetting outlayAlarmSetting)
     {
         startPage();
-        List<OutlayBudgetAlarmSetting> list = outlayBudgetAlarmSettingService.selectOutlayBudgetAlarmSettingList(outlayBudgetAlarmSetting);
+        List<OutlayAlarmSetting> list = outlayAlarmSettingService.selectOutlayAlarmSettingList(outlayAlarmSetting);
         return getDataTable(list);
     }
 
     /**
      * 导出告警设置-规则列表
      */
-
     @PreAuthorize("@ss.hasPermi('system:setting:export')")
     @Log(title = "告警设置-规则", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, OutlayBudgetAlarmSetting outlayBudgetAlarmSetting)
+    public void export(HttpServletResponse response, OutlayAlarmSetting outlayAlarmSetting)
     {
-        List<OutlayBudgetAlarmSetting> list = outlayBudgetAlarmSettingService.selectOutlayBudgetAlarmSettingList(outlayBudgetAlarmSetting);
-        ExcelUtil<OutlayBudgetAlarmSetting> util = new ExcelUtil<OutlayBudgetAlarmSetting>(OutlayBudgetAlarmSetting.class);
+        List<OutlayAlarmSetting> list = outlayAlarmSettingService.selectOutlayAlarmSettingList(outlayAlarmSetting);
+        ExcelUtil<OutlayAlarmSetting> util = new ExcelUtil<OutlayAlarmSetting>(OutlayAlarmSetting.class);
         util.exportExcel(response, list, "告警设置-规则数据");
     }
 
     /**
      * 获取告警设置-规则详细信息
      */
+
     @ApiOperation("告警规则详情")
     @ApiImplicitParam(name = "alarmId", value = "告警ID", required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class)
     @PreAuthorize("@ss.hasPermi('system:setting:query')")
-    @GetMapping(value = "/{alarmId}")
-    public AjaxResult getInfo(@PathVariable("alarmId") Long alarmId)
+    @GetMapping(value = "/{settingId}")
+    public AjaxResult getInfo(@PathVariable("settingId") Long settingId)
     {
-        return AjaxResult.success(outlayBudgetAlarmSettingService.selectOutlayBudgetAlarmSettingByAlarmId(alarmId));
+        return AjaxResult.success(outlayAlarmSettingService.selectOutlayAlarmSettingBySettingId(settingId));
     }
 
     /**
      * 新增告警设置-规则
      */
+
     @ApiOperation("添加告警规则")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "alarmId", value = "告警id", dataType = "Integer", dataTypeClass = Integer.class),
@@ -91,9 +92,9 @@ public class OutlayBudgetAlarmSettingController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:setting:add')")
     @Log(title = "告警设置-规则", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody OutlayBudgetAlarmSetting outlayBudgetAlarmSetting)
+    public AjaxResult add(@RequestBody OutlayAlarmSetting outlayAlarmSetting)
     {
-        return toAjax(outlayBudgetAlarmSettingService.insertOutlayBudgetAlarmSetting(outlayBudgetAlarmSetting));
+        return toAjax(outlayAlarmSettingService.insertOutlayAlarmSetting(outlayAlarmSetting));
     }
 
     /**
@@ -103,9 +104,9 @@ public class OutlayBudgetAlarmSettingController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:setting:edit')")
     @Log(title = "告警设置-规则", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody OutlayBudgetAlarmSetting outlayBudgetAlarmSetting)
+    public AjaxResult edit(@RequestBody OutlayAlarmSetting outlayAlarmSetting)
     {
-        return toAjax(outlayBudgetAlarmSettingService.updateOutlayBudgetAlarmSetting(outlayBudgetAlarmSetting));
+        return toAjax(outlayAlarmSettingService.updateOutlayAlarmSetting(outlayAlarmSetting));
     }
 
     /**
@@ -114,9 +115,9 @@ public class OutlayBudgetAlarmSettingController extends BaseController
     @ApiOperation("删除告警规则")
     @PreAuthorize("@ss.hasPermi('system:setting:remove')")
     @Log(title = "告警设置-规则", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{alarmIds}")
-    public AjaxResult remove(@PathVariable Long[] alarmIds)
+	@DeleteMapping("/{settingIds}")
+    public AjaxResult remove(@PathVariable Long[] settingIds)
     {
-        return toAjax(outlayBudgetAlarmSettingService.deleteOutlayBudgetAlarmSettingByAlarmIds(alarmIds));
+        return toAjax(outlayAlarmSettingService.deleteOutlayAlarmSettingBySettingIds(settingIds));
     }
 }
