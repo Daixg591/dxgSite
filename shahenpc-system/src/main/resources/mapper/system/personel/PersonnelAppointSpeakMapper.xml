@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.personel.PersonnelAppointSpeakMapper">
+    
+    <resultMap type="PersonnelAppointSpeak" id="PersonnelAppointSpeakResult">
+        <result property="speakId"    column="speak_id"    />
+        <result property="speakTitle"    column="speak_title"    />
+        <result property="details"    column="details"    />
+        <result property="userId"    column="user_id"    />
+        <result property="fileList"    column="file_list"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectPersonnelAppointSpeakVo">
+        select speak_id, speak_title, details, user_id, file_list, remark, create_by, create_time, update_by, update_time, del_flag from personnel_appoint_speak
+    </sql>
+
+    <select id="selectPersonnelAppointSpeakList" parameterType="PersonnelAppointSpeak" resultMap="PersonnelAppointSpeakResult">
+        <include refid="selectPersonnelAppointSpeakVo"/>
+        <where>  
+            <if test="speakTitle != null  and speakTitle != ''"> and speak_title = #{speakTitle}</if>
+            <if test="details != null  and details != ''"> and details = #{details}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="fileList != null  and fileList != ''"> and file_list = #{fileList}</if>
+        </where>
+    </select>
+    
+    <select id="selectPersonnelAppointSpeakBySpeakId" parameterType="Long" resultMap="PersonnelAppointSpeakResult">
+        <include refid="selectPersonnelAppointSpeakVo"/>
+        where speak_id = #{speakId}
+    </select>
+        
+    <insert id="insertPersonnelAppointSpeak" parameterType="PersonnelAppointSpeak" useGeneratedKeys="true" keyProperty="speakId">
+        insert into personnel_appoint_speak
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="speakTitle != null">speak_title,</if>
+            <if test="details != null">details,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="fileList != null">file_list,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="speakTitle != null">#{speakTitle},</if>
+            <if test="details != null">#{details},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="fileList != null">#{fileList},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePersonnelAppointSpeak" parameterType="PersonnelAppointSpeak">
+        update personnel_appoint_speak
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="speakTitle != null">speak_title = #{speakTitle},</if>
+            <if test="details != null">details = #{details},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="fileList != null">file_list = #{fileList},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where speak_id = #{speakId}
+    </update>
+
+    <delete id="deletePersonnelAppointSpeakBySpeakId" parameterType="Long">
+        delete from personnel_appoint_speak where speak_id = #{speakId}
+    </delete>
+
+    <delete id="deletePersonnelAppointSpeakBySpeakIds" parameterType="String">
+        delete from personnel_appoint_speak where speak_id in 
+        <foreach item="speakId" collection="array" open="(" separator="," close=")">
+            #{speakId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,9 +1,14 @@
 package com.shahenpc.web.controller.common;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +33,7 @@ import com.shahenpc.framework.config.ServerConfig;
  */
 @RestController
 @RequestMapping("/common")
+@Api(tags = "通用接口_文件上传")
 public class CommonController
 {
     private static final Logger log = LoggerFactory.getLogger(CommonController.class);
@@ -72,7 +78,9 @@ public class CommonController
     /**
      * 通用上传请求（单个）
      */
+    @ApiOperation("单文件上传")
     @PostMapping("/upload")
+    @ApiImplicitParam(name = "file", value = "文件", required = true, dataType = "int", paramType = "path", dataTypeClass = File.class)
     public AjaxResult uploadFile(MultipartFile file) throws Exception
     {
         try
@@ -99,6 +107,8 @@ public class CommonController
      * 通用上传请求（多个）
      */
     @PostMapping("/uploads")
+    @ApiOperation("多文件上传")
+    @ApiImplicitParam(name = "files", value = "文件", required = true, dataType = "int", paramType = "path", dataTypeClass = File.class)
     public AjaxResult uploadFiles(List<MultipartFile> files) throws Exception
     {
         try

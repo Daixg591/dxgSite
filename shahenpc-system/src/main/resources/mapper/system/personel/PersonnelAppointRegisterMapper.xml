@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.personel.PersonnelAppointRegisterMapper">
+
+
+    <resultMap type="SysUser" id="SysUserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="userName"     column="user_name"    />
+        <result property="nickName"     column="nick_name"    />
+        <result property="phonenumber"  column="phonenumber"  />
+        <result property="sex"          column="sex"          />
+        <result property="avatar"       column="avatar"       />
+        <result property="idCard"    column="id_card"    />
+        <result property="identity"    column="identity"    />
+        <result property="openId"    column="open_id"    />
+        <result property="bornDate"    column="born_date"    />
+        <result property="nativePlace"    column="native_place"    />
+        <result property="bornPlace"    column="born_place"    />
+        <result property="nation"    column="nation"    />
+        <result property="partyDate"    column="party_date"    />
+        <result property="jobDate"    column="job_date"    />
+        <result property="healthState"    column="health_state"    />
+        <result property="duty"    column="duty"    />
+        <result property="expert"    column="expert"    />
+        <result property="resume"    column="resume"    />
+        <result property="createBy"     column="create_by"    />
+        <result property="createTime"   column="create_time"  />
+        <result property="updateBy"     column="update_by"    />
+        <result property="updateTime"   column="update_time"  />
+        <result property="remark"       column="remark"       />
+    </resultMap>
+    <resultMap type="PersonnelAppointRegister" id="PersonnelAppointRegisterResult">
+        <result property="registerId" column="register_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="appointType" column="appoint_type"/>
+        <result property="oldDuty" column="old_duty"/>
+        <result property="handleDuty" column="handle_duty"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="comePersonCnt" column="come_person_cnt"/>
+        <result property="scrutineer" column="scrutineer"/>
+        <result property="pollClerk" column="poll_clerk"/>
+        <result property="voteTime" column="vote_time"/>
+        <result property="fileList" column="file_list"/>
+        <result property="regTime" column="reg_time"/>
+        <association property="sysUser" column="user_id" javaType="SysUser"  resultMap="SysUserResult"></association>
+    </resultMap>
+
+    <sql id="selectPersonnelAppointRegisterVo">
+        select r.register_id,
+               r.user_id,
+               r.appoint_type,
+               r.old_duty,
+               r.handle_duty,
+               r.remark,
+               r.create_by,
+               r.create_time,
+               r.update_by,
+               r.update_time,
+               r.del_flag,
+               r.come_person_cnt,
+               r.scrutineer,
+               r.poll_clerk,
+               r.vote_time,
+               r.file_list,
+               r.reg_time
+        from personnel_appoint_register r
+
+    </sql>
+
+    <sql id="selectPersonnelRegListVo">
+        select r.appoint_type,r.old_duty,r.handle_duty,r.reg_time,r.create_by,
+               u.nick_name,u.sex,u.phonenumber,u.id_card
+        from personnel_appoint_register  r
+                 LEFT JOIN sys_user u  on r.user_id=u.user_id
+    </sql>
+
+    <select id="selectPersonnelAppointRegisterList" parameterType="PersonnelAppointRegister"
+            resultMap="PersonnelAppointRegisterResult">
+        <include refid="selectPersonnelRegListVo"/>
+        <where>
+            <if test="userId != null ">and r.user_id = #{userId}</if>
+            <if test="appointType != null  and appointType != ''">and r.appoint_type = #{appointType}</if>
+            <if test="oldDuty != null  and oldDuty != ''">and r.old_duty = #{oldDuty}</if>
+            <if test="handleDuty != null  and handleDuty != ''">and r.handle_duty = #{handleDuty}</if>
+        </where>
+    </select>
+
+    <select id="selectPersonnelAppointRegisterByRegisterId" parameterType="Long"
+            resultMap="PersonnelAppointRegisterResult">
+        <include refid="selectPersonnelAppointRegisterVo"/>
+        where register_id = #{registerId}
+    </select>
+
+    <insert id="insertPersonnelAppointRegister" parameterType="PersonnelAppointRegister" useGeneratedKeys="true"
+            keyProperty="registerId">
+        insert into personnel_appoint_register
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="appointType != null">appoint_type,</if>
+            <if test="oldDuty != null">old_duty,</if>
+            <if test="handleDuty != null">handle_duty,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="comePersonCnt != null">come_person_cnt,</if>
+            <if test="scrutineer != null">scrutineer,</if>
+            <if test="pollClerk != null">poll_clerk,</if>
+            <if test="voteTime != null">vote_time,</if>
+            <if test="fileList != null">file_list,</if>
+            <if test="regTime != null">reg_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="appointType != null">#{appointType},</if>
+            <if test="oldDuty != null">#{oldDuty},</if>
+            <if test="handleDuty != null">#{handleDuty},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="comePersonCnt != null">#{comePersonCnt},</if>
+            <if test="scrutineer != null">#{scrutineer},</if>
+            <if test="pollClerk != null">#{pollClerk},</if>
+            <if test="voteTime != null">#{voteTime},</if>
+            <if test="fileList != null">#{fileList},</if>
+            <if test="regTime != null">#{regTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePersonnelAppointRegister" parameterType="PersonnelAppointRegister">
+        update personnel_appoint_register
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="appointType != null">appoint_type = #{appointType},</if>
+            <if test="oldDuty != null">old_duty = #{oldDuty},</if>
+            <if test="handleDuty != null">handle_duty = #{handleDuty},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="comePersonCnt != null">come_person_cnt = #{comePersonCnt},</if>
+            <if test="scrutineer != null">scrutineer = #{scrutineer},</if>
+            <if test="pollClerk != null">poll_clerk = #{pollClerk},</if>
+            <if test="voteTime != null">vote_time = #{voteTime},</if>
+            <if test="fileList != null">file_list = #{fileList},</if>
+            <if test="regTime != null">reg_time = #{regTime},</if>
+        </trim>
+        where register_id = #{registerId}
+    </update>
+
+    <delete id="deletePersonnelAppointRegisterByRegisterId" parameterType="Long">
+        delete
+        from personnel_appoint_register
+        where register_id = #{registerId}
+    </delete>
+
+    <delete id="deletePersonnelAppointRegisterByRegisterIds" parameterType="String">
+        delete from personnel_appoint_register where register_id in
+        <foreach item="registerId" collection="array" open="(" separator="," close=")">
+            #{registerId}
+        </foreach>
+    </delete>
+</mapper>

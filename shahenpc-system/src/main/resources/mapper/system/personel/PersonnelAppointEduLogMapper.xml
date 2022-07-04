@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.personel.PersonnelAppointEduLogMapper">
+    
+    <resultMap type="PersonnelAppointEduLog" id="PersonnelAppointEduLogResult">
+        <result property="eduLogId"    column="edu_log_id"    />
+        <result property="eduType"    column="edu_type"    />
+        <result property="school"    column="school"    />
+        <result property="major"    column="major"    />
+        <result property="userId"    column="user_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="timeRange"    column="time_range"    />
+        <result property="edu"    column="edu"    />
+    </resultMap>
+
+    <sql id="selectPersonnelAppointEduLogVo">
+        select edu_log_id, edu_type, school, major, user_id, remark, create_by, create_time, update_by, update_time, del_flag, time_range, edu from personnel_appoint_edu_log
+    </sql>
+
+    <select id="selectPersonnelAppointEduLogList" parameterType="PersonnelAppointEduLog" resultMap="PersonnelAppointEduLogResult">
+        <include refid="selectPersonnelAppointEduLogVo"/>
+        <where>  
+            <if test="eduType != null  and eduType != ''"> and edu_type = #{eduType}</if>
+            <if test="school != null  and school != ''"> and school = #{school}</if>
+            <if test="major != null  and major != ''"> and major = #{major}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="timeRange != null  and timeRange != ''"> and time_range = #{timeRange}</if>
+            <if test="edu != null  and edu != ''"> and edu = #{edu}</if>
+        </where>
+    </select>
+    
+    <select id="selectPersonnelAppointEduLogByEduLogId" parameterType="Long" resultMap="PersonnelAppointEduLogResult">
+        <include refid="selectPersonnelAppointEduLogVo"/>
+        where edu_log_id = #{eduLogId}
+    </select>
+        
+    <insert id="insertPersonnelAppointEduLog" parameterType="PersonnelAppointEduLog">
+        insert into personnel_appoint_edu_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduLogId != null">edu_log_id,</if>
+            <if test="eduType != null">edu_type,</if>
+            <if test="school != null">school,</if>
+            <if test="major != null">major,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="timeRange != null">time_range,</if>
+            <if test="edu != null">edu,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduLogId != null">#{eduLogId},</if>
+            <if test="eduType != null">#{eduType},</if>
+            <if test="school != null">#{school},</if>
+            <if test="major != null">#{major},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="timeRange != null">#{timeRange},</if>
+            <if test="edu != null">#{edu},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePersonnelAppointEduLog" parameterType="PersonnelAppointEduLog">
+        update personnel_appoint_edu_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduType != null">edu_type = #{eduType},</if>
+            <if test="school != null">school = #{school},</if>
+            <if test="major != null">major = #{major},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="timeRange != null">time_range = #{timeRange},</if>
+            <if test="edu != null">edu = #{edu},</if>
+        </trim>
+        where edu_log_id = #{eduLogId}
+    </update>
+
+    <delete id="deletePersonnelAppointEduLogByEduLogId" parameterType="Long">
+        delete from personnel_appoint_edu_log where edu_log_id = #{eduLogId}
+    </delete>
+
+    <delete id="deletePersonnelAppointEduLogByEduLogIds" parameterType="String">
+        delete from personnel_appoint_edu_log where edu_log_id in 
+        <foreach item="eduLogId" collection="array" open="(" separator="," close=")">
+            #{eduLogId}
+        </foreach>
+    </delete>
+</mapper>
