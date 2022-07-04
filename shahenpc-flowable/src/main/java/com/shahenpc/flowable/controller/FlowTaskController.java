@@ -59,6 +59,13 @@ public class FlowTaskController {
         return flowTaskService.todoList(pageNum, pageSize);
     }
 
+    @ApiOperation(value = "获取待办列表", response = FlowTaskDto.class)
+    @GetMapping(value = "/todoLists")
+    public AjaxResult todoLists(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
+                               @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize,@ApiParam(value = "类型1.接收2.受理3.分发4.审查5.反馈", required = true) @RequestParam String type) {
+        return flowTaskService.todoLists(pageNum, pageSize,type);
+    }
+
     @ApiOperation(value = "获取已办任务", response = FlowTaskDto.class)
     @GetMapping(value = "/finishedList")
     public AjaxResult finishedList(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,

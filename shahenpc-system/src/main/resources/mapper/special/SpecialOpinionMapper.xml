@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.special.SpecialOpinionMapper">
+    
+    <resultMap type="SpecialOpinion" id="SpecialOpinionResult">
+        <result property="opinionId"    column="opinion_id"    />
+        <result property="opinionType"    column="opinion_type"    />
+        <result property="content"    column="content"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="submitUserId"    column="submit_user_id"    />
+        <result property="submitNickName"    column="submit_nick_name"    />
+        <result property="submitPhone"    column="submit_phone"    />
+        <result property="receiveUserId"    column="receive_user_id"    />
+        <result property="receiveNickName"    column="receive_nick_name"    />
+        <result property="receiveReply"    column="receive_reply"    />
+        <result property="status"    column="status"    />
+        <result property="replyTime"    column="reply_time"    />
+    </resultMap>
+
+    <sql id="selectSpecialOpinionVo">
+        select opinion_id, opinion_type, content, create_by, create_time, update_by, update_time, remark, submit_user_id, submit_nick_name, submit_phone, receive_user_id, receive_nick_name, receive_reply, status, reply_time from special_opinion
+    </sql>
+
+    <select id="selectSpecialOpinionList" parameterType="SpecialOpinion" resultMap="SpecialOpinionResult">
+        <include refid="selectSpecialOpinionVo"/>
+        <where>  
+            <if test="opinionType != null "> and opinion_type = #{opinionType}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="submitUserId != null "> and submit_user_id = #{submitUserId}</if>
+            <if test="submitNickName != null  and submitNickName != ''"> and submit_nick_name like concat('%', #{submitNickName}, '%')</if>
+            <if test="submitPhone != null  and submitPhone != ''"> and submit_phone = #{submitPhone}</if>
+            <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
+            <if test="receiveNickName != null  and receiveNickName != ''"> and receive_nick_name like concat('%', #{receiveNickName}, '%')</if>
+            <if test="receiveReply != null  and receiveReply != ''"> and receive_reply = #{receiveReply}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="replyTime != null "> and reply_time = #{replyTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectSpecialOpinionByOpinionId" parameterType="Long" resultMap="SpecialOpinionResult">
+        <include refid="selectSpecialOpinionVo"/>
+        where opinion_id = #{opinionId}
+    </select>
+        
+    <insert id="insertSpecialOpinion" parameterType="SpecialOpinion" useGeneratedKeys="true" keyProperty="opinionId">
+        insert into special_opinion
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opinionType != null">opinion_type,</if>
+            <if test="content != null">content,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="submitUserId != null">submit_user_id,</if>
+            <if test="submitNickName != null">submit_nick_name,</if>
+            <if test="submitPhone != null">submit_phone,</if>
+            <if test="receiveUserId != null">receive_user_id,</if>
+            <if test="receiveNickName != null">receive_nick_name,</if>
+            <if test="receiveReply != null">receive_reply,</if>
+            <if test="status != null">status,</if>
+            <if test="replyTime != null">reply_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opinionType != null">#{opinionType},</if>
+            <if test="content != null">#{content},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="submitUserId != null">#{submitUserId},</if>
+            <if test="submitNickName != null">#{submitNickName},</if>
+            <if test="submitPhone != null">#{submitPhone},</if>
+            <if test="receiveUserId != null">#{receiveUserId},</if>
+            <if test="receiveNickName != null">#{receiveNickName},</if>
+            <if test="receiveReply != null">#{receiveReply},</if>
+            <if test="status != null">#{status},</if>
+            <if test="replyTime != null">#{replyTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSpecialOpinion" parameterType="SpecialOpinion">
+        update special_opinion
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="opinionType != null">opinion_type = #{opinionType},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="submitUserId != null">submit_user_id = #{submitUserId},</if>
+            <if test="submitNickName != null">submit_nick_name = #{submitNickName},</if>
+            <if test="submitPhone != null">submit_phone = #{submitPhone},</if>
+            <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
+            <if test="receiveNickName != null">receive_nick_name = #{receiveNickName},</if>
+            <if test="receiveReply != null">receive_reply = #{receiveReply},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="replyTime != null">reply_time = #{replyTime},</if>
+        </trim>
+        where opinion_id = #{opinionId}
+    </update>
+
+    <delete id="deleteSpecialOpinionByOpinionId" parameterType="Long">
+        delete from special_opinion where opinion_id = #{opinionId}
+    </delete>
+
+    <delete id="deleteSpecialOpinionByOpinionIds" parameterType="String">
+        delete from special_opinion where opinion_id in 
+        <foreach item="opinionId" collection="array" open="(" separator="," close=")">
+            #{opinionId}
+        </foreach>
+    </delete>
+</mapper>

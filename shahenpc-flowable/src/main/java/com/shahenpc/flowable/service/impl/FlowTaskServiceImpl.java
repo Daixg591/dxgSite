@@ -57,6 +57,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * @author XuanXuan
@@ -608,6 +609,51 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         return AjaxResult.success(page);
     }
 
+    @Override
+    public AjaxResult todoLists(Integer pageNum, Integer pageSize, String type) {
+        Page<FlowTaskDto> page = new Page<>();
+        Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
+        TaskQuery taskQuery = taskService.createTaskQuery()
+                .active()
+                .includeProcessVariables()
+//                .taskAssignee(userId.toString())
+                .orderByTaskCreateTime().desc();
+        page.setTotal(taskQuery.count());
+        List<Task> taskList = taskQuery.listPage(pageSize * (pageNum - 1), pageSize);
+        List<FlowTaskDto> flowList = new ArrayList<>();
+        for (Task task : taskList) {
+            FlowTaskDto flowTask = new FlowTaskDto();
+            // 当前流程信息
+            flowTask.setTaskId(task.getId());
+            flowTask.setTaskDefKey(task.getTaskDefinitionKey());
+            flowTask.setCreateTime(task.getCreateTime());
+            flowTask.setProcDefId(task.getProcessDefinitionId());
+            flowTask.setExecutionId(task.getExecutionId());
+            flowTask.setTaskName(task.getName());
+            // 流程定义信息
+            ProcessDefinition pd = repositoryService.createProcessDefinitionQuery().processDefinitionId(task.getProcessDefinitionId()).singleResult();
+
+            flowTask.setDeployId(pd.getDeploymentId());
+            flowTask.setProcDefName(pd.getName());
+            flowTask.setProcDefVersion(pd.getVersion());
+            flowTask.setProcInsId(task.getProcessInstanceId());
+
+            // 流程发起人信息
+            HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
+                    .processInstanceId(task.getProcessInstanceId())
+                    .singleResult();
+            SysUser startUser = sysUserService.selectUserById(Long.parseLong(historicProcessInstance.getStartUserId()));
+//            SysUser startUser = sysUserService.selectUserById(Long.parseLong(task.getAssignee()));
+            flowTask.setStartUserId(startUser.getNickName());
+            flowTask.setStartUserName(startUser.getNickName());
+            flowTask.setStartDeptName(startUser.getDept().getDeptName());
+            flowList.add(flowTask);
+        }
+        flowList.stream().filter(w -> w.getDeployId().equals(type)).collect(Collectors.toList());
+        page.setRecords(flowList);
+        return AjaxResult.success(page);
+    }
+
 
     /**
      * 已办任务列表
@@ -743,13 +789,13 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
 //            }
         }
         // 第一次申请获取初始化表单
-        if (StringUtils.isNotBlank(deployId)) {
-            SysForm sysForm = sysInstanceFormService.selectSysDeployFormByDeployId(deployId);
-            if (Objects.isNull(sysForm)) {
-                return AjaxResult.error("请先配置流程表单");
-            }
-            map.put("formData", JSONObject.parseObject(sysForm.getFormContent()));
-        }
+//        if (StringUtils.isNotBlank(deployId)) {
+//            SysForm sysForm = sysInstanceFormService.selectSysDeployFormByDeployId(deployId);
+//            if (Objects.isNull(sysForm)) {
+//                return AjaxResult.error("请先配置流程表单");
+//            }
+//            map.put("formData", JSONObject.parseObject(sysForm.getFormContent()));
+//        }
         return AjaxResult.success(map);
     }
 
