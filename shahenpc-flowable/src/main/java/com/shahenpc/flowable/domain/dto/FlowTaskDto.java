@@ -98,4 +98,15 @@ public class FlowTaskDto implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date finishTime;
 
+    @ApiModelProperty("流程id")
+    private Long processId;
+
+    @ApiModelProperty("文件类型")
+    private Integer fileType;
+    @ApiModelProperty("文件名称")
+    private String fileName;
+    @ApiModelProperty("返回结果")
+    private String results;
+    @ApiModelProperty("序号")
+    private Long serial;
 }

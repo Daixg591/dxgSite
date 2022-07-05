@@ -86,6 +86,7 @@ public interface IFlowTaskService {
      */
     AjaxResult myProcess(Integer pageNum, Integer pageSize);
 
+    AjaxResult newMyProcess(Integer pageNum, Integer pageSize);
     /**
      * 取消申请
      * @param flowTaskVo
@@ -116,7 +117,7 @@ public interface IFlowTaskService {
      * @param pageSize
      * @return
      */
-    AjaxResult todoLists(Integer pageNum, Integer pageSize,String type);
+    AjaxResult newTodoList(Integer pageNum, Integer pageSize,String type);
     /**
      * 已办任务列表
      *

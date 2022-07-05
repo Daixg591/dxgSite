@@ -22,8 +22,10 @@ import com.shahenpc.flowable.flow.FlowableUtils;
 import com.shahenpc.flowable.service.IFlowTaskService;
 import com.shahenpc.flowable.service.ISysDeployFormService;
 import com.shahenpc.system.domain.SysForm;
+import com.shahenpc.system.domain.censor.CensorProcess;
 import com.shahenpc.system.service.ISysRoleService;
 import com.shahenpc.system.service.ISysUserService;
+import com.shahenpc.system.service.censor.ICensorProcessService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
@@ -77,6 +79,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
 
     @Resource
     private ISysDeployFormService sysInstanceFormService;
+
+    @Resource
+    private ICensorProcessService censorProcessService;
 
     /**
      * 完成任务
@@ -456,6 +461,70 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         return AjaxResult.success(page);
     }
 
+    @Override
+    public AjaxResult newMyProcess(Integer pageNum, Integer pageSize) {
+        Page<FlowTaskDto> page = new Page<>();
+        Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
+        HistoricProcessInstanceQuery historicProcessInstanceQuery = historyService.createHistoricProcessInstanceQuery()
+                .startedBy(userId.toString())
+                .orderByProcessInstanceStartTime()
+                .desc();
+        List<HistoricProcessInstance> historicProcessInstances = historicProcessInstanceQuery.listPage(pageSize * (pageNum - 1), pageSize);
+
+
+        //自定义
+        page.setTotal(historicProcessInstanceQuery.count());
+        List<FlowTaskDto> flowList = new ArrayList<>();
+        for (HistoricProcessInstance hisIns : historicProcessInstances) {
+            CensorProcess censor=censorProcessService.selectCensorProcessByWorkflowId(hisIns.getId());
+            FlowTaskDto flowTask = new FlowTaskDto();
+            flowTask.setCreateTime(hisIns.getStartTime());
+            flowTask.setFinishTime(hisIns.getEndTime());
+            flowTask.setProcInsId(hisIns.getId());
+
+            flowTask.setTaskName(hisIns.getName());
+            flowTask.setAssigneeName("");
+            SysUser startUser = sysUserService.selectUserById(Long.parseLong(hisIns.getStartUserId()));
+            flowTask.setDeptName(startUser.getDept().getDeptName());
+            flowTask.setStartUserName(startUser.getUserName());
+            //flowTask.setResults();
+            // 计算耗时
+            if (Objects.nonNull(hisIns.getEndTime())) {
+                long time = hisIns.getEndTime().getTime() - hisIns.getStartTime().getTime();
+                flowTask.setDuration(getDate(time));
+            } else {
+                long time = System.currentTimeMillis() - hisIns.getStartTime().getTime();
+                flowTask.setDuration(getDate(time));
+            }
+            // 流程定义信息
+            ProcessDefinition pd = repositoryService.createProcessDefinitionQuery()
+                    .processDefinitionId(hisIns.getProcessDefinitionId())
+                    .singleResult();
+            flowTask.setDeployId(pd.getDeploymentId());
+            flowTask.setProcDefName(pd.getName());
+            flowTask.setProcDefVersion(pd.getVersion());
+            flowTask.setCategory(pd.getCategory());
+            flowTask.setProcDefVersion(pd.getVersion());
+            // 当前所处流程 todo: 本地启动放开以下注释
+            List<Task> taskList = taskService.createTaskQuery().processInstanceId(hisIns.getId()).list();
+            if (CollectionUtils.isNotEmpty(taskList)) {
+                flowTask.setTaskId(taskList.get(0).getId());
+                flowTask.setTaskName(taskList.get(0).getName());
+            } else {
+                List<HistoricTaskInstance> historicTaskInstance = historyService.createHistoricTaskInstanceQuery().processInstanceId(hisIns.getId()).orderByHistoricTaskInstanceEndTime().desc().list();
+                flowTask.setTaskId(historicTaskInstance.get(0).getId());
+            }
+            if(censor != null) {
+                flowTask.setSerial(censor.getProcessId());
+                flowTask.setFileType(censor.getFileType());
+                flowTask.setFileName(censor.getFileName());
+            }
+            flowList.add(flowTask);
+        }
+        page.setRecords(flowList);
+        return AjaxResult.success(page);
+    }
+
     /**
      * 取消申请
      *
@@ -548,11 +617,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         Execution execution = runtimeService.createExecutionQuery().executionId(task.getExecutionId()).singleResult();
         String activityId = execution.getActivityId();
         FlowNode flowNode = (FlowNode) bpmnModel.getMainProcess().getFlowElement(activityId);
-
         //记录原活动方向
         List<SequenceFlow> oriSequenceFlows = new ArrayList<>(flowNode.getOutgoingFlows());
-
-
         return AjaxResult.success();
     }
 
@@ -604,19 +670,19 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             flowTask.setStartDeptName(startUser.getDept().getDeptName());
             flowList.add(flowTask);
         }
-
         page.setRecords(flowList);
         return AjaxResult.success(page);
     }
 
     @Override
-    public AjaxResult todoLists(Integer pageNum, Integer pageSize, String type) {
+    public AjaxResult newTodoList(Integer pageNum, Integer pageSize, String type) {
         Page<FlowTaskDto> page = new Page<>();
         Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
         TaskQuery taskQuery = taskService.createTaskQuery()
                 .active()
                 .includeProcessVariables()
-//                .taskAssignee(userId.toString())
+                .taskDefinitionKey(type)
+                .taskAssignee(userId.toString())
                 .orderByTaskCreateTime().desc();
         page.setTotal(taskQuery.count());
         List<Task> taskList = taskQuery.listPage(pageSize * (pageNum - 1), pageSize);
@@ -647,9 +713,15 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             flowTask.setStartUserId(startUser.getNickName());
             flowTask.setStartUserName(startUser.getNickName());
             flowTask.setStartDeptName(startUser.getDept().getDeptName());
+            CensorProcess censor=censorProcessService.selectCensorProcessByWorkflowId(task.getProcessInstanceId());
+            if(censor != null) {
+                flowTask.setSerial(censor.getProcessId());
+                flowTask.setFileType(censor.getFileType());
+                flowTask.setFileName(censor.getFileName());
+            }
             flowList.add(flowTask);
         }
-        flowList.stream().filter(w -> w.getDeployId().equals(type)).collect(Collectors.toList());
+        //flowList.stream().filter(w -> w.getDeployId().equals(type)).collect(Collectors.toList());
         page.setRecords(flowList);
         return AjaxResult.success(page);
     }
@@ -780,6 +852,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 }
             }
             map.put("flowList", hisFlowList);
+            CensorProcess censorData = censorProcessService.selectCensorProcessByWorkflowId(procInsId);
+            map.put("censorData", censorData);
 //            // 查询当前任务是否完成
 //            List<Task> taskList = taskService.createTaskQuery().processInstanceId(procInsId).list();
 //            if (CollectionUtils.isNotEmpty(taskList)) {

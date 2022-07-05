@@ -40,6 +40,13 @@ public class FlowTaskController {
         return flowTaskService.myProcess(pageNum, pageSize);
     }
 
+    @ApiOperation(value = "我发起的流程", response = FlowTaskDto.class)
+    @GetMapping(value = "/new/myProcess")
+    public AjaxResult newMyProcess(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
+                                @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize) {
+        return flowTaskService.newMyProcess(pageNum, pageSize);
+    }
+
     @ApiOperation(value = "取消申请", response = FlowTaskDto.class)
     @PostMapping(value = "/stopProcess")
     public AjaxResult stopProcess(@RequestBody FlowTaskVo flowTaskVo) {
@@ -60,10 +67,10 @@ public class FlowTaskController {
     }
 
     @ApiOperation(value = "获取待办列表", response = FlowTaskDto.class)
-    @GetMapping(value = "/todoLists")
-    public AjaxResult todoLists(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
+    @GetMapping(value = "/new/todoList")
+    public AjaxResult newTodoList(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
                                @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize,@ApiParam(value = "类型1.接收2.受理3.分发4.审查5.反馈", required = true) @RequestParam String type) {
-        return flowTaskService.todoLists(pageNum, pageSize,type);
+        return flowTaskService.newTodoList(pageNum, pageSize,type);
     }
 
     @ApiOperation(value = "获取已办任务", response = FlowTaskDto.class)
