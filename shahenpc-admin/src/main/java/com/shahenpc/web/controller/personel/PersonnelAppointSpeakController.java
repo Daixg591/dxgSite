@@ -1,7 +1,14 @@
 package com.shahenpc.web.controller.personel;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +36,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/system/speak")
+@Api(tags = "人事任免_拟任职发言 ")
 public class PersonnelAppointSpeakController extends BaseController
 {
     @Autowired
@@ -37,9 +45,18 @@ public class PersonnelAppointSpeakController extends BaseController
     /**
      * 查询人事任免_拟任职发言列表
      */
+
+    @ApiOperation("查询-拟任职发言")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "nickName", value = "人员姓名", dataType = "String", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "appointType", value = "任免类型", dataType = "Integer", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "keyWords", value = "关键词", dataType = "String", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "startTime", value = "开始时间", dataType = "String", dataTypeClass = Date.class),
+            @ApiImplicitParam(name = "endTime", value = "结束时间", dataType = "String", dataTypeClass = Date.class)
+    })
     @PreAuthorize("@ss.hasPermi('system:speak:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PersonnelAppointSpeak personnelAppointSpeak)
+    public TableDataInfo list(PersonnelQueryDto personnelAppointSpeak)
     {
         startPage();
         List<PersonnelAppointSpeak> list = personnelAppointSpeakService.selectPersonnelAppointSpeakList(personnelAppointSpeak);
@@ -52,7 +69,7 @@ public class PersonnelAppointSpeakController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:speak:export')")
     @Log(title = "人事任免_拟任职发言", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PersonnelAppointSpeak personnelAppointSpeak)
+    public void export(HttpServletResponse response, PersonnelQueryDto personnelAppointSpeak)
     {
         List<PersonnelAppointSpeak> list = personnelAppointSpeakService.selectPersonnelAppointSpeakList(personnelAppointSpeak);
         ExcelUtil<PersonnelAppointSpeak> util = new ExcelUtil<PersonnelAppointSpeak>(PersonnelAppointSpeak.class);
@@ -62,11 +79,12 @@ public class PersonnelAppointSpeakController extends BaseController
     /**
      * 获取人事任免_拟任职发言详细信息
      */
+    @ApiOperation("详情-拟任职发言")
     @PreAuthorize("@ss.hasPermi('system:speak:query')")
     @GetMapping(value = "/{speakId}")
-    public AjaxResult getInfo(@PathVariable("speakId") Long speakId)
+    public AjaxResult getInfo(@PathVariable("speakId") Long registerId)
     {
-        return AjaxResult.success(personnelAppointSpeakService.selectPersonnelAppointSpeakBySpeakId(speakId));
+        return AjaxResult.success(personnelAppointSpeakService.selectPersonnelAppointSpeakBySpeakId(registerId));
     }
 
     /**
@@ -74,6 +92,7 @@ public class PersonnelAppointSpeakController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:speak:add')")
     @Log(title = "人事任免_拟任职发言", businessType = BusinessType.INSERT)
+    @ApiOperation("新增-拟任职发言")
     @PostMapping
     public AjaxResult add(@RequestBody PersonnelAppointSpeak personnelAppointSpeak)
     {
@@ -85,6 +104,7 @@ public class PersonnelAppointSpeakController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:speak:edit')")
     @Log(title = "人事任免_拟任职发言", businessType = BusinessType.UPDATE)
+    @ApiOperation("更新-拟任职发言")
     @PutMapping
     public AjaxResult edit(@RequestBody PersonnelAppointSpeak personnelAppointSpeak)
     {
@@ -94,11 +114,12 @@ public class PersonnelAppointSpeakController extends BaseController
     /**
      * 删除人事任免_拟任职发言
      */
+    @ApiOperation("删除-拟任职发言")
     @PreAuthorize("@ss.hasPermi('system:speak:remove')")
     @Log(title = "人事任免_拟任职发言", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{speakIds}")
-    public AjaxResult remove(@PathVariable Long[] speakIds)
+	@DeleteMapping("/{registerIds}")
+    public AjaxResult remove(@PathVariable Long[] registerIds)
     {
-        return toAjax(personnelAppointSpeakService.deletePersonnelAppointSpeakBySpeakIds(speakIds));
+        return toAjax(personnelAppointSpeakService.deletePersonnelAppointSpeakBySpeakIds(registerIds));
     }
 }

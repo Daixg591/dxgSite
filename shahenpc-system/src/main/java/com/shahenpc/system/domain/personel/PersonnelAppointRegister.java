@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.shahenpc.common.core.domain.entity.SysUser;
+import com.shahenpc.common.core.domain.model.BaseUserEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -15,22 +16,33 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-04
  */
-public class PersonnelAppointRegister extends BaseEntity {
+public class PersonnelAppointRegister extends BaseEntity{
     private static final long serialVersionUID = 1L;
 
     private SysUser sysUser;
 
-
-    /** 姓名 */
+    /**
+     * 姓名
+     */
+    @Excel(name = "姓名")
     private String nickName;
 
-    /** 性别 */
+    /**
+     * 性别
+     */
+    @Excel(name = "性別", readConverterExp = "0=男,1=女,2=未知")
     private String sex;
 
-    /** 手机号 */
+    /**
+     * 手机号
+     */
+    @Excel(name = "手机号")
     private String phonenumber;
 
-    /** 身份证号 */
+    /**
+     * 身份证号
+     */
+    @Excel(name = "身份证号")
     private String idCard;
 
     /**
@@ -41,13 +53,14 @@ public class PersonnelAppointRegister extends BaseEntity {
     /**
      * 用户Id
      */
-    @Excel(name = "用户Id")
+//    @Excel(name = "用户Id")
     private Long userId;
 
     /**
      * 任免类型
      */
-    @Excel(name = "任免类型")
+    @Excel(name = "任免类型", readConverterExp = "1=选举,2=任免,3=罢免,4=推选,5=决定任免,6=决定人选," +
+            "7=通过人选,8=决定代理人选,9=批准任免,10=补充任命,11=接受辞职,12=撤销职务")
     private String appointType;
 
     /**
@@ -70,19 +83,19 @@ public class PersonnelAppointRegister extends BaseEntity {
     /**
      * 应到人数
      */
-    @Excel(name = "应到人数")
+//    @Excel(name = "应到人数")
     private Long comePersonCnt;
 
     /**
      * 监票人
      */
-    @Excel(name = "监票人")
+//    @Excel(name = "监票人")
     private String scrutineer;
 
     /**
      * 计票人
      */
-    @Excel(name = "计票人")
+//    @Excel(name = "计票人")
     private String pollClerk;
 
     /**
@@ -90,14 +103,18 @@ public class PersonnelAppointRegister extends BaseEntity {
      */
     private String fileList;
 
-    /** 任免时间 */
+    /**
+     * 任免时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "任免时间")
     private Date regTime;
 
     /**
      * 投票时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "投票时间", width = 30, dateFormat = "yyyy-MM-dd")
+//    @Excel(name = "投票时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date voteTime;
 
     public void setRegisterId(Long registerId) {
@@ -205,7 +222,6 @@ public class PersonnelAppointRegister extends BaseEntity {
                 .append("sex", getSex())
                 .append("phonenumber", getPhonenumber())
                 .append("idCard", getIdCard())
-
                 .toString();
     }
 

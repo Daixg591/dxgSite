@@ -1,5 +1,6 @@
 package com.shahenpc.web.controller.personel;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
@@ -10,6 +11,8 @@ import com.shahenpc.system.domain.personel.PersonnelAppointEduLog;
 import com.shahenpc.system.service.ISysUserService;
 import com.shahenpc.system.service.personel.IPersonnelAppointEduLogService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,16 +35,15 @@ import com.shahenpc.common.core.page.TableDataInfo;
 
 /**
  * 人事任免_任免记录Controller
- * 
+ *
  * @author ruoyi
  * @date 2022-07-04
  */
-@Api(tags="人事任免_信息登记")
+@Api(tags = "人事任免_信息登记 Done √")
 @ApiOperation("人事任免_信息登记")
 @RestController
 @RequestMapping("/system/register")
-public class PersonnelAppointRegisterController extends BaseController
-{
+public class PersonnelAppointRegisterController extends BaseController {
     @Autowired
     private IPersonnelAppointRegisterService personnelAppointRegisterService;
 
@@ -54,15 +56,20 @@ public class PersonnelAppointRegisterController extends BaseController
     /**
      * 查询人事任免_任免记录列表
      */
-
     @PreAuthorize("@ss.hasPermi('system:register:list')")
     @GetMapping("/list")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "appointType", value = "任免类型", dataType = "Integer", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "nickName", value = "人员姓名", dataType = "String", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "keyWords", value = "关键词", dataType = "String", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "startTime", value = "开始时间", dataType = "String", dataTypeClass = Date.class),
+            @ApiImplicitParam(name = "endTime", value = "结束时间", dataType = "String", dataTypeClass = Date.class)
+    })
     @ApiOperation("任免列表")
-    public TableDataInfo list(PersonnelAppointRegister personnelAppointRegister)
-    {
+
+    public TableDataInfo list(PersonnelAppointRegister personnelAppointRegister) {
         startPage();
         List<PersonnelAppointRegister> list = personnelAppointRegisterService.selectPersonnelAppointRegisterList(personnelAppointRegister);
-
         return getDataTable(list);
     }
 
@@ -73,8 +80,7 @@ public class PersonnelAppointRegisterController extends BaseController
     @ApiOperation("批量导出")
     @Log(title = "人事任免_任免记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PersonnelAppointRegister personnelAppointRegister)
-    {
+    public void export(HttpServletResponse response, PersonnelAppointRegister personnelAppointRegister) {
         List<PersonnelAppointRegister> list = personnelAppointRegisterService.selectPersonnelAppointRegisterList(personnelAppointRegister);
         ExcelUtil<PersonnelAppointRegister> util = new ExcelUtil<PersonnelAppointRegister>(PersonnelAppointRegister.class);
         util.exportExcel(response, list, "人事任免_任免记录数据");
@@ -86,15 +92,14 @@ public class PersonnelAppointRegisterController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:register:query')")
     @GetMapping(value = "/{registerId}")
     @ApiOperation("任免详情")
-    public AjaxResult getInfo(@PathVariable("registerId") Long registerId)
-    {
-        PersonnelAppointRegister regEntity=personnelAppointRegisterService.selectPersonnelAppointRegisterByRegisterId(registerId);
-        SysUser userEntity=userService.selectUserById(regEntity.getUserId());
-        List<PersonnelAppointEduLog> eduList=eduLogService.selectPersonnelAppointEduLogList(null);
+    public AjaxResult getInfo(@PathVariable("registerId") Long registerId) {
+        PersonnelAppointRegister regEntity = personnelAppointRegisterService.selectPersonnelAppointRegisterByRegisterId(registerId);
+        SysUser userEntity = userService.selectUserById(regEntity.getUserId());
+        List<PersonnelAppointEduLog> eduList = eduLogService.selectPersonnelAppointEduLogList(null);
 
-        PersonalInfo res=new PersonalInfo();
+        PersonalInfo res = new PersonalInfo();
         res.setRegEntity(regEntity);
-       regEntity.setSysUser(userEntity);
+        regEntity.setSysUser(userEntity);
         res.setEduLogList(eduList);
 
         return AjaxResult.success(res);
@@ -107,8 +112,7 @@ public class PersonnelAppointRegisterController extends BaseController
     @Log(title = "人事任免_任免记录", businessType = BusinessType.INSERT)
     @ApiOperation("新增任免")
     @PostMapping
-    public AjaxResult add(@RequestBody PersonnelAppointRegister personnelAppointRegister)
-    {
+    public AjaxResult add(@RequestBody PersonnelAppointRegister personnelAppointRegister) {
         return toAjax(personnelAppointRegisterService.insertPersonnelAppointRegister(personnelAppointRegister));
     }
 
@@ -119,8 +123,7 @@ public class PersonnelAppointRegisterController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:register:edit')")
     @Log(title = "人事任免_任免记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody PersonnelAppointRegister personnelAppointRegister)
-    {
+    public AjaxResult edit(@RequestBody PersonnelAppointRegister personnelAppointRegister) {
         return toAjax(personnelAppointRegisterService.updatePersonnelAppointRegister(personnelAppointRegister));
     }
 
@@ -130,9 +133,8 @@ public class PersonnelAppointRegisterController extends BaseController
     @ApiOperation("删除任免")
     @PreAuthorize("@ss.hasPermi('system:register:remove')")
     @Log(title = "人事任免_任免记录", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{registerIds}")
-    public AjaxResult remove(@PathVariable Long[] registerIds)
-    {
+    @DeleteMapping("/{registerIds}")
+    public AjaxResult remove(@PathVariable Long[] registerIds) {
         return toAjax(personnelAppointRegisterService.deletePersonnelAppointRegisterByRegisterIds(registerIds));
     }
 }

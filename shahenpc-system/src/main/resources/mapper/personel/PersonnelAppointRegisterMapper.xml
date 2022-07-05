@@ -6,30 +6,30 @@
 
 
     <resultMap type="SysUser" id="SysUserResult">
-        <id     property="userId"       column="user_id"      />
-        <result property="userName"     column="user_name"    />
-        <result property="nickName"     column="nick_name"    />
-        <result property="phonenumber"  column="phonenumber"  />
-        <result property="sex"          column="sex"          />
-        <result property="avatar"       column="avatar"       />
-        <result property="idCard"    column="id_card"    />
-        <result property="identity"    column="identity"    />
-        <result property="openId"    column="open_id"    />
-        <result property="bornDate"    column="born_date"    />
-        <result property="nativePlace"    column="native_place"    />
-        <result property="bornPlace"    column="born_place"    />
-        <result property="nation"    column="nation"    />
-        <result property="partyDate"    column="party_date"    />
-        <result property="jobDate"    column="job_date"    />
-        <result property="healthState"    column="health_state"    />
-        <result property="duty"    column="duty"    />
-        <result property="expert"    column="expert"    />
-        <result property="resume"    column="resume"    />
-        <result property="createBy"     column="create_by"    />
-        <result property="createTime"   column="create_time"  />
-        <result property="updateBy"     column="update_by"    />
-        <result property="updateTime"   column="update_time"  />
-        <result property="remark"       column="remark"       />
+        <id property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="phonenumber" column="phonenumber"/>
+        <result property="sex" column="sex"/>
+        <result property="avatar" column="avatar"/>
+        <result property="idCard" column="id_card"/>
+        <result property="identity" column="identity"/>
+        <result property="openId" column="open_id"/>
+        <result property="bornDate" column="born_date"/>
+        <result property="nativePlace" column="native_place"/>
+        <result property="bornPlace" column="born_place"/>
+        <result property="nation" column="nation"/>
+        <result property="partyDate" column="party_date"/>
+        <result property="jobDate" column="job_date"/>
+        <result property="healthState" column="health_state"/>
+        <result property="duty" column="duty"/>
+        <result property="expert" column="expert"/>
+        <result property="resume" column="resume"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
     </resultMap>
     <resultMap type="PersonnelAppointRegister" id="PersonnelAppointRegisterResult">
         <result property="registerId" column="register_id"/>
@@ -49,7 +49,7 @@
         <result property="voteTime" column="vote_time"/>
         <result property="fileList" column="file_list"/>
         <result property="regTime" column="reg_time"/>
-        <association property="sysUser" column="user_id" javaType="SysUser"  resultMap="SysUserResult"></association>
+        <association property="sysUser" column="user_id" javaType="SysUser" resultMap="SysUserResult"></association>
     </resultMap>
 
     <sql id="selectPersonnelAppointRegisterVo">
@@ -75,10 +75,17 @@
     </sql>
 
     <sql id="selectPersonnelRegListVo">
-        select r.appoint_type,r.old_duty,r.handle_duty,r.reg_time,r.create_by,
-               u.nick_name,u.sex,u.phonenumber,u.id_card
-        from personnel_appoint_register  r
-                 LEFT JOIN sys_user u  on r.user_id=u.user_id
+        select r.appoint_type,
+               r.old_duty,
+               r.handle_duty,
+               r.reg_time,
+               r.create_by,
+               u.nick_name,
+               u.sex,
+               u.phonenumber,
+               u.id_card
+        from personnel_appoint_register r
+                 LEFT JOIN sys_user u on r.user_id = u.user_id
     </sql>
 
     <select id="selectPersonnelAppointRegisterList" parameterType="PersonnelAppointRegister"
@@ -87,8 +94,12 @@
         <where>
             <if test="userId != null ">and r.user_id = #{userId}</if>
             <if test="appointType != null  and appointType != ''">and r.appoint_type = #{appointType}</if>
-            <if test="oldDuty != null  and oldDuty != ''">and r.old_duty = #{oldDuty}</if>
-            <if test="handleDuty != null  and handleDuty != ''">and r.handle_duty = #{handleDuty}</if>
+            <if test="nickName != null  and nickName != ''">and u.nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="phonenumber != null  and phonenumber != ''">and u.phonenumber like concat('%', #{phonenumber}, '%')</if>
+            <if test="startTime != null ">and r.reg_time <![CDATA[ >= ]]> #{startTime}  </if>
+            <if test="endTime != null ">and r.reg_time <![CDATA[ <= ]]> #{endTime}  </if>
+            <if test="keyWords != null  and keyWords != ''"> and (u.nick_name like concat('%', #{keyWords}, '%') or
+            r.old_duty like concat('%', #{keyWords}, '%') or r.handle_duty like concat('%', #{keyWords}, '%') )</if>
         </where>
     </select>
 

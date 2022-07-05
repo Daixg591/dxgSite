@@ -1,7 +1,14 @@
 package com.shahenpc.web.controller.personel;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +34,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  * @author ruoyi
  * @date 2022-07-04
  */
+@Api(tags = "人事任免_议案提请 Done √")
 @RestController
 @RequestMapping("/system/bill")
 public class PersonnelAppointBillController extends BaseController
@@ -39,7 +47,15 @@ public class PersonnelAppointBillController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:bill:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PersonnelAppointBill personnelAppointBill)
+    @ApiOperation("查询-议案提请")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "nickName", value = "人员姓名", dataType = "String", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "appointType", value = "任免类型", dataType = "Integer", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "keyWords", value = "关键词", dataType = "String", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "startTime", value = "开始时间", dataType = "String", dataTypeClass = Date.class),
+            @ApiImplicitParam(name = "endTime", value = "结束时间", dataType = "String", dataTypeClass = Date.class)
+    })
+    public TableDataInfo list(PersonnelQueryDto personnelAppointBill)
     {
         startPage();
         List<PersonnelAppointBill> list = personnelAppointBillService.selectPersonnelAppointBillList(personnelAppointBill);
@@ -52,7 +68,7 @@ public class PersonnelAppointBillController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:bill:export')")
     @Log(title = "人事任免_议案提请", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PersonnelAppointBill personnelAppointBill)
+    public void export(HttpServletResponse response, PersonnelQueryDto personnelAppointBill)
     {
         List<PersonnelAppointBill> list = personnelAppointBillService.selectPersonnelAppointBillList(personnelAppointBill);
         ExcelUtil<PersonnelAppointBill> util = new ExcelUtil<PersonnelAppointBill>(PersonnelAppointBill.class);
@@ -62,16 +78,19 @@ public class PersonnelAppointBillController extends BaseController
     /**
      * 获取人事任免_议案提请详细信息
      */
+
+    @ApiOperation("详情-议案提请")
     @PreAuthorize("@ss.hasPermi('system:bill:query')")
-    @GetMapping(value = "/{billId}")
-    public AjaxResult getInfo(@PathVariable("billId") Long billId)
+    @GetMapping(value = "/{registerId}")
+    public AjaxResult getInfo(@PathVariable("registerId") Long registerId)
     {
-        return AjaxResult.success(personnelAppointBillService.selectPersonnelAppointBillByBillId(billId));
+        return AjaxResult.success(personnelAppointBillService.selectPersonnelAppointBillByBillId(registerId));
     }
 
     /**
      * 新增人事任免_议案提请
      */
+    @ApiOperation("新增-议案提请")
     @PreAuthorize("@ss.hasPermi('system:bill:add')")
     @Log(title = "人事任免_议案提请", businessType = BusinessType.INSERT)
     @PostMapping
@@ -83,6 +102,7 @@ public class PersonnelAppointBillController extends BaseController
     /**
      * 修改人事任免_议案提请
      */
+    @ApiOperation("更新-议案提请")
     @PreAuthorize("@ss.hasPermi('system:bill:edit')")
     @Log(title = "人事任免_议案提请", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -94,11 +114,12 @@ public class PersonnelAppointBillController extends BaseController
     /**
      * 删除人事任免_议案提请
      */
+    @ApiOperation("删除-议案提请")
     @PreAuthorize("@ss.hasPermi('system:bill:remove')")
     @Log(title = "人事任免_议案提请", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{billIds}")
-    public AjaxResult remove(@PathVariable Long[] billIds)
+	@DeleteMapping("/{registerIds}")
+    public AjaxResult remove(@PathVariable Long[] registerIds)
     {
-        return toAjax(personnelAppointBillService.deletePersonnelAppointBillByBillIds(billIds));
+        return toAjax(personnelAppointBillService.deletePersonnelAppointBillByBillIds(registerIds));
     }
 }

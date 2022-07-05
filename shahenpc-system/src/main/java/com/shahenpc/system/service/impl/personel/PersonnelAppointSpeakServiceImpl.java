@@ -2,6 +2,7 @@ package com.shahenpc.system.service.impl.personel;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.personel.PersonnelAppointSpeakMapper;
@@ -23,13 +24,13 @@ public class PersonnelAppointSpeakServiceImpl implements IPersonnelAppointSpeakS
     /**
      * 查询人事任免_拟任职发言
      * 
-     * @param speakId 人事任免_拟任职发言主键
+     * @param registerId 人事任免_拟任职发言主键
      * @return 人事任免_拟任职发言
      */
     @Override
-    public PersonnelAppointSpeak selectPersonnelAppointSpeakBySpeakId(Long speakId)
+    public PersonnelAppointSpeak selectPersonnelAppointSpeakBySpeakId(Long registerId)
     {
-        return personnelAppointSpeakMapper.selectPersonnelAppointSpeakBySpeakId(speakId);
+        return personnelAppointSpeakMapper.selectPersonnelAppointSpeakBySpeakId(registerId);
     }
 
     /**
@@ -39,7 +40,7 @@ public class PersonnelAppointSpeakServiceImpl implements IPersonnelAppointSpeakS
      * @return 人事任免_拟任职发言
      */
     @Override
-    public List<PersonnelAppointSpeak> selectPersonnelAppointSpeakList(PersonnelAppointSpeak personnelAppointSpeak)
+    public List<PersonnelAppointSpeak> selectPersonnelAppointSpeakList(PersonnelQueryDto personnelAppointSpeak)
     {
         return personnelAppointSpeakMapper.selectPersonnelAppointSpeakList(personnelAppointSpeak);
     }
@@ -73,13 +74,13 @@ public class PersonnelAppointSpeakServiceImpl implements IPersonnelAppointSpeakS
     /**
      * 批量删除人事任免_拟任职发言
      * 
-     * @param speakIds 需要删除的人事任免_拟任职发言主键
+     * @param registerIds 需要删除的人事任免_拟任职发言主键
      * @return 结果
      */
     @Override
-    public int deletePersonnelAppointSpeakBySpeakIds(Long[] speakIds)
+    public int deletePersonnelAppointSpeakBySpeakIds(Long[] registerIds)
     {
-        return personnelAppointSpeakMapper.deletePersonnelAppointSpeakBySpeakIds(speakIds);
+        return personnelAppointSpeakMapper.deletePersonnelAppointSpeakBySpeakIds(registerIds);
     }
 
     /**
