@@ -537,4 +537,15 @@ public class SysUserServiceImpl implements ISysUserService
         }
         return successMsg.toString();
     }
+
+    @Override
+    public SysUser selectUserByuserIds(String userIds) {
+        return userMapper.selectUserByuserIds(userIds);
+    }
+
+    @Override
+    public List<SysUser> selectUserByUserIds(String userIds) {
+        return userMapper.selectUserByUserIds(userIds);
+    }
+
 }

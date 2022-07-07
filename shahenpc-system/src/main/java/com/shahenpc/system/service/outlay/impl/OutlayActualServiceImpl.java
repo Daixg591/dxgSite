@@ -1,7 +1,17 @@
 package com.shahenpc.system.service.outlay.impl;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.outlay.OutlayAlarm;
+import com.shahenpc.system.domain.outlay.OutlayAlarmSetting;
+import com.shahenpc.system.domain.outlay.OutlayBudget;
+import com.shahenpc.system.domain.outlay.dto.ActualListConutDto;
+import com.shahenpc.system.domain.outlay.dto.CountDto;
+import com.shahenpc.system.mapper.outlay.OutlayAlarmMapper;
+import com.shahenpc.system.mapper.outlay.OutlayAlarmSettingMapper;
+import com.shahenpc.system.mapper.outlay.OutlayBudgetMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.outlay.OutlayActualMapper;
@@ -19,7 +29,12 @@ public class OutlayActualServiceImpl implements IOutlayActualService
 {
     @Autowired
     private OutlayActualMapper outlayActualMapper;
-
+    @Autowired
+    private OutlayAlarmSettingMapper outlayAlarmSettingMapper;
+    @Autowired
+    private OutlayBudgetMapper outlayBudgetMapper;
+    @Autowired
+    private OutlayAlarmMapper outlayAlarmMapper;
     /**
      * 查询实际支出
      * 
@@ -54,6 +69,20 @@ public class OutlayActualServiceImpl implements IOutlayActualService
     public int insertOutlayActual(OutlayActual outlayActual)
     {
         outlayActual.setCreateTime(DateUtils.getNowDate());
+        OutlayBudget budget=outlayBudgetMapper.selectOutlayBudgetByBudgetId(outlayActual.getBudgetId());
+        OutlayAlarmSetting setting= outlayAlarmSettingMapper.selectByBudgetType(budget.getBudgetType());
+        BigDecimal divide = budget.getAmount().divide(outlayActual.getAmount(), 2, BigDecimal.ROUND_HALF_UP);
+        if(divide.compareTo(setting.getRatio()) == -1){
+            //预支  和 实际 支出比例 小于 规则比例  就增加到
+            OutlayAlarm alarm = new OutlayAlarm();
+            alarm.setAlarmId(outlayActual.getActualId());
+            alarm.setBudgetId(budget.getBudgetId());
+            alarm.setSettingId(setting.getSettingId());
+            alarm.setCause("实际支出 超出 预计支出 比例");
+            alarm.setBeyondRatio(divide.subtract(setting.getRatio()).toString());
+            outlayAlarmMapper.insertOutlayAlarm(alarm);
+        }
+        //查出 规则
         return outlayActualMapper.insertOutlayActual(outlayActual);
     }
 
@@ -92,5 +121,16 @@ public class OutlayActualServiceImpl implements IOutlayActualService
     public int deleteOutlayActualByActualId(Long actualId)
     {
         return outlayActualMapper.deleteOutlayActualByActualId(actualId);
+    }
+
+
+    @Override
+    public ActualListConutDto listCount() {
+        return outlayActualMapper.getListCount();
+    }
+
+    @Override
+    public CountDto getCount() {
+        return outlayActualMapper.selectByCountAndMonth();
     }
 }

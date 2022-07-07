@@ -34,17 +34,29 @@ import com.shahenpc.common.core.page.TableDataInfo;
  */
 @Api(tags = "预算管理")
 @RestController
-@RequestMapping("/system/budget")
+@RequestMapping("/outlay/budget")
 public class OutlayBudgetController extends BaseController
 {
     @Autowired
     private IOutlayBudgetService outlayBudgetService;
 
+
+
+    /**
+     * 查询预算列表
+     */
+    @ApiOperation("累计记录and本月记录")
+    @PreAuthorize("@ss.hasPermi('outlay:budget:count')")
+    @GetMapping("/count")
+    public AjaxResult getCount()
+    {
+        return AjaxResult.success(outlayBudgetService.getCount());
+    }
     /**
      * 查询预算列表
      */
     @ApiOperation("预算支出列表")
-    @PreAuthorize("@ss.hasPermi('system:budget:list')")
+    @PreAuthorize("@ss.hasPermi('outlay:budget:list')")
     @GetMapping("/list")
     public TableDataInfo list(OutlayBudget outlayBudget)
     {
@@ -56,7 +68,7 @@ public class OutlayBudgetController extends BaseController
     /**
      * 导出预算列表
      */
-    @PreAuthorize("@ss.hasPermi('system:budget:export')")
+    @PreAuthorize("@ss.hasPermi('outlay:budget:export')")
     @Log(title = "预算", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, OutlayBudget outlayBudget)
@@ -71,7 +83,7 @@ public class OutlayBudgetController extends BaseController
      */
     @ApiOperation("预算支出详情")
     @ApiImplicitParam(name = "budgetId", value = "预计ID", required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class)
-    @PreAuthorize("@ss.hasPermi('system:budget:query')")
+    @PreAuthorize("@ss.hasPermi('outlay:budget:query')")
     @GetMapping(value = "/{budgetId}")
     public AjaxResult getInfo(@PathVariable("budgetId") Long budgetId)
     {
@@ -94,7 +106,7 @@ public class OutlayBudgetController extends BaseController
             @ApiImplicitParam(name = "proposedUserId", value = "提出人", dataType = "String", dataTypeClass = String.class),
             @ApiImplicitParam(name = "beyondRatio", value = "比例", dataType = "String", dataTypeClass = String.class)
     })
-    @PreAuthorize("@ss.hasPermi('system:budget:add')")
+    @PreAuthorize("@ss.hasPermi('outlay:budget:add')")
     @Log(title = "预算", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody OutlayBudget outlayBudget)
@@ -106,7 +118,7 @@ public class OutlayBudgetController extends BaseController
      * 修改预算
      */
     @ApiOperation("修改预支用户")
-    @PreAuthorize("@ss.hasPermi('system:budget:edit')")
+    @PreAuthorize("@ss.hasPermi('outlay:budget:edit')")
     @Log(title = "预算", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody OutlayBudget outlayBudget)
@@ -119,7 +131,7 @@ public class OutlayBudgetController extends BaseController
      */
     @ApiOperation("删除预支记录")
     @ApiImplicitParam(name = "budgetId", value = "预支id", required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class)
-    @PreAuthorize("@ss.hasPermi('system:budget:remove')")
+    @PreAuthorize("@ss.hasPermi('outlay:budget:remove')")
     @Log(title = "预算", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{budgetIds}")
     public AjaxResult remove(@PathVariable Long[] budgetIds)

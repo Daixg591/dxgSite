@@ -109,4 +109,15 @@ public class FlowTaskDto implements Serializable {
     private String results;
     @ApiModelProperty("序号")
     private Long serial;
+    @ApiModelProperty("标题")
+    private String title;
+    @ApiModelProperty("内容")
+    private String content;
+    @ApiModelProperty("提议人id")
+    private String suggestUserId;
+    @ApiModelProperty("提议人")
+    private String suggestUserName;
+    @ApiModelProperty("")
+    private Integer motionType;
+
 }

@@ -124,4 +124,12 @@ public interface SysUserMapper
      * @return 结果
      */
     public SysUser checkEmailUnique(String email);
+
+    /**
+     *
+     */
+    public SysUser selectUserByuserIds(String userIds);
+
+
+    public List<SysUser> selectUserByUserIds(@Param("userIds") String userIds);
 }

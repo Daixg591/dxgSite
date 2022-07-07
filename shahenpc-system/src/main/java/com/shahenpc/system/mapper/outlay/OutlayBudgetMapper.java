@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper.outlay;
 
 import java.util.List;
 import com.shahenpc.system.domain.outlay.OutlayBudget;
+import com.shahenpc.system.domain.outlay.dto.CountDto;
 
 /**
  * 预算Mapper接口
@@ -58,4 +59,6 @@ public interface OutlayBudgetMapper
      * @return 结果
      */
     public int deleteOutlayBudgetByBudgetIds(Long[] budgetIds);
+
+    public CountDto selectByCountAndMonth();
 }

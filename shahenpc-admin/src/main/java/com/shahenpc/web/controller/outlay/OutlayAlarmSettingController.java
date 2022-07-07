@@ -34,7 +34,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  */
 @Api(tags = "预算告警管理")
 @RestController
-@RequestMapping("/system/setting")
+@RequestMapping("/outlay/setting")
 public class OutlayAlarmSettingController extends BaseController
 {
     @Autowired
@@ -44,7 +44,7 @@ public class OutlayAlarmSettingController extends BaseController
      * 查询告警设置-规则列表
      */
     @ApiOperation("告警规则列表")
-    @PreAuthorize("@ss.hasPermi('system:setting:list')")
+    @PreAuthorize("@ss.hasPermi('outlay:setting:list')")
     @GetMapping("/list")
     public TableDataInfo list(OutlayAlarmSetting outlayAlarmSetting)
     {
@@ -56,7 +56,7 @@ public class OutlayAlarmSettingController extends BaseController
     /**
      * 导出告警设置-规则列表
      */
-    @PreAuthorize("@ss.hasPermi('system:setting:export')")
+    @PreAuthorize("@ss.hasPermi('outlay:setting:export')")
     @Log(title = "告警设置-规则", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, OutlayAlarmSetting outlayAlarmSetting)
@@ -72,7 +72,7 @@ public class OutlayAlarmSettingController extends BaseController
 
     @ApiOperation("告警规则详情")
     @ApiImplicitParam(name = "alarmId", value = "告警ID", required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class)
-    @PreAuthorize("@ss.hasPermi('system:setting:query')")
+    @PreAuthorize("@ss.hasPermi('outlay:setting:query')")
     @GetMapping(value = "/{settingId}")
     public AjaxResult getInfo(@PathVariable("settingId") Long settingId)
     {
@@ -89,7 +89,7 @@ public class OutlayAlarmSettingController extends BaseController
             @ApiImplicitParam(name = "budgetType", value = "预支类型", dataType = "Integer", dataTypeClass = Integer.class),
             @ApiImplicitParam(name = "ratio", value = "比例", dataType = "String", dataTypeClass = String.class),
     })
-    @PreAuthorize("@ss.hasPermi('system:setting:add')")
+    @PreAuthorize("@ss.hasPermi('outlay:setting:add')")
     @Log(title = "告警设置-规则", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody OutlayAlarmSetting outlayAlarmSetting)
@@ -101,7 +101,7 @@ public class OutlayAlarmSettingController extends BaseController
      * 修改告警设置-规则
      */
     @ApiOperation("修改告警规则")
-    @PreAuthorize("@ss.hasPermi('system:setting:edit')")
+    @PreAuthorize("@ss.hasPermi('outlay:setting:edit')")
     @Log(title = "告警设置-规则", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody OutlayAlarmSetting outlayAlarmSetting)
@@ -113,7 +113,7 @@ public class OutlayAlarmSettingController extends BaseController
      * 删除告警设置-规则
      */
     @ApiOperation("删除告警规则")
-    @PreAuthorize("@ss.hasPermi('system:setting:remove')")
+    @PreAuthorize("@ss.hasPermi('outlay:setting:remove')")
     @Log(title = "告警设置-规则", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{settingIds}")
     public AjaxResult remove(@PathVariable Long[] settingIds)

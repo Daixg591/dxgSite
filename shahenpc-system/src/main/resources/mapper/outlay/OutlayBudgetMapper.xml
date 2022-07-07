@@ -115,4 +115,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{budgetId}
         </foreach>
     </delete>
+    <!-- ==================================分割线-->
+    <select id="selectByCountAndMonth" resultType="com.shahenpc.system.domain.outlay.dto.CountDto">
+        SELECT
+                (SELECT COUNT(s.budget_id))AS countPen,
+                (SELECT COUNT(a1.budget_id) FROM outlay_actual a1  WHERE DATE_FORMAT(a1.create_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m'))AS monthPen
+        FROM outlay_budget s
+    </select>
 </mapper>

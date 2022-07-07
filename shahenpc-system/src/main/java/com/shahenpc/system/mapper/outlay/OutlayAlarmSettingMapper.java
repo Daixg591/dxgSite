@@ -58,4 +58,6 @@ public interface OutlayAlarmSettingMapper
      * @return 结果
      */
     public int deleteOutlayAlarmSettingBySettingIds(Long[] settingIds);
+
+    public OutlayAlarmSetting selectByBudgetType(Integer budgetType);
 }

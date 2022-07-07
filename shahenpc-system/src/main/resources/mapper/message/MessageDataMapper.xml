@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.message.MessageDataMapper">
+    
+    <resultMap type="MessageData" id="MessageDataResult">
+        <result property="id"    column="id"    />
+        <result property="sendUserId"    column="send_user_id"    />
+        <result property="receiveUserId"    column="receive_user_id"    />
+        <result property="type"    column="type"    />
+        <result property="title"    column="title"    />
+        <result property="message"    column="message"    />
+        <result property="jumpParam"    column="jump_param"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+    </resultMap>
+
+    <sql id="selectMessageDataVo">
+        select id, send_user_id, receive_user_id, type, title, message, jump_param, remark, create_time, update_by, update_time, create_by from message_data
+    </sql>
+
+    <select id="selectMessageDataList" parameterType="MessageData" resultMap="MessageDataResult">
+        <include refid="selectMessageDataVo"/>
+        <where>  
+            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="message != null  and message != ''"> and message = #{message}</if>
+            <if test="jumpParam != null  and jumpParam != ''"> and jump_param = #{jumpParam}</if>
+        </where>
+    </select>
+    
+    <select id="selectMessageDataById" parameterType="Long" resultMap="MessageDataResult">
+        <include refid="selectMessageDataVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMessageData" parameterType="MessageData" useGeneratedKeys="true" keyProperty="id">
+        insert into message_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sendUserId != null">send_user_id,</if>
+            <if test="receiveUserId != null">receive_user_id,</if>
+            <if test="type != null">type,</if>
+            <if test="title != null">title,</if>
+            <if test="message != null">message,</if>
+            <if test="jumpParam != null">jump_param,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sendUserId != null">#{sendUserId},</if>
+            <if test="receiveUserId != null">#{receiveUserId},</if>
+            <if test="type != null">#{type},</if>
+            <if test="title != null">#{title},</if>
+            <if test="message != null">#{message},</if>
+            <if test="jumpParam != null">#{jumpParam},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMessageData" parameterType="MessageData">
+        update message_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
+            <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="message != null">message = #{message},</if>
+            <if test="jumpParam != null">jump_param = #{jumpParam},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMessageDataById" parameterType="Long">
+        delete from message_data where id = #{id}
+    </delete>
+
+    <delete id="deleteMessageDataByIds" parameterType="String">
+        delete from message_data where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

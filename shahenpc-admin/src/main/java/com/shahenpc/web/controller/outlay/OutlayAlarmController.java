@@ -31,7 +31,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  */
 @Api(tags = "预警后存储表信息")
 @RestController
-@RequestMapping("/system/alarm")
+@RequestMapping("/outlay/alarm")
 public class OutlayAlarmController extends BaseController
 {
     @Autowired
@@ -40,7 +40,7 @@ public class OutlayAlarmController extends BaseController
     /**
      * 查询预警后存储数据列表
      */
-    @PreAuthorize("@ss.hasPermi('system:alarm:list')")
+    @PreAuthorize("@ss.hasPermi('outlay:alarm:list')")
     @GetMapping("/list")
     public TableDataInfo list(OutlayAlarm outlayAlarm)
     {
@@ -52,7 +52,7 @@ public class OutlayAlarmController extends BaseController
     /**
      * 导出预警后存储数据列表
      */
-    @PreAuthorize("@ss.hasPermi('system:alarm:export')")
+    @PreAuthorize("@ss.hasPermi('outlay:alarm:export')")
     @Log(title = "预警后存储数据", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, OutlayAlarm outlayAlarm)
@@ -65,7 +65,7 @@ public class OutlayAlarmController extends BaseController
     /**
      * 获取预警后存储数据详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:alarm:query')")
+    @PreAuthorize("@ss.hasPermi('outlay:alarm:query')")
     @GetMapping(value = "/{alarmId}")
     public AjaxResult getInfo(@PathVariable("alarmId") Long alarmId)
     {
@@ -75,7 +75,7 @@ public class OutlayAlarmController extends BaseController
     /**
      * 新增预警后存储数据
      */
-    @PreAuthorize("@ss.hasPermi('system:alarm:add')")
+    @PreAuthorize("@ss.hasPermi('outlay:alarm:add')")
     @Log(title = "预警后存储数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody OutlayAlarm outlayAlarm)
@@ -86,7 +86,7 @@ public class OutlayAlarmController extends BaseController
     /**
      * 修改预警后存储数据
      */
-    @PreAuthorize("@ss.hasPermi('system:alarm:edit')")
+    @PreAuthorize("@ss.hasPermi('outlay:alarm:edit')")
     @Log(title = "预警后存储数据", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody OutlayAlarm outlayAlarm)
@@ -97,7 +97,7 @@ public class OutlayAlarmController extends BaseController
     /**
      * 删除预警后存储数据
      */
-    @PreAuthorize("@ss.hasPermi('system:alarm:remove')")
+    @PreAuthorize("@ss.hasPermi('outlay:alarm:remove')")
     @Log(title = "预警后存储数据", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{alarmIds}")
     public AjaxResult remove(@PathVariable Long[] alarmIds)

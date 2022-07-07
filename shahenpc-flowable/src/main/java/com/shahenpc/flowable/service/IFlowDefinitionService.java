@@ -54,6 +54,8 @@ public interface IFlowDefinitionService {
 
     AjaxResult newStartProcessInstanceById(String procDefId, Map<String, Object> variables);
 
+    AjaxResult motionStartProcessInstanceById(String procDefId, Map<String, Object> variables);
+
     /**
      * 激活或挂起流程定义
      *

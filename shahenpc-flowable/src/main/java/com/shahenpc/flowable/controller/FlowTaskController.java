@@ -1,5 +1,6 @@
 package com.shahenpc.flowable.controller;
 
+import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.flowable.domain.dto.FlowTaskDto;
 import com.shahenpc.flowable.domain.vo.FlowTaskVo;
@@ -28,10 +29,19 @@ import java.io.OutputStream;
 @Api(tags = "工作流流程任务管理")
 @RestController
 @RequestMapping("/flowable/task")
-public class FlowTaskController {
+public class FlowTaskController extends BaseController {
 
     @Autowired
     private IFlowTaskService flowTaskService;
+
+
+    @ApiOperation(value = "催办")
+    @PostMapping(value = "/remind")
+    public AjaxResult remind(@RequestBody FlowTaskVo flowTaskVo) {
+        flowTaskVo.setUserId(getUserId().toString());
+        flowTaskService.remind(flowTaskVo);
+        return AjaxResult.success();
+    }
 
     @ApiOperation(value = "我发起的流程", response = FlowTaskDto.class)
     @GetMapping(value = "/myProcess")
@@ -43,8 +53,22 @@ public class FlowTaskController {
     @ApiOperation(value = "我发起的流程", response = FlowTaskDto.class)
     @GetMapping(value = "/new/myProcess")
     public AjaxResult newMyProcess(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
-                                @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize) {
-        return flowTaskService.newMyProcess(pageNum, pageSize);
+                                @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize,
+                                @ApiParam(value="流程名字", required=true) @RequestParam String processDefinitionName) {
+        return flowTaskService.newMyProcess(pageNum, pageSize,processDefinitionName);
+    }
+
+    /**
+     * 建议议案
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @ApiOperation(value = "我发起的流程", response = FlowTaskDto.class)
+    @GetMapping(value = "/motion/myProcess")
+    public AjaxResult motionMyProcess(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
+                                   @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize) {
+        return flowTaskService.motionMyProcess(pageNum, pageSize);
     }
 
     @ApiOperation(value = "取消申请", response = FlowTaskDto.class)
@@ -76,8 +100,9 @@ public class FlowTaskController {
     @ApiOperation(value = "获取已办任务", response = FlowTaskDto.class)
     @GetMapping(value = "/finishedList")
     public AjaxResult finishedList(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
-                                   @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize) {
-        return flowTaskService.finishedList(pageNum, pageSize);
+                                   @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize,
+                                   @ApiParam(value = "各个工作流名称", required = true) @RequestParam String name) {
+        return flowTaskService.finishedList(pageNum, pageSize,name);
     }
 
 
@@ -146,6 +171,8 @@ public class FlowTaskController {
         flowTaskService.delegateTask(flowTaskVo);
         return AjaxResult.success();
     }
+
+
 
     @ApiOperation(value = "转办任务")
     @PostMapping(value = "/assign")

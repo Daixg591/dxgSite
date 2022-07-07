@@ -165,6 +165,13 @@ public class FlowDefinitionController {
         return flowDefinitionService.newStartProcessInstanceById(procDefId,variables);
 
     }
+    @ApiOperation(value = "根据流程定义id启动流程实例")
+    @PostMapping("/motion/start/{procDefId}")
+    public AjaxResult motionStart(@ApiParam(value = "流程定义id") @PathVariable(value = "procDefId") String procDefId,
+                               @ApiParam(value = "变量集合,json对象") @RequestBody Map<String, Object> variables) {
+        return flowDefinitionService.motionStartProcessInstanceById(procDefId,variables);
+
+    }
 
     @ApiOperation(value = "激活或挂起流程定义")
     @PutMapping(value = "/updateState")

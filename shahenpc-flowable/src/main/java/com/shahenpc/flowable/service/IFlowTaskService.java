@@ -11,7 +11,10 @@ import java.io.InputStream;
  * @date 2021-04-03 14:42
  */
 public interface IFlowTaskService {
-
+    /**
+     * 催办
+     */
+    void remind(FlowTaskVo flowTaskVo);
     /**
      * 审批任务
      *
@@ -86,7 +89,9 @@ public interface IFlowTaskService {
      */
     AjaxResult myProcess(Integer pageNum, Integer pageSize);
 
-    AjaxResult newMyProcess(Integer pageNum, Integer pageSize);
+    AjaxResult newMyProcess(Integer pageNum, Integer pageSize,String processDefinitionName);
+
+    AjaxResult motionMyProcess(Integer pageNum, Integer pageSize);
     /**
      * 取消申请
      * @param flowTaskVo
@@ -125,7 +130,7 @@ public interface IFlowTaskService {
      * @param pageSize 每页条数
      * @return
      */
-    AjaxResult finishedList(Integer pageNum, Integer pageSize);
+    AjaxResult finishedList(Integer pageNum, Integer pageSize,String taskName);
 
     /**
      * 流程历史流转记录

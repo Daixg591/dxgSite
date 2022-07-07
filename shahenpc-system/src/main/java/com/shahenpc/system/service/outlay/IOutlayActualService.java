@@ -2,6 +2,8 @@ package com.shahenpc.system.service.outlay;
 
 import java.util.List;
 import com.shahenpc.system.domain.outlay.OutlayActual;
+import com.shahenpc.system.domain.outlay.dto.ActualListConutDto;
+import com.shahenpc.system.domain.outlay.dto.CountDto;
 
 /**
  * 实际支出Service接口
@@ -58,4 +60,8 @@ public interface IOutlayActualService
      * @return 结果
      */
     public int deleteOutlayActualByActualId(Long actualId);
+
+    public ActualListConutDto listCount();
+
+    public CountDto getCount();
 }

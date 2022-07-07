@@ -2,6 +2,8 @@ package com.shahenpc.system.service.outlay.impl;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.outlay.dto.CountDto;
+import com.shahenpc.system.mapper.outlay.OutlayAlarmSettingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.outlay.OutlayBudgetMapper;
@@ -54,6 +56,7 @@ public class OutlayBudgetServiceImpl implements IOutlayBudgetService
     public int insertOutlayBudget(OutlayBudget outlayBudget)
     {
         outlayBudget.setCreateTime(DateUtils.getNowDate());
+
         return outlayBudgetMapper.insertOutlayBudget(outlayBudget);
     }
 
@@ -92,5 +95,10 @@ public class OutlayBudgetServiceImpl implements IOutlayBudgetService
     public int deleteOutlayBudgetByBudgetId(Long budgetId)
     {
         return outlayBudgetMapper.deleteOutlayBudgetByBudgetId(budgetId);
+    }
+
+    @Override
+    public CountDto getCount() {
+        return outlayBudgetMapper.selectByCountAndMonth();
     }
 }
