@@ -8,16 +8,19 @@ import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.flowable.common.enums.FlowComment;
 import com.shahenpc.common.utils.SecurityUtils;
-import com.shahenpc.flowable.domain.vo.FlowDefinitionAddVo;
 import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.flowable.factory.FlowServiceFactory;
 import com.shahenpc.flowable.service.IFlowDefinitionService;
 import com.shahenpc.flowable.service.ISysDeployFormService;
 import com.shahenpc.system.domain.SysForm;
+import com.shahenpc.system.domain.censor.CensorProcess;
+import com.shahenpc.system.domain.job.JobMotion;
 import com.shahenpc.system.mapper.FlowDeployMapper;
 import com.shahenpc.system.service.ISysDeptService;
 import com.shahenpc.system.service.ISysPostService;
 import com.shahenpc.system.service.ISysUserService;
+import com.shahenpc.system.service.censor.ICensorProcessService;
+import com.shahenpc.system.service.job.IJobMotionService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.flowable.bpmn.model.BpmnModel;
@@ -33,7 +36,9 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 流程定义
@@ -59,6 +64,13 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
 
     @Resource
     private FlowDeployMapper flowDeployMapper;
+
+    @Resource
+    private ICensorProcessService censorProcessService;
+
+    @Resource
+    private IJobMotionService jobMotionService;
+
 
     private static final String BPMN_FILE_SUFFIX = ".bpmn";
 
@@ -215,13 +227,13 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
 
     /**
      * 新版 大晓刚
-     * @param request
+     * @param
      * @return
      */
     @Override
-    public AjaxResult newStartProcessInstanceById(FlowDefinitionAddVo request) {
+    public AjaxResult newStartProcessInstanceById(String procDefId, Map<String, Object> variables) {
         try {
-            ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(request.getProcDefId())
+            ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(procDefId)
                     .latestVersion().singleResult();
             if (Objects.nonNull(processDefinition) && processDefinition.isSuspended()) {
                 return AjaxResult.error("流程已被挂起,请先激活流程");
@@ -231,15 +243,79 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
             // 设置流程发起人Id到流程中
             SysUser sysUser = SecurityUtils.getLoginUser().getUser();
             identityService.setAuthenticatedUserId(sysUser.getUserId().toString());
-            request.getVariables().put(ProcessConstants.PROCESS_INITIATOR, "");
-            ProcessInstance processInstance = runtimeService.startProcessInstanceById(request.getProcDefId(), request.getVariables());
+            variables.put(ProcessConstants.PROCESS_INITIATOR, "");
+            ProcessInstance processInstance = runtimeService.startProcessInstanceById(procDefId, variables);
             // 给第一步申请人节点设置任务执行人和意见 todo:第一个节点不设置为申请人节点有点问题？
             Task task = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId()).singleResult();
             if (Objects.nonNull(task)) {
                 taskService.addComment(task.getId(), processInstance.getProcessInstanceId(), FlowComment.NORMAL.getType(), sysUser.getNickName() + "发起流程申请");
 //                taskService.setAssignee(task.getId(), sysUser.getUserId().toString());
-                taskService.complete(task.getId(), request.getVariables());
+                taskService.complete(task.getId(), variables);
             }
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            CensorProcess censor = new CensorProcess();
+            censor.setFileUrl(variables.get("fileUrl").toString());
+            censor.setFileName(variables.get("fileName").toString());
+            censor.setRecordAgencies(variables.get("recordAgencies").toString());
+            censor.setRecordSerial(variables.get("recordSerial").toString());
+            censor.setReportAgencies(variables.get("reportAgencies").toString());
+            censor.setReportAgencies(variables.get("reportSerial").toString());
+            String passDate = variables.get("passDate").toString();
+            censor.setPassDate(simpleDateFormat.parse(passDate));
+            censor.setPassAgencies(variables.get("passAgencies").toString());
+            String bulletinDate = variables.get("bulletinDate").toString();
+            censor.setBulletinDate(simpleDateFormat.parse(bulletinDate));
+            String enforceDate = variables.get("enforceDate").toString();
+            censor.setEnforceDate(simpleDateFormat.parse(enforceDate));
+            censor.setFileType(Integer.parseInt(variables.get("fileType").toString()));
+            //${INITIATOR}  #{approval}
+            String approval =  variables.get("approval").toString();
+            censor.setAcceptUserId(Long.valueOf(approval));
+            censor.setWorkflowId(task.getProcessInstanceId());
+            censor.setCensorTache(task.getName());
+
+            //censor.setAcceptUserName(variables.get("acceptUserName").toString());
+            //censor.setProcessId((Long) variables.get("processType"));
+            censorProcessService.insertCensorProcess(censor);
+            return AjaxResult.success("流程启动成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AjaxResult.error("流程启动错误");
+        }
+    }
+
+    @Override
+    public AjaxResult motionStartProcessInstanceById(String procDefId, Map<String, Object> variables) {
+        try {
+            ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(procDefId)
+                    .latestVersion().singleResult();
+            if (Objects.nonNull(processDefinition) && processDefinition.isSuspended()) {
+                return AjaxResult.error("流程已被挂起,请先激活流程");
+            }
+//           variables.put("skip", true);
+//           variables.put(ProcessConstants.FLOWABLE_SKIP_EXPRESSION_ENABLED, true);
+            // 设置流程发起人Id到流程中
+            SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+            identityService.setAuthenticatedUserId(sysUser.getUserId().toString());
+            variables.put(ProcessConstants.PROCESS_INITIATOR, "");
+            ProcessInstance processInstance = runtimeService.startProcessInstanceById(procDefId, variables);
+            // 给第一步申请人节点设置任务执行人和意见 todo:第一个节点不设置为申请人节点有点问题？
+            Task task = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId()).singleResult();
+            if (Objects.nonNull(task)) {
+                taskService.addComment(task.getId(), processInstance.getProcessInstanceId(), FlowComment.NORMAL.getType(), sysUser.getNickName() + "发起流程申请");
+//                taskService.setAssignee(task.getId(), sysUser.getUserId().toString());
+                taskService.complete(task.getId(), variables);
+            }
+            JobMotion motion = new JobMotion();
+            motion.setMotionType(Integer.parseInt(variables.get("motionType").toString()));
+            motion.setTitle(variables.get("title").toString());
+            motion.setContent(variables.get("content").toString());
+            //${INITIATOR}  #{approval}
+            motion.setSuggestUserId(variables.get("approval").toString());
+            List<SysUser> user=sysUserService.selectUserByUserIds(variables.get("approval").toString());
+            motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
+            motion.setWorkflowId(task.getProcessInstanceId());
+            jobMotionService.insertJobMotion(motion);
             return AjaxResult.success("流程启动成功");
         } catch (Exception e) {
             e.printStackTrace();

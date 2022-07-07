@@ -3,6 +3,8 @@ package com.shahenpc.web.controller.system;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -233,5 +235,18 @@ public class SysUserController extends BaseController
         userService.checkUserDataScope(userId);
         userService.insertUserAuth(userId, roleIds);
         return success();
+    }
+
+    /**
+     * 人大常委 下拉 用户列表  用于审批流程
+     */
+    @ApiOperation("人大常委人员下拉")
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/npc/list")
+    public TableDataInfo NpcList(SysUser user)
+    {
+        startPage();
+        List<SysUser> list = userService.selectUserList(user);
+        return getDataTable(list);
     }
 }

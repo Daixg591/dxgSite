@@ -1,6 +1,8 @@
 package com.shahenpc.system.domain.outlay;
 
 import java.math.BigDecimal;
+
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -12,6 +14,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-01
  */
+@Data
 public class OutlayBudget extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -25,7 +28,7 @@ public class OutlayBudget extends BaseEntity
 
     /** 收支类型 */
     @Excel(name = "收支类型")
-    private Long budgetType;
+    private Integer budgetType;
 
     /** 标题 */
     @Excel(name = "标题")
@@ -73,16 +76,7 @@ public class OutlayBudget extends BaseEntity
     {
         return alarmId;
     }
-    public void setBudgetType(Long budgetType) 
-    {
-        this.budgetType = budgetType;
-    }
-
-    public Long getBudgetType() 
-    {
-        return budgetType;
-    }
-    public void setTitle(String title) 
+    public void setTitle(String title)
     {
         this.title = title;
     }

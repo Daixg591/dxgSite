@@ -282,4 +282,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
  	</delete>
 
-</mapper> 
+	<!--===================================分割线-->
+	<select id="selectUserByuserIds" resultMap="SysUserResult">
+		<include refid="selectUserVo"/>
+		where u.user_id in(#{userIds}) LIMIT 1
+	</select>
+
+	<select id="selectUserByUserIds" resultMap="SysUserResult" parameterType="java.lang.String">
+		SELECT * FROM sys_user where user_id in(${userIds})
+	</select>
+</mapper>

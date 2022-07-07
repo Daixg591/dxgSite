@@ -2,6 +2,8 @@ package com.shahenpc.system.mapper.outlay;
 
 import java.util.List;
 import com.shahenpc.system.domain.outlay.OutlayActual;
+import com.shahenpc.system.domain.outlay.dto.ActualListConutDto;
+import com.shahenpc.system.domain.outlay.dto.CountDto;
 
 /**
  * 实际支出Mapper接口
@@ -58,4 +60,8 @@ public interface OutlayActualMapper
      * @return 结果
      */
     public int deleteOutlayActualByActualIds(Long[] actualIds);
+
+    public ActualListConutDto getListCount();
+
+    public CountDto selectByCountAndMonth();
 }

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.censor.CensorProcessMapper">
+
+    <resultMap type="CensorProcess" id="CensorProcessResult">
+        <result property="processId"    column="process_id"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="recordAgencies"    column="record_agencies"    />
+        <result property="recordSerial"    column="record_serial"    />
+        <result property="reportAgencies"    column="report_agencies"    />
+        <result property="reportSerial"    column="report_serial"    />
+        <result property="passDate"    column="pass_date"    />
+        <result property="passAgencies"    column="pass_agencies"    />
+        <result property="bulletinDate"    column="bulletin_date"    />
+        <result property="enforceDate"    column="enforce_date"    />
+        <result property="fileUrl"    column="file_url"    />
+        <result property="acceptUserId"    column="accept_user_id"    />
+        <result property="acceptUserName"    column="accept_user_name"    />
+        <result property="copyUserId"    column="copy_user_id"    />
+        <result property="copyUserName"    column="copy_user_name"    />
+        <result property="processType"    column="process_type"    />
+        <result property="workflowId"    column="workflow_id"    />
+        <result property="censorTache"    column="censor_tache"    />
+    </resultMap>
+
+    <sql id="selectCensorProcessVo">
+        select process_id, file_type, create_by, create_time, update_by, update_time, remark, file_name, record_agencies, record_serial, report_agencies, report_serial, pass_date, pass_agencies, bulletin_date, enforce_date, file_url, accept_user_id, accept_user_name, copy_user_id, copy_user_name, process_type, workflow_id, censor_tache from censor_process
+    </sql>
+
+    <select id="selectCensorProcessList" parameterType="CensorProcess" resultMap="CensorProcessResult">
+        <include refid="selectCensorProcessVo"/>
+        <where>
+            <if test="fileType != null "> and file_type = #{fileType}</if>
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="recordAgencies != null  and recordAgencies != ''"> and record_agencies = #{recordAgencies}</if>
+            <if test="recordSerial != null  and recordSerial != ''"> and record_serial = #{recordSerial}</if>
+            <if test="reportAgencies != null  and reportAgencies != ''"> and report_agencies = #{reportAgencies}</if>
+            <if test="reportSerial != null  and reportSerial != ''"> and report_serial = #{reportSerial}</if>
+            <if test="passDate != null "> and pass_date = #{passDate}</if>
+            <if test="passAgencies != null  and passAgencies != ''"> and pass_agencies = #{passAgencies}</if>
+            <if test="bulletinDate != null "> and bulletin_date = #{bulletinDate}</if>
+            <if test="enforceDate != null "> and enforce_date = #{enforceDate}</if>
+            <if test="fileUrl != null  and fileUrl != ''"> and file_url = #{fileUrl}</if>
+            <if test="acceptUserId != null "> and accept_user_id = #{acceptUserId}</if>
+            <if test="acceptUserName != null  and acceptUserName != ''"> and accept_user_name like concat('%', #{acceptUserName}, '%')</if>
+            <if test="copyUserId != null "> and copy_user_id = #{copyUserId}</if>
+            <if test="copyUserName != null  and copyUserName != ''"> and copy_user_name like concat('%', #{copyUserName}, '%')</if>
+            <if test="processType != null "> and process_type = #{processType}</if>
+            <if test="workflowId != null  and workflowId != ''"> and workflow_id = #{workflowId}</if>
+            <if test="censorTache != null  and censorTache != ''"> and censor_tache = #{censorTache}</if>
+        </where>
+    </select>
+
+    <select id="selectCensorProcessByProcessId" parameterType="Long" resultMap="CensorProcessResult">
+        <include refid="selectCensorProcessVo"/>
+        where process_id = #{processId}
+    </select>
+
+    <insert id="insertCensorProcess" parameterType="CensorProcess" useGeneratedKeys="true" keyProperty="processId">
+        insert into censor_process
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fileType != null">file_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="recordAgencies != null">record_agencies,</if>
+            <if test="recordSerial != null">record_serial,</if>
+            <if test="reportAgencies != null">report_agencies,</if>
+            <if test="reportSerial != null">report_serial,</if>
+            <if test="passDate != null">pass_date,</if>
+            <if test="passAgencies != null">pass_agencies,</if>
+            <if test="bulletinDate != null">bulletin_date,</if>
+            <if test="enforceDate != null">enforce_date,</if>
+            <if test="fileUrl != null">file_url,</if>
+            <if test="acceptUserId != null">accept_user_id,</if>
+            <if test="acceptUserName != null">accept_user_name,</if>
+            <if test="copyUserId != null">copy_user_id,</if>
+            <if test="copyUserName != null">copy_user_name,</if>
+            <if test="processType != null">process_type,</if>
+            <if test="workflowId != null">workflow_id,</if>
+            <if test="censorTache != null">censor_tache,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fileType != null">#{fileType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="recordAgencies != null">#{recordAgencies},</if>
+            <if test="recordSerial != null">#{recordSerial},</if>
+            <if test="reportAgencies != null">#{reportAgencies},</if>
+            <if test="reportSerial != null">#{reportSerial},</if>
+            <if test="passDate != null">#{passDate},</if>
+            <if test="passAgencies != null">#{passAgencies},</if>
+            <if test="bulletinDate != null">#{bulletinDate},</if>
+            <if test="enforceDate != null">#{enforceDate},</if>
+            <if test="fileUrl != null">#{fileUrl},</if>
+            <if test="acceptUserId != null">#{acceptUserId},</if>
+            <if test="acceptUserName != null">#{acceptUserName},</if>
+            <if test="copyUserId != null">#{copyUserId},</if>
+            <if test="copyUserName != null">#{copyUserName},</if>
+            <if test="processType != null">#{processType},</if>
+            <if test="workflowId != null">#{workflowId},</if>
+            <if test="censorTache != null">#{censorTache},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCensorProcess" parameterType="CensorProcess">
+        update censor_process
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fileType != null">file_type = #{fileType},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="recordAgencies != null">record_agencies = #{recordAgencies},</if>
+            <if test="recordSerial != null">record_serial = #{recordSerial},</if>
+            <if test="reportAgencies != null">report_agencies = #{reportAgencies},</if>
+            <if test="reportSerial != null">report_serial = #{reportSerial},</if>
+            <if test="passDate != null">pass_date = #{passDate},</if>
+            <if test="passAgencies != null">pass_agencies = #{passAgencies},</if>
+            <if test="bulletinDate != null">bulletin_date = #{bulletinDate},</if>
+            <if test="enforceDate != null">enforce_date = #{enforceDate},</if>
+            <if test="fileUrl != null">file_url = #{fileUrl},</if>
+            <if test="acceptUserId != null">accept_user_id = #{acceptUserId},</if>
+            <if test="acceptUserName != null">accept_user_name = #{acceptUserName},</if>
+            <if test="copyUserId != null">copy_user_id = #{copyUserId},</if>
+            <if test="copyUserName != null">copy_user_name = #{copyUserName},</if>
+            <if test="processType != null">process_type = #{processType},</if>
+            <if test="workflowId != null">workflow_id = #{workflowId},</if>
+            <if test="censorTache != null">censor_tache = #{censorTache},</if>
+        </trim>
+        where process_id = #{processId}
+    </update>
+
+    <delete id="deleteCensorProcessByProcessId" parameterType="Long">
+        delete from censor_process where process_id = #{processId}
+    </delete>
+
+    <delete id="deleteCensorProcessByProcessIds" parameterType="String">
+        delete from censor_process where process_id in
+        <foreach item="processId" collection="array" open="(" separator="," close=")">
+            #{processId}
+        </foreach>
+    </delete>
+    <!--====================分割线-->
+    <select id="selectCensorProcessByWorkflowId" resultMap="CensorProcessResult">
+        <include refid="selectCensorProcessVo"/>
+        where workflow_id = #{workflowId}
+    </select>
+</mapper>

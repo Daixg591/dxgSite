@@ -203,4 +203,9 @@ public interface ISysUserService
      * @return 结果
      */
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
+
+
+    public SysUser selectUserByuserIds(String userIds);
+
+    public List<SysUser> selectUserByUserIds(String userIds);
 }

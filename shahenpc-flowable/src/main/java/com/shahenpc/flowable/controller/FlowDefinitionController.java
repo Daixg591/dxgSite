@@ -3,7 +3,6 @@ package com.shahenpc.flowable.controller;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysRole;
 import com.shahenpc.common.core.domain.entity.SysUser;
-import com.shahenpc.flowable.domain.vo.FlowDefinitionAddVo;
 import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.flowable.domain.dto.FlowSaveXmlVo;
 import com.shahenpc.flowable.service.IFlowDefinitionService;
@@ -161,8 +160,16 @@ public class FlowDefinitionController {
 
     @ApiOperation(value = "根据流程定义id启动流程实例")
     @PostMapping("/new/start/{procDefId}")
-    public AjaxResult newStart(@RequestBody FlowDefinitionAddVo request) {
-        return flowDefinitionService.newStartProcessInstanceById(request);
+    public AjaxResult newStart(@ApiParam(value = "流程定义id") @PathVariable(value = "procDefId") String procDefId,
+                               @ApiParam(value = "变量集合,json对象") @RequestBody Map<String, Object> variables) {
+        return flowDefinitionService.newStartProcessInstanceById(procDefId,variables);
+
+    }
+    @ApiOperation(value = "根据流程定义id启动流程实例")
+    @PostMapping("/motion/start/{procDefId}")
+    public AjaxResult motionStart(@ApiParam(value = "流程定义id") @PathVariable(value = "procDefId") String procDefId,
+                               @ApiParam(value = "变量集合,json对象") @RequestBody Map<String, Object> variables) {
+        return flowDefinitionService.motionStartProcessInstanceById(procDefId,variables);
 
     }
 

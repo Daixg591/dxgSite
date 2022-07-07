@@ -78,4 +78,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{settingId}
         </foreach>
     </delete>
+    <!-- =====================================-->
+    <select id="selectByBudgetType" resultMap="OutlayAlarmSettingResult">
+        <include refid="selectOutlayAlarmSettingVo"/>
+        where budget_type = #{budgetType}
+    </select>
 </mapper>

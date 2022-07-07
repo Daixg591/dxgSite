@@ -2,6 +2,7 @@ package com.shahenpc.system.service.outlay;
 
 import java.util.List;
 import com.shahenpc.system.domain.outlay.OutlayBudget;
+import com.shahenpc.system.domain.outlay.dto.CountDto;
 
 /**
  * 预算Service接口
@@ -58,4 +59,6 @@ public interface IOutlayBudgetService
      * @return 结果
      */
     public int deleteOutlayBudgetByBudgetId(Long budgetId);
+
+    public CountDto getCount();
 }
