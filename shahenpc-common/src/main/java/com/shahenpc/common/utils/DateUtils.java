@@ -72,6 +72,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
     {
         return parseDateToStr(YYYY_MM_DD, date);
     }
+    public static final String dateYear(final Date date)
+    {
+        return parseDateToStr(YYYY, date);
+    }
 
     public static final String parseDateToStr(final String format, final Date date)
     {

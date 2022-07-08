@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -19,6 +20,7 @@ import com.shahenpc.common.xss.Xss;
  *
  * @author ruoyi
  */
+@Data
 public class SysUser extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -218,6 +220,8 @@ public class SysUser extends BaseEntity {
      * 角色ID
      */
     private Long roleId;
+
+    private String edu;
 
     public SysUser() {
 

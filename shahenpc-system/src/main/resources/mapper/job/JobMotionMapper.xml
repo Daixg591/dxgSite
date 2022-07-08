@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.job.JobMotionMapper">
 
-    <resultMap type="com.shahenpc.system.domain.job.JobMotion" id="JobMotionResult">
+    <resultMap type="JobMotion" id="JobMotionResult">
         <result property="motionId"    column="motion_id"    />
         <result property="motionType"    column="motion_type"    />
         <result property="title"    column="title"    />
@@ -18,10 +18,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="workflowId"    column="workflow_id"    />
+        <result property="sendUserId"    column="send_user_id"    />
+        <result property="sendUserName"    column="send_user_name"    />
     </resultMap>
 
     <sql id="selectJobMotionVo">
-        select motion_id, motion_type, title, content, suggest_user_id, suggest_user_name, status, remark, create_by, create_time, update_by, update_time, workflow_id from job_motion
+        select motion_id, motion_type, title, content, suggest_user_id, suggest_user_name, status, remark, create_by, create_time, update_by, update_time, workflow_id, send_user_id, send_user_name from job_motion
     </sql>
 
     <select id="selectJobMotionList" parameterType="JobMotion" resultMap="JobMotionResult">
@@ -34,6 +36,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="suggestUserName != null  and suggestUserName != ''"> and suggest_user_name like concat('%', #{suggestUserName}, '%')</if>
             <if test="status != null "> and status = #{status}</if>
             <if test="workflowId != null  and workflowId != ''"> and workflow_id = #{workflowId}</if>
+            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="sendUserName != null  and sendUserName != ''"> and send_user_name like concat('%', #{sendUserName}, '%')</if>
         </where>
     </select>
 
@@ -57,6 +61,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="workflowId != null">workflow_id,</if>
+            <if test="sendUserId != null">send_user_id,</if>
+            <if test="sendUserName != null">send_user_name,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="motionType != null">#{motionType},</if>
@@ -71,6 +77,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="workflowId != null">#{workflowId},</if>
+            <if test="sendUserId != null">#{sendUserId},</if>
+            <if test="sendUserName != null">#{sendUserName},</if>
         </trim>
     </insert>
 
@@ -89,6 +97,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="workflowId != null">workflow_id = #{workflowId},</if>
+            <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
+            <if test="sendUserName != null">send_user_name = #{sendUserName},</if>
         </trim>
         where motion_id = #{motionId}
     </update>
