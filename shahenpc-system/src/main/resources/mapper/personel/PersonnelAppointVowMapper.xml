@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.shahenpc.system.mapper.personel.PersonnelAppointSpeakMapper">
+<mapper namespace="com.shahenpc.system.mapper.personel.PersonnelAppointVowMapper">
     <resultMap type="SysUser" id="SysUserResult">
         <id property="userId" column="user_id"/>
         <result property="userName" column="user_name"/>
@@ -49,42 +49,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="regTime" column="reg_time"/>
         <association property="sysUser" column="user_id" javaType="SysUser" resultMap="SysUserResult"></association>
     </resultMap>
-    <resultMap type="PersonnelAppointSpeak" id="PersonnelAppointSpeakResult">
-        <result property="speakId"    column="speak_id"    />
-        <result property="speakTitle"    column="speak_title"    />
-        <result property="details"    column="details"    />
+    <resultMap type="PersonnelAppointVow" id="PersonnelAppointVowResult">
+        <result property="vowId"    column="vow_id"    />
         <result property="userId"    column="user_id"    />
-        <result property="fileList"    column="file_list"    />
+        <result property="fileIds"    column="file_ids"    />
+        <result property="fileUrl"    column="file_url"    />
+        <result property="coverUrl"    column="cover_Url"    />
         <result property="remark"    column="remark"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
-        <result property="registerId"    column="register_id"    />
         <result property="delFlag"    column="del_flag"    />
+        <result property="registerId"    column="register_id"    />
         <association property="sysUser" column="user_id" javaType="SysUser" resultMap="SysUserResult"></association>
         <association property="regEntity" column="reg_id" javaType="PersonnelAppointRegister" resultMap="PersonnelAppointRegisterResult"></association>
     </resultMap>
 
-    <sql id="selectPersonnelAppointSpeakVo">
-        select speak_id, speak_title, details, user_id, file_list, remark, create_by, create_time, update_by, update_time, del_flag, register_id from personnel_appoint_speak
+    <sql id="selectPersonnelAppointVowVo">
+        select vow_id, user_id, file_ids, remark, create_by, create_time, update_by, update_time, del_flag, register_id,file_url,conver_url from personnel_appoint_vow
     </sql>
 
-    <sql id="selectPersonnelSpeakVo">
-        select b.speak_id, b.speak_title, b.details, b.user_id, b.file_list, b.remark, b.create_by,
-               b.create_time, b.update_by, b.update_time, b.del_flag,b.register_id,
-               u.nick_name,u.sex,u.phonenumber,u.id_card,
-               r.reg_time,r.appoint_type
-        from personnel_appoint_speak b
+    <sql id="selectVowVo">
+        select b.vow_id, b.user_id, b.file_ids, b.remark, b.create_by, b.create_time,
+               b.update_by, b.update_time, b.del_flag, b.register_id,b.file_url,b.cover_url,
+                u.nick_name,u.sex,u.phonenumber,u.id_card,
+                r.reg_time,r.appoint_type
+        from personnel_appoint_vow b
                  LEFT JOIN sys_user u on b.user_id = u.user_id
                  LEFT JOIN personnel_appoint_register r on r.register_id = b.register_id
     </sql>
 
-
-    <select id="selectPersonnelAppointSpeakList" parameterType="PersonnelAppointSpeak" resultMap="PersonnelAppointSpeakResult">
-        <include refid="selectPersonnelSpeakVo"/>
+    <select id="selectPersonnelAppointVowList" parameterType="PersonnelAppointVow" resultMap="PersonnelAppointVowResult">
+        <include refid="selectVowVo"/>
         <where>
             <if test="appointType != null  and appointType != ''">and r.appoint_type = #{appointType}</if>
+            <if test="registerId != null ">and r.register_id = #{registerId}</if>
             <if test="nickName != null  and nickName != ''">and u.nick_name like concat('%', #{nickName}, '%')</if>
             <if test="phonenumber != null  and phonenumber != ''">and u.phonenumber like concat('%', #{phonenumber}, '%')</if>
             <if test="startTime != null ">and r.reg_time <![CDATA[ >= ]]> #{startTime}  </if>
@@ -93,20 +93,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 r.old_duty like concat('%', #{keyWords}, '%') or r.handle_duty like concat('%', #{keyWords}, '%') or
                 b.speak_title like concat('%', #{keyWords}, '%') or b.details like concat('%', #{keyWords}, '%') )</if>
         </where>
+        order by b.create_time desc
     </select>
     
-    <select id="selectPersonnelAppointSpeakBySpeakId" parameterType="Long" resultMap="PersonnelAppointSpeakResult">
-        <include refid="selectPersonnelAppointSpeakVo"/>
+    <select id="selectPersonnelAppointVowByVowId" parameterType="Long" resultMap="PersonnelAppointVowResult">
+        <include refid="selectPersonnelAppointVowVo"/>
         where register_id = #{registerId}
     </select>
         
-    <insert id="insertPersonnelAppointSpeak" parameterType="PersonnelAppointSpeak" useGeneratedKeys="true" keyProperty="speakId">
-        insert into personnel_appoint_speak
+    <insert id="insertPersonnelAppointVow" parameterType="PersonnelAppointVow" useGeneratedKeys="true" keyProperty="vowId">
+        insert into personnel_appoint_vow
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="speakTitle != null">speak_title,</if>
-            <if test="details != null">details,</if>
             <if test="userId != null">user_id,</if>
-            <if test="fileList != null">file_list,</if>
+            <if test="fileIds != null">file_ids,</if>
             <if test="remark != null">remark,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -114,12 +113,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="registerId != null">register_id,</if>
+            <if test="fileUrl != null">file_url,</if>
+            <if test="coverUrl != null">cover_url,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="speakTitle != null">#{speakTitle},</if>
-            <if test="details != null">#{details},</if>
             <if test="userId != null">#{userId},</if>
-            <if test="fileList != null">#{fileList},</if>
+            <if test="fileIds != null">#{fileIds},</if>
             <if test="remark != null">#{remark},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -127,16 +126,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="registerId != null">#{registerId},</if>
+            <if test="fileUrl != null">#{fileUrl},</if>
+            <if test="coverUrl != null">#{coverUrl},</if>
          </trim>
     </insert>
 
-    <update id="updatePersonnelAppointSpeak" parameterType="PersonnelAppointSpeak">
-        update personnel_appoint_speak
+    <update id="updatePersonnelAppointVow" parameterType="PersonnelAppointVow">
+        update personnel_appoint_vow
         <trim prefix="SET" suffixOverrides=",">
-            <if test="speakTitle != null">speak_title = #{speakTitle},</if>
-            <if test="details != null">details = #{details},</if>
             <if test="userId != null">user_id = #{userId},</if>
-            <if test="fileList != null">file_list = #{fileList},</if>
+            <if test="fileIds != null">file_ids = #{fileIds},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
@@ -144,18 +143,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="registerId != null">register_id = #{registerId},</if>
+            <if test="fileUrl != null">file_url = #{fileUrl},</if>
+            <if test="coverUrl != null">cover_url = #{coverUrl},</if>
+
         </trim>
-        where speak_id = #{speakId}
+        where vow_id = #{vowId}
     </update>
 
-    <delete id="deletePersonnelAppointSpeakBySpeakId" parameterType="Long">
-        delete from personnel_appoint_speak where speak_id = #{speakId}
+    <delete id="deletePersonnelAppointVowByVowId" parameterType="Long">
+        delete from personnel_appoint_vow where vow_id = #{vowId}
     </delete>
 
-    <delete id="deletePersonnelAppointSpeakBySpeakIds" parameterType="String">
-        delete from personnel_appoint_speak where register_id in
-        <foreach item="registerId" collection="array" open="(" separator="," close=")">
-            #{registerId}
+    <delete id="deletePersonnelAppointVowByVowIds" parameterType="String">
+        delete from personnel_appoint_vow where vow_id in 
+        <foreach item="vowId" collection="array" open="(" separator="," close=")">
+            #{vowId}
         </foreach>
     </delete>
 </mapper>

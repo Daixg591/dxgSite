@@ -2,6 +2,7 @@ package com.shahenpc.system.service.personel;
 
 import java.util.List;
 import com.shahenpc.system.domain.personel.PersonnelAppointRegister;
+import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
 
 /**
  * 人事任免_任免记录Service接口
@@ -25,7 +26,7 @@ public interface IPersonnelAppointRegisterService
      * @param personnelAppointRegister 人事任免_任免记录
      * @return 人事任免_任免记录集合
      */
-    public List<PersonnelAppointRegister> selectPersonnelAppointRegisterList(PersonnelAppointRegister personnelAppointRegister);
+    public List<PersonnelAppointRegister> selectPersonnelAppointRegisterList(PersonnelQueryDto personnelAppointRegister);
 
     /**
      * 新增人事任免_任免记录
@@ -33,7 +34,7 @@ public interface IPersonnelAppointRegisterService
      * @param personnelAppointRegister 人事任免_任免记录
      * @return 结果
      */
-    public int insertPersonnelAppointRegister(PersonnelAppointRegister personnelAppointRegister);
+    public Long insertPersonnelAppointRegister(PersonnelAppointRegister personnelAppointRegister);
 
     /**
      * 修改人事任免_任免记录

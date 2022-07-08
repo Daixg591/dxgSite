@@ -4,7 +4,6 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.shahenpc.common.core.domain.entity.SysUser;
-import com.shahenpc.common.core.domain.model.BaseUserEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -53,7 +52,6 @@ public class PersonnelAppointRegister extends BaseEntity{
     /**
      * 用户Id
      */
-//    @Excel(name = "用户Id")
     private Long userId;
 
     /**
@@ -83,19 +81,21 @@ public class PersonnelAppointRegister extends BaseEntity{
     /**
      * 应到人数
      */
-//    @Excel(name = "应到人数")
     private Long comePersonCnt;
+
+    /**
+     * 实到人数
+     */
+    private Long realPersonCnt;
 
     /**
      * 监票人
      */
-//    @Excel(name = "监票人")
     private String scrutineer;
 
     /**
      * 计票人
      */
-//    @Excel(name = "计票人")
     private String pollClerk;
 
     /**
@@ -114,8 +114,22 @@ public class PersonnelAppointRegister extends BaseEntity{
      * 投票时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-//    @Excel(name = "投票时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date voteTime;
+
+    /**
+     * 同意票数
+     */
+    private Integer allowTipsCnt;
+
+    /**
+     * 拒绝票数
+     */
+    private Integer refuseTipsCnt;
+
+    /**
+     * 弃权票数
+     */
+    private Integer waiverTipsCnt;
 
     public void setRegisterId(Long registerId) {
         this.registerId = registerId;
@@ -222,6 +236,10 @@ public class PersonnelAppointRegister extends BaseEntity{
                 .append("sex", getSex())
                 .append("phonenumber", getPhonenumber())
                 .append("idCard", getIdCard())
+                .append("realPersonCnt", getRealPersonCnt())
+                .append("allowTipsCnt", getAllowTipsCnt())
+                .append("refuseTipsCnt", getRefuseTipsCnt())
+                .append("waiverTipsCnt", getWaiverTipsCnt())
                 .toString();
     }
 
@@ -280,5 +298,37 @@ public class PersonnelAppointRegister extends BaseEntity{
 
     public void setIdCard(String idCard) {
         this.idCard = idCard;
+    }
+
+    public Long getRealPersonCnt() {
+        return realPersonCnt;
+    }
+
+    public void setRealPersonCnt(Long realPersonCnt) {
+        this.realPersonCnt = realPersonCnt;
+    }
+
+    public Integer getAllowTipsCnt() {
+        return allowTipsCnt;
+    }
+
+    public void setAllowTipsCnt(Integer allowTipsCnt) {
+        this.allowTipsCnt = allowTipsCnt;
+    }
+
+    public Integer getRefuseTipsCnt() {
+        return refuseTipsCnt;
+    }
+
+    public void setRefuseTipsCnt(Integer refuseTipsCnt) {
+        this.refuseTipsCnt = refuseTipsCnt;
+    }
+
+    public Integer getWaiverTipsCnt() {
+        return waiverTipsCnt;
+    }
+
+    public void setWaiverTipsCnt(Integer waiverTipsCnt) {
+        this.waiverTipsCnt = waiverTipsCnt;
     }
 }

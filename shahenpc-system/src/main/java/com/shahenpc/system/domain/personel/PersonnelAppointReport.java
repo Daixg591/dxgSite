@@ -16,8 +16,17 @@ import com.shahenpc.common.core.domain.BaseEntity;
 public class PersonnelAppointReport extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 用户详情
+     */
     @JsonIgnore
     private SysUser sysUser;
+
+    /**
+     * 任免记录详情
+     */
+    @JsonIgnore
+    private PersonnelAppointRegister regEntity;
 
     /**
      * 姓名
@@ -88,11 +97,7 @@ public class PersonnelAppointReport extends BaseEntity {
      */
     private Long registerId;
 
-    /**
-     * 任免记录详情
-     */
-    @JsonIgnore
-    private PersonnelAppointRegister regEntity;
+
 
     public void setReportId(Long reportId) {
         this.reportId = reportId;

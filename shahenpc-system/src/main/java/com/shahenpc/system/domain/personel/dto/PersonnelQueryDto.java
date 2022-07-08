@@ -42,4 +42,24 @@ public class PersonnelQueryDto implements Serializable
      * 手机号码
      */
     private String phonenumber;
+
+    /**
+     * 用户Id
+     */
+    private String userId;
+
+    /**
+     * 任免记录Id
+     */
+    private Long registerId;
+
+    /**
+     * 最小月份
+     */
+    private Date minMonth;
+
+    /**
+     * 指定月份
+     */
+    private Date currentData;
 }

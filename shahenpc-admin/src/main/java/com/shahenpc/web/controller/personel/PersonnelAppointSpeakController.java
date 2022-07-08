@@ -36,7 +36,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/system/speak")
-@Api(tags = "人事任免_拟任职发言 ")
+@Api(tags = "人事任免_拟任职发言 Done √")
 public class PersonnelAppointSpeakController extends BaseController
 {
     @Autowired

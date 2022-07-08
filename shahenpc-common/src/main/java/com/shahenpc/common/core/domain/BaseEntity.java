@@ -20,15 +20,15 @@ public class BaseEntity implements Serializable
     private String searchValue;
 
     /** 开始时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date startTime;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    private Date startTime;
 
     /** 结束时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date endTime;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    private Date endTime;
 
     /** 关键词 */
-    private String keyWords;
+//    private String keyWords;
 
     /** 创建者 */
     private String createBy;
@@ -124,27 +124,27 @@ public class BaseEntity implements Serializable
         this.params = params;
     }
 
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getKeyWords() {
-        return keyWords;
-    }
-
-    public void setKeyWords(String keyWords) {
-        this.keyWords = keyWords;
-    }
+//    public Date getStartTime() {
+//        return startTime;
+//    }
+//
+//    public void setStartTime(Date startTime) {
+//        this.startTime = startTime;
+//    }
+//
+//    public Date getEndTime() {
+//        return endTime;
+//    }
+//
+//    public void setEndTime(Date endTime) {
+//        this.endTime = endTime;
+//    }
+//
+//    public String getKeyWords() {
+//        return keyWords;
+//    }
+//
+//    public void setKeyWords(String keyWords) {
+//        this.keyWords = keyWords;
+//    }
 }

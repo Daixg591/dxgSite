@@ -49,6 +49,10 @@
         <result property="voteTime" column="vote_time"/>
         <result property="fileList" column="file_list"/>
         <result property="regTime" column="reg_time"/>
+        <result property="realPersonCnt" column="real_person_cnt"/>
+        <result property="allowTipsCnt" column="allow_tips_cnt"/>
+        <result property="refuseTipsCnt" column="refuse_tips_cnt"/>
+        <result property="waiverTipsCnt" column="waiver_tips_cnt"/>
         <association property="sysUser" column="user_id" javaType="SysUser" resultMap="SysUserResult"></association>
     </resultMap>
 
@@ -69,7 +73,11 @@
                r.poll_clerk,
                r.vote_time,
                r.file_list,
-               r.reg_time
+               r.reg_time,
+               r.real_person_cnt,
+               r.allow_tips_cnt,
+               r.refuse_tips_cnt,
+               r.waiver_tips_cnt
         from personnel_appoint_register r
 
     </sql>
@@ -80,6 +88,12 @@
                r.handle_duty,
                r.reg_time,
                r.create_by,
+               r.register_id,
+               r.user_id,
+               r.allow_tips_cnt,
+               r.refuse_tips_cnt,
+               r.waiver_tips_cnt,
+               u.user_id,
                u.nick_name,
                u.sex,
                u.phonenumber,
@@ -110,7 +124,7 @@
     </select>
 
     <insert id="insertPersonnelAppointRegister" parameterType="PersonnelAppointRegister" useGeneratedKeys="true"
-            keyProperty="registerId">
+            keyProperty="registerId" >
         insert into personnel_appoint_register
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
@@ -129,6 +143,10 @@
             <if test="voteTime != null">vote_time,</if>
             <if test="fileList != null">file_list,</if>
             <if test="regTime != null">reg_time,</if>
+            <if test="realPersonCnt != null">real_person_cnt,</if>
+            <if test="allowTipsCnt != null">allow_tips_cnt,</if>
+            <if test="refuseTipsCnt != null">refuse_tips_cnt,</if>
+            <if test="waiverTipsCnt != null">waiver_tips_cnt,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
@@ -147,7 +165,12 @@
             <if test="voteTime != null">#{voteTime},</if>
             <if test="fileList != null">#{fileList},</if>
             <if test="regTime != null">#{regTime},</if>
+            <if test="realPersonCnt != null">#{realPersonCnt},</if>
+            <if test="allowTipsCnt != null">#{allowTipsCnt},</if>
+            <if test="refuseTipsCnt != null">#{refuseTipsCnt},</if>
+            <if test="waiverTipsCnt != null">#{waiverTipsCnt},</if>
         </trim>
+
     </insert>
 
     <update id="updatePersonnelAppointRegister" parameterType="PersonnelAppointRegister">
@@ -169,6 +192,10 @@
             <if test="voteTime != null">vote_time = #{voteTime},</if>
             <if test="fileList != null">file_list = #{fileList},</if>
             <if test="regTime != null">reg_time = #{regTime},</if>
+            <if test="realPersonCnt != null">real_person_cnt = #{realPersonCnt},</if>
+            <if test="allowTipsCnt != null">allow_tips_cnt = #{allowTipsCnt},</if>
+            <if test="refuseTipsCnt != null">refuse_tips_cnt = #{refuseTipsCnt},</if>
+            <if test="waiverTipsCnt != null">waiver_tips_cnt = #{waiverTipsCnt},</if>
         </trim>
         where register_id = #{registerId}
     </update>
@@ -185,4 +212,8 @@
             #{registerId}
         </foreach>
     </delete>
+<!--    ****************************************************************************************-->
+
+
+
 </mapper>

@@ -18,7 +18,7 @@ import com.shahenpc.common.annotation.Log;
 import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.enums.BusinessType;
-import com.shahenpc.system.service.survey.ISurveyPaperService;
+import com.shahenpc.system.service.special.survey.ISurveyPaperService;
 import com.shahenpc.common.utils.poi.ExcelUtil;
 import com.shahenpc.common.core.page.TableDataInfo;
 

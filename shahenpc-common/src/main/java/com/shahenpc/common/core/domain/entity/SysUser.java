@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -21,6 +22,10 @@ import com.shahenpc.common.xss.Xss;
  */
 public class SysUser extends BaseEntity {
     private static final long serialVersionUID = 1L;
+
+
+    private Object eduLogList;
+
 
     /**
      * 用户ID
@@ -49,7 +54,7 @@ public class SysUser extends BaseEntity {
     /**
      * 用户邮箱
      */
-    @Excel(name = "用户邮箱")
+//    @Excel(name = "用户邮箱")
     private String email;
 
     /**
@@ -72,17 +77,20 @@ public class SysUser extends BaseEntity {
     /**
      * 密码
      */
+    @JsonIgnore
     private String password;
 
     /**
      * 帐号状态（0正常 1停用）
      */
+    @JsonIgnore
     @Excel(name = "帐号状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
     /**
      * 删除标志（0代表存在 2代表删除）
      */
+    @JsonIgnore
     private String delFlag;
 
 
@@ -95,13 +103,15 @@ public class SysUser extends BaseEntity {
     /**
      * 身份标识
      */
-    @Excel(name = "身份标识")
+//    @Excel(name = "身份标识")
+    @JsonIgnore
     private String identity;
 
     /**
      * 微信唯一身份标识
      */
-    @Excel(name = "微信唯一身份标识")
+//    @Excel(name = "微信唯一身份标识")
+    @JsonIgnore
     private String openId;
 
     /**
@@ -130,7 +140,6 @@ public class SysUser extends BaseEntity {
     private String nation;
 
     /** 用户状态 */
-    @Excel(name = "用户状态")
     private String userStatus;
 
     /**
@@ -159,6 +168,9 @@ public class SysUser extends BaseEntity {
     @Excel(name = "专业技术职务")
     private String duty;
 
+    @Excel(name="现任职务")
+    private String nowDuty;
+
     /**
      * 熟悉专业有何专长
      */
@@ -168,13 +180,12 @@ public class SysUser extends BaseEntity {
     /**
      * 个人简历
      */
-    @Excel(name = "个人简历")
     private String resume;
 
     /**
      * 附件id集合
      */
-    @Excel(name = "附件id集合")
+    @JsonIgnore
     private String fileIds;
 
 
@@ -183,6 +194,8 @@ public class SysUser extends BaseEntity {
      */
     @Excel(name = "最后登录IP", type = Type.EXPORT)
     private String loginIp;
+
+    private String edu;
 
     /**
      * 最后登录时间
@@ -544,6 +557,32 @@ public class SysUser extends BaseEntity {
                 .append("remark", getRemark())
                 .append("dept", getDept())
                 .append("userStatus", getUserStatus())
+                .append("nowDuty", getNowDuty())
+                .append("edu", getEdu())
                 .toString();
+    }
+
+    public String getNowDuty() {
+        return nowDuty;
+    }
+
+    public void setNowDuty(String nowDuty) {
+        this.nowDuty = nowDuty;
+    }
+
+    public String getEdu() {
+        return edu;
+    }
+
+    public void setEdu(String edu) {
+        this.edu = edu;
+    }
+
+    public Object getEduLogList() {
+        return eduLogList;
+    }
+
+    public void setEduLogList(Object eduLogList) {
+        this.eduLogList = eduLogList;
     }
 }

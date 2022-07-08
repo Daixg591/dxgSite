@@ -2,6 +2,7 @@ package com.shahenpc.system.service.impl.personel;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.personel.PersonnelAppointRegisterMapper;
@@ -39,7 +40,7 @@ public class PersonnelAppointRegisterServiceImpl implements IPersonnelAppointReg
      * @return 人事任免_任免记录
      */
     @Override
-    public List<PersonnelAppointRegister> selectPersonnelAppointRegisterList(PersonnelAppointRegister personnelAppointRegister)
+    public List<PersonnelAppointRegister> selectPersonnelAppointRegisterList(PersonnelQueryDto personnelAppointRegister)
     {
         List<PersonnelAppointRegister> list=personnelAppointRegisterMapper.selectPersonnelAppointRegisterList(personnelAppointRegister);
         for (PersonnelAppointRegister item:list) {
@@ -58,10 +59,11 @@ public class PersonnelAppointRegisterServiceImpl implements IPersonnelAppointReg
      * @return 结果
      */
     @Override
-    public int insertPersonnelAppointRegister(PersonnelAppointRegister personnelAppointRegister)
+    public Long insertPersonnelAppointRegister(PersonnelAppointRegister personnelAppointRegister)
     {
         personnelAppointRegister.setCreateTime(DateUtils.getNowDate());
-        return personnelAppointRegisterMapper.insertPersonnelAppointRegister(personnelAppointRegister);
+        Long id=personnelAppointRegisterMapper.insertPersonnelAppointRegister(personnelAppointRegister);
+        return id;
     }
 
     /**
