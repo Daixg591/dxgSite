@@ -1,4 +1,4 @@
-package com.shahenpc.system.service.survey;
+package com.shahenpc.system.service.special.survey;
 
 import java.util.List;
 import com.shahenpc.system.domain.survey.SurveyOptions;

@@ -2,6 +2,7 @@ package com.shahenpc.system.service.impl.personel;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.personel.PersonnelAppointReportMapper;
@@ -27,9 +28,9 @@ public class PersonnelAppointReportServiceImpl implements IPersonnelAppointRepor
      * @return 人事任免_述职报告
      */
     @Override
-    public PersonnelAppointReport selectPersonnelAppointReportByReportId(Long reportId)
+    public PersonnelAppointReport selectPersonnelAppointReportByReportId(Long registerId)
     {
-        return personnelAppointReportMapper.selectPersonnelAppointReportByReportId(reportId);
+        return personnelAppointReportMapper.selectPersonnelAppointReportByReportId(registerId);
     }
 
     /**
@@ -39,7 +40,7 @@ public class PersonnelAppointReportServiceImpl implements IPersonnelAppointRepor
      * @return 人事任免_述职报告
      */
     @Override
-    public List<PersonnelAppointReport> selectPersonnelAppointReportList(PersonnelAppointReport personnelAppointReport)
+    public List<PersonnelAppointReport> selectPersonnelAppointReportList(PersonnelQueryDto personnelAppointReport)
     {
         return personnelAppointReportMapper.selectPersonnelAppointReportList(personnelAppointReport);
     }
@@ -73,13 +74,13 @@ public class PersonnelAppointReportServiceImpl implements IPersonnelAppointRepor
     /**
      * 批量删除人事任免_述职报告
      * 
-     * @param reportIds 需要删除的人事任免_述职报告主键
+     * @param registerIds 需要删除的人事任免_述职报告主键
      * @return 结果
      */
     @Override
-    public int deletePersonnelAppointReportByReportIds(Long[] reportIds)
+    public int deletePersonnelAppointReportByReportIds(Long[] registerIds)
     {
-        return personnelAppointReportMapper.deletePersonnelAppointReportByReportIds(reportIds);
+        return personnelAppointReportMapper.deletePersonnelAppointReportByReportIds(registerIds);
     }
 
     /**

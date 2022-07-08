@@ -1,4 +1,4 @@
-package com.shahenpc.system.service.survey.impl;
+package com.shahenpc.system.service.special.survey.impl;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
@@ -6,7 +6,7 @@ import com.shahenpc.system.domain.survey.SurveyOptions;
 import com.shahenpc.system.mapper.survey.SurveyOptionsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.shahenpc.system.service.survey.ISurveyOptionsService;
+import com.shahenpc.system.service.special.survey.ISurveyOptionsService;
 
 /**
  * 题目选项Service业务层处理

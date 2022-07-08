@@ -15,7 +15,7 @@ public class PersonalInfo {
     /**
      * 教育记录
      */
-    private List<PersonnelAppointEduLog> eduLogList;
+//    private List<PersonnelAppointEduLog> eduLogList;
 
     public PersonnelAppointRegister getRegEntity() {
         return regEntity;
@@ -26,11 +26,11 @@ public class PersonalInfo {
     }
 
 
-    public List<PersonnelAppointEduLog> getEduLogList() {
-        return eduLogList;
-    }
-
-    public void setEduLogList(List<PersonnelAppointEduLog> eduLogList) {
-        this.eduLogList = eduLogList;
-    }
+//    public List<PersonnelAppointEduLog> getEduLogList() {
+//        return eduLogList;
+//    }
+//
+//    public void setEduLogList(List<PersonnelAppointEduLog> eduLogList) {
+//        this.eduLogList = eduLogList;
+//    }
 }

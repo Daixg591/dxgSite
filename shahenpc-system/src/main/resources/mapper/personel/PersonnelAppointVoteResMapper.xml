@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.personel.PersonnelAppointVoteResMapper">
+    
+    <resultMap type="PersonnelAppointVoteRes" id="PersonnelAppointVoteResResult">
+        <result property="voteId"    column="vote_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="voteName"    column="vote_name"    />
+        <result property="voteState"    column="vote_state"    />
+        <result property="scrutineer"    column="scrutineer"    />
+        <result property="tallyClerk"    column="tally_clerk"    />
+        <result property="voteTime"    column="vote_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="registerId"    column="register_id"    />
+    </resultMap>
+
+    <sql id="selectPersonnelAppointVoteResVo">
+        select vote_id, user_id, vote_name, vote_state, scrutineer, tally_clerk, vote_time, remark, create_by, create_time, update_by, update_time, del_flag, register_id from personnel_appoint_vote_res
+    </sql>
+
+    <select id="selectPersonnelAppointVoteResList" parameterType="PersonnelAppointVoteRes" resultMap="PersonnelAppointVoteResResult">
+        <include refid="selectPersonnelAppointVoteResVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="voteName != null  and voteName != ''"> and vote_name like concat('%', #{voteName}, '%')</if>
+            <if test="voteState != null  and voteState != ''"> and vote_state = #{voteState}</if>
+            <if test="scrutineer != null  and scrutineer != ''"> and scrutineer = #{scrutineer}</if>
+            <if test="tallyClerk != null  and tallyClerk != ''"> and tally_clerk = #{tallyClerk}</if>
+            <if test="voteTime != null "> and vote_time = #{voteTime}</if>
+            <if test="registerId != null "> and register_id = #{registerId}</if>
+        </where>
+    </select>
+    
+    <select id="selectPersonnelAppointVoteResByVoteId" parameterType="Long" resultMap="PersonnelAppointVoteResResult">
+        <include refid="selectPersonnelAppointVoteResVo"/>
+        where vote_id = #{voteId}
+    </select>
+        
+    <insert id="insertPersonnelAppointVoteRes" parameterType="PersonnelAppointVoteRes" useGeneratedKeys="true" keyProperty="voteId">
+        insert into personnel_appoint_vote_res
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="voteName != null">vote_name,</if>
+            <if test="voteState != null">vote_state,</if>
+            <if test="scrutineer != null">scrutineer,</if>
+            <if test="tallyClerk != null">tally_clerk,</if>
+            <if test="voteTime != null">vote_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="registerId != null">register_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="voteName != null">#{voteName},</if>
+            <if test="voteState != null">#{voteState},</if>
+            <if test="scrutineer != null">#{scrutineer},</if>
+            <if test="tallyClerk != null">#{tallyClerk},</if>
+            <if test="voteTime != null">#{voteTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="registerId != null">#{registerId},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePersonnelAppointVoteRes" parameterType="PersonnelAppointVoteRes">
+        update personnel_appoint_vote_res
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="voteName != null">vote_name = #{voteName},</if>
+            <if test="voteState != null">vote_state = #{voteState},</if>
+            <if test="scrutineer != null">scrutineer = #{scrutineer},</if>
+            <if test="tallyClerk != null">tally_clerk = #{tallyClerk},</if>
+            <if test="voteTime != null">vote_time = #{voteTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="registerId != null">register_id = #{registerId},</if>
+        </trim>
+        where vote_id = #{voteId}
+    </update>
+
+    <delete id="deletePersonnelAppointVoteResByVoteId" parameterType="Long">
+        delete from personnel_appoint_vote_res where vote_id = #{voteId}
+    </delete>
+
+    <delete id="deletePersonnelAppointVoteResByVoteIds" parameterType="String">
+        delete from personnel_appoint_vote_res where vote_id in 
+        <foreach item="voteId" collection="array" open="(" separator="," close=")">
+            #{voteId}
+        </foreach>
+    </delete>
+</mapper>

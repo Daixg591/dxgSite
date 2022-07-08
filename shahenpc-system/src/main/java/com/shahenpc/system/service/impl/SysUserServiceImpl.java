@@ -1,9 +1,13 @@
 package com.shahenpc.system.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
+
+import com.shahenpc.system.domain.personel.PersonnelAppointEduLog;
+import com.shahenpc.system.service.personel.IPersonnelAppointEduLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +65,8 @@ public class SysUserServiceImpl implements ISysUserService
     @Autowired
     protected Validator validator;
 
+    @Autowired
+    private IPersonnelAppointEduLogService eduLogService;
     /**
      * 根据条件分页查询用户列表
      * 
@@ -121,7 +127,12 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public SysUser selectUserById(Long userId)
     {
-        return userMapper.selectUserById(userId);
+        SysUser res=userMapper.selectUserById(userId);
+        PersonnelAppointEduLog param=new PersonnelAppointEduLog();
+        param.setUserId(userId);
+        List<PersonnelAppointEduLog> eduList=eduLogService.selectPersonnelAppointEduLogList(param);
+        res.setEduLogList(eduList);
+        return res;
     }
 
     /**
