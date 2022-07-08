@@ -1,10 +1,13 @@
 package com.shahenpc.system.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
 
+import com.shahenpc.system.domain.personel.PersonnelAppointEduLog;
+import com.shahenpc.system.service.personel.IPersonnelAppointEduLogService;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.age.AgeUtils;
@@ -69,6 +72,8 @@ public class SysUserServiceImpl implements ISysUserService
     @Autowired
     private ISysDictDataService dictDataService;
 
+    @Autowired
+    private IPersonnelAppointEduLogService eduLogService;
     /**
      * 根据条件分页查询用户列表
      * 
@@ -129,7 +134,12 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public SysUser selectUserById(Long userId)
     {
-        return userMapper.selectUserById(userId);
+        SysUser res=userMapper.selectUserById(userId);
+        PersonnelAppointEduLog param=new PersonnelAppointEduLog();
+        param.setUserId(userId);
+        List<PersonnelAppointEduLog> eduList=eduLogService.selectPersonnelAppointEduLogList(param);
+        res.setEduLogList(eduList);
+        return res;
     }
 
     /**

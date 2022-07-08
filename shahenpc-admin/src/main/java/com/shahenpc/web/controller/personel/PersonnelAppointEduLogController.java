@@ -32,7 +32,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  * @author ruoyi
  * @date 2022-07-04
  */
-@Api(tags = "人员教育记录信息")
+@Api(tags = "用户信息_人员教育记录信息 Done √")
 @RestController
 @RequestMapping("/system/log")
 public class PersonnelAppointEduLogController extends BaseController
