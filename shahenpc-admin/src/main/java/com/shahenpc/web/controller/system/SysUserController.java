@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ import com.shahenpc.system.service.ISysUserService;
  * 
  * @author ruoyi
  */
+@Api("用户管理")
 @RestController
 @RequestMapping("/system/user")
 public class SysUserController extends BaseController
@@ -248,5 +250,37 @@ public class SysUserController extends BaseController
         startPage();
         List<SysUser> list = userService.selectUserList(user);
         return getDataTable(list);
+    }
+
+
+    /**
+     * 人大代表性别分布
+     */
+    @ApiOperation("性别饼图")
+    @PreAuthorize("@ss.hasPermi('user:gender:cake')")
+    @GetMapping("/gender/cake")
+    public AjaxResult genderCake(){
+        return AjaxResult.success(userService.genderCake());
+    }
+
+    /**
+     * 人大代表年龄分布
+     */
+    @ApiOperation("年龄饼图")
+    @PreAuthorize("@ss.hasPermi('user:age:cake')")
+    @GetMapping("/age/cake")
+    public AjaxResult ageCake(){
+
+        return AjaxResult.success(userService.ageCake());
+    }
+    /**
+     * 人大代表学历分布
+     */
+    @ApiOperation("学历饼图")
+    @PreAuthorize("@ss.hasPermi('user:degree:cake')")
+    @GetMapping("/degree/cake")
+    public AjaxResult degreeCake(){
+
+        return AjaxResult.success(userService.degreeCake());
     }
 }

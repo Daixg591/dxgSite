@@ -40,6 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"   column="update_time"  />
         <result property="remark"       column="remark"       />
 		<result property="nowDuty"       column="now_duty"       />
+		<result property="edu"    column="edu"    />
         <association property="dept"    column="dept_id" javaType="SysDept" resultMap="deptResult" />
         <collection  property="roles"   javaType="java.util.List"           resultMap="RoleResult" />
     </resultMap>
@@ -67,7 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
 			   u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date, u.job_date, u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.user_status,u.now_duty,u.edu,
             d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.status as dept_status,
-               r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status
+               r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status,u.edu
         from sys_user u
 		    left join sys_dept d on u.dept_id = d.dept_id
 		    left join sys_user_role ur on u.user_id = ur.user_id
@@ -297,5 +298,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectUserByUserIds" resultMap="SysUserResult" parameterType="java.lang.String">
 		SELECT * FROM sys_user where user_id in(${userIds})
+	</select>
+
+	<select id="selectByWomanCount" resultType="java.lang.Integer">
+		SELECT COUNT(u.user_id) FROM sys_user u WHERE u.sex = 0 AND u.identity = 1
+	</select>
+	<select id="selectByManCount" resultType="java.lang.Integer">
+		SELECT COUNT(u.user_id) FROM sys_user u WHERE u.sex = 1 AND u.identity = 1
 	</select>
 </mapper>

@@ -1,7 +1,9 @@
 package com.shahenpc.system.service;
 
 import java.util.List;
+
 import com.shahenpc.common.core.domain.entity.SysUser;
+import com.shahenpc.system.domain.dto.NpcCakeDto;
 
 /**
  * 用户 业务层
@@ -208,4 +210,11 @@ public interface ISysUserService
     public SysUser selectUserByuserIds(String userIds);
 
     public List<SysUser> selectUserByUserIds(String userIds);
+
+
+    public List<NpcCakeDto> genderCake();
+
+    public List<NpcCakeDto> ageCake();
+
+    public List<NpcCakeDto> degreeCake();
 }

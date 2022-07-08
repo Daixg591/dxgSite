@@ -46,6 +46,15 @@ public class JobMotion extends BaseEntity
     @Excel(name = "分割用户名字")
     private String suggestUserName;
 
+    /** 发送id */
+    @Excel(name = "发送id")
+    private Long sendUserId;
+
+    /** $column.columnComment */
+    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    private String sendUserName;
+
+
     public void setMotionId(Long motionId) 
     {
         this.motionId = motionId;

@@ -8,6 +8,11 @@ import javax.validation.Validator;
 
 import com.shahenpc.system.domain.personel.PersonnelAppointEduLog;
 import com.shahenpc.system.service.personel.IPersonnelAppointEduLogService;
+import com.shahenpc.common.core.domain.entity.SysDictData;
+import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.common.utils.age.AgeUtils;
+import com.shahenpc.system.domain.dto.NpcCakeDto;
+import com.shahenpc.system.service.ISysDictDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +69,8 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     protected Validator validator;
+    @Autowired
+    private ISysDictDataService dictDataService;
 
     @Autowired
     private IPersonnelAppointEduLogService eduLogService;
@@ -558,5 +565,89 @@ public class SysUserServiceImpl implements ISysUserService
     public List<SysUser> selectUserByUserIds(String userIds) {
         return userMapper.selectUserByUserIds(userIds);
     }
+
+    @Override
+    public List<NpcCakeDto> genderCake() {
+        List<NpcCakeDto> BpcList = new ArrayList();
+        NpcCakeDto man = new NpcCakeDto();
+        man.setName("男");
+        man.setValue(userMapper.selectByManCount());
+        NpcCakeDto woman = new NpcCakeDto();
+        woman.setName("女");
+        woman.setValue(userMapper.selectByWomanCount());
+        BpcList.add(man);
+        BpcList.add(woman);
+        return BpcList;
+    }
+
+    @Override
+    public List<NpcCakeDto> ageCake() {
+        List<NpcCakeDto> BpcList = new ArrayList();
+        SysUser sysUser = new SysUser();
+        sysUser.setIdentity("1");
+        List<SysUser> listuser=userMapper.selectUserList(sysUser);
+        List<Integer> age = new ArrayList<>();
+        for (SysUser item :listuser){
+            age.add(AgeUtils.bornDate(DateUtils.dateYear(item.getBornDate())));
+        }
+        int thirty = 0;
+        int fifty = 0;
+        int sixty = 0;
+        int sixty1 = 0;
+        for(Integer aaa: age){
+            if(aaa <36){
+                thirty++;
+            }
+            if(aaa>35 && aaa<51){
+                fifty++;
+            }
+            if(aaa>50 && aaa<61){
+                sixty++;
+            }
+            if(aaa>60){
+                sixty1++;
+            }
+
+        }
+        NpcCakeDto dto = new NpcCakeDto();
+        dto.setName("35岁以下");
+        dto.setValue(thirty);
+        BpcList.add(dto);
+        NpcCakeDto dto1 = new NpcCakeDto();
+        dto1.setName("36~50岁");
+        dto1.setValue(fifty);
+        BpcList.add(dto1);
+        NpcCakeDto dto2 = new NpcCakeDto();
+        dto2.setName("51~60岁");
+        dto2.setValue(sixty);
+        BpcList.add(dto2);
+        NpcCakeDto dto3 = new NpcCakeDto();
+        dto3.setName("60岁以上");
+        dto3.setValue(sixty1);
+        BpcList.add(dto2);
+        return BpcList;
+    }
+
+    @Override
+    public List<NpcCakeDto> degreeCake() {
+        List<NpcCakeDto> dto = new ArrayList<>();
+        SysUser sysUser = new SysUser();
+        sysUser.setIdentity("1");
+        List<SysUser> listuser=userMapper.selectUserList(sysUser);
+        SysDictData dictParam = new SysDictData();
+        dictParam.setDictType("leader_education_type");
+        List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            int v = listuser.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getEdu()))
+                    .collect(Collectors.toList()).size();
+            NpcCakeDto item = new NpcCakeDto();
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
+            dto.add(item);
+        }
+        return dto;
+    }
+
 
 }

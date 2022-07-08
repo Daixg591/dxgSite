@@ -310,10 +310,15 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
             motion.setMotionType(Integer.parseInt(variables.get("motionType").toString()));
             motion.setTitle(variables.get("title").toString());
             motion.setContent(variables.get("content").toString());
+            //提议人
+            motion.setSuggestUserName(variables.get("suggestUserName").toString());
             //${INITIATOR}  #{approval}
+            //选择审批人
             motion.setSuggestUserId(variables.get("approval").toString());
+
+            //数组存储
             List<SysUser> user=sysUserService.selectUserByUserIds(variables.get("approval").toString());
-            motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
+            //motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
             motion.setWorkflowId(task.getProcessInstanceId());
             jobMotionService.insertJobMotion(motion);
             return AjaxResult.success("流程启动成功");
