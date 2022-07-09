@@ -16,6 +16,36 @@ import com.shahenpc.common.core.domain.BaseEntity;
 public class PersonnelAppointVow extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+
+    /**
+     * 姓名
+     */
+    @Excel(name = "姓名")
+    private String nickName;
+
+    /**
+     * 性别
+     */
+    @Excel(name = "性別", readConverterExp = "0=男,1=女,2=未知")
+    private String sex;
+
+    /**
+     * 手机号
+     */
+    @Excel(name = "手机号")
+    private String phonenumber;
+
+    /**
+     * 身份证号
+     */
+    @Excel(name = "身份证号")
+    private String idCard;
+
+    /**
+     * 任免类型
+     */
+    private String appointType;
+
     /**
      * 用户详情
      */
@@ -155,5 +185,45 @@ public class PersonnelAppointVow extends BaseEntity {
 
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
+    public String getAppointType() {
+        return appointType;
+    }
+
+    public void setAppointType(String appointType) {
+        this.appointType = appointType;
     }
 }

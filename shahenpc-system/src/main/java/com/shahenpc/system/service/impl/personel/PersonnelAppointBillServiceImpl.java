@@ -47,6 +47,7 @@ public class PersonnelAppointBillServiceImpl implements IPersonnelAppointBillSer
             item.setSex(item.getSysUser().getSex());
             item.setPhonenumber(item.getSysUser().getPhonenumber());
             item.setIdCard(item.getSysUser().getIdCard());
+            item.setAppointType(item.getAppointType());
         }
         return list;
     }

@@ -23,6 +23,13 @@ public class PersonnelAppointAppointment extends BaseEntity
     @JsonIgnore
     private SysUser sysUser;
 
+    private String nickName;
+    private String sex;
+    private String phonenumber;
+    private String idCard;
+    private String appointType;
+
+
     /**
      * 任免记录详情
      */
@@ -122,5 +129,45 @@ public class PersonnelAppointAppointment extends BaseEntity
 
     public void setRegEntity(PersonnelAppointRegister regEntity) {
         this.regEntity = regEntity;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
+    public String getAppointType() {
+        return appointType;
+    }
+
+    public void setAppointType(String appointType) {
+        this.appointType = appointType;
     }
 }

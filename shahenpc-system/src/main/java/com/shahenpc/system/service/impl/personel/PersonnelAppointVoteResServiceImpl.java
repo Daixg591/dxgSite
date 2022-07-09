@@ -41,6 +41,7 @@ public class PersonnelAppointVoteResServiceImpl implements IPersonnelAppointVote
     @Override
     public List<PersonnelAppointVoteRes> selectPersonnelAppointVoteResList(PersonnelAppointVoteRes personnelAppointVoteRes)
     {
+
         return personnelAppointVoteResMapper.selectPersonnelAppointVoteResList(personnelAppointVoteRes);
     }
 

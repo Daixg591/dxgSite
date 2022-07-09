@@ -77,7 +77,6 @@ public class PersonnelAppointRegisterController extends BaseController {
             @ApiImplicitParam(name = "endTime", value = "结束时间", dataType = "String", dataTypeClass = Date.class)
     })
     @ApiOperation("任免列表")
-
     public TableDataInfo list(PersonnelQueryDto personnelAppointRegister) {
         startPage();
         List<PersonnelAppointRegister> list = personnelAppointRegisterService.selectPersonnelAppointRegisterList(personnelAppointRegister);
@@ -124,6 +123,7 @@ public class PersonnelAppointRegisterController extends BaseController {
     @ApiOperation("新增任免")
     @PostMapping
     public AjaxResult add(@RequestBody PersonnelAppointRegister personnelAppointRegister) {
+        personnelAppointRegister.setCreateBy(getUsername());
         personnelAppointRegisterService.insertPersonnelAppointRegister(personnelAppointRegister);
         return AjaxResult.success(personnelAppointRegister.getRegisterId());
     }
@@ -136,6 +136,7 @@ public class PersonnelAppointRegisterController extends BaseController {
     @Log(title = "人事任免_任免记录", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody PersonnelAppointRegister personnelAppointRegister) {
+        personnelAppointRegister.setUpdateBy(getUsername());
         return toAjax(personnelAppointRegisterService.updatePersonnelAppointRegister(personnelAppointRegister));
     }
 

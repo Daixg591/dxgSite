@@ -1,4 +1,4 @@
-package com.shahenpc.web.controller.tool;
+package com.shahenpc.web.core.config.tool;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

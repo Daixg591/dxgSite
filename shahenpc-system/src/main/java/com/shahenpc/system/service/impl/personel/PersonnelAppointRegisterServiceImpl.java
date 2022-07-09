@@ -1,5 +1,6 @@
 package com.shahenpc.system.service.impl.personel;
 
+import java.util.Comparator;
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
@@ -48,6 +49,7 @@ public class PersonnelAppointRegisterServiceImpl implements IPersonnelAppointReg
             item.setSex(item.getSysUser().getSex());
             item.setPhonenumber(item.getSysUser().getPhonenumber());
             item.setIdCard(item.getSysUser().getIdCard());
+            item.setAppointType(item.getAppointType());
         }
         return list;
     }

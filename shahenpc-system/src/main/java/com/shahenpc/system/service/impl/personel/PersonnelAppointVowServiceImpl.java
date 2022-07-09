@@ -2,6 +2,7 @@ package com.shahenpc.system.service.impl.personel;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.personel.PersonnelAppointSpeak;
 import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import com.shahenpc.system.service.personel.IPersonnelAppointVowService;
  * @date 2022-07-06
  */
 @Service
-public class PersonnelAppointVowServiceImpl implements IPersonnelAppointVowService 
+public class PersonnelAppointVowServiceImpl implements IPersonnelAppointVowService
 {
     @Autowired
     private PersonnelAppointVowMapper personnelAppointVowMapper;
@@ -42,7 +43,15 @@ public class PersonnelAppointVowServiceImpl implements IPersonnelAppointVowServi
     @Override
     public List<PersonnelAppointVow> selectPersonnelAppointVowList(PersonnelQueryDto personnelAppointVow)
     {
-        return personnelAppointVowMapper.selectPersonnelAppointVowList(personnelAppointVow);
+        List<PersonnelAppointVow>  list= personnelAppointVowMapper.selectPersonnelAppointVowList(personnelAppointVow);
+        for (PersonnelAppointVow item : list) {
+            item.setNickName(item.getSysUser().getNickName());
+            item.setSex(item.getSysUser().getSex());
+            item.setPhonenumber(item.getSysUser().getPhonenumber());
+            item.setIdCard(item.getSysUser().getIdCard());
+            item.setAppointType(item.getAppointType());
+        }
+        return list;
     }
 
     /**

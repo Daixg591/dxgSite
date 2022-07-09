@@ -16,6 +16,8 @@ import com.shahenpc.common.core.domain.BaseEntity;
 public class PersonnelAppointReport extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+
+
     /**
      * 用户详情
      */

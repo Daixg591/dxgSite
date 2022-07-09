@@ -14,6 +14,22 @@ import com.shahenpc.common.core.domain.BaseEntity;
 public class PersonnelAppointNotice extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+
+    /**
+     * 阅读次数
+     */
+    private Integer readCnt;
+
+    /**
+     * 分享次数
+     */
+    private Integer shareCnt;
+
+    /**
+     * 用户名
+     */
+    private String nickName;
+
     /**
      * 通知id
      */
@@ -117,6 +133,8 @@ public class PersonnelAppointNotice extends BaseEntity {
                 .append("updateTime", getUpdateTime())
                 .append("delFlag", getDelFlag())
                 .append("type", getType())
+                .append("readCnt", getReadCnt())
+                .append("shareCnt", getShareCnt())
                 .toString();
     }
 
@@ -126,5 +144,29 @@ public class PersonnelAppointNotice extends BaseEntity {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public Integer getReadCnt() {
+        return readCnt;
+    }
+
+    public void setReadCnt(Integer readCnt) {
+        this.readCnt = readCnt;
+    }
+
+    public Integer getShareCnt() {
+        return shareCnt;
+    }
+
+    public void setShareCnt(Integer shareCnt) {
+        this.shareCnt = shareCnt;
     }
 }

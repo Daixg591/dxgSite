@@ -96,6 +96,8 @@ public class PersonnelAppointSpeakController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody PersonnelAppointSpeak personnelAppointSpeak)
     {
+        personnelAppointSpeak.setUserId(getUserId());
+        personnelAppointSpeak.setCreateBy(getUsername());
         return toAjax(personnelAppointSpeakService.insertPersonnelAppointSpeak(personnelAppointSpeak));
     }
 
@@ -108,6 +110,7 @@ public class PersonnelAppointSpeakController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody PersonnelAppointSpeak personnelAppointSpeak)
     {
+        personnelAppointSpeak.setUpdateBy(getUsername());
         return toAjax(personnelAppointSpeakService.updatePersonnelAppointSpeak(personnelAppointSpeak));
     }
 

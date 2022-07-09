@@ -19,6 +19,8 @@ public interface IPersonnelAppointNoticeService
      */
     public PersonnelAppointNotice selectPersonnelAppointNoticeByNoticeId(Long noticeId);
 
+    public PersonnelAppointNotice selectDetailByNoticeId(Long noticeId);
+
     /**
      * 查询人事任免_任免通知列表
      * 

@@ -17,10 +17,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="type"    column="type"    />
+        <result property="readCnt"    column="read_cnt"    />
+        <result property="shareCnt"    column="share_cnt"    />
     </resultMap>
 
     <sql id="selectPersonnelAppointNoticeVo">
-        select notice_id, cover_url, title, details, state, remark, create_by, create_time, update_by, update_time, del_flag,type from personnel_appoint_notice
+        select notice_id, cover_url, title, details, state, remark, create_by, create_time, update_by, update_time, del_flag,type,read_cnt,share_cnt
+        from personnel_appoint_notice
     </sql>
 
     <select id="selectPersonnelAppointNoticeList" parameterType="PersonnelAppointNotice" resultMap="PersonnelAppointNoticeResult">
@@ -31,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="details != null  and details != ''"> and details = #{details}</if>
             <if test="state != null  and state != ''"> and state = #{state}</if>
         </where>
+        order by create_time desc
     </select>
     
     <select id="selectPersonnelAppointNoticeByNoticeId" parameterType="Long" resultMap="PersonnelAppointNoticeResult">
@@ -52,6 +56,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="type != null">type,</if>
+            <if test="readCnt != null">read_cnt,</if>
+            <if test="shareCnt != null">share_cnt,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="coverUrl != null">#{coverUrl},</if>
@@ -65,6 +71,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="type != null">#{type},</if>
+            <if test="readCnt != null">#{readCnt},</if>
+            <if test="shareCnt != null">#{shareCnt},</if>
          </trim>
     </insert>
 
@@ -82,6 +90,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="type != null">type = #{type},</if>
+            <if test="readCnt != null">read_cnt = #{readCnt},</if>
+            <if test="shareCnt != null">share_cnt = #{shareCnt},</if>
         </trim>
         where notice_id = #{noticeId}
     </update>
