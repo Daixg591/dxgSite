@@ -153,6 +153,10 @@ public class PersonnelAppointNoticeController extends BaseController {
         return AjaxResult.success();
     }
 
+    /**
+     * 通知统计数据-任免通知
+     * @return
+     */
     @ApiOperation("通知统计数据-任免通知")
     @GetMapping(value = "/noticeTJ")
     public AjaxResult noticeTJ() {
