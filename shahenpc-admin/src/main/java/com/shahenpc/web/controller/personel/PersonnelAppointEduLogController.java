@@ -93,6 +93,7 @@ public class PersonnelAppointEduLogController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody PersonnelAppointEduLog personnelAppointEduLog)
     {
+        personnelAppointEduLog.setCreateBy(getUsername());
         return toAjax(personnelAppointEduLogService.insertPersonnelAppointEduLog(personnelAppointEduLog));
     }
 
@@ -105,6 +106,7 @@ public class PersonnelAppointEduLogController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody PersonnelAppointEduLog personnelAppointEduLog)
     {
+        personnelAppointEduLog.setUpdateBy(getUsername());
         return toAjax(personnelAppointEduLogService.updatePersonnelAppointEduLog(personnelAppointEduLog));
     }
 

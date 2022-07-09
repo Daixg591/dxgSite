@@ -95,6 +95,7 @@ public class PersonnelAppointAppointmentController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody PersonnelAppointAppointment personnelAppointAppointment)
     {
+        personnelAppointAppointment.setCreateBy(getUsername());
         return toAjax(personnelAppointAppointmentService.insertPersonnelAppointAppointment(personnelAppointAppointment));
     }
 
@@ -107,6 +108,7 @@ public class PersonnelAppointAppointmentController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody PersonnelAppointAppointment personnelAppointAppointment)
     {
+        personnelAppointAppointment.setUpdateBy(getUsername());
         return toAjax(personnelAppointAppointmentService.updatePersonnelAppointAppointment(personnelAppointAppointment));
     }
 

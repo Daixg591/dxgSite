@@ -29,7 +29,19 @@ public class PersonnelAppointNoticeServiceImpl implements IPersonnelAppointNotic
     @Override
     public PersonnelAppointNotice selectPersonnelAppointNoticeByNoticeId(Long noticeId)
     {
-        return personnelAppointNoticeMapper.selectPersonnelAppointNoticeByNoticeId(noticeId);
+        PersonnelAppointNotice entity=personnelAppointNoticeMapper.selectPersonnelAppointNoticeByNoticeId(noticeId);
+        if (entity.getReadCnt()==null){
+            entity.setReadCnt(0);
+        }
+        entity.setReadCnt(entity.getReadCnt()+1);
+        alterPersonnelAppointNotice(entity);
+        return entity;
+    }
+
+    @Override
+    public PersonnelAppointNotice selectDetailByNoticeId(Long noticeId){
+        PersonnelAppointNotice entity=personnelAppointNoticeMapper.selectPersonnelAppointNoticeByNoticeId(noticeId);
+        return entity;
     }
 
     /**
@@ -70,6 +82,7 @@ public class PersonnelAppointNoticeServiceImpl implements IPersonnelAppointNotic
         return personnelAppointNoticeMapper.updatePersonnelAppointNotice(personnelAppointNotice);
     }
 
+
     /**
      * 批量删除人事任免_任免通知
      * 
@@ -93,4 +106,12 @@ public class PersonnelAppointNoticeServiceImpl implements IPersonnelAppointNotic
     {
         return personnelAppointNoticeMapper.deletePersonnelAppointNoticeByNoticeId(noticeId);
     }
+
+
+
+    public int alterPersonnelAppointNotice(PersonnelAppointNotice personnelAppointNotice)
+    {
+        return personnelAppointNoticeMapper.updatePersonnelAppointNotice(personnelAppointNotice);
+    }
+
 }

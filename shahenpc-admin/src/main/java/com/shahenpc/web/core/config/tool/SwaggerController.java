@@ -1,4 +1,4 @@
-package com.shahenpc.web.controller.tool;
+package com.shahenpc.web.core.config.tool;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

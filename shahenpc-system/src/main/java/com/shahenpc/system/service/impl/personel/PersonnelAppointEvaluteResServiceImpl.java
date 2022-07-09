@@ -2,6 +2,7 @@ package com.shahenpc.system.service.impl.personel;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.personel.PersonnelAppointBill;
 import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,15 @@ public class PersonnelAppointEvaluteResServiceImpl implements IPersonnelAppointE
     @Override
     public List<PersonnelAppointEvaluteRes> selectPersonnelAppointEvaluteResList(PersonnelQueryDto personnelAppointEvaluteRes)
     {
-        return personnelAppointEvaluteResMapper.selectPersonnelAppointEvaluteResList(personnelAppointEvaluteRes);
+        List<PersonnelAppointEvaluteRes> list= personnelAppointEvaluteResMapper.selectPersonnelAppointEvaluteResList(personnelAppointEvaluteRes);
+        for (PersonnelAppointEvaluteRes item : list) {
+            item.setNickName(item.getSysUser().getNickName());
+            item.setSex(item.getSysUser().getSex());
+            item.setPhonenumber(item.getSysUser().getPhonenumber());
+            item.setIdCard(item.getSysUser().getIdCard());
+            item.setAppointType(item.getAppointType());
+        }
+        return list;
     }
 
     /**

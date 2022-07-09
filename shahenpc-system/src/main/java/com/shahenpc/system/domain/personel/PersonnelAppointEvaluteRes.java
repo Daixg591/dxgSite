@@ -18,6 +18,30 @@ public class PersonnelAppointEvaluteRes extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /**
+     * 姓名
+     */
+    private String nickName;
+
+    /**
+     * 性别
+     */
+    private String sex;
+
+    /**
+     * 手机号
+     */
+    private String phonenumber;
+
+    /**
+     * 身份证号
+     */
+    private String idCard;
+
+
+    private String appointType;
+
+
+    /**
      * 用户详情
      */
     @JsonIgnore
@@ -150,5 +174,46 @@ public class PersonnelAppointEvaluteRes extends BaseEntity
 
     public void setRegEntity(PersonnelAppointRegister regEntity) {
         this.regEntity = regEntity;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
+
+    public String getAppointType() {
+        return appointType;
+    }
+
+    public void setAppointType(String appointType) {
+        this.appointType = appointType;
     }
 }

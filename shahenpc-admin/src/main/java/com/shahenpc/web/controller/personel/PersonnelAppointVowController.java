@@ -96,6 +96,7 @@ public class PersonnelAppointVowController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody PersonnelAppointVow personnelAppointVow)
     {
+        personnelAppointVow.setCreateBy(getUsername());
         return toAjax(personnelAppointVowService.insertPersonnelAppointVow(personnelAppointVow));
     }
 
@@ -108,6 +109,7 @@ public class PersonnelAppointVowController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody PersonnelAppointVow personnelAppointVow)
     {
+        personnelAppointVow.setUpdateBy(getUsername());
         return toAjax(personnelAppointVowService.updatePersonnelAppointVow(personnelAppointVow));
     }
 

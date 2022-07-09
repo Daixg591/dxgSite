@@ -78,6 +78,7 @@ public class PersonnelAppointVoteResController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody PersonnelAppointVoteRes personnelAppointVoteRes)
     {
+        personnelAppointVoteRes.setCreateBy(getUsername());
         return toAjax(personnelAppointVoteResService.insertPersonnelAppointVoteRes(personnelAppointVoteRes));
     }
 
@@ -89,6 +90,7 @@ public class PersonnelAppointVoteResController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody PersonnelAppointVoteRes personnelAppointVoteRes)
     {
+        personnelAppointVoteRes.setUpdateBy(getUsername());
         return toAjax(personnelAppointVoteResService.updatePersonnelAppointVoteRes(personnelAppointVoteRes));
     }
 

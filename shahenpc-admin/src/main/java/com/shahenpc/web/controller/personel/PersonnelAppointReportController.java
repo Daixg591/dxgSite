@@ -99,6 +99,7 @@ public class PersonnelAppointReportController extends BaseController
     @ApiOperation("新增-述职报告")
     public AjaxResult add(@RequestBody PersonnelAppointReport personnelAppointReport)
     {
+        personnelAppointReport.setCreateBy(getUsername());
         return toAjax(personnelAppointReportService.insertPersonnelAppointReport(personnelAppointReport));
     }
 
@@ -111,6 +112,7 @@ public class PersonnelAppointReportController extends BaseController
     @ApiOperation("更新-述职报告")
     public AjaxResult edit(@RequestBody PersonnelAppointReport personnelAppointReport)
     {
+        personnelAppointReport.setUpdateBy(getUsername());
         return toAjax(personnelAppointReportService.updatePersonnelAppointReport(personnelAppointReport));
     }
 
