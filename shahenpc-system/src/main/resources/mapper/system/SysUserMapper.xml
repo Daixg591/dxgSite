@@ -293,13 +293,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!--===================================分割线-->
 	<select id="selectUserByuserIds" resultMap="SysUserResult">
 		<include refid="selectUserVo"/>
-		where u.user_id in(#{userIds}) LIMIT 1
+		where u.user_id in(#{userIds})
 	</select>
-
-	<select id="selectUserByUserIds" resultMap="SysUserResult" parameterType="java.lang.String">
-		SELECT * FROM sys_user where user_id in(${userIds})
-	</select>
-
 	<select id="selectByWomanCount" resultType="java.lang.Integer">
 		SELECT COUNT(u.user_id) FROM sys_user u WHERE u.sex = 0 AND u.identity = 1
 	</select>

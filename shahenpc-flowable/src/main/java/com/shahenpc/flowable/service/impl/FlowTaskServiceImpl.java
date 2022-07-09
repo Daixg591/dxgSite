@@ -22,10 +22,12 @@ import com.shahenpc.flowable.flow.FindNextNodeUtil;
 import com.shahenpc.flowable.flow.FlowableUtils;
 import com.shahenpc.flowable.service.IFlowTaskService;
 import com.shahenpc.flowable.service.ISysDeployFormService;
+import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.system.domain.SysForm;
 import com.shahenpc.system.domain.censor.CensorProcess;
 import com.shahenpc.system.domain.job.JobMotion;
 import com.shahenpc.system.domain.message.MessageData;
+import com.shahenpc.system.mapper.FlowDeployMapper;
 import com.shahenpc.system.service.ISysRoleService;
 import com.shahenpc.system.service.ISysUserService;
 import com.shahenpc.system.service.censor.ICensorProcessService;
@@ -561,7 +563,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setTitle(motion.getTitle());
                 flowTask.setContent(motion.getContent());
                 flowTask.setSuggestUserId(motion.getSuggestUserId());
-                List<SysUser> user=sysUserService.selectUserByUserIds(motion.getSuggestUserId());
+                List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
                 motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
             }
@@ -632,6 +634,88 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         }
         page.setRecords(flowList);
         return AjaxResult.success(page);
+    }
+    @Resource
+    private FlowDeployMapper flowDeployMapper;
+    @Override
+    public AjaxResult newDoneList(Integer pageNum, Integer pageSize, String processDefinitionName,String deployName) {
+        Page<FlowTaskDto> page = new Page<>();
+        List<FlowProcDefDto> dto = flowDeployMapper.selectDeployList(deployName);
+        Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
+        List<HistoricActivityInstance> list = historyService
+                .createHistoricActivityInstanceQuery()
+                .activityName(processDefinitionName)
+                .taskAssignee(userId.toString())
+                .processDefinitionId(dto.get(0).getId())
+                .orderByHistoricActivityInstanceStartTime()
+                .desc().listPage(pageSize * (pageNum - 1), pageSize);
+            //自定义
+            page.setTotal(historyService
+                    .createHistoricActivityInstanceQuery()
+                    .activityName(processDefinitionName)
+                    .taskAssignee(userId.toString())
+                    .processDefinitionId(dto.get(0).getId())
+                    .orderByHistoricActivityInstanceStartTime()
+                    .desc().count());
+            List<FlowTaskDto> flowList = new ArrayList<>();
+        for(HistoricActivityInstance item:list){
+                FlowTaskDto flowTask = new FlowTaskDto();
+                flowTask.setCreateTime(item.getStartTime());
+                flowTask.setFinishTime(item.getEndTime());
+                flowTask.setProcInsId(item.getId());
+                flowTask.setTaskName(item.getActivityName());
+                flowTask.setAssigneeName("");
+                SysUser startUser = sysUserService.selectUserById(Long.parseLong(item.getAssignee()));
+                flowTask.setDeptName(startUser.getDept().getDeptName());
+                flowTask.setStartUserName(startUser.getUserName());
+                //flowTask.setResults();
+                // 计算耗时
+                if (Objects.nonNull(item.getEndTime())) {
+                    long time = item.getEndTime().getTime() - item.getStartTime().getTime();
+                    flowTask.setDuration(getDate(time));
+                } else {
+                    long time = System.currentTimeMillis() - item.getStartTime().getTime();
+                    flowTask.setDuration(getDate(time));
+                }
+                // 流程定义信息
+                ProcessDefinition pd = repositoryService.createProcessDefinitionQuery()
+                        .processDefinitionId(item.getProcessDefinitionId())
+                        .singleResult();
+                flowTask.setDeployId(pd.getDeploymentId());
+                flowTask.setProcDefName(pd.getName());
+                flowTask.setProcDefVersion(pd.getVersion());
+                flowTask.setCategory(pd.getCategory());
+                flowTask.setProcDefVersion(pd.getVersion());
+                // 当前所处流程 todo: 本地启动放开以下注释
+//                List<Task> taskList = taskService.createTaskQuery().processInstanceId(item.getId()).list();
+//                if (CollectionUtils.isNotEmpty(taskList)) {
+//                    flowTask.setTaskId(taskList.get(0).getId());
+//                    flowTask.setTaskName(taskList.get(0).getName());
+//                } else {
+//                    List<HistoricTaskInstance> historicTaskInstance = historyService.createHistoricTaskInstanceQuery().processInstanceId(item.getId()).orderByHistoricTaskInstanceEndTime().desc().list();
+//                    flowTask.setTaskId(historicTaskInstance.get(0).getId());
+//                }
+                CensorProcess censor=censorProcessService.selectCensorProcessByWorkflowId(item.getProcessInstanceId());
+                if(censor != null) {
+                    flowTask.setSerial(censor.getProcessId());
+                    flowTask.setFileType(censor.getFileType());
+                    flowTask.setFileName(censor.getFileName());
+                }
+                JobMotion motion=jobMotionService.selectByWorkflowId(item.getProcessInstanceId());
+                if(motion != null) {
+                    flowTask.setMotionType(motion.getMotionType());
+                    flowTask.setSerial(motion.getMotionId());
+                    flowTask.setTitle(motion.getTitle());
+                    flowTask.setContent(motion.getContent());
+                    flowTask.setSuggestUserId(motion.getSuggestUserId());
+                    List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
+                    motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
+                    flowTask.setSuggestUserName(motion.getSuggestUserName());
+                }
+                flowList.add(flowTask);
+            }
+            page.setRecords(flowList);
+            return AjaxResult.success(page);
     }
 
     /**
@@ -833,7 +917,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setTitle(motion.getTitle());
                 flowTask.setContent(motion.getContent());
                 flowTask.setSuggestUserId(motion.getSuggestUserId());
-                List<SysUser> user=sysUserService.selectUserByUserIds(motion.getSuggestUserId());
+                List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
                 motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
                 flowTask.setMotionType(motion.getMotionType());
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
@@ -914,7 +998,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setTitle(motion.getTitle());
                 flowTask.setContent(motion.getContent());
                 flowTask.setSuggestUserId(motion.getSuggestUserId());
-                List<SysUser> user=sysUserService.selectUserByUserIds(motion.getSuggestUserId());
+                List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
                 motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
                 flowTask.setMotionType(motion.getMotionType());
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
@@ -960,10 +1044,26 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                     if (StringUtils.isNotBlank(histIns.getAssignee())) {
                         //逗号分割 2,1
                         //SysUser sysUser = sysUserService.selectUserById(Long.parseLong(histIns.getAssignee()));
-                        SysUser sysUser = sysUserService.selectUserByuserIds(histIns.getAssignee());
-                        flowTask.setAssigneeId(sysUser.getUserId());
-                        flowTask.setAssigneeName(sysUser.getNickName());
-                        flowTask.setDeptName(sysUser.getDept().getDeptName());
+
+                        List<SysUser> sysUserList = sysUserService.selectUserByuserIds(histIns.getActivityId());
+                        String assigneeId = null;
+                        String assigneeName = null;
+                        String deptName = null;
+                        for(SysUser itme: sysUserList){
+                            assigneeId += itme.getUserId() +",";
+                            assigneeName += itme.getNickName() + ",";
+                            deptName += itme.getDept().getDeptName() +",";
+                        }
+                        assigneeId.substring(0,assigneeId.length()-2);
+                        assigneeName.substring(0,assigneeName.length()-2);
+                        deptName.substring(0,deptName.length()-2);
+                        //去除逗号
+                        flowTask.setAssigneeId(assigneeId);
+                        flowTask.setAssigneeName(assigneeName);
+                        flowTask.setDeptName(deptName);
+//                        flowTask.setAssigneeId(sysUser.getUserId());
+//                        flowTask.setAssigneeName(sysUser.getNickName());
+//                        flowTask.setDeptName(sysUser.getDept().getDeptName());
                     }
                     // 展示审批人员
                     List<HistoricIdentityLink> linksForTask = historyService.getHistoricIdentityLinksForTask(histIns.getTaskId());

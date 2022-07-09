@@ -2,10 +2,12 @@ package com.shahenpc.flowable.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shahenpc.common.core.domain.AjaxResult;
+import com.shahenpc.flowable.domain.dto.CakeDto;
 import com.shahenpc.system.domain.FlowProcDefDto;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -79,4 +81,10 @@ public interface IFlowDefinitionService {
      * @return
      */
     InputStream readImage(String deployId);
+    //月
+    public List<Integer> monthCount();
+    //饼图
+    public List<CakeDto> fileTypeCake();
+    //仪表盘
+    public List<CakeDto> receiveRate(String taskName,String deployName);
 }

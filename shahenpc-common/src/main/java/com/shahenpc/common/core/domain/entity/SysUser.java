@@ -234,8 +234,6 @@ public class SysUser extends BaseEntity {
      */
     private Long roleId;
 
-    private String edu;
-
     public SysUser() {
 
     }

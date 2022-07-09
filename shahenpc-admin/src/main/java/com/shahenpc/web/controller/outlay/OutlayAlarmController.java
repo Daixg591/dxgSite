@@ -4,16 +4,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.shahenpc.common.annotation.Log;
 import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
@@ -25,7 +19,6 @@ import com.shahenpc.common.core.page.TableDataInfo;
 
 /**
  * 预警后存储数据Controller
- * 
  * @author ruoyi
  * @date 2022-07-04
  */
@@ -37,6 +30,20 @@ public class OutlayAlarmController extends BaseController
     @Autowired
     private IOutlayAlarmService outlayAlarmService;
 
+    @ApiOperation("预算占比")
+    @PreAuthorize("@ss.hasPermi('outlay:alarm:list')")
+    @GetMapping("/cake/scale")
+    public AjaxResult cakeScale(@RequestParam String year)
+    {
+        return AjaxResult.success(outlayAlarmService.cakeList(year));
+    }
+    @ApiOperation("季度四个柱子")
+    @PreAuthorize("@ss.hasPermi('outlay:alarm:list')")
+    @GetMapping("/quarter")
+    public AjaxResult quarterColumnar()
+    {
+        return AjaxResult.success(outlayAlarmService.quarter());
+    }
     /**
      * 查询预警后存储数据列表
      */

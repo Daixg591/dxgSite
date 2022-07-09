@@ -3,20 +3,26 @@ package com.shahenpc.flowable.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.flowable.common.constant.ProcessConstants;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.flowable.common.enums.FlowComment;
 import com.shahenpc.common.utils.SecurityUtils;
+import com.shahenpc.flowable.domain.dto.CakeDto;
+import com.shahenpc.flowable.domain.dto.FlowTaskDto;
 import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.flowable.factory.FlowServiceFactory;
 import com.shahenpc.flowable.service.IFlowDefinitionService;
 import com.shahenpc.flowable.service.ISysDeployFormService;
 import com.shahenpc.system.domain.SysForm;
 import com.shahenpc.system.domain.censor.CensorProcess;
+import com.shahenpc.system.domain.dto.NpcCakeDto;
 import com.shahenpc.system.domain.job.JobMotion;
+import com.shahenpc.system.domain.perform.PerformHomeAccess;
 import com.shahenpc.system.mapper.FlowDeployMapper;
 import com.shahenpc.system.service.ISysDeptService;
+import com.shahenpc.system.service.ISysDictDataService;
 import com.shahenpc.system.service.ISysPostService;
 import com.shahenpc.system.service.ISysUserService;
 import com.shahenpc.system.service.censor.ICensorProcessService;
@@ -24,17 +30,22 @@ import com.shahenpc.system.service.job.IJobMotionService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.image.impl.DefaultProcessDiagramGenerator;
 import org.flowable.task.api.Task;
+import org.flowable.task.api.TaskQuery;
+import org.flowable.task.api.history.HistoricTaskInstanceQuery;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -70,6 +81,8 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
 
     @Resource
     private IJobMotionService jobMotionService;
+    @Resource
+    private ISysDictDataService dictDataService;
 
 
     private static final String BPMN_FILE_SUFFIX = ".bpmn";
@@ -188,6 +201,7 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
                 false);
 
     }
+
 
     /**
      * 根据流程定义ID启动流程实例
@@ -317,7 +331,7 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
             motion.setSuggestUserId(variables.get("approval").toString());
 
             //数组存储
-            List<SysUser> user=sysUserService.selectUserByUserIds(variables.get("approval").toString());
+            List<SysUser> user=sysUserService.selectUserByuserIds(variables.get("approval").toString());
             //motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
             motion.setWorkflowId(task.getProcessInstanceId());
             jobMotionService.insertJobMotion(motion);
@@ -360,5 +374,81 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
         repositoryService.deleteDeployment(deployId, true);
     }
 
+
+
+
+    @Override
+    public List<Integer> monthCount() {
+        List<Integer> intss = new ArrayList<>();
+        // 跟 按月  柱状
+        
+        //两个接收的总数
+        //intss.add(list.size());
+        return intss;
+    }
+
+    @Override
+    public List<CakeDto> fileTypeCake() {
+        List<CakeDto> dto = new ArrayList<>();
+        CensorProcess censorProcess = new CensorProcess();
+        List<CensorProcess> listuser= censorProcessService.selectCensorProcessList(censorProcess);
+        SysDictData dictParam = new SysDictData();
+        dictParam.setDictType("file_type");
+        List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            int v = listuser.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getFileType()))
+                    .collect(Collectors.toList()).size();
+            CakeDto item = new CakeDto();
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
+            dto.add(item);
+        }
+        return dto;
+    }
+
+    @Override
+    public List<CakeDto> receiveRate(String taskName,String deployName) {
+        List<CakeDto> list = new ArrayList<>();
+        Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
+
+        //等待数
+        Integer stayTotal = taskService.createTaskQuery()
+                .active()
+                .includeProcessVariables()
+                .taskName(taskName)
+                .taskAssignee(userId.toString())
+                .orderByTaskCreateTime().desc().list().size();
+        List<FlowProcDefDto> dto = flowDeployMapper.selectDeployList(deployName);
+        //过来数
+        int receiveTotal= historyService
+                .createHistoricActivityInstanceQuery()
+                .activityName(taskName)
+                .taskAssignee(userId.toString())
+                .processDefinitionId(dto.get(0).getId())
+                .orderByHistoricActivityInstanceStartTime()
+                .desc().list().size();
+        //先查 流程id
+        ProcessDefinition pd1 = repositoryService.createProcessDefinitionQuery()
+                .processDefinitionName(deployName)
+                .singleResult();
+        //已完成 接收的总数
+        int doneTotal = historyService.createHistoricTaskInstanceQuery()
+                .includeProcessVariables()
+                .finished()
+                .processDefinitionId(pd1.getId())
+                .taskAssignee(userId.toString())
+                .orderByHistoricTaskInstanceEndTime()
+                .desc().list().size();
+        int count = stayTotal+receiveTotal+doneTotal;
+        CakeDto cakedto =new CakeDto();
+        cakedto.setName(taskName+"占总数比例");
+        BigDecimal a = new BigDecimal(stayTotal);
+        BigDecimal b = new BigDecimal(count);
+        BigDecimal gd =  a.divide(b,0,BigDecimal.ROUND_UP);
+        cakedto.setValue(Integer.parseInt(gd.toString()));
+        list.add(cakedto);
+        return list;
+    }
 
 }

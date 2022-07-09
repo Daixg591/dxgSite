@@ -39,7 +39,7 @@ import com.shahenpc.system.service.ISysUserService;
  * 
  * @author ruoyi
  */
-@Api("用户管理")
+@Api( tags = "用户管理")
 @RestController
 @RequestMapping("/system/user")
 public class SysUserController extends BaseController

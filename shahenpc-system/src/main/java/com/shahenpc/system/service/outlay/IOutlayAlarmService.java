@@ -1,7 +1,11 @@
 package com.shahenpc.system.service.outlay;
 
 import java.util.List;
+import java.util.Map;
+
 import com.shahenpc.system.domain.outlay.OutlayAlarm;
+import com.shahenpc.system.domain.outlay.dto.OutlayCakeDto;
+import com.shahenpc.system.domain.outlay.dto.QuarterAlarmDto;
 
 /**
  * 预警后存储数据Service接口
@@ -58,4 +62,8 @@ public interface IOutlayAlarmService
      * @return 结果
      */
     public int deleteOutlayAlarmByAlarmId(Long alarmId);
+
+    public List<OutlayCakeDto> cakeList(String year);
+
+    public Map quarter();
 }
