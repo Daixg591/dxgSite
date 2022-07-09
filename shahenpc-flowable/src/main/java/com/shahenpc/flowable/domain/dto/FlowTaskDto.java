@@ -34,8 +34,8 @@ public class FlowTaskDto implements Serializable {
     private String taskDefKey;
 
     @ApiModelProperty("任务执行人Id")
-    private Long assigneeId;
-
+    //private Long assigneeId;
+    private String assigneeId;
     @ApiModelProperty("部门名称")
     private String deptName;
 

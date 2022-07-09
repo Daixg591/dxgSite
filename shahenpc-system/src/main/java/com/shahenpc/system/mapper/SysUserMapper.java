@@ -128,10 +128,10 @@ public interface SysUserMapper
     /**
      *
      */
-    public SysUser selectUserByuserIds(String userIds);
+    public List<SysUser> selectUserByuserIds(String userIds);
 
 
-    public List<SysUser> selectUserByUserIds(@Param("userIds") String userIds);
+    //public List<SysUser> selectUserByUserIds(@Param("userIds") String userIds);
 
     public Integer selectByWomanCount();
 

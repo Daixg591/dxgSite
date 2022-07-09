@@ -2,6 +2,8 @@ package com.shahenpc.system.mapper.outlay;
 
 import java.util.List;
 import com.shahenpc.system.domain.outlay.OutlayAlarm;
+import com.shahenpc.system.domain.outlay.dto.AlarmAndBudgetDto;
+import com.shahenpc.system.domain.outlay.dto.QuarterAlarmDto;
 
 /**
  * 预警后存储数据Mapper接口
@@ -58,4 +60,9 @@ public interface OutlayAlarmMapper
      * @return 结果
      */
     public int deleteOutlayAlarmByAlarmIds(Long[] alarmIds);
+
+
+    public List<AlarmAndBudgetDto> selectOutlayAlarmAndOutlayBudget(String year);
+
+    public List<QuarterAlarmDto> selectByQuarter(Integer budgetType);
 }

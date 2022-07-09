@@ -557,14 +557,14 @@ public class SysUserServiceImpl implements ISysUserService
     }
 
     @Override
-    public SysUser selectUserByuserIds(String userIds) {
+    public List<SysUser> selectUserByuserIds(String userIds) {
         return userMapper.selectUserByuserIds(userIds);
     }
 
-    @Override
-    public List<SysUser> selectUserByUserIds(String userIds) {
-        return userMapper.selectUserByUserIds(userIds);
-    }
+//    @Override
+//    public List<SysUser> selectUserByUserIds(String userIds) {
+//        return userMapper.selectUserByUserIds(userIds);
+//    }
 
     @Override
     public List<NpcCakeDto> genderCake() {

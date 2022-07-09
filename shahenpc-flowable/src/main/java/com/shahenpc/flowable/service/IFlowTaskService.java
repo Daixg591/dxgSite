@@ -92,6 +92,8 @@ public interface IFlowTaskService {
     AjaxResult newMyProcess(Integer pageNum, Integer pageSize,String processDefinitionName);
 
     AjaxResult motionMyProcess(Integer pageNum, Integer pageSize);
+
+    AjaxResult newDoneList(Integer pageNum, Integer pageSize,String processDefinitionName,String deployName);
     /**
      * 取消申请
      * @param flowTaskVo

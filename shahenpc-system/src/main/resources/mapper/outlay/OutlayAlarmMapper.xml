@@ -93,4 +93,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{alarmId}
         </foreach>
     </delete>
+    <!--===================================================分割线-->
+
+    <select id="selectOutlayAlarmAndOutlayBudget" resultType="com.shahenpc.system.domain.outlay.dto.AlarmAndBudgetDto" parameterType="java.lang.String">
+        SELECT bu.budget_type as budgetType,a.alarm_id as  alarmId,a.create_time as createTime FROM `outlay_alarm` a LEFT JOIN outlay_budget bu ON  a.budget_id = bu.budget_id
+        <where>
+            <if test="year != null">
+                YEAR(a.create_time) = #{year}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByQuarter" resultType="com.shahenpc.system.domain.outlay.dto.QuarterAlarmDto" parameterType="java.lang.Integer">
+        SELECT COUNT(a.alarm_id) countTotal,CONCAT(YEAR(a.create_time),'_',quarter(a.create_time)) qu
+        FROM `outlay_alarm` a LEFT JOIN outlay_budget bu ON  a.budget_id = bu.budget_id
+        <where>
+            <if test="budgetType != null">
+                AND budget_type = #{budgetType}
+            </if>
+        </where>
+        GROUP BY qu
+    </select>
 </mapper>

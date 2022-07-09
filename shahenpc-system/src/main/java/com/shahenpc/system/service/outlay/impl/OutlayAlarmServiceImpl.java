@@ -1,7 +1,17 @@
 package com.shahenpc.system.service.outlay.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import com.alibaba.fastjson2.JSONObject;
+import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.outlay.dto.AlarmAndBudgetDto;
+import com.shahenpc.system.domain.outlay.dto.OutlayCakeDto;
+import com.shahenpc.system.domain.outlay.dto.QuarterAlarmDto;
+import com.shahenpc.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.outlay.OutlayAlarmMapper;
@@ -19,7 +29,8 @@ public class OutlayAlarmServiceImpl implements IOutlayAlarmService
 {
     @Autowired
     private OutlayAlarmMapper outlayAlarmMapper;
-
+    @Autowired
+    private ISysDictDataService dictDataService;
     /**
      * 查询预警后存储数据
      * 
@@ -92,5 +103,54 @@ public class OutlayAlarmServiceImpl implements IOutlayAlarmService
     public int deleteOutlayAlarmByAlarmId(Long alarmId)
     {
         return outlayAlarmMapper.deleteOutlayAlarmByAlarmId(alarmId);
+    }
+
+
+    @Override
+    public List<OutlayCakeDto> cakeList(String year) {
+        List<OutlayCakeDto> dtoList = new ArrayList<>();
+        List<AlarmAndBudgetDto>  alarBudg=outlayAlarmMapper.selectOutlayAlarmAndOutlayBudget(year);
+        SysDictData dictParam = new SysDictData();
+        dictParam.setDictType("budget_type");
+        List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            int v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getBudgetType()))
+                    .collect(Collectors.toList()).size();
+            OutlayCakeDto item = new OutlayCakeDto();
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
+            dtoList.add(item);
+        }
+        return dtoList;
+    }
+
+    @Override
+    public Map quarter() {
+        //分别查出来
+        List<QuarterAlarmDto>  educate=outlayAlarmMapper.selectByQuarter(1);
+        List<QuarterAlarmDto>  society=outlayAlarmMapper.selectByQuarter(2);
+        List<QuarterAlarmDto>  construction=outlayAlarmMapper.selectByQuarter(3);
+        List<QuarterAlarmDto>  technology=outlayAlarmMapper.selectByQuarter(4);
+        JSONObject resPersonMap = new JSONObject();
+        resPersonMap.put("educate", getLine(educate));
+        resPersonMap.put("society", getLine(society));
+        resPersonMap.put("construction", getLine(construction));
+        resPersonMap.put("technology", getLine(technology));
+        return resPersonMap;
+    }
+
+
+    private List<Integer> getLine(List<QuarterAlarmDto> list) {
+        List<Integer> resList = new ArrayList<>();
+
+        for (int i = 0; i < list.size(); i++) {
+            resList.add(list.get(i).getCountTotal());
+        }
+        int tempI = resList.size();
+        for (int i = 0; i < 4 - tempI; i++) {
+            resList.add(0);
+        }
+        return resList;
     }
 }

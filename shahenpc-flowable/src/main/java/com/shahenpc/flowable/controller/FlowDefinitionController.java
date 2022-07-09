@@ -3,6 +3,7 @@ package com.shahenpc.flowable.controller;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysRole;
 import com.shahenpc.common.core.domain.entity.SysUser;
+import com.shahenpc.common.utils.SecurityUtils;
 import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.flowable.domain.dto.FlowSaveXmlVo;
 import com.shahenpc.flowable.service.IFlowDefinitionService;
@@ -12,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.flowable.task.api.TaskQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -204,4 +206,25 @@ public class FlowDefinitionController {
         return AjaxResult.success(list);
     }
 
+    @ApiOperation("接收文件总量")
+    @GetMapping("/month/count")
+    public AjaxResult monthCount(){
+
+        return AjaxResult.success(flowDefinitionService.monthCount());
+    }
+
+    @ApiOperation("接收文件总量")
+    @GetMapping("/file/cake")
+    public AjaxResult fileCake(){
+
+        return AjaxResult.success(flowDefinitionService.fileTypeCake());
+    }
+
+    @ApiOperation("接收文件总量")
+    @GetMapping("/receive/rate")
+    public AjaxResult receiveRate(@ApiParam(value = "工作流里的流程名称", required = true) @RequestParam String taskName,
+                                  @ApiParam(value = "工作流名称", required = true) @RequestParam String deployName){
+
+        return AjaxResult.success(flowDefinitionService.receiveRate(taskName,deployName));
+    }
 }

@@ -1,4 +1,4 @@
-package com.shahenpc.web.controller.special;
+package com.shahenpc.web.controller.work;
 
 import java.util.Date;
 import java.util.List;
@@ -35,7 +35,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  */
 @Api(tags = "双联工作管理")
 @RestController
-@RequestMapping("/system/opinion")
+@RequestMapping("/work/opinion")
 public class SpecialOpinionController extends BaseController
 {
     @Autowired
@@ -45,7 +45,7 @@ public class SpecialOpinionController extends BaseController
      * 查询【请填写功能名称】列表
      */
     @ApiOperation("双联工作列表")
-    @PreAuthorize("@ss.hasPermi('system:opinion:list')")
+    @PreAuthorize("@ss.hasPermi('work:opinion:list')")
     @GetMapping("/list")
     public TableDataInfo list(SpecialOpinion specialOpinion)
     {
@@ -57,7 +57,7 @@ public class SpecialOpinionController extends BaseController
     /**
      * 导出【请填写功能名称】列表
      */
-    @PreAuthorize("@ss.hasPermi('system:opinion:export')")
+    @PreAuthorize("@ss.hasPermi('work:opinion:export')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, SpecialOpinion specialOpinion)
@@ -72,7 +72,7 @@ public class SpecialOpinionController extends BaseController
      */
     @ApiOperation("双联工作详情")
     @ApiImplicitParam(name ="opinionId",value = "双联工作Id",required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
-    @PreAuthorize("@ss.hasPermi('system:opinion:query')")
+    @PreAuthorize("@ss.hasPermi('work:opinion:query')")
     @GetMapping(value = "/{opinionId}")
     public AjaxResult getInfo(@PathVariable("opinionId") Long opinionId)
     {
@@ -97,7 +97,7 @@ public class SpecialOpinionController extends BaseController
             @ApiImplicitParam(name ="status",value = "状态",required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class),
             @ApiImplicitParam(name ="replyTime",value = "回复时间",required = true, dataType = "Date", paramType = "path", dataTypeClass = Date.class)
     })
-    @PreAuthorize("@ss.hasPermi('system:opinion:add')")
+    @PreAuthorize("@ss.hasPermi('work:opinion:add')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SpecialOpinion specialOpinion)
@@ -109,7 +109,7 @@ public class SpecialOpinionController extends BaseController
      * 修改【请填写功能名称】
      */
     @ApiOperation("修改双联工作")
-    @PreAuthorize("@ss.hasPermi('system:opinion:edit')")
+    @PreAuthorize("@ss.hasPermi('work:opinion:edit')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SpecialOpinion specialOpinion)
@@ -121,7 +121,7 @@ public class SpecialOpinionController extends BaseController
      * 删除【请填写功能名称】
      */
     @ApiOperation("删除双联工作")
-    @PreAuthorize("@ss.hasPermi('system:opinion:remove')")
+    @PreAuthorize("@ss.hasPermi('work:opinion:remove')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{opinionIds}")
     public AjaxResult remove(@PathVariable Long[] opinionIds)

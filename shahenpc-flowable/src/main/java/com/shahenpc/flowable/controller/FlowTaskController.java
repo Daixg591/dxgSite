@@ -97,6 +97,15 @@ public class FlowTaskController extends BaseController {
         return flowTaskService.newTodoList(pageNum, pageSize,type);
     }
 
+    @ApiOperation(value = "已办某个节点列表", response = FlowTaskDto.class)
+    @GetMapping(value = "/new/doneList")
+    public AjaxResult newDoneList(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
+                                  @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize,
+                                  @ApiParam(value = "类型1.接收2.受理3.分发4.审查5.反馈", required = true) @RequestParam String type,
+                                  @ApiParam(value = "1.审核流程2.建议议案", required = true) @RequestParam String deployName) {
+        return flowTaskService.newDoneList(pageNum, pageSize,type,deployName);
+    }
+
     @ApiOperation(value = "获取已办任务", response = FlowTaskDto.class)
     @GetMapping(value = "/finishedList")
     public AjaxResult finishedList(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
