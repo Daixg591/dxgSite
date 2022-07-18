@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.feature.FeatureWorkEventMapper">
+    
+    <resultMap type="FeatureWorkEvent" id="FeatureWorkEventResult">
+        <result property="eventId"    column="event_id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="workType"    column="work_type"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectFeatureWorkEventVo">
+        select event_id, title, content, work_type, remark, create_by, create_time, update_by, update_time from feature_work_event
+    </sql>
+
+    <select id="selectFeatureWorkEventList" parameterType="FeatureWorkEvent" resultMap="FeatureWorkEventResult">
+        <include refid="selectFeatureWorkEventVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="workType != null "> and work_type = #{workType}</if>
+        </where>
+    </select>
+    
+    <select id="selectFeatureWorkEventByEventId" parameterType="Long" resultMap="FeatureWorkEventResult">
+        <include refid="selectFeatureWorkEventVo"/>
+        where event_id = #{eventId}
+    </select>
+        
+    <insert id="insertFeatureWorkEvent" parameterType="FeatureWorkEvent" useGeneratedKeys="true" keyProperty="eventId">
+        insert into feature_work_event
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="workType != null">work_type,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="workType != null">#{workType},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFeatureWorkEvent" parameterType="FeatureWorkEvent">
+        update feature_work_event
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="workType != null">work_type = #{workType},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where event_id = #{eventId}
+    </update>
+
+    <delete id="deleteFeatureWorkEventByEventId" parameterType="Long">
+        delete from feature_work_event where event_id = #{eventId}
+    </delete>
+
+    <delete id="deleteFeatureWorkEventByEventIds" parameterType="String">
+        delete from feature_work_event where event_id in 
+        <foreach item="eventId" collection="array" open="(" separator="," close=")">
+            #{eventId}
+        </foreach>
+    </delete>
+</mapper>

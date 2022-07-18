@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.represent.JobMotionMapper">
+
+    <resultMap type="JobMotion" id="JobMotionResult">
+        <result property="motionId"    column="motion_id"    />
+        <result property="motionType"    column="motion_type"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="suggestUserId"    column="suggest_user_id"    />
+        <result property="suggestUserName"    column="suggest_user_name"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="workflowId"    column="workflow_id"    />
+        <result property="sendUserId"    column="send_user_id"    />
+        <result property="sendUserName"    column="send_user_name"    />
+    </resultMap>
+
+    <sql id="selectJobMotionVo">
+        select motion_id, motion_type, title, content, suggest_user_id, suggest_user_name, status, remark, create_by, create_time, update_by, update_time, workflow_id, send_user_id, send_user_name from job_motion
+    </sql>
+
+    <select id="selectJobMotionList" parameterType="JobMotion" resultMap="JobMotionResult">
+        <include refid="selectJobMotionVo"/>
+        <where>
+            <if test="motionType != null "> and motion_type = #{motionType}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="suggestUserId != null  and suggestUserId != ''"> and suggest_user_id = #{suggestUserId}</if>
+            <if test="suggestUserName != null  and suggestUserName != ''"> and suggest_user_name like concat('%', #{suggestUserName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="workflowId != null  and workflowId != ''"> and workflow_id = #{workflowId}</if>
+            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="sendUserName != null  and sendUserName != ''"> and send_user_name like concat('%', #{sendUserName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectJobMotionByMotionId" parameterType="Long" resultMap="JobMotionResult">
+        <include refid="selectJobMotionVo"/>
+        where motion_id = #{motionId}
+    </select>
+
+    <insert id="insertJobMotion" parameterType="JobMotion" useGeneratedKeys="true" keyProperty="motionId">
+        insert into job_motion
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="motionType != null">motion_type,</if>
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="suggestUserId != null">suggest_user_id,</if>
+            <if test="suggestUserName != null">suggest_user_name,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="workflowId != null">workflow_id,</if>
+            <if test="sendUserId != null">send_user_id,</if>
+            <if test="sendUserName != null">send_user_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="motionType != null">#{motionType},</if>
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="suggestUserId != null">#{suggestUserId},</if>
+            <if test="suggestUserName != null">#{suggestUserName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="workflowId != null">#{workflowId},</if>
+            <if test="sendUserId != null">#{sendUserId},</if>
+            <if test="sendUserName != null">#{sendUserName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateJobMotion" parameterType="JobMotion">
+        update job_motion
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="motionType != null">motion_type = #{motionType},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="suggestUserId != null">suggest_user_id = #{suggestUserId},</if>
+            <if test="suggestUserName != null">suggest_user_name = #{suggestUserName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="workflowId != null">workflow_id = #{workflowId},</if>
+            <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
+            <if test="sendUserName != null">send_user_name = #{sendUserName},</if>
+        </trim>
+        where motion_id = #{motionId}
+    </update>
+
+    <delete id="deleteJobMotionByMotionId" parameterType="Long">
+        delete from job_motion where motion_id = #{motionId}
+    </delete>
+
+    <delete id="deleteJobMotionByMotionIds" parameterType="String">
+        delete from job_motion where motion_id in
+        <foreach item="motionId" collection="array" open="(" separator="," close=")">
+            #{motionId}
+        </foreach>
+    </delete>
+
+    <!--==================================================分割线-->
+    <select id="selectByWorkflowId" resultMap="JobMotionResult">
+        <include refid="selectJobMotionVo"/>
+        where workflow_id = #{workflowId}
+    </select>
+</mapper>

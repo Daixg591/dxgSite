@@ -25,14 +25,14 @@ import com.shahenpc.flowable.service.ISysDeployFormService;
 import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.system.domain.SysForm;
 import com.shahenpc.system.domain.censor.CensorProcess;
-import com.shahenpc.system.domain.job.JobMotion;
 import com.shahenpc.system.domain.message.MessageData;
+import com.shahenpc.system.domain.represent.JobMotion;
 import com.shahenpc.system.mapper.FlowDeployMapper;
 import com.shahenpc.system.service.ISysRoleService;
 import com.shahenpc.system.service.ISysUserService;
 import com.shahenpc.system.service.censor.ICensorProcessService;
-import com.shahenpc.system.service.job.IJobMotionService;
 import com.shahenpc.system.service.message.IMessageDataService;
+import com.shahenpc.system.service.represent.IJobMotionService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
@@ -109,7 +109,11 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         //发送人
         mes.setSendUserId(Long.valueOf(flowTaskVo.getUserId()));
         //接收人
-        mes.setReceiveUserId(Long.valueOf(task.getAssignee()));
+//        if(task.getAssignee().indexOf(",") >= 0){
+//
+//        }else{
+            mes.setReceiveUserId(Long.valueOf(task.getAssignee()));
+//        }
         //参数
         mes.setJumpParam(flowTaskVo.getTaskId());
         //内容
@@ -1043,27 +1047,29 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                     flowTask.setFinishTime(histIns.getEndTime());
                     if (StringUtils.isNotBlank(histIns.getAssignee())) {
                         //逗号分割 2,1
-                        //SysUser sysUser = sysUserService.selectUserById(Long.parseLong(histIns.getAssignee()));
+                        SysUser sysUser = sysUserService.selectUserById(Long.parseLong(histIns.getAssignee()));
 
-                        List<SysUser> sysUserList = sysUserService.selectUserByuserIds(histIns.getActivityId());
-                        String assigneeId = null;
-                        String assigneeName = null;
-                        String deptName = null;
-                        for(SysUser itme: sysUserList){
-                            assigneeId += itme.getUserId() +",";
-                            assigneeName += itme.getNickName() + ",";
-                            deptName += itme.getDept().getDeptName() +",";
-                        }
-                        assigneeId.substring(0,assigneeId.length()-2);
-                        assigneeName.substring(0,assigneeName.length()-2);
-                        deptName.substring(0,deptName.length()-2);
-                        //去除逗号
-                        flowTask.setAssigneeId(assigneeId);
-                        flowTask.setAssigneeName(assigneeName);
-                        flowTask.setDeptName(deptName);
-//                        flowTask.setAssigneeId(sysUser.getUserId());
-//                        flowTask.setAssigneeName(sysUser.getNickName());
-//                        flowTask.setDeptName(sysUser.getDept().getDeptName());
+//                        List<SysUser> sysUserList = sysUserService.selectUserByuserIds(histIns.getActivityId());
+//                        String assigneeId = null;
+//                        String assigneeName = null;
+//                        String deptName = null;
+//                        for(SysUser itme: sysUserList){
+//                            assigneeId += itme.getUserId() +",";
+//                            assigneeName += itme.getNickName() + ",";
+//                            deptName += itme.getDept().getDeptName() +",";
+//                        }
+//                        if(sysUserList.size() != 0){
+//                        assigneeId.substring(0,assigneeId.length()-2);
+//                        assigneeName.substring(0,assigneeName.length()-2);
+//                        deptName.substring(0,deptName.length()-2);
+//                        }
+//                        //去除逗号
+//                        flowTask.setAssigneeId(assigneeId);
+//                        flowTask.setAssigneeName(assigneeName);
+//                        flowTask.setDeptName(deptName);
+                        flowTask.setAssigneeId(sysUser.getUserId().toString());
+                        flowTask.setAssigneeName(sysUser.getNickName());
+                        flowTask.setDeptName(sysUser.getDept().getDeptName());
                     }
                     // 展示审批人员
                     List<HistoricIdentityLink> linksForTask = historyService.getHistoricIdentityLinksForTask(histIns.getTaskId());

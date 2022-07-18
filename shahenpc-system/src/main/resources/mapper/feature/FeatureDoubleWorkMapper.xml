@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper">
+    
+    <resultMap type="FeatureDoubleWork" id="FeatureDoubleWorkResult">
+        <result property="doubleId"    column="double_id"    />
+        <result property="doubleType"    column="double_type"    />
+        <result property="title"    column="title"    />
+        <result property="status"    column="status"    />
+        <result property="content"    column="content"    />
+        <result property="picUrl"    column="pic_url"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="submitUserId"    column="submit_user_id"    />
+        <result property="receiveUserId"    column="receive_user_id"    />
+    </resultMap>
+
+    <sql id="selectFeatureDoubleWorkVo">
+        select double_id, double_type, title, status, content, pic_url, create_by, create_time, update_by, update_time, remark, submit_user_id, receive_user_id from feature_double_work
+    </sql>
+
+    <select id="selectFeatureDoubleWorkList" parameterType="FeatureDoubleWork" resultMap="FeatureDoubleWorkResult">
+        <include refid="selectFeatureDoubleWorkVo"/>
+        <where>  
+            <if test="doubleType != null "> and double_type = #{doubleType}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="picUrl != null  and picUrl != ''"> and pic_url = #{picUrl}</if>
+            <if test="submitUserId != null "> and submit_user_id = #{submitUserId}</if>
+            <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
+        </where>
+    </select>
+    
+    <select id="selectFeatureDoubleWorkByDoubleId" parameterType="Long" resultMap="FeatureDoubleWorkResult">
+        <include refid="selectFeatureDoubleWorkVo"/>
+        where double_id = #{doubleId}
+    </select>
+        
+    <insert id="insertFeatureDoubleWork" parameterType="FeatureDoubleWork" useGeneratedKeys="true" keyProperty="doubleId">
+        insert into feature_double_work
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="doubleType != null">double_type,</if>
+            <if test="title != null">title,</if>
+            <if test="status != null">status,</if>
+            <if test="content != null">content,</if>
+            <if test="picUrl != null">pic_url,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="submitUserId != null">submit_user_id,</if>
+            <if test="receiveUserId != null">receive_user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="doubleType != null">#{doubleType},</if>
+            <if test="title != null">#{title},</if>
+            <if test="status != null">#{status},</if>
+            <if test="content != null">#{content},</if>
+            <if test="picUrl != null">#{picUrl},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="submitUserId != null">#{submitUserId},</if>
+            <if test="receiveUserId != null">#{receiveUserId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFeatureDoubleWork" parameterType="FeatureDoubleWork">
+        update feature_double_work
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="doubleType != null">double_type = #{doubleType},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="picUrl != null">pic_url = #{picUrl},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="submitUserId != null">submit_user_id = #{submitUserId},</if>
+            <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
+        </trim>
+        where double_id = #{doubleId}
+    </update>
+
+    <delete id="deleteFeatureDoubleWorkByDoubleId" parameterType="Long">
+        delete from feature_double_work where double_id = #{doubleId}
+    </delete>
+
+    <delete id="deleteFeatureDoubleWorkByDoubleIds" parameterType="String">
+        delete from feature_double_work where double_id in 
+        <foreach item="doubleId" collection="array" open="(" separator="," close=")">
+            #{doubleId}
+        </foreach>
+    </delete>
+
+    <!--======================================分割线-->
+    <select id="selectByCakeType" resultMap="FeatureDoubleWorkResult">
+        <include refid="selectFeatureDoubleWorkVo"/>
+    </select>
+
+    <select id="selectByMonth" resultType="com.shahenpc.system.domain.feature.dto.SpecialMonthDto">
+        SELECT MONTH(s.create_time) AS yue,count(s.opinion_id) as shuliang FROM `special_opinion` s GROUP BY MONTH(s.create_time)
+    </select>
+</mapper>
