@@ -2,6 +2,9 @@ package com.shahenpc.system.service.feature;
 
 import java.util.List;
 import com.shahenpc.system.domain.feature.FeatureWorkEvent;
+import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
+import com.shahenpc.system.domain.feature.dto.FeatureCurveDto;
+import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
 
 /**
  * 特色工作-民生实事-环境保护-信访稳定-营商环境-乡村振兴Service接口
@@ -58,4 +61,16 @@ public interface IFeatureWorkEventService
      * @return 结果
      */
     public int deleteFeatureWorkEventByEventId(Long eventId);
+
+    /**
+     * 总数and 月数
+     */
+    public FeatureMonthDto getCount(Integer workType);
+
+    /**
+     *
+     * @param workType
+     * @return
+     */
+    public FeatureCurveDto monthCount(Integer workType);
 }

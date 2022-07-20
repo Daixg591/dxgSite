@@ -6,4 +6,5 @@ import lombok.Data;
 public class QuarterAlarmDto {
     private Integer countTotal;
     private String qu;
+    private Integer quarter;
 }

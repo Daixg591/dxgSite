@@ -228,6 +228,8 @@ public class PersonnelAppointRegisterController extends BaseController {
             yList.add(nearlist1.size());
         }
         res.tendencyY = yList;
+        Collections.reverse(res.getTendencyY());
+        Collections.reverse(res.getTendencyX());
         return res;
     }
     //endregion

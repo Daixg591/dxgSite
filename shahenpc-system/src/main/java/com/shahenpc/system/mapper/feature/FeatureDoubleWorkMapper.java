@@ -2,7 +2,7 @@ package com.shahenpc.system.mapper.feature;
 
 import java.util.List;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
-import com.shahenpc.system.domain.feature.dto.SpecialMonthDto;
+import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
 
 /**
  * 双联工作Mapper接口
@@ -62,5 +62,5 @@ public interface FeatureDoubleWorkMapper
 
     public List<FeatureDoubleWork> selectByCakeType();
 
-    public List<SpecialMonthDto> selectByMonth();
+    public List<FeatureMonthDto> selectByMonth();
 }

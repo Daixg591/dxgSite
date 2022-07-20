@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.oa.OaMeetingSignMapper">
+    
+    <resultMap type="OaMeetingSign" id="OaMeetingSignResult">
+        <result property="signId"    column="sign_id"    />
+        <result property="meetingId"    column="meeting_id"    />
+        <result property="personnelId"    column="personnel_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+    </resultMap>
+
+    <sql id="selectOaMeetingSignVo">
+        select sign_id, meeting_id, personnel_id, user_id, remark, create_time, update_by, update_time, create_by from oa_meeting_sign
+    </sql>
+
+    <select id="selectOaMeetingSignList" parameterType="OaMeetingSign" resultMap="OaMeetingSignResult">
+        <include refid="selectOaMeetingSignVo"/>
+        <where>  
+            <if test="meetingId != null "> and meeting_id = #{meetingId}</if>
+            <if test="personnelId != null "> and personnel_id = #{personnelId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectOaMeetingSignBySignId" parameterType="Long" resultMap="OaMeetingSignResult">
+        <include refid="selectOaMeetingSignVo"/>
+        where sign_id = #{signId}
+    </select>
+        
+    <insert id="insertOaMeetingSign" parameterType="OaMeetingSign" useGeneratedKeys="true" keyProperty="signId">
+        insert into oa_meeting_sign
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="meetingId != null">meeting_id,</if>
+            <if test="personnelId != null">personnel_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="meetingId != null">#{meetingId},</if>
+            <if test="personnelId != null">#{personnelId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOaMeetingSign" parameterType="OaMeetingSign">
+        update oa_meeting_sign
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="meetingId != null">meeting_id = #{meetingId},</if>
+            <if test="personnelId != null">personnel_id = #{personnelId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+        </trim>
+        where sign_id = #{signId}
+    </update>
+
+    <delete id="deleteOaMeetingSignBySignId" parameterType="Long">
+        delete from oa_meeting_sign where sign_id = #{signId}
+    </delete>
+
+    <delete id="deleteOaMeetingSignBySignIds" parameterType="String">
+        delete from oa_meeting_sign where sign_id in 
+        <foreach item="signId" collection="array" open="(" separator="," close=")">
+            #{signId}
+        </foreach>
+    </delete>
+</mapper>

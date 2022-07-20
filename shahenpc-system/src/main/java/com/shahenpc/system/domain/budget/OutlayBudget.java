@@ -1,12 +1,13 @@
 package com.shahenpc.system.domain.budget;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
 import com.shahenpc.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 预算对象 outlay_budget
@@ -59,7 +60,7 @@ public class OutlayBudget extends BaseEntity
 
     /** 超出比例 */
     @Excel(name = "超出比例")
-    private String beyondRatio;
+    private BigDecimal beyondRatio;
 
     /** 核实时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -156,12 +157,12 @@ public class OutlayBudget extends BaseEntity
     {
         return proposedUserId;
     }
-    public void setBeyondRatio(String beyondRatio)
+    public void setBeyondRatio(BigDecimal beyondRatio)
     {
         this.beyondRatio = beyondRatio;
     }
 
-    public String getBeyondRatio()
+    public BigDecimal getBeyondRatio()
     {
         return beyondRatio;
     }

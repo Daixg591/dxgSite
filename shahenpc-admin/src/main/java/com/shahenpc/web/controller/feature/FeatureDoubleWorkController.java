@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -99,7 +100,8 @@ public class FeatureDoubleWorkController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody FeatureDoubleWork featureDoubleWork)
     {
-        return toAjax(featureDoubleWorkService.insertFeatureDoubleWork(featureDoubleWork));
+        featureDoubleWork.setSubmitUserId(getUserId());
+        return toAjax(featureDoubleWorkService.newAdd(featureDoubleWork));
     }
 
     /**
@@ -111,7 +113,7 @@ public class FeatureDoubleWorkController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody FeatureDoubleWork featureDoubleWork)
     {
-        return toAjax(featureDoubleWorkService.updateFeatureDoubleWork(featureDoubleWork));
+        return toAjax(featureDoubleWorkService.newUpdate(featureDoubleWork));
     }
 
     /**
@@ -137,4 +139,16 @@ public class FeatureDoubleWorkController extends BaseController
     {
         return AjaxResult.success(featureDoubleWorkService.speCake());
     }
+
+    /**
+     * 添加流程
+    @ApiOperation("添加")
+    @PreAuthorize("@ss.hasPermi('feature:work:add')")
+    @Log(title = "双联工作", businessType = BusinessType.INSERT)
+    @PostMapping("/new/add")
+    public AjaxResult newAdd(@RequestBody FeatureDoubleWork featureDoubleWork)
+    {
+        featureDoubleWork.setSubmitUserId(getUserId());
+        return toAjax(featureDoubleWorkService.newAdd(featureDoubleWork));
+    } */
 }

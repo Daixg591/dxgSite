@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.oa.OaMeetingPersonnelMapper">
+    
+    <resultMap type="OaMeetingPersonnel" id="OaMeetingPersonnelResult">
+        <result property="personnelId"    column="personnel_id"    />
+        <result property="meetingId"    column="meeting_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="isSign"    column="is_sign"    />
+        <result property="signTime"    column="sign_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+    </resultMap>
+
+    <sql id="selectOaMeetingPersonnelVo">
+        select personnel_id, meeting_id, user_id, dept_id, is_sign, sign_time, remark, create_time, update_by, update_time, create_by from oa_meeting_personnel
+    </sql>
+
+    <select id="selectOaMeetingPersonnelList" parameterType="OaMeetingPersonnel" resultMap="OaMeetingPersonnelResult">
+        <include refid="selectOaMeetingPersonnelVo"/>
+        <where>  
+            <if test="meetingId != null "> and meeting_id = #{meetingId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="isSign != null "> and is_sign = #{isSign}</if>
+            <if test="signTime != null "> and sign_time = #{signTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectOaMeetingPersonnelByPersonnelId" parameterType="Long" resultMap="OaMeetingPersonnelResult">
+        <include refid="selectOaMeetingPersonnelVo"/>
+        where personnel_id = #{personnelId}
+    </select>
+        
+    <insert id="insertOaMeetingPersonnel" parameterType="OaMeetingPersonnel" useGeneratedKeys="true" keyProperty="personnelId">
+        insert into oa_meeting_personnel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="meetingId != null">meeting_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="isSign != null">is_sign,</if>
+            <if test="signTime != null">sign_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="meetingId != null">#{meetingId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="isSign != null">#{isSign},</if>
+            <if test="signTime != null">#{signTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOaMeetingPersonnel" parameterType="OaMeetingPersonnel">
+        update oa_meeting_personnel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="meetingId != null">meeting_id = #{meetingId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="isSign != null">is_sign = #{isSign},</if>
+            <if test="signTime != null">sign_time = #{signTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+        </trim>
+        where personnel_id = #{personnelId}
+    </update>
+
+    <delete id="deleteOaMeetingPersonnelByPersonnelId" parameterType="Long">
+        delete from oa_meeting_personnel where personnel_id = #{personnelId}
+    </delete>
+
+    <delete id="deleteOaMeetingPersonnelByPersonnelIds" parameterType="String">
+        delete from oa_meeting_personnel where personnel_id in 
+        <foreach item="personnelId" collection="array" open="(" separator="," close=")">
+            #{personnelId}
+        </foreach>
+    </delete>
+</mapper>

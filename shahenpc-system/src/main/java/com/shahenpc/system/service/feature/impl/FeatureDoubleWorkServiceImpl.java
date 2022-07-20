@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
-import com.shahenpc.system.domain.feature.dto.SpecialCakeDto;
-import com.shahenpc.system.domain.feature.dto.SpecialMonthDto;
+import com.shahenpc.system.domain.feature.FeatureDoubleWorkTrace;
+import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
+import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
+import com.shahenpc.system.mapper.feature.FeatureDoubleWorkTraceMapper;
 import com.shahenpc.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     private FeatureDoubleWorkMapper featureDoubleWorkMapper;
     @Autowired
     private ISysDictDataService dictDataService;
+    @Autowired
+    private FeatureDoubleWorkTraceMapper featureDoubleWorkTraceMapper;
     /**
      * 查询双联工作
      * 
@@ -103,8 +107,8 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     }
 
     @Override
-    public List<SpecialCakeDto> speCake() {
-        List<SpecialCakeDto> dtoList = new ArrayList<>();
+    public List<FeatureCakeDto> speCake() {
+        List<FeatureCakeDto> dtoList = new ArrayList<>();
         List<FeatureDoubleWork> alarBudg=featureDoubleWorkMapper.selectByCakeType();
         SysDictData dictParam = new SysDictData();
         dictParam.setDictType("opinion_type");
@@ -113,7 +117,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
             int finalI = i;
             int v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getDoubleType()))
                     .collect(Collectors.toList()).size();
-            SpecialCakeDto item = new SpecialCakeDto();
+            FeatureCakeDto item = new FeatureCakeDto();
             item.setName(dictList.get(i).getDictLabel());
             item.setValue(v);
             dtoList.add(item);
@@ -122,7 +126,39 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     }
 
     @Override
-    public List<SpecialMonthDto> selectByMonth() {
+    public List<FeatureMonthDto> selectByMonth() {
         return featureDoubleWorkMapper.selectByMonth();
     }
+
+
+    @Override
+    public int newAdd(FeatureDoubleWork featureDoubleWork) {
+        featureDoubleWork.setCreateTime(DateUtils.getNowDate());
+        int a =  featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork);
+        FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
+        featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
+        featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
+        featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
+        featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
+        featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
+        featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
+        featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
+        return a;
+    }
+
+    @Override
+    public int newUpdate(FeatureDoubleWork featureDoubleWork) {
+        featureDoubleWork.setUpdateTime(DateUtils.getNowDate());
+        int a =  featureDoubleWorkMapper.updateFeatureDoubleWork(featureDoubleWork);
+        FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
+        featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
+        featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
+        featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
+        featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
+        featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
+        featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
+        featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
+        return a;
+    }
+
 }

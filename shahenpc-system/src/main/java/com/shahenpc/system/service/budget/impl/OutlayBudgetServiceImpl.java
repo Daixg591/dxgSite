@@ -6,6 +6,7 @@ import com.shahenpc.common.exception.ServiceException;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.StringUtils;
 import com.shahenpc.common.utils.bean.BeanValidators;
+import com.shahenpc.system.domain.budget.dto.BudgetDto;
 import com.shahenpc.system.domain.budget.dto.CountDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,6 +165,11 @@ public class OutlayBudgetServiceImpl implements IOutlayBudgetService
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+    @Override
+    public List<OutlayBudget> newList(BudgetDto request) {
+        return outlayBudgetMapper.newList(request);
     }
 
 }

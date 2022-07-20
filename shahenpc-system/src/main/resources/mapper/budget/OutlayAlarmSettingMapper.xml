@@ -83,4 +83,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectOutlayAlarmSettingVo"/>
         where budget_type = #{budgetType}
     </select>
+
+    <select id="newList" resultType="com.shahenpc.system.domain.budget.dto.OutlayAlarmSettingDictDto">
+        SELECT d.dict_label AS dictLabel,d.dict_value AS dictValue,s.setting_id AS settingId,s.ratio
+        FROM sys_dict_data d
+                 LEFT JOIN outlay_alarm_setting s ON s.budget_type = d.dict_value
+        WHERE d.dict_type= "budget_type"
+    </select>
 </mapper>

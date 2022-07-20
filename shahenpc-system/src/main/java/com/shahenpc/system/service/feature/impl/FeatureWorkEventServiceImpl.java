@@ -1,7 +1,15 @@
 package com.shahenpc.system.service.feature.impl;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
+import com.shahenpc.system.domain.feature.dto.FeatureCurveDto;
+import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
+import com.shahenpc.system.domain.personel.PersonnelAppointRegister;
+import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
+import com.shahenpc.system.domain.personel.vo.TendencyChart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.feature.FeatureWorkEventMapper;
@@ -92,5 +100,58 @@ public class FeatureWorkEventServiceImpl implements IFeatureWorkEventService
     public int deleteFeatureWorkEventByEventId(Long eventId)
     {
         return featureWorkEventMapper.deleteFeatureWorkEventByEventId(eventId);
+    }
+
+    @Override
+    public FeatureMonthDto getCount(Integer workType) {
+        return featureWorkEventMapper.getCount(workType);
+    }
+
+    @Override
+    public FeatureCurveDto monthCount(Integer workType) {
+        List<String> monthList = getNearSixMonth();
+        FeatureCurveDto res = new FeatureCurveDto();
+        res.setLabel(monthList);
+
+        List<Integer> yList = new ArrayList<>();
+
+        //获取最小日期
+        Date minMonth = DateUtils.parseDate(monthList.get(monthList.size() - 1));
+        FeatureWorkEvent dto = new FeatureWorkEvent();
+        //dto.setCreateTime(minMonth);
+        dto.setWorkType(workType);
+        List<FeatureWorkEvent> nearlist = featureWorkEventMapper.selectFeatureWorkEventList(dto);
+        for (int i = 0; i < monthList.size(); i++) {
+            int finalI = i;
+            dto.setCreateTime(DateUtils.parseDate(monthList.get(finalI)));
+            String cntt = monthList.get(finalI);
+            List<FeatureWorkEvent> nearlist1 = nearlist.stream().
+                    filter(w -> DateUtils.dateTime(w.getCreateTime()).contains(cntt)).collect(Collectors.toList());
+            yList.add(nearlist1.size());
+        }
+        res.setData(yList);
+        Collections.reverse(res.getData());
+        Collections.reverse(res.getLabel());
+        return res;
+    }
+    /**
+     * 获取最近六个月份  ["2022-07","2022-06","2022-05"...]
+     *
+     * @return
+     */
+    public List<String> getNearSixMonth() {
+        List<String> resultList = new ArrayList<String>();
+        Calendar cal = Calendar.getInstance();
+        //近六个月
+        //要先+1,才能把本月的算进去
+        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
+        for (int i = 0; i < 6; i++) {
+            //逐次往前推1个月
+            cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
+            resultList.add(String.valueOf(cal.get(Calendar.YEAR))
+                    + "-" + (cal.get(Calendar.MONTH) + 1 < 10 ? "0" +
+                    (cal.get(Calendar.MONTH) + 1) : (cal.get(Calendar.MONTH) + 1)));
+        }
+        return resultList;
     }
 }

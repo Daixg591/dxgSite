@@ -2,8 +2,8 @@ package com.shahenpc.system.service.feature;
 
 import java.util.List;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
-import com.shahenpc.system.domain.feature.dto.SpecialCakeDto;
-import com.shahenpc.system.domain.feature.dto.SpecialMonthDto;
+import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
+import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
 
 /**
  * 双联工作Service接口
@@ -61,7 +61,12 @@ public interface IFeatureDoubleWorkService
      */
     public int deleteFeatureDoubleWorkByDoubleId(Long doubleId);
 
-    public List<SpecialCakeDto> speCake();
+    public List<FeatureCakeDto> speCake();
 
-    public List<SpecialMonthDto> selectByMonth();
+    public List<FeatureMonthDto> selectByMonth();
+
+    public int newAdd(FeatureDoubleWork featureDoubleWork);
+
+    public int newUpdate(FeatureDoubleWork featureDoubleWork);
+
 }

@@ -2,6 +2,7 @@ package com.shahenpc.system.service.budget;
 
 import java.util.List;
 import com.shahenpc.system.domain.budget.OutlayAlarmSetting;
+import com.shahenpc.system.domain.budget.dto.OutlayAlarmSettingDictDto;
 
 /**
  * 告警设置-规则Service接口
@@ -58,4 +59,6 @@ public interface IOutlayAlarmSettingService
      * @return 结果
      */
     public int deleteOutlayAlarmSettingBySettingId(Long settingId);
+
+    public List<OutlayAlarmSettingDictDto> newList();
 }

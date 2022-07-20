@@ -4,6 +4,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.shahenpc.system.domain.budget.OutlayBudget;
+import com.shahenpc.system.domain.budget.dto.BudgetDto;
+import com.shahenpc.system.domain.budget.dto.OutlayActualListDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -61,10 +63,10 @@ public class OutlayActualController extends BaseController
     @ApiOperation("实际支出列表")
     @PreAuthorize("@ss.hasPermi('outlay:actual:list')")
     @GetMapping("/list")
-    public TableDataInfo list(OutlayActual outlayActual)
+    public TableDataInfo list(BudgetDto request)
     {
         startPage();
-        List<OutlayActual> list = outlayActualService.selectOutlayActualList(outlayActual);
+        List<OutlayActualListDto> list = outlayActualService.newList(request);
         return getDataTable(list);
     }
 
@@ -124,6 +126,7 @@ public class OutlayActualController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody OutlayActual outlayActual)
     {
+        outlayActual.setCreateBy(getUsername());
         return toAjax(outlayActualService.insertOutlayActual(outlayActual));
     }
 
@@ -136,6 +139,7 @@ public class OutlayActualController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody OutlayActual outlayActual)
     {
+        outlayActual.setCreateBy(getUsername());
         return toAjax(outlayActualService.updateOutlayActual(outlayActual));
     }
 
@@ -150,4 +154,18 @@ public class OutlayActualController extends BaseController
     {
         return toAjax(outlayActualService.deleteOutlayActualByActualIds(actualIds));
     }
+
+    /**
+     * 查询实际支出列表
+
+    @ApiOperation("实际支出列表")
+    @PreAuthorize("@ss.hasPermi('outlay:actual:list')")
+    @GetMapping("/new/list")
+    public TableDataInfo newList(OutlayActual outlayActual)
+    {
+        startPage();
+        List<OutlayActualListDto> list = outlayActualService.newList(outlayActual);
+        return getDataTable(list);
+    }
+     */
 }

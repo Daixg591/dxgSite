@@ -1,9 +1,12 @@
 package com.shahenpc.system.domain.budget;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
 import com.shahenpc.common.core.domain.BaseEntity;
+
+import java.math.BigDecimal;
 
 /**
  * 预警后存储数据对象 outlay_alarm
@@ -11,6 +14,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-04
  */
+@Data
 public class OutlayAlarm extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -29,14 +33,16 @@ public class OutlayAlarm extends BaseEntity
     /** 预警id */
     @Excel(name = "预警id")
     private Long settingId;
-
+    /** 预警比例 */
+    @Excel(name = "预警比例")
+    private BigDecimal settingRatio;
     /** 预警原因 */
     @Excel(name = "预警原因")
     private String cause;
 
     /** 超出比例存储 */
     @Excel(name = "超出比例存储")
-    private String beyondRatio;
+    private BigDecimal beyondRatio;
 
     public void setAlarmId(Long alarmId) 
     {
@@ -83,12 +89,12 @@ public class OutlayAlarm extends BaseEntity
     {
         return cause;
     }
-    public void setBeyondRatio(String beyondRatio) 
+    public void setBeyondRatio(BigDecimal beyondRatio)
     {
         this.beyondRatio = beyondRatio;
     }
 
-    public String getBeyondRatio() 
+    public BigDecimal getBeyondRatio()
     {
         return beyondRatio;
     }

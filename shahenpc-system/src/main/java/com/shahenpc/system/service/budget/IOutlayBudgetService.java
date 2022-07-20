@@ -2,6 +2,7 @@ package com.shahenpc.system.service.budget;
 
 import java.util.List;
 import com.shahenpc.system.domain.budget.OutlayBudget;
+import com.shahenpc.system.domain.budget.dto.BudgetDto;
 import com.shahenpc.system.domain.budget.dto.CountDto;
 
 /**
@@ -63,4 +64,6 @@ public interface IOutlayBudgetService
     public CountDto getCount();
 
     public String importOutlayBudget(List<OutlayBudget> outlayBudgetList, Boolean updateSupport, String operName);
+
+    public List<OutlayBudget> newList(BudgetDto request);
 }

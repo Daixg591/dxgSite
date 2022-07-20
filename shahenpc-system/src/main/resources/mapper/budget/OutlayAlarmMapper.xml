@@ -3,12 +3,13 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.budget.OutlayAlarmMapper">
-    
+
     <resultMap type="OutlayAlarm" id="OutlayAlarmResult">
         <result property="alarmId"    column="alarm_id"    />
         <result property="actualId"    column="actual_id"    />
         <result property="budgetId"    column="budget_id"    />
         <result property="settingId"    column="setting_id"    />
+        <result property="settingRatio"    column="setting_ratio"    />
         <result property="cause"    column="cause"    />
         <result property="beyondRatio"    column="beyond_ratio"    />
         <result property="remark"    column="remark"    />
@@ -19,31 +20,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectOutlayAlarmVo">
-        select alarm_id, actual_id, budget_id, setting_id, cause, beyond_ratio, remark, create_time, update_by, update_time, create_by from outlay_alarm
+        select alarm_id, actual_id, budget_id, setting_id, setting_ratio, cause, beyond_ratio, remark, create_time, update_by, update_time, create_by from outlay_alarm
     </sql>
 
     <select id="selectOutlayAlarmList" parameterType="OutlayAlarm" resultMap="OutlayAlarmResult">
         <include refid="selectOutlayAlarmVo"/>
-        <where>  
+        <where>
             <if test="actualId != null "> and actual_id = #{actualId}</if>
             <if test="budgetId != null "> and budget_id = #{budgetId}</if>
             <if test="settingId != null "> and setting_id = #{settingId}</if>
+            <if test="settingRatio != null "> and setting_ratio = #{settingRatio}</if>
             <if test="cause != null  and cause != ''"> and cause = #{cause}</if>
-            <if test="beyondRatio != null  and beyondRatio != ''"> and beyond_ratio = #{beyondRatio}</if>
+            <if test="beyondRatio != null "> and beyond_ratio = #{beyondRatio}</if>
         </where>
     </select>
-    
+
     <select id="selectOutlayAlarmByAlarmId" parameterType="Long" resultMap="OutlayAlarmResult">
         <include refid="selectOutlayAlarmVo"/>
         where alarm_id = #{alarmId}
     </select>
-        
+
     <insert id="insertOutlayAlarm" parameterType="OutlayAlarm" useGeneratedKeys="true" keyProperty="alarmId">
         insert into outlay_alarm
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="actualId != null">actual_id,</if>
             <if test="budgetId != null">budget_id,</if>
             <if test="settingId != null">setting_id,</if>
+            <if test="settingRatio != null">setting_ratio,</if>
             <if test="cause != null">cause,</if>
             <if test="beyondRatio != null">beyond_ratio,</if>
             <if test="remark != null">remark,</if>
@@ -51,11 +54,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="createBy != null">create_by,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="actualId != null">#{actualId},</if>
             <if test="budgetId != null">#{budgetId},</if>
             <if test="settingId != null">#{settingId},</if>
+            <if test="settingRatio != null">#{settingRatio},</if>
             <if test="cause != null">#{cause},</if>
             <if test="beyondRatio != null">#{beyondRatio},</if>
             <if test="remark != null">#{remark},</if>
@@ -63,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="createBy != null">#{createBy},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateOutlayAlarm" parameterType="OutlayAlarm">
@@ -72,6 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="actualId != null">actual_id = #{actualId},</if>
             <if test="budgetId != null">budget_id = #{budgetId},</if>
             <if test="settingId != null">setting_id = #{settingId},</if>
+            <if test="settingRatio != null">setting_ratio = #{settingRatio},</if>
             <if test="cause != null">cause = #{cause},</if>
             <if test="beyondRatio != null">beyond_ratio = #{beyondRatio},</if>
             <if test="remark != null">remark = #{remark},</if>
@@ -88,7 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteOutlayAlarmByAlarmIds" parameterType="String">
-        delete from outlay_alarm where alarm_id in 
+        delete from outlay_alarm where alarm_id in
         <foreach item="alarmId" collection="array" open="(" separator="," close=")">
             #{alarmId}
         </foreach>
@@ -99,19 +104,53 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT bu.budget_type as budgetType,a.alarm_id as  alarmId,a.create_time as createTime FROM `outlay_alarm` a LEFT JOIN outlay_budget bu ON  a.budget_id = bu.budget_id
         <where>
             <if test="year != null">
-                YEAR(a.create_time) = #{year}
+                AND YEAR(a.create_time) = #{year}
             </if>
         </where>
     </select>
 
-    <select id="selectByQuarter" resultType="com.shahenpc.system.domain.budget.dto.QuarterAlarmDto" parameterType="java.lang.Integer">
-        SELECT COUNT(a.alarm_id) countTotal,CONCAT(YEAR(a.create_time),'_',quarter(a.create_time)) qu
+    <select id="selectByQuarter" resultType="com.shahenpc.system.domain.budget.dto.QuarterAlarmDto">
+        SELECT COUNT(a.alarm_id) countTotal,CONCAT(YEAR(a.create_time),'_',quarter(a.create_time)) qu,
+        quarter(a.create_time)AS `quarter`
         FROM `outlay_alarm` a LEFT JOIN outlay_budget bu ON  a.budget_id = bu.budget_id
         <where>
             <if test="budgetType != null">
                 AND budget_type = #{budgetType}
             </if>
+            <if test="year != null">
+                AND YEAR(a.create_time) = #{year}
+            </if>
         </where>
         GROUP BY qu
+    </select>
+
+    <resultMap id="adminList" type="com.shahenpc.system.domain.budget.dto.AlarmListDto" extends="OutlayAlarmResult">
+
+    </resultMap>
+    <select id="selectByList"  parameterType="com.shahenpc.system.domain.budget.dto.BudgetDto" resultMap="adminList">
+        SELECT a.alarm_id,b.`year`,b.budget_type as budgetType,b.title,b.amount AS forecastAmount,ac.amount AS actualAmount,a.setting_ratio,a.beyond_ratio,a.create_time
+        FROM  outlay_alarm a
+                  LEFT JOIN outlay_actual ac ON ac.actual_id = a.actual_id
+                  LEFT JOIN outlay_budget b ON b.budget_id = a.budget_id
+        <where>
+            <if test="title != null  and title != ''"> and b.title = #{title}</if>
+            <if test="projectNumber != null  and projectNumber != ''"> and b.project_number = #{projectNumber}</if>
+            <if test="budgetType != null "> and b.budget_type = #{budgetType}</if>
+            <if test="startTime != null">
+                and DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%S') &gt;= DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%S')
+            </if>
+            <if test="endTime != null">
+                and DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%S') &lt;= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%S')
+            </if>
+        </where>
+    </select>
+
+    <select id="detail" parameterType="Long" resultMap="adminList">
+        SELECT a.alarm_id,b.`year`,b.budget_type,b.title,b.amount AS forecastAmount,ac.amount AS actualAmount,a.setting_ratio AS settingRatio,a.beyond_ratio,a.create_time,
+            ,b.illustrate
+        FROM  outlay_alarm a
+                  LEFT JOIN outlay_actual ac ON ac.actual_id = a.actual_id
+                  LEFT JOIN outlay_budget b ON b.budget_id = a.budget_id
+        where a.alarm_id = #{alarmId}
     </select>
 </mapper>

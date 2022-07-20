@@ -1,6 +1,7 @@
 package com.shahenpc.system.service.budget.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import com.shahenpc.common.exception.ServiceException;
@@ -11,7 +12,9 @@ import com.shahenpc.system.domain.budget.OutlayAlarm;
 import com.shahenpc.system.domain.budget.OutlayAlarmSetting;
 import com.shahenpc.system.domain.budget.OutlayBudget;
 import com.shahenpc.system.domain.budget.dto.ActualListConutDto;
+import com.shahenpc.system.domain.budget.dto.BudgetDto;
 import com.shahenpc.system.domain.budget.dto.CountDto;
+import com.shahenpc.system.domain.budget.dto.OutlayActualListDto;
 import com.shahenpc.system.mapper.budget.OutlayAlarmMapper;
 import com.shahenpc.system.mapper.budget.OutlayAlarmSettingMapper;
 import com.shahenpc.system.mapper.budget.OutlayBudgetMapper;
@@ -80,21 +83,31 @@ public class OutlayActualServiceImpl implements IOutlayActualService
     public int insertOutlayActual(OutlayActual outlayActual)
     {
         outlayActual.setCreateTime(DateUtils.getNowDate());
-        OutlayBudget budget=outlayBudgetMapper.selectOutlayBudgetByBudgetId(outlayActual.getBudgetId());
-        OutlayAlarmSetting setting= outlayAlarmSettingMapper.selectByBudgetType(budget.getBudgetType());
-        BigDecimal divide = budget.getAmount().divide(outlayActual.getAmount(), 2, BigDecimal.ROUND_HALF_UP);
-        if(divide.compareTo(setting.getRatio()) == -1){
-            //预支  和 实际 支出比例 小于 规则比例  就增加到
-            OutlayAlarm alarm = new OutlayAlarm();
-            alarm.setAlarmId(outlayActual.getActualId());
-            alarm.setBudgetId(budget.getBudgetId());
-            alarm.setSettingId(setting.getSettingId());
-            alarm.setCause("实际支出 超出 预计支出 比例");
-            alarm.setBeyondRatio(divide.subtract(setting.getRatio()).toString());
-            outlayAlarmMapper.insertOutlayAlarm(alarm);
+        //查预计支出
+        OutlayBudget budget=outlayBudgetMapper.selectUserByProjectNumben(outlayActual.getProjectNumber());
+        int success =  outlayActualMapper.insertOutlayActual(outlayActual);
+        //查找规则
+        if( budget != null) {
+            if((outlayActual.getAmount().subtract(budget.getAmount())).divide(budget.getAmount()).multiply(new BigDecimal(100)).compareTo(budget.getBeyondRatio()) == 1 ) {
+                    OutlayAlarm alarm = new OutlayAlarm();
+                    //实际id
+                    alarm.setActualId(outlayActual.getActualId());
+                    //预计id
+                    alarm.setBudgetId(budget.getBudgetId());
+                    //说明
+                    alarm.setCause("实际支出 超出 预计支出 比例");
+                    //预计设定 百分比
+                    alarm.setSettingRatio(budget.getBeyondRatio());
+                    //创建时间
+                    alarm.setCreateTime(DateUtils.getNowDate());
+                    //超出比例
+                    BigDecimal Hundred = new BigDecimal(100);
+                    alarm.setBeyondRatio((outlayActual.getAmount().subtract(budget.getAmount())).divide(budget.getAmount()).multiply( Hundred));
+                    outlayAlarmMapper.insertOutlayAlarm(alarm);
+            }
         }
         //查出 规则
-        return outlayActualMapper.insertOutlayActual(outlayActual);
+        return success;
     }
 
     /**
@@ -197,5 +210,11 @@ public class OutlayActualServiceImpl implements IOutlayActualService
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+
+    @Override
+    public List<OutlayActualListDto> newList(BudgetDto requst) {
+        return outlayActualMapper.newList(requst);
     }
 }

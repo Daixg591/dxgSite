@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper.budget;
 
 import java.util.List;
 import com.shahenpc.system.domain.budget.OutlayAlarmSetting;
+import com.shahenpc.system.domain.budget.dto.OutlayAlarmSettingDictDto;
 
 /**
  * 告警设置-规则Mapper接口
@@ -60,4 +61,6 @@ public interface OutlayAlarmSettingMapper
     public int deleteOutlayAlarmSettingBySettingIds(Long[] settingIds);
 
     public OutlayAlarmSetting selectByBudgetType(Integer budgetType);
+
+    public List<OutlayAlarmSettingDictDto> newList();
 }

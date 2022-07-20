@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.shahenpc.system.domain.budget.OutlayAlarm;
+import com.shahenpc.system.domain.budget.dto.AlarmListDto;
+import com.shahenpc.system.domain.budget.dto.BudgetDto;
 import com.shahenpc.system.domain.budget.dto.OutlayCakeDto;
 
 /**
@@ -64,5 +66,9 @@ public interface IOutlayAlarmService
 
     public List<OutlayCakeDto> cakeList(String year);
 
-    public Map quarter();
+    public Map quarter(String year);
+
+    public List<AlarmListDto> selectByList(BudgetDto requst);
+
+    public AlarmListDto detail(Long alarmId);
 }

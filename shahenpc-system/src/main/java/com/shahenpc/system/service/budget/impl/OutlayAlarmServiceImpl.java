@@ -8,9 +8,7 @@ import java.util.stream.Collectors;
 import com.alibaba.fastjson2.JSONObject;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
-import com.shahenpc.system.domain.budget.dto.AlarmAndBudgetDto;
-import com.shahenpc.system.domain.budget.dto.OutlayCakeDto;
-import com.shahenpc.system.domain.budget.dto.QuarterAlarmDto;
+import com.shahenpc.system.domain.budget.dto.*;
 import com.shahenpc.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -115,8 +113,8 @@ public class OutlayAlarmServiceImpl implements IOutlayAlarmService
         List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getBudgetType()))
-                    .collect(Collectors.toList()).size();
+            String shu =  dictList.get(i).getDictValue();
+            int v = alarBudg.stream().filter(p -> shu.equals(Integer.toString(p.getBudgetType()))).collect(Collectors.toList()).size();
             OutlayCakeDto item = new OutlayCakeDto();
             item.setName(dictList.get(i).getDictLabel());
             item.setValue(v);
@@ -126,28 +124,59 @@ public class OutlayAlarmServiceImpl implements IOutlayAlarmService
     }
 
     @Override
-    public Map quarter() {
+    public Map quarter(String year) {
         //分别查出来
-        List<QuarterAlarmDto>  educate=outlayAlarmMapper.selectByQuarter(1);
-        List<QuarterAlarmDto>  society=outlayAlarmMapper.selectByQuarter(2);
-        List<QuarterAlarmDto>  construction=outlayAlarmMapper.selectByQuarter(3);
-        List<QuarterAlarmDto>  technology=outlayAlarmMapper.selectByQuarter(4);
+        List<QuarterAlarmDto>  educate=outlayAlarmMapper.selectByQuarter(1,year);
+        List<QuarterAlarmDto>  society=outlayAlarmMapper.selectByQuarter(2,year);
+        List<QuarterAlarmDto>  construction=outlayAlarmMapper.selectByQuarter(3,year);
+        List<QuarterAlarmDto>  technology=outlayAlarmMapper.selectByQuarter(4,year);
         JSONObject resPersonMap = new JSONObject();
-        resPersonMap.put("educate", getLine(educate));
-        resPersonMap.put("society", getLine(society));
-        resPersonMap.put("construction", getLine(construction));
-        resPersonMap.put("technology", getLine(technology));
+        resPersonMap.put("educate", getBar(educate));
+        resPersonMap.put("society", getBar(society));
+        resPersonMap.put("construction", getBar(construction));
+        resPersonMap.put("technology", getBar(technology));
         return resPersonMap;
     }
 
+    @Override
+    public List<AlarmListDto> selectByList(BudgetDto requst) {
+        return outlayAlarmMapper.selectByList(requst);
+    }
 
+    @Override
+    public AlarmListDto detail(Long alarmId) {
+        return outlayAlarmMapper.detail(alarmId);
+    }
+
+    private List<Integer> getBar(List<QuarterAlarmDto> list) {
+        List<Integer> resList = new ArrayList<>();
+        int tempI = resList.size();
+        for (int i = 0; i < 4 - tempI; i++) {
+            resList.add(0);
+        }
+        //5 3 2022_3
+        for (int i = 0; i < list.size(); i++) {
+            if(list.get(i).getQuarter() == 1){
+                resList.set(0,list.get(i).getCountTotal());
+            }
+            if(list.get(i).getQuarter() == 2){
+                resList.set(1,list.get(i).getCountTotal());
+            }
+            if(list.get(i).getQuarter() == 3){
+                resList.set(2,list.get(i).getCountTotal());
+            }
+            if(list.get(i).getQuarter() == 4){
+                resList.set(3,list.get(i).getCountTotal());
+            }
+        }
+        return resList;
+    }
     private List<Integer> getLine(List<QuarterAlarmDto> list) {
         List<Integer> resList = new ArrayList<>();
-
+        int tempI = resList.size();
         for (int i = 0; i < list.size(); i++) {
             resList.add(list.get(i).getCountTotal());
         }
-        int tempI = resList.size();
         for (int i = 0; i < 4 - tempI; i++) {
             resList.add(0);
         }

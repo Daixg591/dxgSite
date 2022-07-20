@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.oa.OaVotePlayerMapper">
+    
+    <resultMap type="OaVotePlayer" id="OaVotePlayerResult">
+        <result property="playerId"    column="player_id"    />
+        <result property="voteId"    column="vote_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="name"    column="name"    />
+        <result property="avatarUrl"    column="avatar_url"    />
+        <result property="content"    column="content"    />
+        <result property="total"    column="total"    />
+    </resultMap>
+
+    <sql id="selectOaVotePlayerVo">
+        select player_id, vote_id, remark, create_time, update_by, update_time, create_by, name, avatar_url, content, total from oa_vote_player
+    </sql>
+
+    <select id="selectOaVotePlayerList" parameterType="OaVotePlayer" resultMap="OaVotePlayerResult">
+        <include refid="selectOaVotePlayerVo"/>
+        <where>  
+            <if test="voteId != null "> and vote_id = #{voteId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="avatarUrl != null  and avatarUrl != ''"> and avatar_url = #{avatarUrl}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="total != null "> and total = #{total}</if>
+        </where>
+    </select>
+    
+    <select id="selectOaVotePlayerByPlayerId" parameterType="Long" resultMap="OaVotePlayerResult">
+        <include refid="selectOaVotePlayerVo"/>
+        where player_id = #{playerId}
+    </select>
+        
+    <insert id="insertOaVotePlayer" parameterType="OaVotePlayer">
+        insert into oa_vote_player
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="playerId != null">player_id,</if>
+            <if test="voteId != null">vote_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="name != null">name,</if>
+            <if test="avatarUrl != null">avatar_url,</if>
+            <if test="content != null">content,</if>
+            <if test="total != null">total,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="playerId != null">#{playerId},</if>
+            <if test="voteId != null">#{voteId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="name != null">#{name},</if>
+            <if test="avatarUrl != null">#{avatarUrl},</if>
+            <if test="content != null">#{content},</if>
+            <if test="total != null">#{total},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOaVotePlayer" parameterType="OaVotePlayer">
+        update oa_vote_player
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="voteId != null">vote_id = #{voteId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="total != null">total = #{total},</if>
+        </trim>
+        where player_id = #{playerId}
+    </update>
+
+    <delete id="deleteOaVotePlayerByPlayerId" parameterType="Long">
+        delete from oa_vote_player where player_id = #{playerId}
+    </delete>
+
+    <delete id="deleteOaVotePlayerByPlayerIds" parameterType="String">
+        delete from oa_vote_player where player_id in 
+        <foreach item="playerId" collection="array" open="(" separator="," close=")">
+            #{playerId}
+        </foreach>
+    </delete>
+</mapper>

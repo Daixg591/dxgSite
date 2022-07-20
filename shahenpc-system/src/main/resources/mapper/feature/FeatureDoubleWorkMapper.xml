@@ -109,7 +109,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectFeatureDoubleWorkVo"/>
     </select>
 
-    <select id="selectByMonth" resultType="com.shahenpc.system.domain.feature.dto.SpecialMonthDto">
+    <select id="selectByMonth" resultType="com.shahenpc.system.domain.feature.dto.FeatureMonthDto">
         SELECT MONTH(s.create_time) AS yue,count(s.opinion_id) as shuliang FROM `special_opinion` s GROUP BY MONTH(s.create_time)
     </select>
 </mapper>

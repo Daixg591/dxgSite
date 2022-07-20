@@ -15,10 +15,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="createBy"    column="create_by"    />
+        <result property="budgetType"    column="budget_type"    />
+        <result property="title"    column="title"    />
+        <result property="year"    column="year"    />
     </resultMap>
 
     <sql id="selectOutlayActualVo">
-        select actual_id, budget_id, amount, supervise_user_id, project_number, remark, create_time, update_by, update_time, create_by from outlay_actual
+        select actual_id, budget_id, amount, supervise_user_id, project_number, remark, create_time, update_by, update_time, create_by, budget_type, title, year from outlay_actual
     </sql>
 
     <select id="selectOutlayActualList" parameterType="OutlayActual" resultMap="OutlayActualResult">
@@ -28,6 +31,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="amount != null "> and amount = #{amount}</if>
             <if test="superviseUserId != null "> and supervise_user_id = #{superviseUserId}</if>
             <if test="projectNumber != null  and projectNumber != ''"> and project_number = #{projectNumber}</if>
+            <if test="budgetType != null "> and budget_type = #{budgetType}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="year != null  and year != ''"> and year = #{year}</if>
         </where>
     </select>
 
@@ -48,6 +54,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="createBy != null">create_by,</if>
+            <if test="budgetType != null">budget_type,</if>
+            <if test="title != null">title,</if>
+            <if test="year != null">year,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="budgetId != null">#{budgetId},</if>
@@ -59,6 +68,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="createBy != null">#{createBy},</if>
+            <if test="budgetType != null">#{budgetType},</if>
+            <if test="title != null">#{title},</if>
+            <if test="year != null">#{year},</if>
         </trim>
     </insert>
 
@@ -74,6 +86,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="budgetType != null">budget_type = #{budgetType},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="year != null">year = #{year},</if>
         </trim>
         where actual_id = #{actualId}
     </update>
@@ -104,4 +119,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 (SELECT COUNT(a1.actual_id) FROM outlay_actual a1  WHERE DATE_FORMAT(a1.create_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m'))AS monthPen
         FROM outlay_actual s
     </select>
+
+    <resultMap id="adminList" type="com.shahenpc.system.domain.budget.dto.OutlayActualListDto" extends="OutlayActualResult">
+
+    </resultMap>
+
+    <select id="newList" parameterType="com.shahenpc.system.domain.budget.dto.BudgetDto" resultMap="adminList">
+        select o.actual_id, o.budget_id, o.amount, o.supervise_user_id, o.project_number, o.remark, o.create_time, o.update_by, o.update_time, o.create_by,
+        b.budget_type,b.year,b.title
+        from outlay_actual o LEFT JOIN outlay_budget b ON o.project_number = b.project_number
+        <where>
+            <if test="projectNumber != null  and projectNumber != ''"> and o.project_number = #{projectNumber}</if>
+            <if test="budgetType != null "> and o.budget_type = #{budgetType}</if>
+            <if test="title != null  and title != ''"> and o.title = #{title}</if>
+            <if test="startTime != null">
+                and DATE_FORMAT(o.create_time, '%Y-%m-%d %H:%i:%S') &gt;= DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%S')
+            </if>
+            <if test="endTime != null">
+                and DATE_FORMAT(o.create_time, '%Y-%m-%d %H:%i:%S') &lt;= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%S')
+            </if>
+        </where>
+    </select>
+
 </mapper>

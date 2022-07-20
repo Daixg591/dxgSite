@@ -1,7 +1,11 @@
 package com.shahenpc.system.service.budget.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
+
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.budget.dto.OutlayAlarmSettingDictDto;
+import com.shahenpc.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.budget.OutlayAlarmSettingMapper;
@@ -19,7 +23,8 @@ public class OutlayAlarmSettingServiceImpl implements IOutlayAlarmSettingService
 {
     @Autowired
     private OutlayAlarmSettingMapper outlayAlarmSettingMapper;
-
+    @Autowired
+    private ISysDictDataService dictDataService;
     /**
      * 查询告警设置-规则
      * 
@@ -92,5 +97,20 @@ public class OutlayAlarmSettingServiceImpl implements IOutlayAlarmSettingService
     public int deleteOutlayAlarmSettingBySettingId(Long settingId)
     {
         return outlayAlarmSettingMapper.deleteOutlayAlarmSettingBySettingId(settingId);
+    }
+
+    @Override
+    public List<OutlayAlarmSettingDictDto> newList() {
+        List<OutlayAlarmSettingDictDto> list= outlayAlarmSettingMapper.newList();
+        OutlayAlarmSetting outlayAlarmSetting = new OutlayAlarmSetting();
+        for(OutlayAlarmSettingDictDto item:list){
+            if(item.getSettingId() == null){
+                outlayAlarmSetting.setBudgetType(Integer.parseInt(item.getDictValue()));
+                outlayAlarmSetting.setRatio(new BigDecimal(20));
+                outlayAlarmSetting.setCreateTime(DateUtils.getNowDate());
+                outlayAlarmSettingMapper.insertOutlayAlarmSetting(outlayAlarmSetting);
+            }
+        }
+        return outlayAlarmSettingMapper.newList();
     }
 }

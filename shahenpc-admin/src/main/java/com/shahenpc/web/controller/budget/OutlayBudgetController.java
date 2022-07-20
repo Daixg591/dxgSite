@@ -3,6 +3,7 @@ package com.shahenpc.web.controller.budget;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.system.domain.budget.dto.BudgetDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -51,10 +52,10 @@ public class OutlayBudgetController extends BaseController
     @ApiOperation("预算支出列表")
     @PreAuthorize("@ss.hasPermi('outlay:budget:list')")
     @GetMapping("/list")
-    public TableDataInfo list(OutlayBudget outlayBudget)
+    public TableDataInfo list(BudgetDto request)
     {
         startPage();
-        List<OutlayBudget> list = outlayBudgetService.selectOutlayBudgetList(outlayBudget);
+        List<OutlayBudget> list = outlayBudgetService.newList(request);
         return getDataTable(list);
     }
 
@@ -120,6 +121,7 @@ public class OutlayBudgetController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody OutlayBudget outlayBudget)
     {
+        outlayBudget.setCreateBy(getUsername());
         return toAjax(outlayBudgetService.insertOutlayBudget(outlayBudget));
     }
 

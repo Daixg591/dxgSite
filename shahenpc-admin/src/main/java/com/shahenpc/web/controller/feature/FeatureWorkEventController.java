@@ -9,14 +9,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.shahenpc.common.annotation.Log;
 import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
@@ -117,5 +110,21 @@ public class FeatureWorkEventController extends BaseController
     public AjaxResult remove(@PathVariable Long[] eventIds)
     {
         return toAjax(featureWorkEventService.deleteFeatureWorkEventByEventIds(eventIds));
+    }
+
+    @ApiOperation("累计记录and本月记录")
+    @PreAuthorize("@ss.hasPermi('feature:event:count')")
+    @GetMapping("/count")
+    public AjaxResult count(@RequestParam Integer workType)
+    {
+        return AjaxResult.success(featureWorkEventService.getCount(workType));
+    }
+
+    @ApiOperation("曲线每月数量")
+    @PreAuthorize("@ss.hasPermi('feature:month:count')")
+    @GetMapping("/month/count")
+    public AjaxResult monthCount(@RequestParam Integer workType)
+    {
+        return AjaxResult.success(featureWorkEventService.monthCount(workType));
     }
 }

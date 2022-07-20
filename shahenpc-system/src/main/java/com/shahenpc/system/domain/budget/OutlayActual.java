@@ -38,6 +38,18 @@ public class OutlayActual extends BaseEntity
     @Excel(name = "项目编号")
     private String projectNumber;
 
+    /** 收支类型 */
+    @Excel(name = "收支类型")
+    private Integer budgetType;
+
+    /** 标题 */
+    @Excel(name = "标题")
+    private String title;
+
+    /** 年份 */
+    @Excel(name = "年份")
+    private String year;
+
 
     public void setActualId(Long actualId) 
     {

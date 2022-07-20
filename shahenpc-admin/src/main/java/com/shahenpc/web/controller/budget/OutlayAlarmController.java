@@ -3,6 +3,8 @@ package com.shahenpc.web.controller.budget;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.system.domain.budget.dto.AlarmListDto;
+import com.shahenpc.system.domain.budget.dto.BudgetDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,19 +42,20 @@ public class OutlayAlarmController extends BaseController
     @ApiOperation("季度四个柱子")
     @PreAuthorize("@ss.hasPermi('outlay:alarm:list')")
     @GetMapping("/quarter")
-    public AjaxResult quarterColumnar()
+    public AjaxResult quarterColumnar(@RequestParam String year)
     {
-        return AjaxResult.success(outlayAlarmService.quarter());
+        return AjaxResult.success(outlayAlarmService.quarter(year));
     }
     /**
      * 查询预警后存储数据列表
      */
+    @ApiOperation("预警后的列表")
     @PreAuthorize("@ss.hasPermi('outlay:alarm:list')")
     @GetMapping("/list")
-    public TableDataInfo list(OutlayAlarm outlayAlarm)
+    public TableDataInfo list(BudgetDto requst)
     {
         startPage();
-        List<OutlayAlarm> list = outlayAlarmService.selectOutlayAlarmList(outlayAlarm);
+        List<AlarmListDto> list = outlayAlarmService.selectByList(requst);
         return getDataTable(list);
     }
 
@@ -76,7 +79,7 @@ public class OutlayAlarmController extends BaseController
     @GetMapping(value = "/{alarmId}")
     public AjaxResult getInfo(@PathVariable("alarmId") Long alarmId)
     {
-        return AjaxResult.success(outlayAlarmService.selectOutlayAlarmByAlarmId(alarmId));
+        return AjaxResult.success(outlayAlarmService.detail(alarmId));
     }
 
     /**

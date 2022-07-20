@@ -3,7 +3,9 @@ package com.shahenpc.system.mapper.budget;
 import java.util.List;
 import com.shahenpc.system.domain.budget.OutlayActual;
 import com.shahenpc.system.domain.budget.dto.ActualListConutDto;
+import com.shahenpc.system.domain.budget.dto.BudgetDto;
 import com.shahenpc.system.domain.budget.dto.CountDto;
+import com.shahenpc.system.domain.budget.dto.OutlayActualListDto;
 
 /**
  * 实际支出Mapper接口
@@ -64,4 +66,6 @@ public interface OutlayActualMapper
     public ActualListConutDto getListCount();
 
     public CountDto selectByCountAndMonth();
+
+    public List<OutlayActualListDto> newList(BudgetDto requst);
 }

@@ -3,7 +3,10 @@ package com.shahenpc.system.mapper.budget;
 import java.util.List;
 import com.shahenpc.system.domain.budget.OutlayAlarm;
 import com.shahenpc.system.domain.budget.dto.AlarmAndBudgetDto;
+import com.shahenpc.system.domain.budget.dto.AlarmListDto;
+import com.shahenpc.system.domain.budget.dto.BudgetDto;
 import com.shahenpc.system.domain.budget.dto.QuarterAlarmDto;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 预警后存储数据Mapper接口
@@ -62,7 +65,11 @@ public interface OutlayAlarmMapper
     public int deleteOutlayAlarmByAlarmIds(Long[] alarmIds);
 
 
-    public List<AlarmAndBudgetDto> selectOutlayAlarmAndOutlayBudget(String year);
+    public List<AlarmAndBudgetDto> selectOutlayAlarmAndOutlayBudget(@Param("year") String year);
 
-    public List<QuarterAlarmDto> selectByQuarter(Integer budgetType);
+    public List<QuarterAlarmDto> selectByQuarter(@Param("budgetType") Integer budgetType,@Param("year") String year);
+
+    public List<AlarmListDto> selectByList(BudgetDto requst);
+
+    public AlarmListDto detail(Long alarmId);
 }

@@ -3,6 +3,7 @@ package com.shahenpc.web.controller.budget;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.system.domain.budget.dto.OutlayAlarmSettingDictDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -46,10 +47,10 @@ public class OutlayAlarmSettingController extends BaseController
     @ApiOperation("告警规则列表")
     @PreAuthorize("@ss.hasPermi('outlay:setting:list')")
     @GetMapping("/list")
-    public TableDataInfo list(OutlayAlarmSetting outlayAlarmSetting)
+    public TableDataInfo list()
     {
         startPage();
-        List<OutlayAlarmSetting> list = outlayAlarmSettingService.selectOutlayAlarmSettingList(outlayAlarmSetting);
+        List<OutlayAlarmSettingDictDto> list = outlayAlarmSettingService.newList();
         return getDataTable(list);
     }
 
@@ -119,5 +120,19 @@ public class OutlayAlarmSettingController extends BaseController
     public AjaxResult remove(@PathVariable Long[] settingIds)
     {
         return toAjax(outlayAlarmSettingService.deleteOutlayAlarmSettingBySettingIds(settingIds));
+    }
+
+    /**
+     * @param
+     * @return
+     */
+    @ApiOperation("告警规则列表")
+    @PreAuthorize("@ss.hasPermi('outlay:setting:list')")
+    @GetMapping("/new/list")
+    public TableDataInfo newList()
+    {
+        startPage();
+        List<OutlayAlarmSettingDictDto> list = outlayAlarmSettingService.newList();
+        return getDataTable(list);
     }
 }

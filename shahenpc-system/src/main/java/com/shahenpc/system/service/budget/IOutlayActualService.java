@@ -4,7 +4,9 @@ import java.util.List;
 import com.shahenpc.system.domain.budget.OutlayActual;
 import com.shahenpc.system.domain.budget.OutlayBudget;
 import com.shahenpc.system.domain.budget.dto.ActualListConutDto;
+import com.shahenpc.system.domain.budget.dto.BudgetDto;
 import com.shahenpc.system.domain.budget.dto.CountDto;
+import com.shahenpc.system.domain.budget.dto.OutlayActualListDto;
 
 /**
  * 实际支出Service接口
@@ -67,4 +69,6 @@ public interface IOutlayActualService
     public CountDto getCount();
 
     public String importOutlayActual(List<OutlayActual> outlayActualList, Boolean updateSupport, String operName);
+
+    public List<OutlayActualListDto> newList(BudgetDto request);
 }

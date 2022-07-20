@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper.budget;
 
 import java.util.List;
 import com.shahenpc.system.domain.budget.OutlayBudget;
+import com.shahenpc.system.domain.budget.dto.BudgetDto;
 import com.shahenpc.system.domain.budget.dto.CountDto;
 
 /**
@@ -63,4 +64,7 @@ public interface OutlayBudgetMapper
     public CountDto selectByCountAndMonth();
 
     public OutlayBudget selectUserByProjectNumben(String projectNumben);
+
+    public List<OutlayBudget> newList(BudgetDto request);
+
 }
