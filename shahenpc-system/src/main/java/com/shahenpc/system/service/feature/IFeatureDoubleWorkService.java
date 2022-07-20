@@ -69,4 +69,5 @@ public interface IFeatureDoubleWorkService
 
     public int newUpdate(FeatureDoubleWork featureDoubleWork);
 
+    public int appNewAdd(FeatureDoubleWork featureDoubleWork);
 }

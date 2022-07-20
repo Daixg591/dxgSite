@@ -1,4 +1,4 @@
-package com.shahenpc.web.controller.perform;
+package com.shahenpc.web.controller.representative;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -16,8 +16,8 @@ import com.shahenpc.common.annotation.Log;
 import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.enums.BusinessType;
-import com.shahenpc.system.domain.perform.PerformNpcOverview;
-import com.shahenpc.system.service.perform.IPerformNpcOverviewService;
+import com.shahenpc.system.domain.representative.PerformNpcOverview;
+import com.shahenpc.system.service.representative.IPerformNpcOverviewService;
 import com.shahenpc.common.utils.poi.ExcelUtil;
 import com.shahenpc.common.core.page.TableDataInfo;
 

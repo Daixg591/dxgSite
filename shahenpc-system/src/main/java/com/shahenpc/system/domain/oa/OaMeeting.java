@@ -29,12 +29,12 @@ public class OaMeeting extends BaseEntity
     private Integer meetingType;
 
     /**  */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "", width = 30, dateFormat = "yyyy-MM-dd")
     private Date startTime;
 
     /**  */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "", width = 30, dateFormat = "yyyy-MM-dd")
     private Date endTime;
 

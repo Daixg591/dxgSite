@@ -1,4 +1,4 @@
-package com.shahenpc.system.domain.perform;
+package com.shahenpc.system.domain.representative;
 
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;

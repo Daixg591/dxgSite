@@ -9,6 +9,8 @@ import com.shahenpc.common.utils.SecurityUtils;
 import com.shahenpc.framework.web.service.SysLoginService;
 import com.shahenpc.framework.web.service.SysPermissionService;
 import com.shahenpc.system.service.ISysMenuService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Set;
-
+@Api(tags = "app登录")
 @RestController
 public class AppSysLoginController {
     @Autowired
@@ -35,6 +37,7 @@ public class AppSysLoginController {
      * @param loginBody 登录信息
      * @return 结果
      */
+    @ApiOperation("登录")
     @PostMapping("/app/login")
     public AjaxResult login(@RequestBody LoginBody loginBody)
     {
@@ -51,6 +54,7 @@ public class AppSysLoginController {
      *
      * @return 用户信息
      */
+    @ApiOperation("用户信息")
     @GetMapping("/app/getInfo")
     public AjaxResult getInfo()
     {
@@ -71,6 +75,7 @@ public class AppSysLoginController {
      *
      * @return 路由信息
      */
+    @ApiOperation("路由信息")
     @GetMapping("app/getRouters")
     public AjaxResult getRouters()
     {

@@ -1,7 +1,7 @@
-package com.shahenpc.system.mapper.perform;
+package com.shahenpc.system.mapper.representative;
 
 import java.util.List;
-import com.shahenpc.system.domain.perform.PerformNpcOverview;
+import com.shahenpc.system.domain.representative.PerformNpcOverview;
 
 /**
  * 小程序-信息发布Mapper接口

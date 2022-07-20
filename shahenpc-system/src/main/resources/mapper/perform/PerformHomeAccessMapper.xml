@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.shahenpc.system.mapper.perform.PerformHomeAccessMapper">
+<mapper namespace="com.shahenpc.system.mapper.representative.PerformHomeAccessMapper">
     
     <resultMap type="PerformHomeAccess" id="PerformHomeAccessResult">
         <result property="accessId"    column="access_id"    />

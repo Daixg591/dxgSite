@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,7 @@ public class OaVotePlayerController extends BaseController
     /**
      * 查询投票选手列表
      */
+    @ApiOperation("列表")
     @PreAuthorize("@ss.hasPermi('oa:player:list')")
     @GetMapping("/list")
     public TableDataInfo list(OaVotePlayer oaVotePlayer)
@@ -52,6 +54,7 @@ public class OaVotePlayerController extends BaseController
     /**
      * 导出投票选手列表
      */
+    @ApiOperation("导出")
     @PreAuthorize("@ss.hasPermi('oa:player:export')")
     @Log(title = "投票选手", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -65,6 +68,7 @@ public class OaVotePlayerController extends BaseController
     /**
      * 获取投票选手详细信息
      */
+    @ApiOperation("详情")
     @PreAuthorize("@ss.hasPermi('oa:player:query')")
     @GetMapping(value = "/{playerId}")
     public AjaxResult getInfo(@PathVariable("playerId") Long playerId)
@@ -75,6 +79,7 @@ public class OaVotePlayerController extends BaseController
     /**
      * 新增投票选手
      */
+    @ApiOperation("增加")
     @PreAuthorize("@ss.hasPermi('oa:player:add')")
     @Log(title = "投票选手", businessType = BusinessType.INSERT)
     @PostMapping
@@ -86,6 +91,7 @@ public class OaVotePlayerController extends BaseController
     /**
      * 修改投票选手
      */
+    @ApiOperation("修改")
     @PreAuthorize("@ss.hasPermi('oa:player:edit')")
     @Log(title = "投票选手", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -97,6 +103,7 @@ public class OaVotePlayerController extends BaseController
     /**
      * 删除投票选手
      */
+    @ApiOperation("删除")
     @PreAuthorize("@ss.hasPermi('oa:player:remove')")
     @Log(title = "投票选手", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{playerIds}")

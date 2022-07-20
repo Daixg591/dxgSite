@@ -83,4 +83,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{signId}
         </foreach>
     </delete>
+
+    <!--====================================================分割线 -->
+    <select id="selectByMeetingId" parameterType="java.lang.Long" resultMap="OaMeetingSignResult">
+        <include refid="selectOaMeetingSignVo"/>
+        where meeting_id = #{meetingId}
+    </select>
 </mapper>

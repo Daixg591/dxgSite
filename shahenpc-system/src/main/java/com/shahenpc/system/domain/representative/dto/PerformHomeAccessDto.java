@@ -1,6 +1,6 @@
-package com.shahenpc.system.domain.perform.dto;
+package com.shahenpc.system.domain.representative.dto;
 
-import com.shahenpc.system.domain.perform.PerformHomeAccess;
+import com.shahenpc.system.domain.representative.PerformHomeAccess;
 import lombok.Data;
 
 @Data

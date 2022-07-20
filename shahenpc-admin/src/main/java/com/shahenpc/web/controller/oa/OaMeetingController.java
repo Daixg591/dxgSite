@@ -3,6 +3,7 @@ package com.shahenpc.web.controller.oa;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.system.domain.oa.dto.MeetingAddDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -66,7 +67,7 @@ public class OaMeetingController extends BaseController
     @GetMapping(value = "/{meetingId}")
     public AjaxResult getInfo(@PathVariable("meetingId") Long meetingId)
     {
-        return AjaxResult.success(oaMeetingService.selectOaMeetingByMeetingId(meetingId));
+        return AjaxResult.success(oaMeetingService.newDetail(meetingId));
     }
 
     /**
@@ -76,9 +77,10 @@ public class OaMeetingController extends BaseController
     @PreAuthorize("@ss.hasPermi('oa:meeting:add')")
     @Log(title = "人大办公-会议管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody OaMeeting oaMeeting)
+    public AjaxResult add(@RequestBody MeetingAddDto oaMeeting)
     {
-        return toAjax(oaMeetingService.insertOaMeeting(oaMeeting));
+        oaMeeting.setCreateBy(getUsername());
+        return toAjax(oaMeetingService.newAdd(oaMeeting));
     }
 
     /**

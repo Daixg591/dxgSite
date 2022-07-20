@@ -1,9 +1,9 @@
-package com.shahenpc.web.controller.perform;
+package com.shahenpc.web.controller.representative;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.shahenpc.system.domain.perform.dto.PerformHomeAccessDto;
+import com.shahenpc.system.domain.representative.dto.PerformHomeAccessDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,8 +20,8 @@ import com.shahenpc.common.annotation.Log;
 import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.enums.BusinessType;
-import com.shahenpc.system.domain.perform.PerformHomeAccess;
-import com.shahenpc.system.service.perform.IPerformHomeAccessService;
+import com.shahenpc.system.domain.representative.PerformHomeAccess;
+import com.shahenpc.system.service.representative.IPerformHomeAccessService;
 import com.shahenpc.common.utils.poi.ExcelUtil;
 import com.shahenpc.common.core.page.TableDataInfo;
 

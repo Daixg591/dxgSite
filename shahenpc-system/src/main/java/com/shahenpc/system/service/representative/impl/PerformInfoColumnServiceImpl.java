@@ -1,12 +1,12 @@
-package com.shahenpc.system.service.perform.impl;
+package com.shahenpc.system.service.representative.impl;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.shahenpc.system.mapper.perform.PerformInfoColumnMapper;
-import com.shahenpc.system.domain.perform.PerformInfoColumn;
-import com.shahenpc.system.service.perform.IPerformInfoColumnService;
+import com.shahenpc.system.mapper.representative.PerformInfoColumnMapper;
+import com.shahenpc.system.domain.representative.PerformInfoColumn;
+import com.shahenpc.system.service.representative.IPerformInfoColumnService;
 
 /**
  * 信息发布栏目菜单Service业务层处理

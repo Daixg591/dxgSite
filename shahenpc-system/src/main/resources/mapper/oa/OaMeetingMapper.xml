@@ -108,4 +108,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{meetingId}
         </foreach>
     </delete>
+
+    <!--=======================================================分割线-->
+    <resultMap id="webDetail" type="com.shahenpc.system.domain.oa.dto.MeetingDetailDto" extends="OaMeetingResult">
+        <association property="record" column="meeting_id" select="com.shahenpc.system.mapper.oa.OaMeetingRecordMapper.selectByMeetingId"/>
+        <association property="sign" column="meeting_id" select="com.shahenpc.system.mapper.oa.OaMeetingSignMapper.selectByMeetingId"/>
+        <association property="personnel" column="meeting_id" select="com.shahenpc.system.mapper.oa.OaMeetingPersonnelMapper.selectByMeetingId"/>
+    </resultMap>
+    <select id="newDetail" resultMap="webDetail" parameterType="Long" >
+        <include refid="selectOaMeetingVo"/>
+        where meeting_id = #{meetingId}
+    </select>
 </mapper>

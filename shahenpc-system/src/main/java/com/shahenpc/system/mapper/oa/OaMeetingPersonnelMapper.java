@@ -58,4 +58,6 @@ public interface OaMeetingPersonnelMapper
      * @return 结果
      */
     public int deleteOaMeetingPersonnelByPersonnelIds(Long[] personnelIds);
+
+    public List<Long> selectByMeetingId(Long meetingId);
 }

@@ -58,4 +58,7 @@ public interface OaMeetingRecordMapper
      * @return 结果
      */
     public int deleteOaMeetingRecordByRecordIds(Long[] recordIds);
+
+    public List<OaMeetingRecord> selectByMeetingId(Long meetingId);
+
 }

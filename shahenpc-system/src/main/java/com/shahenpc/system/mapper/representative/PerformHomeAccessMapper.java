@@ -1,7 +1,7 @@
-package com.shahenpc.system.mapper.perform;
+package com.shahenpc.system.mapper.representative;
 
 import java.util.List;
-import com.shahenpc.system.domain.perform.PerformHomeAccess;
+import com.shahenpc.system.domain.representative.PerformHomeAccess;
 
 /**
  * 代之家访问Mapper接口

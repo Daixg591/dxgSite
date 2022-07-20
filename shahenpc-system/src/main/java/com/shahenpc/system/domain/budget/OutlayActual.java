@@ -23,7 +23,7 @@ public class OutlayActual extends BaseEntity
     private Long actualId;
 
     /** 预支出 */
-    @Excel(name = "预支出")
+    //@Excel(name = "预支出")
     private Long budgetId;
 
     /** 金额 */
@@ -31,7 +31,7 @@ public class OutlayActual extends BaseEntity
     private BigDecimal amount;
 
     /** 监督id */
-    @Excel(name = "监督id")
+    //@Excel(name = "监督id")
     private Long superviseUserId;
 
     /** 项目编号 */
@@ -39,7 +39,7 @@ public class OutlayActual extends BaseEntity
     private String projectNumber;
 
     /** 收支类型 */
-    @Excel(name = "收支类型")
+    @Excel(name = "收支类型" ,readConverterExp = "1=教育资金,2=社会保障,3=基础建设,4=科技支持")
     private Integer budgetType;
 
     /** 标题 */

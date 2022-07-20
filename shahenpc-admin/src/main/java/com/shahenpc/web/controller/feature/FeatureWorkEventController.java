@@ -127,4 +127,13 @@ public class FeatureWorkEventController extends BaseController
     {
         return AjaxResult.success(featureWorkEventService.monthCount(workType));
     }
+
+    @ApiOperation("环比")
+    @PreAuthorize("@ss.hasPermi('feature:month:count')")
+    @GetMapping("/ring/scale")
+    public AjaxResult ringScale(@RequestParam Integer workType)
+    {
+        Object data = featureWorkEventService.ringScale(workType);
+        return AjaxResult.success(data);
+    }
 }

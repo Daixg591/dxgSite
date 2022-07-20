@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.shahenpc.system.mapper.represent.JobMotionMapper">
+<mapper namespace="com.shahenpc.system.represent.JobMotionMapper">
 
     <resultMap type="JobMotion" id="JobMotionResult">
         <result property="motionId"    column="motion_id"    />

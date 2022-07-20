@@ -90,15 +90,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 (SELECT COUNT(e1.event_id) FROM feature_work_event e1  WHERE DATE_FORMAT(e1.create_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m') AND e1.work_type = e.work_type)AS monthPen
         FROM feature_work_event e WHERE e.work_type = #{workType}
     </select>
-    <select id="monthCount">
 
+    <!---->
+    <select id="selectByLastYear" resultType="java.lang.Integer">
+        SELECT count(event_id) FROM feature_work_event
+        where create_time &gt;= #{sTime} and create_time &lt;= #{eTime} AND work_type = #{workType};
     </select>
-
-<!--    <select id="">-->
-<!--        SELECT-->
-<!--                (select COUNT(e.event_id)from `feature_work_event` e where YEAR(e.create_time)=YEAR(DATE_SUB(now(),interval 1 year)))AS lastYear,-->
-<!--                (select COUNT(e1.event_id) from `feature_work_event` e1 where YEAR(e1.create_time)=YEAR(NOW())) AS thisYear-->
-<!--        FROM feature_work_event LIMIT 0,1;-->
-<!--    </select>-->
 
 </mapper>

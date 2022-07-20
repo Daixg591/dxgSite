@@ -5,12 +5,14 @@ import java.util.stream.Collectors;
 
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
-import com.shahenpc.system.domain.budget.dto.AlarmAndBudgetDto;
-import com.shahenpc.system.domain.budget.dto.OutlayCakeDto;
-import com.shahenpc.system.domain.feature.FeatureWorkEvent;
-import com.shahenpc.system.domain.feature.dto.FeatureCurveDto;
+import com.shahenpc.system.domain.oa.OaMeetingPersonnel;
 import com.shahenpc.system.domain.oa.dto.MeetingCakeDto;
 import com.shahenpc.system.domain.oa.dto.MeetingColumnarDto;
+import com.shahenpc.system.domain.oa.dto.MeetingAddDto;
+import com.shahenpc.system.domain.oa.dto.MeetingDetailDto;
+import com.shahenpc.system.mapper.oa.OaMeetingPersonnelMapper;
+import com.shahenpc.system.mapper.oa.OaMeetingRecordMapper;
+import com.shahenpc.system.mapper.oa.OaMeetingSignMapper;
 import com.shahenpc.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,14 @@ public class OaMeetingServiceImpl implements IOaMeetingService
     private OaMeetingMapper oaMeetingMapper;
     @Autowired
     private ISysDictDataService dictDataService;
+    @Autowired
+    private OaMeetingPersonnelMapper oaMeetingPersonnelMapper;
+    @Autowired
+    private OaMeetingRecordMapper oaMeetingRecordMapper;
+    @Autowired
+    private OaMeetingSignMapper oaMeetingSignMapper;
+
+
     /**
      * 查询人大办公-会议管理
      * 
@@ -66,6 +76,29 @@ public class OaMeetingServiceImpl implements IOaMeetingService
     {
         oaMeeting.setCreateTime(DateUtils.getNowDate());
         return oaMeetingMapper.insertOaMeeting(oaMeeting);
+    }
+
+    @Override
+    public int newAdd(MeetingAddDto request) {
+        request.setCreateTime(DateUtils.getNowDate());
+        int success= oaMeetingMapper.insertOaMeeting(request);
+        for (Long userId :request.getPersonnel()){
+            OaMeetingPersonnel item = new OaMeetingPersonnel();
+            item.setMeetingId(request.getMeetingId());
+            item.setCreateTime(DateUtils.getNowDate());
+            item.setUserId(userId);
+            oaMeetingPersonnelMapper.insertOaMeetingPersonnel(item);
+        }
+        return success;
+    }
+
+    @Override
+    public MeetingDetailDto newDetail(Long meetingId) {
+        MeetingDetailDto dto=oaMeetingMapper.newDetail(meetingId);
+//        dto.setPersonnel(oaMeetingPersonnelMapper.selectByMeetingId(meetingId));
+//        dto.setSign(oaMeetingSignMapper.selectByMeetingId(meetingId));
+//        dto.setRecord(oaMeetingRecordMapper.selectByMeetingId(meetingId));
+        return dto;
     }
 
     /**
@@ -152,6 +185,9 @@ public class OaMeetingServiceImpl implements IOaMeetingService
         Collections.reverse(res.getLabel());
         return res;
     }
+
+
+
     /**
      * 获取最近六个月份  ["2022-07","2022-06","2022-05"...]
      *

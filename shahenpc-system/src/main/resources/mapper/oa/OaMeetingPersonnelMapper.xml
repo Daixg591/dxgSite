@@ -93,4 +93,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{personnelId}
         </foreach>
     </delete>
+    <!--=======================================分割线-->
+    <select id="selectByMeetingId" resultType="java.lang.Long" parameterType="java.lang.Long">
+        select user_id from oa_meeting_personnel
+        where meeting_id = #{meetingId}
+    </select>
 </mapper>

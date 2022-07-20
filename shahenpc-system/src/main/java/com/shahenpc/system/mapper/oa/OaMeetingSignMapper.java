@@ -58,4 +58,6 @@ public interface OaMeetingSignMapper
      * @return 结果
      */
     public int deleteOaMeetingSignBySignIds(Long[] signIds);
+
+    public List<OaMeetingSign> selectByMeetingId(Long meetingId);
 }

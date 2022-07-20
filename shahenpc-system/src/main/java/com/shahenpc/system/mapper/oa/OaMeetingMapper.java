@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper.oa;
 
 import java.util.List;
 import com.shahenpc.system.domain.oa.OaMeeting;
+import com.shahenpc.system.domain.oa.dto.MeetingDetailDto;
 
 /**
  * 人大办公-会议管理Mapper接口
@@ -58,4 +59,6 @@ public interface OaMeetingMapper
      * @return 结果
      */
     public int deleteOaMeetingByMeetingIds(Long[] meetingIds);
+
+    public MeetingDetailDto newDetail(Long meetingId);
 }

@@ -1,7 +1,7 @@
-package com.shahenpc.system.service.perform;
+package com.shahenpc.system.service.representative;
 
 import java.util.List;
-import com.shahenpc.system.domain.perform.PerformNpcOverview;
+import com.shahenpc.system.domain.representative.PerformNpcOverview;
 
 /**
  * 小程序-信息发布Service接口

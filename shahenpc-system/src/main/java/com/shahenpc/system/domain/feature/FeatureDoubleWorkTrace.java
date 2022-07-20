@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.feature;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-13
  */
+@Data
 public class FeatureDoubleWorkTrace extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -38,75 +40,93 @@ public class FeatureDoubleWorkTrace extends BaseEntity
     @Excel(name = "回复")
     private String content;
 
-    public void setTraceId(Long traceId) 
+    /** 图片存储 */
+    @Excel(name = "图片存储")
+    private String picUrls;
+    /** 是否已读 */
+    @Excel(name = "是否已读")
+    private Integer isRead;
+
+
+    public void setTraceId(Long traceId)
     {
         this.traceId = traceId;
     }
 
-    public Long getTraceId() 
+    public Long getTraceId()
     {
         return traceId;
     }
-    public void setDoubleId(Long doubleId) 
+    public void setDoubleId(Long doubleId)
     {
         this.doubleId = doubleId;
     }
 
-    public Long getDoubleId() 
+    public Long getDoubleId()
     {
         return doubleId;
     }
-    public void setSendUserId(Long sendUserId) 
+    public void setSendUserId(Long sendUserId)
     {
         this.sendUserId = sendUserId;
     }
 
-    public Long getSendUserId() 
+    public Long getSendUserId()
     {
         return sendUserId;
     }
-    public void setReceiveUserId(Long receiveUserId) 
+    public void setReceiveUserId(Long receiveUserId)
     {
         this.receiveUserId = receiveUserId;
     }
 
-    public Long getReceiveUserId() 
+    public Long getReceiveUserId()
     {
         return receiveUserId;
     }
-    public void setStatus(Integer status) 
+    public void setStatus(Integer status)
     {
         this.status = status;
     }
 
-    public Integer getStatus() 
+    public Integer getStatus()
     {
         return status;
     }
-    public void setContent(String content) 
+    public void setContent(String content)
     {
         this.content = content;
     }
 
-    public String getContent() 
+    public String getContent()
     {
         return content;
+    }
+    public void setPicUrls(String picUrls)
+    {
+        this.picUrls = picUrls;
+    }
+
+    public String getPicUrls()
+    {
+        return picUrls;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("traceId", getTraceId())
-            .append("doubleId", getDoubleId())
-            .append("sendUserId", getSendUserId())
-            .append("receiveUserId", getReceiveUserId())
-            .append("status", getStatus())
-            .append("content", getContent())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .toString();
+                .append("traceId", getTraceId())
+                .append("doubleId", getDoubleId())
+                .append("sendUserId", getSendUserId())
+                .append("receiveUserId", getReceiveUserId())
+                .append("status", getStatus())
+                .append("content", getContent())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .append("remark", getRemark())
+                .append("picUrls", getPicUrls())
+                .toString();
     }
 }

@@ -1,12 +1,12 @@
-package com.shahenpc.system.service.perform.impl;
+package com.shahenpc.system.service.representative.impl;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.shahenpc.system.mapper.perform.PerformNpcOverviewMapper;
-import com.shahenpc.system.domain.perform.PerformNpcOverview;
-import com.shahenpc.system.service.perform.IPerformNpcOverviewService;
+import com.shahenpc.system.mapper.representative.PerformNpcOverviewMapper;
+import com.shahenpc.system.domain.representative.PerformNpcOverview;
+import com.shahenpc.system.service.representative.IPerformNpcOverviewService;
 
 /**
  * 小程序-信息发布Service业务层处理

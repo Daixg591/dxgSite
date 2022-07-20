@@ -23,11 +23,11 @@ public class OutlayBudget extends BaseEntity
     private Long budgetId;
 
     /** 告警id */
-    @Excel(name = "告警id")
+    //@Excel(name = "告警id")
     private Long alarmId;
 
     /** 收支类型 */
-    @Excel(name = "收支类型")
+    @Excel(name = "收支类型",readConverterExp = "1=教育资金,2=社会保障,3=基础建设,4=科技支持")
     private Integer budgetType;
 
     /** 标题 */
@@ -39,7 +39,7 @@ public class OutlayBudget extends BaseEntity
     private String year;
 
     /** 说明 */
-    @Excel(name = "说明")
+    //@Excel(name = "说明")
     private String illustrate;
 
     /** 金额 */
@@ -47,7 +47,7 @@ public class OutlayBudget extends BaseEntity
     private BigDecimal amount;
 
     /** 状态 */
-    @Excel(name = "状态")
+    //@Excel(name = "状态")
     private Integer status;
 
     /** 项目编号 */
@@ -55,7 +55,7 @@ public class OutlayBudget extends BaseEntity
     private String projectNumber;
 
     /** 提报人 */
-    @Excel(name = "提报人")
+    //@Excel(name = "提报人")
     private Long proposedUserId;
 
     /** 超出比例 */

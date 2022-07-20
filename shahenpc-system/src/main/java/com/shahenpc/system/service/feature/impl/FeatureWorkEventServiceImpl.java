@@ -4,12 +4,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.shahenpc.common.utils.DateUtils;
-import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
 import com.shahenpc.system.domain.feature.dto.FeatureCurveDto;
 import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
-import com.shahenpc.system.domain.personel.PersonnelAppointRegister;
-import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
-import com.shahenpc.system.domain.personel.vo.TendencyChart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.feature.FeatureWorkEventMapper;
@@ -134,6 +130,37 @@ public class FeatureWorkEventServiceImpl implements IFeatureWorkEventService
         Collections.reverse(res.getLabel());
         return res;
     }
+
+    @Override
+    public String ringScale(Integer workType) {
+        String sTime="";
+        String eTime="";
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.MONTH, 1);
+        c.add(Calendar.YEAR, -1);
+        int year = c.get(Calendar.YEAR);
+        sTime = year +"-1-1 00:00:00";
+        int month2 = c.get(Calendar.MONTH);
+        int day2 = c.get(Calendar.DAY_OF_MONTH);
+        eTime = year+"-"+month2+"-"+day2+" 00:00:00";
+        int lastYear =featureWorkEventMapper.selectByLastYear(sTime,eTime,workType);
+        c.add(Calendar.YEAR, 1);
+        int year2 = c.get(Calendar.YEAR);
+        month2 = c.get(Calendar.MONTH);
+        day2 = c.get(Calendar.DAY_OF_MONTH);
+        sTime = year2+"-1-1 00:00:00";
+        eTime = year2+"-"+month2+"-"+day2+" 00:00:00";
+        int thisYear =featureWorkEventMapper.selectByLastYear(sTime,eTime,workType);
+        //今年 - 去年 / 去年
+        double dou = 0.00;
+        if(lastYear != 0 && thisYear != 0){
+            double thisYear1=thisYear;
+            double lastYear1 =lastYear;
+            dou = (thisYear1 -lastYear1) / lastYear1;
+        }
+        return String.format("%.2f",dou);
+    }
+
     /**
      * 获取最近六个月份  ["2022-07","2022-06","2022-05"...]
      *

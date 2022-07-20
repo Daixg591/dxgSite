@@ -1,4 +1,4 @@
-package com.shahenpc.system.domain.perform;
+package com.shahenpc.system.domain.representative;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

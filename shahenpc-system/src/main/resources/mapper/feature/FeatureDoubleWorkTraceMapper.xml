@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.feature.FeatureDoubleWorkTraceMapper">
-    
+
     <resultMap type="FeatureDoubleWorkTrace" id="FeatureDoubleWorkTraceResult">
         <result property="traceId"    column="trace_id"    />
         <result property="doubleId"    column="double_id"    />
@@ -16,28 +16,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <result property="picUrls"    column="pic_urls"    />
+        <result property="isRead"    column="is_read"    />
     </resultMap>
 
     <sql id="selectFeatureDoubleWorkTraceVo">
-        select trace_id, double_id, send_user_id, receive_user_id, status, content, create_by, create_time, update_by, update_time, remark from feature_double_work_trace
+        select trace_id, double_id, send_user_id, receive_user_id, status, content, create_by, create_time, update_by, update_time, remark, pic_urls, is_read from feature_double_work_trace
     </sql>
 
     <select id="selectFeatureDoubleWorkTraceList" parameterType="FeatureDoubleWorkTrace" resultMap="FeatureDoubleWorkTraceResult">
         <include refid="selectFeatureDoubleWorkTraceVo"/>
-        <where>  
+        <where>
             <if test="doubleId != null "> and double_id = #{doubleId}</if>
             <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
             <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
             <if test="status != null "> and status = #{status}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="picUrls != null  and picUrls != ''"> and pic_urls = #{picUrls}</if>
+            <if test="isRead != null "> and is_read = #{isRead}</if>
         </where>
     </select>
-    
+
     <select id="selectFeatureDoubleWorkTraceByTraceId" parameterType="Long" resultMap="FeatureDoubleWorkTraceResult">
         <include refid="selectFeatureDoubleWorkTraceVo"/>
         where trace_id = #{traceId}
     </select>
-        
+
     <insert id="insertFeatureDoubleWorkTrace" parameterType="FeatureDoubleWorkTrace" useGeneratedKeys="true" keyProperty="traceId">
         insert into feature_double_work_trace
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -51,7 +55,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
-         </trim>
+            <if test="picUrls != null">pic_urls,</if>
+            <if test="isRead != null">is_read,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="doubleId != null">#{doubleId},</if>
             <if test="sendUserId != null">#{sendUserId},</if>
@@ -63,7 +69,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
-         </trim>
+            <if test="picUrls != null">#{picUrls},</if>
+            <if test="isRead != null">#{isRead},</if>
+        </trim>
     </insert>
 
     <update id="updateFeatureDoubleWorkTrace" parameterType="FeatureDoubleWorkTrace">
@@ -79,6 +87,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="picUrls != null">pic_urls = #{picUrls},</if>
+            <if test="isRead != null">is_read = #{isRead},</if>
         </trim>
         where trace_id = #{traceId}
     </update>
@@ -88,7 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteFeatureDoubleWorkTraceByTraceIds" parameterType="String">
-        delete from feature_double_work_trace where trace_id in 
+        delete from feature_double_work_trace where trace_id in
         <foreach item="traceId" collection="array" open="(" separator="," close=")">
             #{traceId}
         </foreach>

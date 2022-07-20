@@ -161,4 +161,20 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         return a;
     }
 
+    @Override
+    public int appNewAdd(FeatureDoubleWork featureDoubleWork) {
+        featureDoubleWork.setCreateTime(DateUtils.getNowDate());
+        int a =  featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork);
+        FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
+        featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
+        featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
+        featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
+        featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
+        featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
+        featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
+        featureDoubleWorkTrace.setPicUrls(featureDoubleWork.getPicUrls());
+        featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
+        return a;
+    }
+
 }

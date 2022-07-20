@@ -59,6 +59,16 @@ public class OutlayBudgetController extends BaseController
         return getDataTable(list);
     }
 
+    @ApiOperation("导出模板")
+    @PreAuthorize("@ss.hasPermi('outlay:budget:export')")
+    @Log(title = "预算", businessType = BusinessType.CLEAN)
+    @PostMapping("/template")
+    public void template(HttpServletResponse response)
+    {
+        List<OutlayBudget> list = null;
+        ExcelUtil<OutlayBudget> util = new ExcelUtil<OutlayBudget>(OutlayBudget.class);
+        util.importTemplateExcel(response,"预算模板");
+    }
     /**
      * 导出预算列表
      */

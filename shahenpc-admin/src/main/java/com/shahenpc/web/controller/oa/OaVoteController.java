@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,7 @@ public class OaVoteController extends BaseController
     /**
      * 查询投票窗口列表
      */
+    @ApiOperation("列表")
     @PreAuthorize("@ss.hasPermi('oa:vote:list')")
     @GetMapping("/list")
     public TableDataInfo list(OaVote oaVote)
@@ -52,6 +54,7 @@ public class OaVoteController extends BaseController
     /**
      * 导出投票窗口列表
      */
+    @ApiOperation("导出")
     @PreAuthorize("@ss.hasPermi('oa:vote:export')")
     @Log(title = "投票窗口", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -65,6 +68,7 @@ public class OaVoteController extends BaseController
     /**
      * 获取投票窗口详细信息
      */
+    @ApiOperation("详情")
     @PreAuthorize("@ss.hasPermi('oa:vote:query')")
     @GetMapping(value = "/{voteId}")
     public AjaxResult getInfo(@PathVariable("voteId") Long voteId)
@@ -75,6 +79,7 @@ public class OaVoteController extends BaseController
     /**
      * 新增投票窗口
      */
+    @ApiOperation("新增")
     @PreAuthorize("@ss.hasPermi('oa:vote:add')")
     @Log(title = "投票窗口", businessType = BusinessType.INSERT)
     @PostMapping
@@ -86,6 +91,7 @@ public class OaVoteController extends BaseController
     /**
      * 修改投票窗口
      */
+    @ApiOperation("修改")
     @PreAuthorize("@ss.hasPermi('oa:vote:edit')")
     @Log(title = "投票窗口", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -97,6 +103,7 @@ public class OaVoteController extends BaseController
     /**
      * 删除投票窗口
      */
+    @ApiOperation("删除")
     @PreAuthorize("@ss.hasPermi('oa:vote:remove')")
     @Log(title = "投票窗口", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{voteIds}")

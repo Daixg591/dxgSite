@@ -1,8 +1,8 @@
-package com.shahenpc.system.service.perform;
+package com.shahenpc.system.service.representative;
 
 import java.util.List;
-import com.shahenpc.system.domain.perform.PerformHomeAccess;
-import com.shahenpc.system.domain.perform.dto.PerformHomeAccessDto;
+import com.shahenpc.system.domain.representative.PerformHomeAccess;
+import com.shahenpc.system.domain.representative.dto.PerformHomeAccessDto;
 
 /**
  * 代之家访问Service接口

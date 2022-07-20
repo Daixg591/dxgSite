@@ -1,7 +1,7 @@
-package com.shahenpc.system.service.perform;
+package com.shahenpc.system.service.representative;
 
 import java.util.List;
-import com.shahenpc.system.domain.perform.PerformInfoColumn;
+import com.shahenpc.system.domain.representative.PerformInfoColumn;
 
 /**
  * 信息发布栏目菜单Service接口

@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.feature;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-13
  */
+@Data
 public class FeatureDoubleWork extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -36,7 +38,7 @@ public class FeatureDoubleWork extends BaseEntity
 
     /** 图片存储 */
     @Excel(name = "图片存储")
-    private String picUrl;
+    private String picUrls;
 
     /** 提交id */
     @Excel(name = "提交id")
@@ -45,6 +47,10 @@ public class FeatureDoubleWork extends BaseEntity
     /** 接收人id */
     @Excel(name = "接收人id")
     private Long receiveUserId;
+    /** 是否已读 */
+    @Excel(name = "是否已读")
+    private Integer isRead;
+
 
     public void setDoubleId(Long doubleId) 
     {
@@ -91,15 +97,7 @@ public class FeatureDoubleWork extends BaseEntity
     {
         return content;
     }
-    public void setPicUrl(String picUrl) 
-    {
-        this.picUrl = picUrl;
-    }
 
-    public String getPicUrl() 
-    {
-        return picUrl;
-    }
     public void setSubmitUserId(Long submitUserId) 
     {
         this.submitUserId = submitUserId;
@@ -127,7 +125,6 @@ public class FeatureDoubleWork extends BaseEntity
             .append("title", getTitle())
             .append("status", getStatus())
             .append("content", getContent())
-            .append("picUrl", getPicUrl())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

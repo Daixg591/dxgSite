@@ -4,6 +4,8 @@ import java.util.List;
 import com.shahenpc.system.domain.oa.OaMeeting;
 import com.shahenpc.system.domain.oa.dto.MeetingCakeDto;
 import com.shahenpc.system.domain.oa.dto.MeetingColumnarDto;
+import com.shahenpc.system.domain.oa.dto.MeetingAddDto;
+import com.shahenpc.system.domain.oa.dto.MeetingDetailDto;
 
 /**
  * 人大办公-会议管理Service接口
@@ -71,4 +73,8 @@ public interface IOaMeetingService
      * 柱状
      */
     public MeetingColumnarDto columnarCount();
+
+    public int newAdd(MeetingAddDto request);
+
+    public MeetingDetailDto newDetail(Long meetingId);
 }

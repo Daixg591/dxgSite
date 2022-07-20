@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Api(tags = "实际支出管理")
 @RestController
-@RequestMapping("/outlay/actual")
+    @RequestMapping("/outlay/actual")
 public class OutlayActualController extends BaseController
 {
     @Autowired
@@ -69,7 +69,16 @@ public class OutlayActualController extends BaseController
         List<OutlayActualListDto> list = outlayActualService.newList(request);
         return getDataTable(list);
     }
-
+    @ApiOperation("导出模板")
+    @PreAuthorize("@ss.hasPermi('outlay:actual:template')")
+    @Log(title = "实际支出", businessType = BusinessType.CLEAN)
+    @PostMapping("/template")
+    public void template(HttpServletResponse response)
+    {
+        List<OutlayActual> list = null;
+        ExcelUtil<OutlayActual> util = new ExcelUtil<OutlayActual>(OutlayActual.class);
+        util.importTemplateExcel(response,"实际支出模板");
+    }
     /**
      * 导出实际支出列表
      */

@@ -1,4 +1,4 @@
-package com.shahenpc.web.controller.perform;
+package com.shahenpc.web.controller.representative;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -20,10 +20,9 @@ import com.shahenpc.common.annotation.Log;
 import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.enums.BusinessType;
-import com.shahenpc.system.domain.perform.PerformInfoColumn;
-import com.shahenpc.system.service.perform.IPerformInfoColumnService;
+import com.shahenpc.system.domain.representative.PerformInfoColumn;
+import com.shahenpc.system.service.representative.IPerformInfoColumnService;
 import com.shahenpc.common.utils.poi.ExcelUtil;
-import com.shahenpc.common.core.page.TableDataInfo;
 
 /**
  * 信息发布栏目菜单Controller

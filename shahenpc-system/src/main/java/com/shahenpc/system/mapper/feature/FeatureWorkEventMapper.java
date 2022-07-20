@@ -4,6 +4,7 @@ import java.util.List;
 import com.shahenpc.system.domain.feature.FeatureWorkEvent;
 import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
 import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 特色工作-民生实事-环境保护-信访稳定-营商环境-乡村振兴Mapper接口
@@ -69,4 +70,11 @@ public interface FeatureWorkEventMapper
      *
      */
     public FeatureCakeDto monthCount(Integer workType);
+
+    /**
+     *
+     * @param workType
+     * @return
+     */
+    public int selectByLastYear(@Param("sTime")String sTime,@Param("eTime")String eTime,@Param("workType")Integer workType);
 }
