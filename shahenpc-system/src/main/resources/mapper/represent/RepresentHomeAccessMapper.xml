@@ -138,4 +138,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectVisitsCount" resultType="java.lang.Integer">
         SELECT COUNT(browse_number) FROM represent_home_access
     </select>
+
+    <select id="rankingList" resultMap="RepresentHomeAccessResult">
+        <include refid="selectRepresentHomeAccessVo"/> ORDER BY browse_number DESC LIMIT 3;
+    </select>
 </mapper>

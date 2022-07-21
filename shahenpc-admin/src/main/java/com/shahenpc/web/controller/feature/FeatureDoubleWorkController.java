@@ -134,13 +134,18 @@ public class FeatureDoubleWorkController extends BaseController
      * @return
      */
     @ApiOperation("瓶图展示")
-    @PreAuthorize("@ss.hasPermi('work:opinion:query')")
     @GetMapping(value = "/cake")
     public AjaxResult cake()
     {
         return AjaxResult.success(featureDoubleWorkService.speCake());
     }
 
+    @ApiOperation("各个总数比例")
+    @GetMapping(value = "/each")
+    public AjaxResult each()
+    {
+        return AjaxResult.success(featureDoubleWorkService.eachCount());
+    }
     /**
      * 添加流程
     @ApiOperation("添加")

@@ -107,10 +107,17 @@ public class RepresentHomeAccessController extends BaseController
     }
 
     @ApiOperation("访问总次数")
-    @PreAuthorize("@ss.hasPermi('represent:access:count')")
     @GetMapping("/visits/count")
     public AjaxResult visitsTotal()
     {
         return AjaxResult.success(representHomeAccessService.selectVisitsCount());
+    }
+
+    @ApiOperation("前三名排行")
+    @GetMapping("/ranking/list")
+    public TableDataInfo rankingList()
+    {
+        List<RepresentHomeAccess> list = representHomeAccessService.rankingList();
+        return getDataTable(list);
     }
 }

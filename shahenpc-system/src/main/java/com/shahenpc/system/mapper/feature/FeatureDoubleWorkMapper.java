@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper.feature;
 
 import java.util.List;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
+import com.shahenpc.system.domain.feature.dto.FeatureEachCount;
 import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
 
 /**
@@ -63,4 +64,6 @@ public interface FeatureDoubleWorkMapper
     public List<FeatureDoubleWork> selectByCakeType();
 
     public List<FeatureMonthDto> selectByMonth();
+
+    public FeatureEachCount eachCount();
 }

@@ -98,4 +98,9 @@ public class RepresentHomeAccessServiceImpl implements IRepresentHomeAccessServi
     public int selectVisitsCount() {
         return representHomeAccessMapper.selectVisitsCount();
     }
+
+    @Override
+    public List<RepresentHomeAccess> rankingList() {
+        return representHomeAccessMapper.rankingList();
+    }
 }

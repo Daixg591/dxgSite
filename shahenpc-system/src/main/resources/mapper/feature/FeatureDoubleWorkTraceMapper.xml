@@ -9,6 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="doubleId"    column="double_id"    />
         <result property="sendUserId"    column="send_user_id"    />
         <result property="receiveUserId"    column="receive_user_id"    />
+        <result property="parentTraceId"    column="parent_trace_id"    />
         <result property="status"    column="status"    />
         <result property="content"    column="content"    />
         <result property="createBy"    column="create_by"    />
@@ -21,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectFeatureDoubleWorkTraceVo">
-        select trace_id, double_id, send_user_id, receive_user_id, status, content, create_by, create_time, update_by, update_time, remark, pic_urls, is_read from feature_double_work_trace
+        select trace_id, double_id, send_user_id, receive_user_id, parent_trace_id, status, content, create_by, create_time, update_by, update_time, remark, pic_urls, is_read from feature_double_work_trace
     </sql>
 
     <select id="selectFeatureDoubleWorkTraceList" parameterType="FeatureDoubleWorkTrace" resultMap="FeatureDoubleWorkTraceResult">
@@ -30,6 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="doubleId != null "> and double_id = #{doubleId}</if>
             <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
             <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
+            <if test="parentTraceId != null "> and parent_trace_id = #{parentTraceId}</if>
             <if test="status != null "> and status = #{status}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="picUrls != null  and picUrls != ''"> and pic_urls = #{picUrls}</if>
@@ -48,6 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="doubleId != null">double_id,</if>
             <if test="sendUserId != null">send_user_id,</if>
             <if test="receiveUserId != null">receive_user_id,</if>
+            <if test="parentTraceId != null">parent_trace_id,</if>
             <if test="status != null">status,</if>
             <if test="content != null">content,</if>
             <if test="createBy != null">create_by,</if>
@@ -62,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="doubleId != null">#{doubleId},</if>
             <if test="sendUserId != null">#{sendUserId},</if>
             <if test="receiveUserId != null">#{receiveUserId},</if>
+            <if test="parentTraceId != null">#{parentTraceId},</if>
             <if test="status != null">#{status},</if>
             <if test="content != null">#{content},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -80,6 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="doubleId != null">double_id = #{doubleId},</if>
             <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
             <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
+            <if test="parentTraceId != null">parent_trace_id = #{parentTraceId},</if>
             <if test="status != null">status = #{status},</if>
             <if test="content != null">content = #{content},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
@@ -103,4 +108,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{traceId}
         </foreach>
     </delete>
+
+
+
 </mapper>

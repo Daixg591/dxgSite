@@ -31,6 +31,9 @@ public class FeatureDoubleWorkTrace extends BaseEntity
     /** 接收id */
     @Excel(name = "接收id")
     private Long receiveUserId;
+    /** 回复那一条id */
+    @Excel(name = "回复那一条id")
+    private Long parentTraceId;
 
     /** 1.待审核2.处理中 3.办结 4关闭 */
     @Excel(name = "1.待审核2.处理中 3.办结 4关闭")

@@ -63,4 +63,6 @@ public interface RepresentHomeAccessMapper
      * @return
      */
     public int selectVisitsCount();
+
+    public List<RepresentHomeAccess> rankingList();
 }

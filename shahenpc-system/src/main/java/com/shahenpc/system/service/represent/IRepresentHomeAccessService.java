@@ -60,4 +60,6 @@ public interface IRepresentHomeAccessService
     public int deleteRepresentHomeAccessByAccessId(Long accessId);
 
     public int selectVisitsCount();
+
+    public List<RepresentHomeAccess> rankingList();
 }

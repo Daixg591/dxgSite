@@ -8,6 +8,7 @@ import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.system.domain.feature.FeatureDoubleWorkTrace;
 import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
+import com.shahenpc.system.domain.feature.dto.FeatureEachCount;
 import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkTraceMapper;
 import com.shahenpc.system.service.ISysDictDataService;
@@ -176,5 +177,16 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
         return a;
     }
+
+    @Override
+    public FeatureEachCount eachCount() {
+        FeatureEachCount each =  featureDoubleWorkMapper.eachCount();
+        if(each.getProcessed() != 0 && each.getProportion() != 0) {
+            each.setProportion(each.getProcessed() / (each.getProcessed() + each.getProportion()));
+        }
+        each.setProportion(Double.valueOf(String.format("%.2f", each.getProportion())));
+        return each;
+    }
+
 
 }

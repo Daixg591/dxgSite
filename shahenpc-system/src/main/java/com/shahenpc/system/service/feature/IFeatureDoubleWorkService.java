@@ -3,6 +3,7 @@ package com.shahenpc.system.service.feature;
 import java.util.List;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
+import com.shahenpc.system.domain.feature.dto.FeatureEachCount;
 import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
 
 /**
@@ -70,4 +71,6 @@ public interface IFeatureDoubleWorkService
     public int newUpdate(FeatureDoubleWork featureDoubleWork);
 
     public int appNewAdd(FeatureDoubleWork featureDoubleWork);
+
+    public FeatureEachCount eachCount();
 }
