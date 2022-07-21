@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Api(tags = "实际支出管理")
 @RestController
-    @RequestMapping("/outlay/actual")
+@RequestMapping("/outlay/actual")
 public class OutlayActualController extends BaseController
 {
     @Autowired

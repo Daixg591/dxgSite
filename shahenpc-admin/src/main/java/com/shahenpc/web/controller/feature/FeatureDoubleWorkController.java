@@ -33,6 +33,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  * @author ruoyi
  * @date 2022-07-15
  */
+@Api(tags = "双联工作")
 @RestController
 @RequestMapping("/feature/work")
 public class FeatureDoubleWorkController extends BaseController

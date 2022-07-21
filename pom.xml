@@ -35,6 +35,8 @@
         <!--工作流 需要-->
         <flowable.version>6.7.2</flowable.version>
         <swagger.bootstrap-ui.version>1.9.6</swagger.bootstrap-ui.version>
+        <weixin.version>4.3.0</weixin.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
     </properties>
 	
     <!-- 依赖声明 -->
@@ -104,7 +106,18 @@
                 <artifactId>commons-io</artifactId>
                 <version>${commons.io.version}</version>
             </dependency>
-
+            <!-- https://mvnrepository.com/artifact/com.github.binarywang/weixin-java-miniapp -->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-miniapp</artifactId>
+                <version>${weixin.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
             <!-- 文件上传工具类 -->
             <dependency>
                 <groupId>commons-fileupload</groupId>
