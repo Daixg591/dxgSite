@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper.oa;
 
 import java.util.List;
 import com.shahenpc.system.domain.oa.OaMeetingSign;
+import com.shahenpc.system.domain.oa.dto.MeetingAppDetailDto;
 
 /**
  * 会议签到记录Mapper接口
@@ -60,4 +61,8 @@ public interface OaMeetingSignMapper
     public int deleteOaMeetingSignBySignIds(Long[] signIds);
 
     public List<OaMeetingSign> selectByMeetingId(Long meetingId);
+
+    public OaMeetingSign selectByMeetingIdAndUserId(OaMeetingSign oaMeetingSign);
+
+
 }

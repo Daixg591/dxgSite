@@ -3,13 +3,12 @@ package com.shahenpc.system.service.oa.impl;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.system.domain.oa.OaMeetingPersonnel;
-import com.shahenpc.system.domain.oa.dto.MeetingCakeDto;
-import com.shahenpc.system.domain.oa.dto.MeetingColumnarDto;
-import com.shahenpc.system.domain.oa.dto.MeetingAddDto;
-import com.shahenpc.system.domain.oa.dto.MeetingDetailDto;
+import com.shahenpc.system.domain.oa.OaMeetingSign;
+import com.shahenpc.system.domain.oa.dto.*;
 import com.shahenpc.system.mapper.oa.OaMeetingPersonnelMapper;
 import com.shahenpc.system.mapper.oa.OaMeetingRecordMapper;
 import com.shahenpc.system.mapper.oa.OaMeetingSignMapper;
@@ -99,6 +98,46 @@ public class OaMeetingServiceImpl implements IOaMeetingService
 //        dto.setSign(oaMeetingSignMapper.selectByMeetingId(meetingId));
 //        dto.setRecord(oaMeetingRecordMapper.selectByMeetingId(meetingId));
         return dto;
+    }
+
+    @Override
+    public MeetingCountMinuteDto selectByCountMinute(Long userId) {
+        MeetingCountMinuteDto dto = new MeetingCountMinuteDto();
+        dto =oaMeetingMapper.selectByCountMinute(userId);
+        dto.setMeetingList(oaMeetingMapper.selectByAppHomeList());
+        return dto;
+    }
+
+    @Override
+    public List<MeetingAppListDto> appList(OaMeeting oaMeeting) {
+        return oaMeetingMapper.appList(oaMeeting);
+    }
+
+    @Override
+    public AjaxResult sign(Long meetingId, Long userId) {
+        OaMeetingSign sign = new OaMeetingSign();
+        sign.setMeetingId(meetingId);
+        sign.setUserId(userId);
+        List<OaMeetingSign> sing = oaMeetingSignMapper.selectOaMeetingSignList(sign);
+        if(sing.size() == 0){
+            return AjaxResult.success(oaMeetingSignMapper.insertOaMeetingSign(sign));
+        }else{
+            return AjaxResult.error("已签到！");
+        }
+    }
+
+    @Override
+    public AjaxResult signSuccess(Long meetingId, Long userId) {
+        OaMeetingSign sign = new OaMeetingSign();
+        sign.setMeetingId(meetingId);
+        sign.setUserId(userId);
+        return AjaxResult.success(oaMeetingSignMapper.selectByMeetingIdAndUserId(sign));
+    }
+
+    @Override
+    public MeetingAppDetailDto appDetail(Long meetingId) {
+
+        return oaMeetingMapper.appDetail(meetingId);
     }
 
     /**

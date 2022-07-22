@@ -119,7 +119,7 @@ public class SysLoginService
         // 验证码开关
 //        if (captchaOnOff)
 //        {
-            appValidateCaptcha(username, uuid);
+            //appValidateCaptcha(username, uuid);
 //        }
         // 用户验证
         Authentication authentication = null;

@@ -37,6 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="participateConut != null "> and participate_conut = #{participateConut}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
         </where>
+        ORDER BY start_time DESC
     </select>
     
     <select id="selectRepresentActivityByActivityId" parameterType="Long" resultMap="RepresentActivityResult">
@@ -108,4 +109,49 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{activityId}
         </foreach>
     </delete>
+
+    <!--======================================================分割线-->
+    <select id="selectByFinishCount" resultType="com.shahenpc.system.domain.represent.dto.ActivityFinishCountDto" parameterType="java.lang.Long">
+        SELECT
+            sum((SELECT COUNT(a.activity_id) FROM represent_activity a WHERE a1.`status` = 4 AND a.activity_id =a1.activity_id))AS finishCount,
+            COUNT(a1.activity_id)AS `count`
+        FROM represent_activity a1 LEFT JOIN represent_activity_record r1 ON a1.activity_id = r1.activity_id
+        WHERE r1.user_id= #{userId}
+    </select>
+    <resultMap id="activityList" type="com.shahenpc.system.domain.represent.dto.ActivityAppListDto" extends="RepresentActivityResult">
+
+    </resultMap>
+    <select id="selectByAppHomeList" resultMap="activityList">
+        select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type )AS activityTypeName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
+        from represent_activity
+        WHERE `status` IN(1,2)
+        ORDER BY start_time DESC
+    </select>
+
+    <select id="appList" parameterType="RepresentActivity" resultMap="activityList">
+        select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type )AS activityTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
+        from represent_activity
+        <where>
+            <if test="activityType != null "> and activity_type = #{activityType}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="participateConut != null "> and participate_conut = #{participateConut}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+        ORDER BY start_time DESC
+    </select>
+
+    <select id="appDetail" resultMap="activityList" parameterType="Long">
+        select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type )AS activityTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
+        from represent_activity where activity_id = #{activityId}
+    </select>
 </mapper>

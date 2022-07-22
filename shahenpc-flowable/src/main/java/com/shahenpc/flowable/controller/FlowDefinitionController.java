@@ -161,17 +161,10 @@ public class FlowDefinitionController {
     }
 
     @ApiOperation(value = "根据流程定义id启动流程实例")
-    @PostMapping("/new/start/{procDefId}")
-    public AjaxResult newStart(@ApiParam(value = "流程定义id") @PathVariable(value = "procDefId") String procDefId,
-                               @ApiParam(value = "变量集合,json对象") @RequestBody Map<String, Object> variables) {
-        return flowDefinitionService.newStartProcessInstanceById(procDefId,variables);
-
-    }
-    @ApiOperation(value = "根据流程定义id启动流程实例")
-    @PostMapping("/motion/start/{procDefId}")
-    public AjaxResult motionStart(@ApiParam(value = "流程定义id") @PathVariable(value = "procDefId") String procDefId,
-                               @ApiParam(value = "变量集合,json对象") @RequestBody Map<String, Object> variables) {
-        return flowDefinitionService.motionStartProcessInstanceById(procDefId,variables);
+    @PostMapping("/motion/add")
+    public AjaxResult motionAdd(@ApiParam(value = "变量集合,json对象") @RequestBody Map<String, Object> variables) {
+        FlowProcDefDto dto=flowDefinitionService.detail("议案建议");
+        return flowDefinitionService.addMotion(dto.getId(),variables);
 
     }
 

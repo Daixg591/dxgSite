@@ -2,6 +2,9 @@ package com.shahenpc.system.mapper.oa;
 
 import java.util.List;
 import com.shahenpc.system.domain.oa.OaMeeting;
+import com.shahenpc.system.domain.oa.dto.MeetingAppDetailDto;
+import com.shahenpc.system.domain.oa.dto.MeetingAppListDto;
+import com.shahenpc.system.domain.oa.dto.MeetingCountMinuteDto;
 import com.shahenpc.system.domain.oa.dto.MeetingDetailDto;
 
 /**
@@ -61,4 +64,17 @@ public interface OaMeetingMapper
     public int deleteOaMeetingByMeetingIds(Long[] meetingIds);
 
     public MeetingDetailDto newDetail(Long meetingId);
+
+    /**
+     * 参会次数-参会总分钟
+     * @param userId
+     * @return
+     */
+    public MeetingCountMinuteDto selectByCountMinute(Long userId);
+
+    public List<MeetingAppListDto> selectByAppHomeList();
+
+    public List<MeetingAppListDto> appList(OaMeeting oaMeeting);
+
+    public MeetingAppDetailDto appDetail(Long meetingId);
 }

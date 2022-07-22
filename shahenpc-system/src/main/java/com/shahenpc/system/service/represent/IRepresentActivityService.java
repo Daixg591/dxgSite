@@ -2,6 +2,8 @@ package com.shahenpc.system.service.represent;
 
 import java.util.List;
 import com.shahenpc.system.domain.represent.RepresentActivity;
+import com.shahenpc.system.domain.represent.dto.ActivityAppListDto;
+import com.shahenpc.system.domain.represent.dto.ActivityFinishCountDto;
 import com.shahenpc.system.domain.represent.dto.RepresentActivityAddDto;
 
 /**
@@ -61,4 +63,10 @@ public interface IRepresentActivityService
     public int deleteRepresentActivityByActivityId(Long activityId);
 
     public int newAdd(RepresentActivityAddDto dto);
+
+    public ActivityFinishCountDto selectByFinishCount(Long userId);
+
+    public List<ActivityAppListDto> appList(RepresentActivity representActivity);
+
+    public ActivityAppListDto appDetail(Long activityId);
 }

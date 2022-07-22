@@ -1,21 +1,19 @@
-package com.shahenpc.system.domain.censor;
+package com.shahenpc.system.domain.standard;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
 import com.shahenpc.common.core.domain.BaseEntity;
 
 /**
- * 审查流程对象 censor_process
+ * 审查流程对象 standard_censor
  * 
  * @author ruoyi
- * @date 2022-07-05
+ * @date 2022-07-22
  */
-@Data
-public class CensorProcess extends BaseEntity
+public class StandardCensor extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -89,8 +87,18 @@ public class CensorProcess extends BaseEntity
     @Excel(name = "流程类型")
     private Integer processType;
 
+    /** 关联 原 流程id */
+    @Excel(name = "关联 原 流程id")
     private String workflowId;
+
+    /** 流程位置 */
+    @Excel(name = "流程位置")
     private String censorTache;
+
+    /** 状态 */
+    @Excel(name = "状态")
+    private Integer status;
+
     public void setProcessId(Long processId) 
     {
         this.processId = processId;
@@ -244,6 +252,33 @@ public class CensorProcess extends BaseEntity
     {
         return processType;
     }
+    public void setWorkflowId(String workflowId) 
+    {
+        this.workflowId = workflowId;
+    }
+
+    public String getWorkflowId() 
+    {
+        return workflowId;
+    }
+    public void setCensorTache(String censorTache) 
+    {
+        this.censorTache = censorTache;
+    }
+
+    public String getCensorTache() 
+    {
+        return censorTache;
+    }
+    public void setStatus(Integer status) 
+    {
+        this.status = status;
+    }
+
+    public Integer getStatus() 
+    {
+        return status;
+    }
 
     @Override
     public String toString() {
@@ -270,6 +305,9 @@ public class CensorProcess extends BaseEntity
             .append("copyUserId", getCopyUserId())
             .append("copyUserName", getCopyUserName())
             .append("processType", getProcessType())
+            .append("workflowId", getWorkflowId())
+            .append("censorTache", getCensorTache())
+            .append("status", getStatus())
             .toString();
     }
 }

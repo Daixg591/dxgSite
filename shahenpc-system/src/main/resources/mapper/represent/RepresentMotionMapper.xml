@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.shahenpc.system.represent.JobMotionMapper">
-
-    <resultMap type="JobMotion" id="JobMotionResult">
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.represent.RepresentMotionMapper">
+    
+    <resultMap type="RepresentMotion" id="RepresentMotionResult">
         <result property="motionId"    column="motion_id"    />
         <result property="motionType"    column="motion_type"    />
         <result property="title"    column="title"    />
@@ -22,13 +22,13 @@
         <result property="sendUserName"    column="send_user_name"    />
     </resultMap>
 
-    <sql id="selectJobMotionVo">
-        select motion_id, motion_type, title, content, suggest_user_id, suggest_user_name, status, remark, create_by, create_time, update_by, update_time, workflow_id, send_user_id, send_user_name from job_motion
+    <sql id="selectRepresentMotionVo">
+        select motion_id, motion_type, title, content, suggest_user_id, suggest_user_name, status, remark, create_by, create_time, update_by, update_time, workflow_id, send_user_id, send_user_name from represent_motion
     </sql>
 
-    <select id="selectJobMotionList" parameterType="JobMotion" resultMap="JobMotionResult">
-        <include refid="selectJobMotionVo"/>
-        <where>
+    <select id="selectRepresentMotionList" parameterType="RepresentMotion" resultMap="RepresentMotionResult">
+        <include refid="selectRepresentMotionVo"/>
+        <where>  
             <if test="motionType != null "> and motion_type = #{motionType}</if>
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
@@ -40,14 +40,14 @@
             <if test="sendUserName != null  and sendUserName != ''"> and send_user_name like concat('%', #{sendUserName}, '%')</if>
         </where>
     </select>
-
-    <select id="selectJobMotionByMotionId" parameterType="Long" resultMap="JobMotionResult">
-        <include refid="selectJobMotionVo"/>
+    
+    <select id="selectRepresentMotionByMotionId" parameterType="Long" resultMap="RepresentMotionResult">
+        <include refid="selectRepresentMotionVo"/>
         where motion_id = #{motionId}
     </select>
-
-    <insert id="insertJobMotion" parameterType="JobMotion" useGeneratedKeys="true" keyProperty="motionId">
-        insert into job_motion
+        
+    <insert id="insertRepresentMotion" parameterType="RepresentMotion" useGeneratedKeys="true" keyProperty="motionId">
+        insert into represent_motion
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="motionType != null">motion_type,</if>
             <if test="title != null">title,</if>
@@ -63,7 +63,7 @@
             <if test="workflowId != null">workflow_id,</if>
             <if test="sendUserId != null">send_user_id,</if>
             <if test="sendUserName != null">send_user_name,</if>
-        </trim>
+         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="motionType != null">#{motionType},</if>
             <if test="title != null">#{title},</if>
@@ -79,11 +79,11 @@
             <if test="workflowId != null">#{workflowId},</if>
             <if test="sendUserId != null">#{sendUserId},</if>
             <if test="sendUserName != null">#{sendUserName},</if>
-        </trim>
+         </trim>
     </insert>
 
-    <update id="updateJobMotion" parameterType="JobMotion">
-        update job_motion
+    <update id="updateRepresentMotion" parameterType="RepresentMotion">
+        update represent_motion
         <trim prefix="SET" suffixOverrides=",">
             <if test="motionType != null">motion_type = #{motionType},</if>
             <if test="title != null">title = #{title},</if>
@@ -103,20 +103,20 @@
         where motion_id = #{motionId}
     </update>
 
-    <delete id="deleteJobMotionByMotionId" parameterType="Long">
-        delete from job_motion where motion_id = #{motionId}
+    <delete id="deleteRepresentMotionByMotionId" parameterType="Long">
+        delete from represent_motion where motion_id = #{motionId}
     </delete>
 
-    <delete id="deleteJobMotionByMotionIds" parameterType="String">
-        delete from job_motion where motion_id in
+    <delete id="deleteRepresentMotionByMotionIds" parameterType="String">
+        delete from represent_motion where motion_id in 
         <foreach item="motionId" collection="array" open="(" separator="," close=")">
             #{motionId}
         </foreach>
     </delete>
 
     <!--==================================================分割线-->
-    <select id="selectByWorkflowId" resultMap="JobMotionResult">
-        <include refid="selectJobMotionVo"/>
+    <select id="selectByWorkflowId" resultMap="RepresentMotionResult">
+        <include refid="selectRepresentMotionVo"/>
         where workflow_id = #{workflowId}
     </select>
 </mapper>

@@ -43,8 +43,8 @@ public class AppSysLoginController {
     {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
-        String token = loginService.appLogin(loginBody.getUsername(), loginBody.getPassword(),
-                loginBody.getUuid());
+        String token = loginService.appLogin(loginBody.getUsername(),loginBody.getPassword(),
+                null);
         ajax.put(Constants.TOKEN, token);
         return ajax;
     }

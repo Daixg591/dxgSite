@@ -2,6 +2,8 @@ package com.shahenpc.system.mapper.represent;
 
 import java.util.List;
 import com.shahenpc.system.domain.represent.RepresentActivity;
+import com.shahenpc.system.domain.represent.dto.ActivityAppListDto;
+import com.shahenpc.system.domain.represent.dto.ActivityFinishCountDto;
 
 /**
  * 代-活动列Mapper接口
@@ -58,4 +60,12 @@ public interface RepresentActivityMapper
      * @return 结果
      */
     public int deleteRepresentActivityByActivityIds(Long[] activityIds);
+
+    public ActivityFinishCountDto selectByFinishCount(Long userId);
+
+    public List<ActivityAppListDto> selectByAppHomeList();
+
+    public List<ActivityAppListDto> appList(RepresentActivity representActivity);
+
+    public ActivityAppListDto appDetail(Long activityId);
 }

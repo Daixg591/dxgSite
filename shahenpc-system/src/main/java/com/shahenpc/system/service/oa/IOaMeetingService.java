@@ -1,11 +1,10 @@
 package com.shahenpc.system.service.oa;
 
 import java.util.List;
+
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.system.domain.oa.OaMeeting;
-import com.shahenpc.system.domain.oa.dto.MeetingCakeDto;
-import com.shahenpc.system.domain.oa.dto.MeetingColumnarDto;
-import com.shahenpc.system.domain.oa.dto.MeetingAddDto;
-import com.shahenpc.system.domain.oa.dto.MeetingDetailDto;
+import com.shahenpc.system.domain.oa.dto.*;
 
 /**
  * 人大办公-会议管理Service接口
@@ -77,4 +76,19 @@ public interface IOaMeetingService
     public int newAdd(MeetingAddDto request);
 
     public MeetingDetailDto newDetail(Long meetingId);
+
+    /**
+     *
+     * @param userId
+     * @return
+     */
+    public MeetingCountMinuteDto selectByCountMinute(Long userId);
+
+    public List<MeetingAppListDto> appList(OaMeeting oaMeeting);
+
+    public AjaxResult sign(Long meetingId, Long userId);
+
+    public AjaxResult signSuccess(Long meetingId, Long userId);
+
+    public MeetingAppDetailDto appDetail(Long meetingId);
 }

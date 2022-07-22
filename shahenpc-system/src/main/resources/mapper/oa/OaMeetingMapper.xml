@@ -37,6 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isSign != null "> and is_sign = #{isSign}</if>
             <if test="status != null "> and status = #{status}</if>
         </where>
+        ORDER BY start_time DESC
     </select>
 
     <select id="selectOaMeetingByMeetingId" parameterType="Long" resultMap="OaMeetingResult">
@@ -117,6 +118,63 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     <select id="newDetail" resultMap="webDetail" parameterType="Long" >
         <include refid="selectOaMeetingVo"/>
+        where meeting_id = #{meetingId}
+    </select>
+
+    <select id="selectByCountMinute" resultType="com.shahenpc.system.domain.oa.dto.MeetingCountMinuteDto" parameterType="java.lang.Long">
+        SELECT
+            COUNT(d.meeting_id)AS count,
+            sum(TIMESTAMPDIFF(MINUTE,(DATE_FORMAT(d.start_time,'%Y-%m-%d %H:%i')),(DATE_FORMAT(d.end_time, '%Y-%m-%d %H:%i'))))AS `minute`
+        FROM oa_meeting_sign s LEFT JOIN oa_meeting d ON d.meeting_id = s.meeting_id WHERE s.user_id = #{userId}
+    </select>
+
+    <resultMap id="meetingList" type="com.shahenpc.system.domain.oa.dto.MeetingAppListDto" extends="OaMeetingResult">
+
+    </resultMap>
+    <select id="selectByAppHomeList" resultMap="meetingList">
+        select
+            meeting_id, title, meeting_type, start_time, end_time, address, content, is_sign, status, remark, create_time, update_by, update_time, create_by,
+            (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_type' AND d.dict_value = a.meeting_type)AS meetingTypeName,
+            (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_status' AND d.dict_value = a.`status`)AS statusName,
+            (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_is_sign' AND d.dict_value = a.is_sign)AS isSignName
+        from oa_meeting a
+        WHERE `status` IN(1,2)
+        ORDER BY start_time DESC
+    </select>
+
+    <select id="appList" resultMap="meetingList" parameterType="OaMeeting">
+        select
+        meeting_id, title, meeting_type, start_time, end_time, address, content, is_sign, status, remark, create_time, update_by, update_time, create_by,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_type' AND d.dict_value = a.meeting_type)AS meetingTypeName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_status' AND d.dict_value = a.`status`)AS statusName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_is_sign' AND d.dict_value = a.is_sign)AS isSignName
+        from oa_meeting a
+        <where>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="meetingType != null "> and meeting_type = #{meetingType}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="isSign != null "> and is_sign = #{isSign}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+        ORDER BY start_time DESC
+    </select>
+
+
+    <resultMap id="appDetail" type="com.shahenpc.system.domain.oa.dto.MeetingAppDetailDto" extends="OaMeetingResult">
+        <association property="record" column="meeting_id" select="com.shahenpc.system.mapper.oa.OaMeetingRecordMapper.selectByMeetingId"/>
+        <association property="sign" column="meeting_id" select="com.shahenpc.system.mapper.oa.OaMeetingSignMapper.selectByMeetingId"/>
+        <association property="personnel" column="meeting_id" select="com.shahenpc.system.mapper.oa.OaMeetingPersonnelMapper.selectByMeetingId"/>
+    </resultMap>
+    <select id="appDetail" resultMap="appDetail" parameterType="Long">
+        select
+            meeting_id, title, meeting_type, start_time, end_time, address, content, is_sign, status, remark, create_time, update_by, update_time, create_by,
+            (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_type' AND d.dict_value = a.meeting_type)AS meetingTypeName,
+            (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_status' AND d.dict_value = a.`status`)AS statusName,
+            (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_is_sign' AND d.dict_value = a.is_sign)AS isSignName
+        from oa_meeting a
         where meeting_id = #{meetingId}
     </select>
 </mapper>

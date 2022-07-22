@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.shahenpc.system.mapper.censor.CensorProcessMapper">
-
-    <resultMap type="CensorProcess" id="CensorProcessResult">
+<mapper namespace="com.shahenpc.system.mapper.standard.StandardCensorMapper">
+    
+    <resultMap type="StandardCensor" id="StandardCensorResult">
         <result property="processId"    column="process_id"    />
         <result property="fileType"    column="file_type"    />
         <result property="createBy"    column="create_by"    />
@@ -29,15 +29,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="processType"    column="process_type"    />
         <result property="workflowId"    column="workflow_id"    />
         <result property="censorTache"    column="censor_tache"    />
+        <result property="status"    column="status"    />
     </resultMap>
 
-    <sql id="selectCensorProcessVo">
-        select process_id, file_type, create_by, create_time, update_by, update_time, remark, file_name, record_agencies, record_serial, report_agencies, report_serial, pass_date, pass_agencies, bulletin_date, enforce_date, file_url, accept_user_id, accept_user_name, copy_user_id, copy_user_name, process_type, workflow_id, censor_tache from censor_process
+    <sql id="selectStandardCensorVo">
+        select process_id, file_type, create_by, create_time, update_by, update_time, remark, file_name, record_agencies, record_serial, report_agencies, report_serial, pass_date, pass_agencies, bulletin_date, enforce_date, file_url, accept_user_id, accept_user_name, copy_user_id, copy_user_name, process_type, workflow_id, censor_tache, status from standard_censor
     </sql>
 
-    <select id="selectCensorProcessList" parameterType="CensorProcess" resultMap="CensorProcessResult">
-        <include refid="selectCensorProcessVo"/>
-        <where>
+    <select id="selectStandardCensorList" parameterType="StandardCensor" resultMap="StandardCensorResult">
+        <include refid="selectStandardCensorVo"/>
+        <where>  
             <if test="fileType != null "> and file_type = #{fileType}</if>
             <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
             <if test="recordAgencies != null  and recordAgencies != ''"> and record_agencies = #{recordAgencies}</if>
@@ -56,16 +57,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="processType != null "> and process_type = #{processType}</if>
             <if test="workflowId != null  and workflowId != ''"> and workflow_id = #{workflowId}</if>
             <if test="censorTache != null  and censorTache != ''"> and censor_tache = #{censorTache}</if>
+            <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
-
-    <select id="selectCensorProcessByProcessId" parameterType="Long" resultMap="CensorProcessResult">
-        <include refid="selectCensorProcessVo"/>
+    
+    <select id="selectStandardCensorByProcessId" parameterType="Long" resultMap="StandardCensorResult">
+        <include refid="selectStandardCensorVo"/>
         where process_id = #{processId}
     </select>
-
-    <insert id="insertCensorProcess" parameterType="CensorProcess" useGeneratedKeys="true" keyProperty="processId">
-        insert into censor_process
+        
+    <insert id="insertStandardCensor" parameterType="StandardCensor" useGeneratedKeys="true" keyProperty="processId">
+        insert into standard_censor
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="fileType != null">file_type,</if>
             <if test="createBy != null">create_by,</if>
@@ -90,7 +92,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="processType != null">process_type,</if>
             <if test="workflowId != null">workflow_id,</if>
             <if test="censorTache != null">censor_tache,</if>
-        </trim>
+            <if test="status != null">status,</if>
+         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="fileType != null">#{fileType},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -115,11 +118,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="processType != null">#{processType},</if>
             <if test="workflowId != null">#{workflowId},</if>
             <if test="censorTache != null">#{censorTache},</if>
-        </trim>
+            <if test="status != null">#{status},</if>
+         </trim>
     </insert>
 
-    <update id="updateCensorProcess" parameterType="CensorProcess">
-        update censor_process
+    <update id="updateStandardCensor" parameterType="StandardCensor">
+        update standard_censor
         <trim prefix="SET" suffixOverrides=",">
             <if test="fileType != null">file_type = #{fileType},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
@@ -144,23 +148,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="processType != null">process_type = #{processType},</if>
             <if test="workflowId != null">workflow_id = #{workflowId},</if>
             <if test="censorTache != null">censor_tache = #{censorTache},</if>
+            <if test="status != null">status = #{status},</if>
         </trim>
         where process_id = #{processId}
     </update>
 
-    <delete id="deleteCensorProcessByProcessId" parameterType="Long">
-        delete from censor_process where process_id = #{processId}
+    <delete id="deleteStandardCensorByProcessId" parameterType="Long">
+        delete from standard_censor where process_id = #{processId}
     </delete>
 
-    <delete id="deleteCensorProcessByProcessIds" parameterType="String">
-        delete from censor_process where process_id in
+    <delete id="deleteStandardCensorByProcessIds" parameterType="String">
+        delete from standard_censor where process_id in 
         <foreach item="processId" collection="array" open="(" separator="," close=")">
             #{processId}
         </foreach>
     </delete>
     <!--====================分割线-->
-    <select id="selectCensorProcessByWorkflowId" resultMap="CensorProcessResult">
-        <include refid="selectCensorProcessVo"/>
+    <select id="selectCensorProcessByWorkflowId" resultMap="StandardCensorResult">
+        <include refid="selectStandardCensorVo"/>
         where workflow_id = #{workflowId}
     </select>
 </mapper>

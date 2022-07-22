@@ -3,6 +3,8 @@ package com.shahenpc.system.service.represent.impl;
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.system.domain.represent.RepresentActivityRecord;
+import com.shahenpc.system.domain.represent.dto.ActivityAppListDto;
+import com.shahenpc.system.domain.represent.dto.ActivityFinishCountDto;
 import com.shahenpc.system.domain.represent.dto.RepresentActivityAddDto;
 import com.shahenpc.system.mapper.represent.RepresentActivityRecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,5 +112,23 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
             representActivityRecordMapper.insertRepresentActivityRecord(item);
         }
         return suss;
+    }
+
+    @Override
+    public ActivityFinishCountDto selectByFinishCount(Long userId) {
+        ActivityFinishCountDto dto = new ActivityFinishCountDto();
+        dto = representActivityMapper.selectByFinishCount(userId);
+        dto.setActivityList(representActivityMapper.selectByAppHomeList());
+        return dto;
+    }
+
+    @Override
+    public List<ActivityAppListDto> appList(RepresentActivity representActivity) {
+        return representActivityMapper.appList(representActivity);
+    }
+
+    @Override
+    public ActivityAppListDto appDetail(Long activityId) {
+        return representActivityMapper.appDetail(activityId);
     }
 }
