@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.represent.RepresentNpcOverviewMapper">
+    
+    <resultMap type="RepresentNpcOverview" id="RepresentNpcOverviewResult">
+        <result property="npcId"    column="npc_id"    />
+        <result property="picUrl"    column="pic_url"    />
+        <result property="content"    column="content"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="directorId"    column="director_id"    />
+        <result property="deputyDirectorId"    column="deputy_director_id"    />
+        <result property="secretaryId"    column="secretary_id"    />
+        <result property="standingId"    column="standing_id"    />
+    </resultMap>
+
+    <sql id="selectRepresentNpcOverviewVo">
+        select npc_id, pic_url, content, remark, create_time, update_by, update_time, director_id, deputy_director_id, secretary_id, standing_id from represent_npc_overview
+    </sql>
+
+    <select id="selectRepresentNpcOverviewList" parameterType="RepresentNpcOverview" resultMap="RepresentNpcOverviewResult">
+        <include refid="selectRepresentNpcOverviewVo"/>
+        <where>  
+            <if test="picUrl != null  and picUrl != ''"> and pic_url = #{picUrl}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="directorId != null "> and director_id = #{directorId}</if>
+            <if test="deputyDirectorId != null "> and deputy_director_id = #{deputyDirectorId}</if>
+            <if test="secretaryId != null "> and secretary_id = #{secretaryId}</if>
+            <if test="standingId != null "> and standing_id = #{standingId}</if>
+        </where>
+    </select>
+    
+    <select id="selectRepresentNpcOverviewByNpcId" parameterType="Long" resultMap="RepresentNpcOverviewResult">
+        <include refid="selectRepresentNpcOverviewVo"/>
+        where npc_id = #{npcId}
+    </select>
+        
+    <insert id="insertRepresentNpcOverview" parameterType="RepresentNpcOverview" useGeneratedKeys="true" keyProperty="npcId">
+        insert into represent_npc_overview
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="picUrl != null">pic_url,</if>
+            <if test="content != null">content,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="directorId != null">director_id,</if>
+            <if test="deputyDirectorId != null">deputy_director_id,</if>
+            <if test="secretaryId != null">secretary_id,</if>
+            <if test="standingId != null">standing_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="picUrl != null">#{picUrl},</if>
+            <if test="content != null">#{content},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="directorId != null">#{directorId},</if>
+            <if test="deputyDirectorId != null">#{deputyDirectorId},</if>
+            <if test="secretaryId != null">#{secretaryId},</if>
+            <if test="standingId != null">#{standingId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRepresentNpcOverview" parameterType="RepresentNpcOverview">
+        update represent_npc_overview
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="picUrl != null">pic_url = #{picUrl},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="directorId != null">director_id = #{directorId},</if>
+            <if test="deputyDirectorId != null">deputy_director_id = #{deputyDirectorId},</if>
+            <if test="secretaryId != null">secretary_id = #{secretaryId},</if>
+            <if test="standingId != null">standing_id = #{standingId},</if>
+        </trim>
+        where npc_id = #{npcId}
+    </update>
+
+    <delete id="deleteRepresentNpcOverviewByNpcId" parameterType="Long">
+        delete from represent_npc_overview where npc_id = #{npcId}
+    </delete>
+
+    <delete id="deleteRepresentNpcOverviewByNpcIds" parameterType="String">
+        delete from represent_npc_overview where npc_id in 
+        <foreach item="npcId" collection="array" open="(" separator="," close=")">
+            #{npcId}
+        </foreach>
+    </delete>
+    <!--==============================================分割线-->
+    <select id="selectByOverview" resultMap="RepresentNpcOverviewResult">
+        <include refid="selectRepresentNpcOverviewVo"/> ORDER BY create_time DESC LIMIT 1;
+    </select>
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.budget.OutlayAlarmSettingMapper">
+    
+    <resultMap type="OutlayAlarmSetting" id="OutlayAlarmSettingResult">
+        <result property="settingId"    column="setting_id"    />
+        <result property="budgetType"    column="budget_type"    />
+        <result property="ratio"    column="ratio"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectOutlayAlarmSettingVo">
+        select setting_id, budget_type, ratio, remark, create_by, create_time, update_by, update_time from outlay_alarm_setting
+    </sql>
+
+    <select id="selectOutlayAlarmSettingList" parameterType="OutlayAlarmSetting" resultMap="OutlayAlarmSettingResult">
+        <include refid="selectOutlayAlarmSettingVo"/>
+        <where>  
+            <if test="budgetType != null "> and budget_type = #{budgetType}</if>
+            <if test="ratio != null "> and ratio = #{ratio}</if>
+        </where>
+    </select>
+    
+    <select id="selectOutlayAlarmSettingBySettingId" parameterType="Long" resultMap="OutlayAlarmSettingResult">
+        <include refid="selectOutlayAlarmSettingVo"/>
+        where setting_id = #{settingId}
+    </select>
+        
+    <insert id="insertOutlayAlarmSetting" parameterType="OutlayAlarmSetting" useGeneratedKeys="true" keyProperty="settingId">
+        insert into outlay_alarm_setting
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="budgetType != null">budget_type,</if>
+            <if test="ratio != null">ratio,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="budgetType != null">#{budgetType},</if>
+            <if test="ratio != null">#{ratio},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOutlayAlarmSetting" parameterType="OutlayAlarmSetting">
+        update outlay_alarm_setting
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="budgetType != null">budget_type = #{budgetType},</if>
+            <if test="ratio != null">ratio = #{ratio},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where setting_id = #{settingId}
+    </update>
+
+    <delete id="deleteOutlayAlarmSettingBySettingId" parameterType="Long">
+        delete from outlay_alarm_setting where setting_id = #{settingId}
+    </delete>
+
+    <delete id="deleteOutlayAlarmSettingBySettingIds" parameterType="String">
+        delete from outlay_alarm_setting where setting_id in 
+        <foreach item="settingId" collection="array" open="(" separator="," close=")">
+            #{settingId}
+        </foreach>
+    </delete>
+    <!-- =====================================-->
+    <select id="selectByBudgetType" resultMap="OutlayAlarmSettingResult">
+        <include refid="selectOutlayAlarmSettingVo"/>
+        where budget_type = #{budgetType}
+    </select>
+
+    <select id="newList" resultType="com.shahenpc.system.domain.budget.dto.OutlayAlarmSettingDictDto">
+        SELECT d.dict_label AS dictLabel,d.dict_value AS dictValue,s.setting_id AS settingId,s.ratio
+        FROM sys_dict_data d
+                 LEFT JOIN outlay_alarm_setting s ON s.budget_type = d.dict_value
+        WHERE d.dict_type= "budget_type"
+    </select>
+</mapper>

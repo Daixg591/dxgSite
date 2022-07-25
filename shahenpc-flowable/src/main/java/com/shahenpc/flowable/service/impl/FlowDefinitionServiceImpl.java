@@ -10,37 +10,31 @@ import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.flowable.common.enums.FlowComment;
 import com.shahenpc.common.utils.SecurityUtils;
 import com.shahenpc.flowable.domain.dto.CakeDto;
-import com.shahenpc.flowable.domain.dto.FlowTaskDto;
 import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.flowable.factory.FlowServiceFactory;
 import com.shahenpc.flowable.service.IFlowDefinitionService;
 import com.shahenpc.flowable.service.ISysDeployFormService;
 import com.shahenpc.system.domain.SysForm;
-import com.shahenpc.system.domain.censor.CensorProcess;
-import com.shahenpc.system.domain.dto.NpcCakeDto;
-import com.shahenpc.system.domain.job.JobMotion;
-import com.shahenpc.system.domain.perform.PerformHomeAccess;
+import com.shahenpc.system.domain.represent.RepresentMotion;
+import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.mapper.FlowDeployMapper;
 import com.shahenpc.system.service.ISysDeptService;
 import com.shahenpc.system.service.ISysDictDataService;
 import com.shahenpc.system.service.ISysPostService;
 import com.shahenpc.system.service.ISysUserService;
-import com.shahenpc.system.service.censor.ICensorProcessService;
-import com.shahenpc.system.service.job.IJobMotionService;
+import com.shahenpc.system.service.represent.IRepresentMotionService;
+import com.shahenpc.system.service.standard.IStandardCensorService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.flowable.bpmn.model.BpmnModel;
-import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.image.impl.DefaultProcessDiagramGenerator;
 import org.flowable.task.api.Task;
-import org.flowable.task.api.TaskQuery;
-import org.flowable.task.api.history.HistoricTaskInstanceQuery;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -77,10 +71,10 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
     private FlowDeployMapper flowDeployMapper;
 
     @Resource
-    private ICensorProcessService censorProcessService;
+    private IStandardCensorService standardCensorService;
 
     @Resource
-    private IJobMotionService jobMotionService;
+    private IRepresentMotionService representMotionService;
     @Resource
     private ISysDictDataService dictDataService;
 
@@ -143,6 +137,17 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
         page.setTotal(new PageInfo(dataList).getTotal());
         page.setRecords(dataList);
         return page;
+    }
+
+    @Override
+    public FlowProcDefDto detail(String name) {
+        FlowProcDefDto  procDef=  flowDeployMapper.detail(name);
+        SysForm sysForm = sysDeployFormService.selectSysDeployFormByDeployId(procDef.getDeploymentId());
+        if (Objects.nonNull(sysForm)) {
+            procDef.setFormName(sysForm.getFormName());
+            procDef.setFormId(sysForm.getFormId());
+        }
+        return procDef;
     }
 
 
@@ -239,13 +244,51 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
         }
     }
 
-    /**
-     * 新版 大晓刚
-     * @param
-     * @return
-     */
+
     @Override
-    public AjaxResult newStartProcessInstanceById(String procDefId, Map<String, Object> variables) {
+    @Transactional
+    public AjaxResult addMotion(String procDefId, Map<String, Object> variables) {
+        try {
+            ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(procDefId)
+                    .latestVersion().singleResult();
+            if (Objects.nonNull(processDefinition) && processDefinition.isSuspended()) {
+                return AjaxResult.error("流程已被挂起,请先联系管理员！");
+            }
+//           variables.put("skip", true);
+//           variables.put(ProcessConstants.FLOWABLE_SKIP_EXPRESSION_ENABLED, true);
+            // 设置流程发起人Id到流程中
+            SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+            identityService.setAuthenticatedUserId(sysUser.getUserId().toString());
+            variables.put(ProcessConstants.PROCESS_INITIATOR, "");
+            ProcessInstance processInstance = runtimeService.startProcessInstanceById(procDefId, variables);
+            // 给第一步申请人节点设置任务执行人和意见 todo:第一个节点不设置为申请人节点有点问题？
+            Task task = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId()).singleResult();
+            if (Objects.nonNull(task)) {
+                taskService.addComment(task.getId(), processInstance.getProcessInstanceId(), FlowComment.NORMAL.getType(), sysUser.getNickName() + "发起流程申请");
+                taskService.setAssignee(task.getId(), sysUser.getUserId().toString());
+                taskService.complete(task.getId(), variables);
+            }
+            RepresentMotion motion = new RepresentMotion();
+            motion.setMotionType(Integer.parseInt(variables.get("motionType").toString()));
+            motion.setTitle(variables.get("title").toString());
+            motion.setContent(variables.get("content").toString());
+            //提议人
+            motion.setSuggestUserName(variables.get("suggestUserName").toString());
+            //选择审批人
+            motion.setSuggestUserId(variables.get("approval").toString());
+            //数组存储
+            List<SysUser> user=sysUserService.selectUserByuserIds(variables.get("approval").toString());
+            motion.setWorkflowId(task.getProcessInstanceId());
+            representMotionService.insertRepresentMotion(motion);
+            return AjaxResult.success("流程启动成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AjaxResult.error("流程启动错误");
+        }
+    }
+
+    @Override
+    public AjaxResult addCensor(String procDefId, Map<String, Object> variables) {
         try {
             ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(procDefId)
                     .latestVersion().singleResult();
@@ -263,11 +306,11 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
             Task task = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId()).singleResult();
             if (Objects.nonNull(task)) {
                 taskService.addComment(task.getId(), processInstance.getProcessInstanceId(), FlowComment.NORMAL.getType(), sysUser.getNickName() + "发起流程申请");
-//                taskService.setAssignee(task.getId(), sysUser.getUserId().toString());
+                taskService.setAssignee(task.getId(), sysUser.getUserId().toString());
                 taskService.complete(task.getId(), variables);
             }
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            CensorProcess censor = new CensorProcess();
+            StandardCensor censor = new StandardCensor();
             censor.setFileUrl(variables.get("fileUrl").toString());
             censor.setFileName(variables.get("fileName").toString());
             censor.setRecordAgencies(variables.get("recordAgencies").toString());
@@ -287,54 +330,7 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
             censor.setAcceptUserId(Long.valueOf(approval));
             censor.setWorkflowId(task.getProcessInstanceId());
             censor.setCensorTache(task.getName());
-
-            //censor.setAcceptUserName(variables.get("acceptUserName").toString());
-            //censor.setProcessId((Long) variables.get("processType"));
-            censorProcessService.insertCensorProcess(censor);
-            return AjaxResult.success("流程启动成功");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return AjaxResult.error("流程启动错误");
-        }
-    }
-
-    @Override
-    public AjaxResult motionStartProcessInstanceById(String procDefId, Map<String, Object> variables) {
-        try {
-            ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(procDefId)
-                    .latestVersion().singleResult();
-            if (Objects.nonNull(processDefinition) && processDefinition.isSuspended()) {
-                return AjaxResult.error("流程已被挂起,请先激活流程");
-            }
-//           variables.put("skip", true);
-//           variables.put(ProcessConstants.FLOWABLE_SKIP_EXPRESSION_ENABLED, true);
-            // 设置流程发起人Id到流程中
-            SysUser sysUser = SecurityUtils.getLoginUser().getUser();
-            identityService.setAuthenticatedUserId(sysUser.getUserId().toString());
-            variables.put(ProcessConstants.PROCESS_INITIATOR, "");
-            ProcessInstance processInstance = runtimeService.startProcessInstanceById(procDefId, variables);
-            // 给第一步申请人节点设置任务执行人和意见 todo:第一个节点不设置为申请人节点有点问题？
-            Task task = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId()).singleResult();
-            if (Objects.nonNull(task)) {
-                taskService.addComment(task.getId(), processInstance.getProcessInstanceId(), FlowComment.NORMAL.getType(), sysUser.getNickName() + "发起流程申请");
-//                taskService.setAssignee(task.getId(), sysUser.getUserId().toString());
-                taskService.complete(task.getId(), variables);
-            }
-            JobMotion motion = new JobMotion();
-            motion.setMotionType(Integer.parseInt(variables.get("motionType").toString()));
-            motion.setTitle(variables.get("title").toString());
-            motion.setContent(variables.get("content").toString());
-            //提议人
-            motion.setSuggestUserName(variables.get("suggestUserName").toString());
-            //${INITIATOR}  #{approval}
-            //选择审批人
-            motion.setSuggestUserId(variables.get("approval").toString());
-
-            //数组存储
-            List<SysUser> user=sysUserService.selectUserByuserIds(variables.get("approval").toString());
-            //motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
-            motion.setWorkflowId(task.getProcessInstanceId());
-            jobMotionService.insertJobMotion(motion);
+            standardCensorService.insertStandardCensor(censor);
             return AjaxResult.success("流程启动成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -390,8 +386,8 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
     @Override
     public List<CakeDto> fileTypeCake() {
         List<CakeDto> dto = new ArrayList<>();
-        CensorProcess censorProcess = new CensorProcess();
-        List<CensorProcess> listuser= censorProcessService.selectCensorProcessList(censorProcess);
+        StandardCensor censorProcess = new StandardCensor();
+        List<StandardCensor> listuser= standardCensorService.selectStandardCensorList(censorProcess);
         SysDictData dictParam = new SysDictData();
         dictParam.setDictType("file_type");
         List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);

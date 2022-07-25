@@ -28,6 +28,7 @@ public interface IFlowDefinitionService {
      */
     Page<FlowProcDefDto> list(String name,Integer pageNum, Integer pageSize);
 
+    FlowProcDefDto detail(String name);
     /**
      * 导入流程文件
      *
@@ -54,10 +55,21 @@ public interface IFlowDefinitionService {
 
     AjaxResult startProcessInstanceById(String procDefId, Map<String, Object> variables);
 
-    AjaxResult newStartProcessInstanceById(String procDefId, Map<String, Object> variables);
+    /**
+     * 议案 发起流程 启动
+     * @param procDefId
+     * @param variables
+     * @return
+     */
+    AjaxResult addMotion(String procDefId, Map<String, Object> variables);
 
-    AjaxResult motionStartProcessInstanceById(String procDefId, Map<String, Object> variables);
-
+    /**
+     * 审查 发起流程 启动
+     * @param procDefId
+     * @param variables
+     * @return
+     */
+    AjaxResult addCensor(String procDefId, Map<String, Object> variables);
     /**
      * 激活或挂起流程定义
      *

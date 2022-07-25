@@ -19,4 +19,6 @@ public interface FlowDeployMapper {
      * @return
      */
     List<FlowProcDefDto> selectDeployList(String name);
+
+    FlowProcDefDto detail(String name);
 }

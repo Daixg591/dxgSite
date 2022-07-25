@@ -3,7 +3,6 @@ package com.shahenpc.system.service.impl.personel;
 import java.util.List;
 
 import com.shahenpc.common.utils.DateUtils;
-import com.shahenpc.system.domain.personel.PersonnelAppointRegister;
 import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

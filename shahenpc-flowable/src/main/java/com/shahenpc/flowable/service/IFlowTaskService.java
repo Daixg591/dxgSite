@@ -94,6 +94,24 @@ public interface IFlowTaskService {
     AjaxResult motionMyProcess(Integer pageNum, Integer pageSize);
 
     AjaxResult newDoneList(Integer pageNum, Integer pageSize,String processDefinitionName,String deployName);
+
+    /**
+     * 议案 我发起的流程
+     * @param pageNum
+     * @param pageSize
+     * @param processDefinitionName
+     * @return
+     */
+    AjaxResult motionMyProcess(Integer pageNum, Integer pageSize,String processDefinitionName);
+
+    /**
+     * 审查 我发起的流程
+     * @param pageNum
+     * @param pageSize
+     * @param processDefinitionName
+     * @return
+     */
+    AjaxResult censorMyProcess(Integer pageNum, Integer pageSize,String processDefinitionName);
     /**
      * 取消申请
      * @param flowTaskVo

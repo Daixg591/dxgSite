@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.represent.RepresentActivityMapper">
+    
+    <resultMap type="RepresentActivity" id="RepresentActivityResult">
+        <result property="activityId"    column="activity_id"    />
+        <result property="activityType"    column="activity_type"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="title"    column="title"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="address"    column="address"    />
+        <result property="status"    column="status"    />
+        <result property="participateConut"    column="participate_conut"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+
+    <sql id="selectRepresentActivityVo">
+        select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content from represent_activity
+    </sql>
+
+    <select id="selectRepresentActivityList" parameterType="RepresentActivity" resultMap="RepresentActivityResult">
+        <include refid="selectRepresentActivityVo"/>
+        <where>  
+            <if test="activityType != null "> and activity_type = #{activityType}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="participateConut != null "> and participate_conut = #{participateConut}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+        ORDER BY start_time DESC
+    </select>
+    
+    <select id="selectRepresentActivityByActivityId" parameterType="Long" resultMap="RepresentActivityResult">
+        <include refid="selectRepresentActivityVo"/>
+        where activity_id = #{activityId}
+    </select>
+        
+    <insert id="insertRepresentActivity" parameterType="RepresentActivity" useGeneratedKeys="true" keyProperty="activityId">
+        insert into represent_activity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="activityType != null">activity_type,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="title != null">title,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="address != null">address,</if>
+            <if test="status != null">status,</if>
+            <if test="participateConut != null">participate_conut,</if>
+            <if test="content != null">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="activityType != null">#{activityType},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="title != null">#{title},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="address != null">#{address},</if>
+            <if test="status != null">#{status},</if>
+            <if test="participateConut != null">#{participateConut},</if>
+            <if test="content != null">#{content},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRepresentActivity" parameterType="RepresentActivity">
+        update represent_activity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="activityType != null">activity_type = #{activityType},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="participateConut != null">participate_conut = #{participateConut},</if>
+            <if test="content != null">content = #{content},</if>
+        </trim>
+        where activity_id = #{activityId}
+    </update>
+
+    <delete id="deleteRepresentActivityByActivityId" parameterType="Long">
+        delete from represent_activity where activity_id = #{activityId}
+    </delete>
+
+    <delete id="deleteRepresentActivityByActivityIds" parameterType="String">
+        delete from represent_activity where activity_id in 
+        <foreach item="activityId" collection="array" open="(" separator="," close=")">
+            #{activityId}
+        </foreach>
+    </delete>
+
+    <!--======================================================分割线-->
+    <select id="selectByFinishCount" resultType="com.shahenpc.system.domain.represent.dto.ActivityFinishCountDto" parameterType="java.lang.Long">
+        SELECT
+            sum((SELECT COUNT(a.activity_id) FROM represent_activity a WHERE a1.`status` = 4 AND a.activity_id =a1.activity_id))AS finishCount,
+            COUNT(a1.activity_id)AS `count`
+        FROM represent_activity a1 LEFT JOIN represent_activity_record r1 ON a1.activity_id = r1.activity_id
+        WHERE r1.user_id= #{userId}
+    </select>
+    <resultMap id="activityList" type="com.shahenpc.system.domain.represent.dto.ActivityAppListDto" extends="RepresentActivityResult">
+
+    </resultMap>
+    <select id="selectByAppHomeList" resultMap="activityList">
+        select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type )AS activityTypeName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
+        from represent_activity
+        WHERE `status` IN(1,2)
+        ORDER BY start_time DESC
+    </select>
+
+    <select id="appList" parameterType="RepresentActivity" resultMap="activityList">
+        select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type )AS activityTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
+        from represent_activity
+        <where>
+            <if test="activityType != null "> and activity_type = #{activityType}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="participateConut != null "> and participate_conut = #{participateConut}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+        ORDER BY start_time DESC
+    </select>
+
+    <select id="appDetail" resultMap="activityList" parameterType="Long">
+        select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type )AS activityTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
+        from represent_activity where activity_id = #{activityId}
+    </select>
+</mapper>

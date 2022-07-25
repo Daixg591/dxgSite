@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.budget.OutlayActualMapper">
+
+    <resultMap type="OutlayActual" id="OutlayActualResult">
+        <result property="actualId"    column="actual_id"    />
+        <result property="budgetId"    column="budget_id"    />
+        <result property="amount"    column="amount"    />
+        <result property="superviseUserId"    column="supervise_user_id"    />
+        <result property="projectNumber"    column="project_number"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="budgetType"    column="budget_type"    />
+        <result property="title"    column="title"    />
+        <result property="year"    column="year"    />
+    </resultMap>
+
+    <sql id="selectOutlayActualVo">
+        select actual_id, budget_id, amount, supervise_user_id, project_number, remark, create_time, update_by, update_time, create_by, budget_type, title, year from outlay_actual
+    </sql>
+
+    <select id="selectOutlayActualList" parameterType="OutlayActual" resultMap="OutlayActualResult">
+        <include refid="selectOutlayActualVo"/>
+        <where>
+            <if test="budgetId != null "> and budget_id = #{budgetId}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="superviseUserId != null "> and supervise_user_id = #{superviseUserId}</if>
+            <if test="projectNumber != null  and projectNumber != ''"> and project_number = #{projectNumber}</if>
+            <if test="budgetType != null "> and budget_type = #{budgetType}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="year != null  and year != ''"> and year = #{year}</if>
+        </where>
+    </select>
+
+    <select id="selectOutlayActualByActualId" parameterType="Long" resultMap="OutlayActualResult">
+        <include refid="selectOutlayActualVo"/>
+        where actual_id = #{actualId}
+    </select>
+
+    <insert id="insertOutlayActual" parameterType="OutlayActual" useGeneratedKeys="true" keyProperty="actualId">
+        insert into outlay_actual
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="budgetId != null">budget_id,</if>
+            <if test="amount != null">amount,</if>
+            <if test="superviseUserId != null">supervise_user_id,</if>
+            <if test="projectNumber != null">project_number,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="budgetType != null">budget_type,</if>
+            <if test="title != null">title,</if>
+            <if test="year != null">year,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="budgetId != null">#{budgetId},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="superviseUserId != null">#{superviseUserId},</if>
+            <if test="projectNumber != null">#{projectNumber},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="budgetType != null">#{budgetType},</if>
+            <if test="title != null">#{title},</if>
+            <if test="year != null">#{year},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOutlayActual" parameterType="OutlayActual">
+        update outlay_actual
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="budgetId != null">budget_id = #{budgetId},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="superviseUserId != null">supervise_user_id = #{superviseUserId},</if>
+            <if test="projectNumber != null">project_number = #{projectNumber},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="budgetType != null">budget_type = #{budgetType},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="year != null">year = #{year},</if>
+        </trim>
+        where actual_id = #{actualId}
+    </update>
+
+    <delete id="deleteOutlayActualByActualId" parameterType="Long">
+        delete from outlay_actual where actual_id = #{actualId}
+    </delete>
+
+    <delete id="deleteOutlayActualByActualIds" parameterType="String">
+        delete from outlay_actual where actual_id in
+        <foreach item="actualId" collection="array" open="(" separator="," close=")">
+            #{actualId}
+        </foreach>
+    </delete>
+    <!--==============================================分割线-->
+    <select id="getListCount" resultType="com.shahenpc.system.domain.budget.dto.ActualListConutDto">
+        SELECT
+            SUM(a.amount)AS actualFees,
+            count(a.actual_id) AS actualPen,
+            (SELECT SUM(b1.amount) FROM outlay_budget b1)AS budgetFees,
+            (SELECT count(b2.budget_id) FROM outlay_budget b2)AS budgetPen
+        FROM outlay_actual a
+    </select>
+
+    <select id="selectByCountAndMonth" resultType="com.shahenpc.system.domain.budget.dto.CountDto">
+        SELECT
+                (SELECT COUNT(s.actual_id))AS countPen,
+                (SELECT COUNT(a1.actual_id) FROM outlay_actual a1  WHERE DATE_FORMAT(a1.create_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m'))AS monthPen
+        FROM outlay_actual s
+    </select>
+
+    <resultMap id="adminList" type="com.shahenpc.system.domain.budget.dto.OutlayActualListDto" extends="OutlayActualResult">
+
+    </resultMap>
+
+    <select id="newList" parameterType="com.shahenpc.system.domain.budget.dto.BudgetDto" resultMap="adminList">
+        select o.actual_id, o.budget_id, o.amount, o.supervise_user_id, o.project_number, o.remark, o.create_time, o.update_by, o.update_time, o.create_by,
+        b.budget_type,b.year,b.title
+        from outlay_actual o LEFT JOIN outlay_budget b ON o.project_number = b.project_number
+        <where>
+            <if test="projectNumber != null  and projectNumber != ''"> and o.project_number = #{projectNumber}</if>
+            <if test="budgetType != null "> and o.budget_type = #{budgetType}</if>
+            <if test="title != null  and title != ''"> and o.title = #{title}</if>
+            <if test="startTime != null">
+                and DATE_FORMAT(o.create_time, '%Y-%m-%d %H:%i:%S') &gt;= DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%S')
+            </if>
+            <if test="endTime != null">
+                and DATE_FORMAT(o.create_time, '%Y-%m-%d %H:%i:%S') &lt;= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%S')
+            </if>
+        </where>
+    </select>
+
+</mapper>

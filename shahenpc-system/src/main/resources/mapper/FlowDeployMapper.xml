@@ -6,7 +6,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
 
     <select id="selectDeployList" resultType="com.shahenpc.system.domain.FlowProcDefDto">
-
         SELECT
             rp.id_ as id,
             rd.id_ as deploymentId,
@@ -27,5 +26,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by rd.deploy_time_ desc
     </select>
 
-
+    <select id="detail" resultType="com.shahenpc.system.domain.FlowProcDefDto">
+        SELECT
+        rp.id_ as id,
+        rd.id_ as deploymentId,
+        rd.name_ as name,
+        rd.category_ as category,
+        rp.key_ as flowKey,
+        rp.version_ as version,
+        rp.suspension_state_ as suspensionState,
+        rd.deploy_time_  as deploymentTime
+        FROM
+        ACT_RE_PROCDEF rp
+        LEFT JOIN ACT_RE_DEPLOYMENT rd ON rp.deployment_id_ = rd.id_
+        <where>
+            <if test="name != null and name != ''">
+                and rd.name_ like concat('%', #{name}, '%')
+            </if>
+        </where>
+        LIMIT 1;
+    </select>
 </mapper>
