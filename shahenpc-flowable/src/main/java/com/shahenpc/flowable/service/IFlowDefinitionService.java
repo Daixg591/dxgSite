@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.flowable.domain.dto.CakeDto;
 import com.shahenpc.system.domain.FlowProcDefDto;
+import com.shahenpc.system.domain.represent.RepresentMotion;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,7 +62,7 @@ public interface IFlowDefinitionService {
      * @param variables
      * @return
      */
-    AjaxResult addMotion(String procDefId, Map<String, Object> variables);
+    AjaxResult addMotion(RepresentMotion representMotion,String procDefId);
 
     /**
      * 审查 发起流程 启动

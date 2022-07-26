@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.represent;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-22
  */
+@Data
 public class RepresentMotion extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -42,10 +44,6 @@ public class RepresentMotion extends BaseEntity
     @Excel(name = "状态")
     private Integer status;
 
-    /** 关联 原 流程id */
-    @Excel(name = "关联 原 流程id")
-    private String workflowId;
-
     /** 发送id */
     @Excel(name = "发送id")
     private Long sendUserId;
@@ -53,6 +51,18 @@ public class RepresentMotion extends BaseEntity
     /**  */
     @Excel(name = "")
     private String sendUserName;
+
+    /**  */
+    @Excel(name = "")
+    private Long approvalUserId;
+
+    /** 流程id */
+    @Excel(name = "流程id")
+    private String procinsId;
+
+    /** 模板id */
+    @Excel(name = "模板id")
+    private String deployId;
 
     public void setMotionId(Long motionId) 
     {
@@ -117,16 +127,7 @@ public class RepresentMotion extends BaseEntity
     {
         return status;
     }
-    public void setWorkflowId(String workflowId) 
-    {
-        this.workflowId = workflowId;
-    }
-
-    public String getWorkflowId() 
-    {
-        return workflowId;
-    }
-    public void setSendUserId(Long sendUserId) 
+    public void setSendUserId(Long sendUserId)
     {
         this.sendUserId = sendUserId;
     }
@@ -160,7 +161,6 @@ public class RepresentMotion extends BaseEntity
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
-            .append("workflowId", getWorkflowId())
             .append("sendUserId", getSendUserId())
             .append("sendUserName", getSendUserName())
             .toString();

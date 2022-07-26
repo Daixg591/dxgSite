@@ -16,12 +16,14 @@ import com.shahenpc.flowable.service.IFlowDefinitionService;
 import com.shahenpc.flowable.service.ISysDeployFormService;
 import com.shahenpc.system.domain.SysForm;
 import com.shahenpc.system.domain.represent.RepresentMotion;
+import com.shahenpc.system.domain.represent.RepresentMotionRecord;
 import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.mapper.FlowDeployMapper;
 import com.shahenpc.system.service.ISysDeptService;
 import com.shahenpc.system.service.ISysDictDataService;
 import com.shahenpc.system.service.ISysPostService;
 import com.shahenpc.system.service.ISysUserService;
+import com.shahenpc.system.service.represent.IRepresentMotionRecordService;
 import com.shahenpc.system.service.represent.IRepresentMotionService;
 import com.shahenpc.system.service.standard.IStandardCensorService;
 import lombok.extern.slf4j.Slf4j;
@@ -75,6 +77,8 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
 
     @Resource
     private IRepresentMotionService representMotionService;
+    @Resource
+    private IRepresentMotionRecordService representMotionRecordService;
     @Resource
     private ISysDictDataService dictDataService;
 
@@ -247,7 +251,7 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
 
     @Override
     @Transactional
-    public AjaxResult addMotion(String procDefId, Map<String, Object> variables) {
+    public AjaxResult addMotion(RepresentMotion representMotion,String procDefId) {
         try {
             ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(procDefId)
                     .latestVersion().singleResult();
@@ -259,8 +263,10 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
             // 设置流程发起人Id到流程中
             SysUser sysUser = SecurityUtils.getLoginUser().getUser();
             identityService.setAuthenticatedUserId(sysUser.getUserId().toString());
+            Map<String, Object> variables = new HashMap<>();
+            variables.put("approval",representMotion.getApprovalUserId());
             variables.put(ProcessConstants.PROCESS_INITIATOR, "");
-            ProcessInstance processInstance = runtimeService.startProcessInstanceById(procDefId, variables);
+            ProcessInstance processInstance = runtimeService.startProcessInstanceById(procDefId,variables);
             // 给第一步申请人节点设置任务执行人和意见 todo:第一个节点不设置为申请人节点有点问题？
             Task task = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId()).singleResult();
             if (Objects.nonNull(task)) {
@@ -268,18 +274,29 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
                 taskService.setAssignee(task.getId(), sysUser.getUserId().toString());
                 taskService.complete(task.getId(), variables);
             }
-            RepresentMotion motion = new RepresentMotion();
-            motion.setMotionType(Integer.parseInt(variables.get("motionType").toString()));
-            motion.setTitle(variables.get("title").toString());
-            motion.setContent(variables.get("content").toString());
+            //motion.setMotionType(Integer.parseInt(variables.get("motionType").toString()));
+           // motion.setTitle(variables.get("title").toString());
+            //motion.setContent(variables.get("content").toString());
             //提议人
-            motion.setSuggestUserName(variables.get("suggestUserName").toString());
+           // motion.setSuggestUserName(variables.get("suggestUserName").toString());
             //选择审批人
-            motion.setSuggestUserId(variables.get("approval").toString());
+           // motion.setSuggestUserId(variables.get("approval").toString());
             //数组存储
-            List<SysUser> user=sysUserService.selectUserByuserIds(variables.get("approval").toString());
-            motion.setWorkflowId(task.getProcessInstanceId());
-            representMotionService.insertRepresentMotion(motion);
+           // List<SysUser> user=sysUserService.selectUserByuserIds(variables.get("approval").toString());
+            //prochsid 3b2bf51d-f863-11ec-a590-24698ed5e50b  创建流程id
+            // deployId 流程模板的id 417b0131-f85d-11ec-a590-24698ed5e50b
+            representMotion.setProcinsId(task.getProcessInstanceId());
+            representMotion.setDeployId(processInstance.getDeploymentId());
+            //处理环节
+            task.getName();
+            //处理状态
+            task.getDelegationState();
+            representMotionService.insertRepresentMotion(representMotion);
+            RepresentMotionRecord  record = new RepresentMotionRecord();
+            record.setMotionId(representMotion.getMotionId());
+            record.setDeployId(processInstance.getDeploymentId());
+            record.setProcinsId(task.getProcessInstanceId());
+            representMotionRecordService.insertRepresentMotionRecord(record);
             return AjaxResult.success("流程启动成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -393,7 +410,7 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
         List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = listuser.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getFileType()))
+            int v = listuser.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getFileType().toString()))
                     .collect(Collectors.toList()).size();
             CakeDto item = new CakeDto();
             item.setName(dictList.get(i).getDictLabel());

@@ -2,6 +2,8 @@ package com.shahenpc.flowable.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.shahenpc.common.core.domain.entity.SysDictData;
+import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.flowable.common.constant.ProcessConstants;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysRole;
@@ -9,10 +11,7 @@ import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.flowable.common.enums.FlowComment;
 import com.shahenpc.common.exception.CustomException;
 import com.shahenpc.common.utils.SecurityUtils;
-import com.shahenpc.flowable.domain.dto.FlowCommentDto;
-import com.shahenpc.flowable.domain.dto.FlowNextDto;
-import com.shahenpc.flowable.domain.dto.FlowTaskDto;
-import com.shahenpc.flowable.domain.dto.FlowViewerDto;
+import com.shahenpc.flowable.domain.dto.*;
 import com.shahenpc.flowable.domain.vo.FlowTaskVo;
 import com.shahenpc.flowable.factory.FlowServiceFactory;
 import com.shahenpc.flowable.flow.CustomProcessDiagramGenerator;
@@ -21,10 +20,16 @@ import com.shahenpc.flowable.flow.FlowableUtils;
 import com.shahenpc.flowable.service.IFlowTaskService;
 import com.shahenpc.flowable.service.ISysDeployFormService;
 import com.shahenpc.system.domain.FlowProcDefDto;
+import com.shahenpc.system.domain.feature.FeatureWorkEvent;
+import com.shahenpc.system.domain.feature.dto.FeatureCurveDto;
 import com.shahenpc.system.domain.message.MessageData;
 import com.shahenpc.system.domain.represent.RepresentMotion;
+import com.shahenpc.system.domain.represent.dto.MotionLingDto;
+import com.shahenpc.system.domain.represent.dto.MotionPieDto;
+import com.shahenpc.system.domain.represent.dto.MotionRingDto;
 import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.mapper.FlowDeployMapper;
+import com.shahenpc.system.service.ISysDictDataService;
 import com.shahenpc.system.service.ISysRoleService;
 import com.shahenpc.system.service.ISysUserService;
 import com.shahenpc.system.service.message.IMessageDataService;
@@ -43,6 +48,7 @@ import org.flowable.engine.ProcessEngineConfiguration;
 import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.history.HistoricProcessInstanceQuery;
+import org.flowable.engine.impl.persistence.entity.HistoricActivityInstanceEntityImpl;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
@@ -59,6 +65,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -75,15 +82,12 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
 
     @Resource
     private ISysUserService sysUserService;
-
-
     @Resource
     private ISysRoleService sysRoleService;
-
-
+    @Resource
+    private ISysDictDataService dictDataService;
     @Resource
     private ISysDeployFormService sysInstanceFormService;
-
     @Resource
     private IStandardCensorService standardCensorService;
     @Resource
@@ -783,8 +787,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setTitle(motion.getTitle());
                 flowTask.setContent(motion.getContent());
                 flowTask.setSuggestUserId(motion.getSuggestUserId());
-                List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
-                motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
+                //List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
+                //motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
             }
             flowList.add(flowTask);
@@ -1460,6 +1464,156 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         return AjaxResult.success(flowNextDto);
     }
 
+    @Override
+    public AjaxResult motionTodoList(Integer pageNum, Integer pageSize, String type) {
+        Page<FlowTaskDto> page = new Page<>();
+        Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
+        TaskQuery taskQuery = taskService.createTaskQuery()
+                .active()
+                .includeProcessVariables()
+                .taskName(type)
+                .taskAssignee(userId.toString())
+                .orderByTaskCreateTime().desc();
+        page.setTotal(taskQuery.count());
+        List<Task> taskList = taskQuery.listPage(pageSize * (pageNum - 1), pageSize);
+        List<FlowTaskDto> flowList = new ArrayList<>();
+        for (Task task : taskList) {
+            FlowTaskDto flowTask = new FlowTaskDto();
+            // 当前流程信息
+            flowTask.setTaskId(task.getId());
+            flowTask.setTaskDefKey(task.getTaskDefinitionKey());
+            flowTask.setCreateTime(task.getCreateTime());
+            flowTask.setProcDefId(task.getProcessDefinitionId());
+            flowTask.setExecutionId(task.getExecutionId());
+            flowTask.setTaskName(task.getName());
+            // 流程定义信息
+            ProcessDefinition pd = repositoryService.createProcessDefinitionQuery().processDefinitionId(task.getProcessDefinitionId()).singleResult();
+            flowTask.setDeployId(pd.getDeploymentId());
+            flowTask.setProcDefName(pd.getName());
+            flowTask.setProcDefVersion(pd.getVersion());
+            flowTask.setProcInsId(task.getProcessInstanceId());
+
+            // 流程发起人信息
+            HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
+                    .processInstanceId(task.getProcessInstanceId())
+                    .singleResult();
+            SysUser startUser = sysUserService.selectUserById(Long.parseLong(historicProcessInstance.getStartUserId()));
+//            SysUser startUser = sysUserService.selectUserById(Long.parseLong(task.getAssignee()));
+            flowTask.setStartUserId(startUser.getNickName());
+            flowTask.setStartUserName(startUser.getNickName());
+            flowTask.setStartDeptName(startUser.getDept().getDeptName());
+            StandardCensor censor=standardCensorService.selectCensorProcessByWorkflowId(task.getProcessInstanceId());
+            RepresentMotion motion = representMotionService.selectByWorkflowId(task.getProcessInstanceId());
+            if(censor != null) {
+                flowTask.setSerial(censor.getProcessId());
+                flowTask.setFileType(censor.getFileType());
+                flowTask.setFileName(censor.getFileName());
+            }
+            if(motion != null) {
+                flowTask.setSerial(motion.getMotionId());
+                flowTask.setTitle(motion.getTitle());
+                flowTask.setContent(motion.getContent());
+                flowTask.setSuggestUserId(motion.getSuggestUserId());
+                List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
+                motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
+                flowTask.setMotionType(motion.getMotionType());
+                flowTask.setSuggestUserName(motion.getSuggestUserName());
+            }
+            flowList.add(flowTask);
+        }
+        //flowList.stream().filter(w -> w.getDeployId().equals(type)).collect(Collectors.toList());
+        page.setRecords(flowList);
+        return AjaxResult.success(page);
+    }
+
+    @Override
+    public MotionLingDto line(String taskName) {
+        List<String> monthList = getNearSixMonth();
+        MotionLingDto res = new MotionLingDto();
+        res.setLabel(monthList);
+        List<Integer> yList = new ArrayList<>();
+        //获取最小日期
+        Date minMonth = DateUtils.parseDate(monthList.get(monthList.size() - 1));
+        HistoricActivityInstance d = new HistoricActivityInstanceEntityImpl();
+        List<HistoricActivityInstance> receiveTotal = historyService.createHistoricActivityInstanceQuery().activityName(taskName)
+                .orderByHistoricActivityInstanceStartTime()
+                .desc().list();
+        for (int i = 0; i < monthList.size(); i++) {
+            int finalI = i;
+            String cntt = monthList.get(finalI);
+            List<HistoricActivityInstance> nearlist1 = receiveTotal.stream().
+                    filter(w -> DateUtils.dateTime(w.getStartTime()).contains(cntt)).collect(Collectors.toList());
+            yList.add(nearlist1.size());
+        }
+        res.setData(yList);
+        Collections.reverse(res.getData());
+        Collections.reverse(res.getLabel());
+        return res;
+    }
+
+    @Override
+    public List<MotionPieDto> pie(String taskName) {
+        List<HistoricActivityInstance> receiveTotal = historyService.createHistoricActivityInstanceQuery().activityName(taskName)
+                .orderByHistoricActivityInstanceStartTime()
+                .desc().list();
+        List<MotionPieDto> dto = new ArrayList<>();
+        StandardCensor censorProcess = new StandardCensor();
+        List<StandardCensor> listuser= standardCensorService.selectStandardCensorList(censorProcess);
+        SysDictData dictParam = new SysDictData();
+        dictParam.setDictType("motion_type");
+        List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            int v = listuser.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getFileType().toString()))
+                    .collect(Collectors.toList()).size();
+            MotionPieDto item = new MotionPieDto();
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
+            dto.add(item);
+        }
+        return dto;
+    }
+
+    @Override
+    public BigDecimal ring(String taskName) {
+        Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
+
+        //等待数
+        Integer stayTotal = taskService.createTaskQuery()
+                .active()
+                .includeProcessVariables()
+                .taskName(taskName)
+                .taskAssignee(userId.toString())
+                .orderByTaskCreateTime().desc().list().size();
+        List<FlowProcDefDto> dto = flowDeployMapper.selectDeployList("");
+        //过来数
+        int receiveTotal= historyService
+                .createHistoricActivityInstanceQuery()
+                .activityName(taskName)
+                .taskAssignee(userId.toString())
+                .processDefinitionId(dto.get(0).getId())
+                .orderByHistoricActivityInstanceStartTime()
+                .desc().list().size();
+        //先查 流程id
+        ProcessDefinition pd1 = repositoryService.createProcessDefinitionQuery().processDefinitionName("建议议案").singleResult();
+        //已完成 接收的总数
+        int doneTotal = historyService.createHistoricTaskInstanceQuery()
+                .includeProcessVariables()
+                .finished()
+                .processDefinitionId(null)
+                .taskAssignee(userId.toString())
+                .orderByHistoricTaskInstanceEndTime()
+                .desc().list().size();
+        int count = stayTotal+receiveTotal+doneTotal;
+        MotionRingDto cakedto =new MotionRingDto();
+        //cakedto.setName(taskName+"占总数比例");
+        BigDecimal a = new BigDecimal(stayTotal);
+        BigDecimal b = new BigDecimal(count);
+        BigDecimal gd =  a.divide(b,0,BigDecimal.ROUND_UP);
+        cakedto.setValue(Integer.parseInt(gd.toString()));
+        return gd;
+    }
+
     /**
      * 流程完成时间处理
      *
@@ -1487,5 +1641,25 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         } else {
             return 0 + "秒";
         }
+    }
+    /**
+     * 获取最近六个月份  ["2022-07","2022-06","2022-05"...]
+     *
+     * @return
+     */
+    public List<String> getNearSixMonth() {
+        List<String> resultList = new ArrayList<String>();
+        Calendar cal = Calendar.getInstance();
+        //近六个月
+        //要先+1,才能把本月的算进去
+        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
+        for (int i = 0; i < 6; i++) {
+            //逐次往前推1个月
+            cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
+            resultList.add(String.valueOf(cal.get(Calendar.YEAR))
+                    + "-" + (cal.get(Calendar.MONTH) + 1 < 10 ? "0" +
+                    (cal.get(Calendar.MONTH) + 1) : (cal.get(Calendar.MONTH) + 1)));
+        }
+        return resultList;
     }
 }

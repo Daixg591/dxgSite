@@ -3,6 +3,7 @@ package com.shahenpc.app.controller.motionSuggestion;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.flowable.service.IFlowDefinitionService;
 import com.shahenpc.system.domain.FlowProcDefDto;
+import com.shahenpc.system.domain.represent.RepresentMotion;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -28,7 +29,8 @@ public class AppMotionSuggestionController {
     @PostMapping("/add")
     public AjaxResult add(@ApiParam(value = "变量集合,json对象") @RequestBody Map<String, Object> variables) {
         FlowProcDefDto dto=flowDefinitionService.detail("议案建议");
-        return flowDefinitionService.addMotion(dto.getId(),variables);
+        RepresentMotion representMotion = new RepresentMotion();
+        return flowDefinitionService.addMotion(null,null);
     }
 
 

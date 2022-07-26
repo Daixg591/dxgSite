@@ -2,9 +2,14 @@ package com.shahenpc.flowable.service;
 
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.flowable.domain.vo.FlowTaskVo;
+import com.shahenpc.system.domain.represent.dto.MotionLingDto;
+import com.shahenpc.system.domain.represent.dto.MotionPieDto;
+import com.shahenpc.system.domain.represent.dto.MotionRingDto;
 import org.flowable.task.api.Task;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author XuanXuan
@@ -195,4 +200,13 @@ public interface IFlowTaskService {
      * @return
      */
     AjaxResult getNextFlowNode(FlowTaskVo flowTaskVo);
+
+
+    AjaxResult motionTodoList(Integer pageNum, Integer pageSize,String type);
+
+    MotionLingDto line(String taskName);
+
+    List<MotionPieDto> pie(String taskName);
+
+    BigDecimal ring(String taskName);
 }

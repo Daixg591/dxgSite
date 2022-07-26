@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.represent.RepresentMotionMapper">
-    
+
     <resultMap type="RepresentMotion" id="RepresentMotionResult">
         <result property="motionId"    column="motion_id"    />
         <result property="motionType"    column="motion_type"    />
@@ -17,35 +17,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
-        <result property="workflowId"    column="workflow_id"    />
         <result property="sendUserId"    column="send_user_id"    />
         <result property="sendUserName"    column="send_user_name"    />
+        <result property="approvalUserId"    column="approval_user_id"    />
+        <result property="procinsId"    column="procIns_id"    />
+        <result property="deployId"    column="deploy_id"    />
     </resultMap>
 
     <sql id="selectRepresentMotionVo">
-        select motion_id, motion_type, title, content, suggest_user_id, suggest_user_name, status, remark, create_by, create_time, update_by, update_time, workflow_id, send_user_id, send_user_name from represent_motion
+        select motion_id, motion_type, title, content, suggest_user_id, suggest_user_name, status, remark, create_by, create_time, update_by, update_time, send_user_id, send_user_name, approval_user_id, procIns_id, deploy_id from represent_motion
     </sql>
 
     <select id="selectRepresentMotionList" parameterType="RepresentMotion" resultMap="RepresentMotionResult">
         <include refid="selectRepresentMotionVo"/>
-        <where>  
+        <where>
             <if test="motionType != null "> and motion_type = #{motionType}</if>
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="suggestUserId != null  and suggestUserId != ''"> and suggest_user_id = #{suggestUserId}</if>
             <if test="suggestUserName != null  and suggestUserName != ''"> and suggest_user_name like concat('%', #{suggestUserName}, '%')</if>
             <if test="status != null "> and status = #{status}</if>
-            <if test="workflowId != null  and workflowId != ''"> and workflow_id = #{workflowId}</if>
             <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
             <if test="sendUserName != null  and sendUserName != ''"> and send_user_name like concat('%', #{sendUserName}, '%')</if>
+            <if test="approvalUserId != null "> and approval_user_id = #{approvalUserId}</if>
+            <if test="procinsId != null  and procinsId != ''"> and procIns_id = #{procinsId}</if>
+            <if test="deployId != null  and deployId != ''"> and deploy_id = #{deployId}</if>
         </where>
     </select>
-    
+
     <select id="selectRepresentMotionByMotionId" parameterType="Long" resultMap="RepresentMotionResult">
         <include refid="selectRepresentMotionVo"/>
         where motion_id = #{motionId}
     </select>
-        
+
     <insert id="insertRepresentMotion" parameterType="RepresentMotion" useGeneratedKeys="true" keyProperty="motionId">
         insert into represent_motion
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -60,10 +64,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-            <if test="workflowId != null">workflow_id,</if>
             <if test="sendUserId != null">send_user_id,</if>
             <if test="sendUserName != null">send_user_name,</if>
-         </trim>
+            <if test="approvalUserId != null">approval_user_id,</if>
+            <if test="procinsId != null">procIns_id,</if>
+            <if test="deployId != null">deploy_id,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="motionType != null">#{motionType},</if>
             <if test="title != null">#{title},</if>
@@ -76,10 +82,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
-            <if test="workflowId != null">#{workflowId},</if>
             <if test="sendUserId != null">#{sendUserId},</if>
             <if test="sendUserName != null">#{sendUserName},</if>
-         </trim>
+            <if test="approvalUserId != null">#{approvalUserId},</if>
+            <if test="procinsId != null">#{procinsId},</if>
+            <if test="deployId != null">#{deployId},</if>
+        </trim>
     </insert>
 
     <update id="updateRepresentMotion" parameterType="RepresentMotion">
@@ -96,9 +104,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
-            <if test="workflowId != null">workflow_id = #{workflowId},</if>
             <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
             <if test="sendUserName != null">send_user_name = #{sendUserName},</if>
+            <if test="approvalUserId != null">approval_user_id = #{approvalUserId},</if>
+            <if test="procinsId != null">procIns_id = #{procinsId},</if>
+            <if test="deployId != null">deploy_id = #{deployId},</if>
         </trim>
         where motion_id = #{motionId}
     </update>
@@ -108,15 +118,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteRepresentMotionByMotionIds" parameterType="String">
-        delete from represent_motion where motion_id in 
+        delete from represent_motion where motion_id in
         <foreach item="motionId" collection="array" open="(" separator="," close=")">
             #{motionId}
         </foreach>
     </delete>
-
     <!--==================================================分割线-->
     <select id="selectByWorkflowId" resultMap="RepresentMotionResult">
         <include refid="selectRepresentMotionVo"/>
-        where workflow_id = #{workflowId}
+        where procins_id = #{procinsId}
     </select>
 </mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.represent.RepresentExperienceMapper">
+    
+    <resultMap type="RepresentExperience" id="RepresentExperienceResult">
+        <result property="experienceId"    column="experience_id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="picUrl"    column="pic_url"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+    </resultMap>
+
+    <sql id="selectRepresentExperienceVo">
+        select experience_id, title, content, pic_url, remark, create_time, update_by, update_time, create_by from represent_experience
+    </sql>
+
+    <select id="selectRepresentExperienceList" parameterType="RepresentExperience" resultMap="RepresentExperienceResult">
+        <include refid="selectRepresentExperienceVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="picUrl != null  and picUrl != ''"> and pic_url = #{picUrl}</if>
+        </where>
+    </select>
+    
+    <select id="selectRepresentExperienceByExperienceId" parameterType="Long" resultMap="RepresentExperienceResult">
+        <include refid="selectRepresentExperienceVo"/>
+        where experience_id = #{experienceId}
+    </select>
+        
+    <insert id="insertRepresentExperience" parameterType="RepresentExperience">
+        insert into represent_experience
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="experienceId != null">experience_id,</if>
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="picUrl != null">pic_url,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="experienceId != null">#{experienceId},</if>
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="picUrl != null">#{picUrl},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRepresentExperience" parameterType="RepresentExperience">
+        update represent_experience
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="picUrl != null">pic_url = #{picUrl},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+        </trim>
+        where experience_id = #{experienceId}
+    </update>
+
+    <delete id="deleteRepresentExperienceByExperienceId" parameterType="Long">
+        delete from represent_experience where experience_id = #{experienceId}
+    </delete>
+
+    <delete id="deleteRepresentExperienceByExperienceIds" parameterType="String">
+        delete from represent_experience where experience_id in 
+        <foreach item="experienceId" collection="array" open="(" separator="," close=")">
+            #{experienceId}
+        </foreach>
+    </delete>
+</mapper>

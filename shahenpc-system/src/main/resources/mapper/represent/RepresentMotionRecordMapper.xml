@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.represent.RepresentMotionRecordMapper">
+    
+    <resultMap type="RepresentMotionRecord" id="RepresentMotionRecordResult">
+        <result property="recordId"    column="record_id"    />
+        <result property="motionId"    column="motion_id"    />
+        <result property="procinsId"    column="procIns_id"    />
+        <result property="deployId"    column="deploy_id"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectRepresentMotionRecordVo">
+        select record_id, motion_id, procIns_id, deploy_id, status, remark, create_by, create_time, update_by from represent_motion_record
+    </sql>
+
+    <select id="selectRepresentMotionRecordList" parameterType="RepresentMotionRecord" resultMap="RepresentMotionRecordResult">
+        <include refid="selectRepresentMotionRecordVo"/>
+        <where>  
+            <if test="motionId != null "> and motion_id = #{motionId}</if>
+            <if test="procinsId != null  and procinsId != ''"> and procIns_id = #{procinsId}</if>
+            <if test="deployId != null  and deployId != ''"> and deploy_id = #{deployId}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectRepresentMotionRecordByRecordId" parameterType="Long" resultMap="RepresentMotionRecordResult">
+        <include refid="selectRepresentMotionRecordVo"/>
+        where record_id = #{recordId}
+    </select>
+        
+    <insert id="insertRepresentMotionRecord" parameterType="RepresentMotionRecord">
+        insert into represent_motion_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">record_id,</if>
+            <if test="motionId != null">motion_id,</if>
+            <if test="procinsId != null">procIns_id,</if>
+            <if test="deployId != null">deploy_id,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">#{recordId},</if>
+            <if test="motionId != null">#{motionId},</if>
+            <if test="procinsId != null">#{procinsId},</if>
+            <if test="deployId != null">#{deployId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRepresentMotionRecord" parameterType="RepresentMotionRecord">
+        update represent_motion_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="motionId != null">motion_id = #{motionId},</if>
+            <if test="procinsId != null">procIns_id = #{procinsId},</if>
+            <if test="deployId != null">deploy_id = #{deployId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+    <delete id="deleteRepresentMotionRecordByRecordId" parameterType="Long">
+        delete from represent_motion_record where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteRepresentMotionRecordByRecordIds" parameterType="String">
+        delete from represent_motion_record where record_id in 
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+</mapper>

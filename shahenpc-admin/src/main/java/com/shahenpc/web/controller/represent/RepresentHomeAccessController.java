@@ -41,6 +41,7 @@ public class RepresentHomeAccessController extends BaseController
     /**
      * 查询代之家访问列表
      */
+    @ApiOperation("列表")
     @PreAuthorize("@ss.hasPermi('represent:access:list')")
     @GetMapping("/list")
     public TableDataInfo list(RepresentHomeAccess representHomeAccess)
@@ -53,6 +54,7 @@ public class RepresentHomeAccessController extends BaseController
     /**
      * 导出代之家访问列表
      */
+    @ApiOperation("导出")
     @PreAuthorize("@ss.hasPermi('represent:access:export')")
     @Log(title = "代之家访问", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -66,6 +68,7 @@ public class RepresentHomeAccessController extends BaseController
     /**
      * 获取代之家访问详细信息
      */
+    @ApiOperation("详情")
     @PreAuthorize("@ss.hasPermi('represent:access:query')")
     @GetMapping(value = "/{accessId}")
     public AjaxResult getInfo(@PathVariable("accessId") Long accessId)
@@ -76,6 +79,7 @@ public class RepresentHomeAccessController extends BaseController
     /**
      * 新增代之家访问
      */
+    @ApiOperation("新增")
     @PreAuthorize("@ss.hasPermi('represent:access:add')")
     @Log(title = "代之家访问", businessType = BusinessType.INSERT)
     @PostMapping
@@ -87,6 +91,7 @@ public class RepresentHomeAccessController extends BaseController
     /**
      * 修改代之家访问
      */
+    @ApiOperation("修改")
     @PreAuthorize("@ss.hasPermi('represent:access:edit')")
     @Log(title = "代之家访问", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -98,6 +103,7 @@ public class RepresentHomeAccessController extends BaseController
     /**
      * 删除代之家访问
      */
+    @ApiOperation("删除")
     @PreAuthorize("@ss.hasPermi('represent:access:remove')")
     @Log(title = "代之家访问", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{accessIds}")

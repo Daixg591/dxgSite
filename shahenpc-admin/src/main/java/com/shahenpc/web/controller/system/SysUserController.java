@@ -257,30 +257,27 @@ public class SysUserController extends BaseController
      * 人大代表性别分布
      */
     @ApiOperation("性别饼图")
-    @PreAuthorize("@ss.hasPermi('user:gender:cake')")
-    @GetMapping("/gender/cake")
-    public AjaxResult genderCake(){
-        return AjaxResult.success(userService.genderCake());
+    @GetMapping("/gender/cake/{identity}")
+    public AjaxResult genderCake(@PathVariable("identity")String identity){
+        return AjaxResult.success(userService.genderCake(identity));
     }
 
     /**
      * 人大代表年龄分布
      */
     @ApiOperation("年龄饼图")
-    @PreAuthorize("@ss.hasPermi('user:age:cake')")
-    @GetMapping("/age/cake")
-    public AjaxResult ageCake(){
+    @GetMapping("/age/cake/{identity}")
+    public AjaxResult ageCake(@PathVariable("identity")String identity){
 
-        return AjaxResult.success(userService.ageCake());
+        return AjaxResult.success(userService.ageCake(identity));
     }
     /**
      * 人大代表学历分布
      */
     @ApiOperation("学历饼图")
-    @PreAuthorize("@ss.hasPermi('user:degree:cake')")
-    @GetMapping("/degree/cake")
-    public AjaxResult degreeCake(){
+    @GetMapping("/degree/cake/{identity}")
+    public AjaxResult degreeCake(@PathVariable("identity")String identity){
 
-        return AjaxResult.success(userService.degreeCake());
+        return AjaxResult.success(userService.degreeCake(identity));
     }
 }

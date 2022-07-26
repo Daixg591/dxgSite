@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.represent.RepresentColumnMapper">
-    
+
     <resultMap type="RepresentColumn" id="RepresentColumnResult">
         <result property="columnId"    column="column_id"    />
         <result property="name"    column="name"    />
@@ -17,29 +17,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="columnType"    column="column_type"    />
         <result property="isAppShow"    column="is_app_show"    />
         <result property="isWxShow"    column="is_wx_show"    />
+        <result property="category"    column="category"    />
     </resultMap>
 
     <sql id="selectRepresentColumnVo">
-        select column_id, name, order_num, status, remark, create_time, update_by, update_time, create_by, column_type, is_app_show, is_wx_show from represent_column
+        select column_id, name, order_num, status, remark, create_time, update_by, update_time, create_by, column_type, is_app_show, is_wx_show, category from represent_column
     </sql>
 
     <select id="selectRepresentColumnList" parameterType="RepresentColumn" resultMap="RepresentColumnResult">
         <include refid="selectRepresentColumnVo"/>
-        <where>  
+        <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="orderNum != null "> and order_num = #{orderNum}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="columnType != null "> and column_type = #{columnType}</if>
             <if test="isAppShow != null "> and is_app_show = #{isAppShow}</if>
             <if test="isWxShow != null "> and is_wx_show = #{isWxShow}</if>
+            <if test="category != null "> and category = #{category}</if>
         </where>
     </select>
-    
+
     <select id="selectRepresentColumnByColumnId" parameterType="Long" resultMap="RepresentColumnResult">
         <include refid="selectRepresentColumnVo"/>
         where column_id = #{columnId}
     </select>
-        
+
     <insert id="insertRepresentColumn" parameterType="RepresentColumn" useGeneratedKeys="true" keyProperty="columnId">
         insert into represent_column
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -54,7 +56,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="columnType != null">column_type,</if>
             <if test="isAppShow != null">is_app_show,</if>
             <if test="isWxShow != null">is_wx_show,</if>
-         </trim>
+            <if test="category != null">category,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
             <if test="orderNum != null">#{orderNum},</if>
@@ -67,7 +70,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="columnType != null">#{columnType},</if>
             <if test="isAppShow != null">#{isAppShow},</if>
             <if test="isWxShow != null">#{isWxShow},</if>
-         </trim>
+            <if test="category != null">#{category},</if>
+        </trim>
     </insert>
 
     <update id="updateRepresentColumn" parameterType="RepresentColumn">
@@ -84,6 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="columnType != null">column_type = #{columnType},</if>
             <if test="isAppShow != null">is_app_show = #{isAppShow},</if>
             <if test="isWxShow != null">is_wx_show = #{isWxShow},</if>
+            <if test="category != null">category = #{category},</if>
         </trim>
         where column_id = #{columnId}
     </update>
@@ -93,7 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteRepresentColumnByColumnIds" parameterType="String">
-        delete from represent_column where column_id in 
+        delete from represent_column where column_id in
         <foreach item="columnId" collection="array" open="(" separator="," close=")">
             #{columnId}
         </foreach>
@@ -105,15 +110,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     <select id="selectByAdminList" parameterType="RepresentColumn" resultMap="adminList">
         select c.column_id, c.name, c.order_num, c.status, c.remark, c.create_time, c.update_by, c.update_time, c.create_by, c.column_type, c.is_app_show, c.is_wx_show,
-        (SELECT COUNT(n.notice_id) FROM personnel_appoint_notice n WHERE n.type = c.order_num)AS conut
+        c.category,
+        (SELECT COUNT(n.notice_id) FROM personnel_appoint_notice n WHERE n.type = c.category)AS conuts
         from represent_column c
         <where>
-            <if test="name != null  and name != ''"> and c.name like concat('%', #{name}, '%')</if>
-            <if test="orderNum != null "> and c.order_num = #{orderNum}</if>
-            <if test="status != null  and status != ''"> and c.status = #{status}</if>
-            <if test="columnType != null "> and c.column_type = #{columnType}</if>
-            <if test="isAppShow != null "> and c.is_app_show = #{isAppShow}</if>
-            <if test="isWxShow != null "> and c.is_wx_show = #{isWxShow}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="columnType != null "> and column_type = #{columnType}</if>
+            <if test="isAppShow != null "> and is_app_show = #{isAppShow}</if>
+            <if test="isWxShow != null "> and is_wx_show = #{isWxShow}</if>
+            <if test="category != null "> and category = #{category}</if>
         </where>
         ORDER BY c.order_num
     </select>
