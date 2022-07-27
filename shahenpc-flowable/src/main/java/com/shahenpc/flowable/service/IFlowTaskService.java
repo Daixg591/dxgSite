@@ -5,6 +5,7 @@ import com.shahenpc.flowable.domain.vo.FlowTaskVo;
 import com.shahenpc.system.domain.represent.dto.MotionLingDto;
 import com.shahenpc.system.domain.represent.dto.MotionPieDto;
 import com.shahenpc.system.domain.represent.dto.MotionRingDto;
+import com.shahenpc.system.domain.represent.vo.MotionTaskVo;
 import org.flowable.task.api.Task;
 
 import java.io.InputStream;
@@ -99,16 +100,6 @@ public interface IFlowTaskService {
     AjaxResult motionMyProcess(Integer pageNum, Integer pageSize);
 
     AjaxResult newDoneList(Integer pageNum, Integer pageSize,String processDefinitionName,String deployName);
-
-    /**
-     * 议案 我发起的流程
-     * @param pageNum
-     * @param pageSize
-     * @param processDefinitionName
-     * @return
-     */
-    AjaxResult motionMyProcess(Integer pageNum, Integer pageSize,String processDefinitionName);
-
     /**
      * 审查 我发起的流程
      * @param pageNum
@@ -116,7 +107,7 @@ public interface IFlowTaskService {
      * @param processDefinitionName
      * @return
      */
-    AjaxResult censorMyProcess(Integer pageNum, Integer pageSize,String processDefinitionName);
+
     /**
      * 取消申请
      * @param flowTaskVo
@@ -201,12 +192,38 @@ public interface IFlowTaskService {
      */
     AjaxResult getNextFlowNode(FlowTaskVo flowTaskVo);
 
+    /**议案 */
+    AjaxResult motionMyProcess(Integer pageNum, Integer pageSize,String processDefinitionName);
 
     AjaxResult motionTodoList(Integer pageNum, Integer pageSize,String type);
 
-    MotionLingDto line(String taskName);
+    AjaxResult motionFlowRecord(String procInsId,String deployId);
 
-    List<MotionPieDto> pie(String taskName);
+    AjaxResult motionComplete(FlowTaskVo task);
 
-    BigDecimal ring(String taskName);
+    void motionTaskReject(FlowTaskVo flowTaskVo);
+
+    void motionTaskReturn(FlowTaskVo flowTaskVo);
+
+    AjaxResult motionFinishedList(Integer pageNum, Integer pageSize,String taskName);
+    /** 审查 */
+    AjaxResult censorMyProcess(Integer pageNum, Integer pageSize,String processDefinitionName);
+
+    AjaxResult censorFlowRecord(String procInsId,String deployId);
+
+    AjaxResult censorTodoList(Integer pageNum, Integer pageSize,String type);
+
+    AjaxResult censorFinishedList(Integer pageNum, Integer pageSize,String taskName);
+
+    AjaxResult censorComplete(FlowTaskVo task);
+
+    void censorTaskReject(FlowTaskVo flowTaskVo);
+
+    void  censorTaskReturn(FlowTaskVo flowTaskVo);
+    /** 图形展示  公共累 */
+    MotionLingDto line(MotionTaskVo vo);
+
+    List<MotionPieDto> pie(MotionTaskVo vo);
+
+    BigDecimal ring(MotionTaskVo vo);
 }

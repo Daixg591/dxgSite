@@ -18,7 +18,7 @@ public interface StandardCensorMapper
      * @param processId 审查流程主键
      * @return 审查流程
      */
-    public StandardCensor selectStandardCensorByProcessId(Long processId);
+    public StandardCensor selectStandardCensorByCensorId(Long censorIds);
 
     /**
      * 查询审查流程列表
@@ -47,23 +47,21 @@ public interface StandardCensorMapper
     /**
      * 删除审查流程
      * 
-     * @param processId 审查流程主键
+     * @param censorId 审查流程主键
      * @return 结果
      */
-    public int deleteStandardCensorByProcessId(Long processId);
+    public int deleteStandardCensorByCensorId(Long censorId);
 
     /**
      * 批量删除审查流程
      * 
-     * @param processIds 需要删除的数据主键集合
+     * @param censorIds 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteStandardCensorByProcessIds(Long[] processIds);
+    public int deleteStandardCensorByCensorIds(Long[] censorIds);
 
-    /**
-     *
-     * @param WorkflowId
-     * @return
-     */
-    public StandardCensor selectCensorProcessByWorkflowId(String WorkflowId);
+
+
+
+    public StandardCensor selectByProcessId(String processId);
 }

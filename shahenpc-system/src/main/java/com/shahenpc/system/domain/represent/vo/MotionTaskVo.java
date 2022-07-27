@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class MotionTaskVo {
+    private String processName;
     private String taskName;
 }

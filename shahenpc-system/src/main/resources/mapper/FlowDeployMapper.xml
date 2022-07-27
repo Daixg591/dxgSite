@@ -44,6 +44,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and rd.name_ like concat('%', #{name}, '%')
             </if>
         </where>
-        LIMIT 1;
+        ORDER BY deploymentTime DESC LIMIT 1;
     </select>
 </mapper>

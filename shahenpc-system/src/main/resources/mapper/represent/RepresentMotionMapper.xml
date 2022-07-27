@@ -22,10 +22,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="approvalUserId"    column="approval_user_id"    />
         <result property="procinsId"    column="procIns_id"    />
         <result property="deployId"    column="deploy_id"    />
+        <result property="linkName"    column="link_name"    />
+        <result property="linkStatus"    column="link_status"    />
+        <result property="address"    column="address"    />
+        <result property="rate"    column="rate"    />
+        <result property="phone"    column="phone"    />
     </resultMap>
 
     <sql id="selectRepresentMotionVo">
-        select motion_id, motion_type, title, content, suggest_user_id, suggest_user_name, status, remark, create_by, create_time, update_by, update_time, send_user_id, send_user_name, approval_user_id, procIns_id, deploy_id from represent_motion
+        select motion_id, motion_type, title, content, suggest_user_id, suggest_user_name, status, remark, create_by, create_time, update_by, update_time, send_user_id, send_user_name, approval_user_id, procIns_id, deploy_id, link_name, link_status, address, rate, phone from represent_motion
     </sql>
 
     <select id="selectRepresentMotionList" parameterType="RepresentMotion" resultMap="RepresentMotionResult">
@@ -42,6 +47,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="approvalUserId != null "> and approval_user_id = #{approvalUserId}</if>
             <if test="procinsId != null  and procinsId != ''"> and procIns_id = #{procinsId}</if>
             <if test="deployId != null  and deployId != ''"> and deploy_id = #{deployId}</if>
+            <if test="linkName != null  and linkName != ''"> and link_name like concat('%', #{linkName}, '%')</if>
+            <if test="linkStatus != null  and linkStatus != ''"> and link_status = #{linkStatus}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="rate != null "> and rate = #{rate}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
         </where>
     </select>
 
@@ -69,6 +79,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="approvalUserId != null">approval_user_id,</if>
             <if test="procinsId != null">procIns_id,</if>
             <if test="deployId != null">deploy_id,</if>
+            <if test="linkName != null">link_name,</if>
+            <if test="linkStatus != null">link_status,</if>
+            <if test="address != null">address,</if>
+            <if test="rate != null">rate,</if>
+            <if test="phone != null">phone,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="motionType != null">#{motionType},</if>
@@ -87,6 +102,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="approvalUserId != null">#{approvalUserId},</if>
             <if test="procinsId != null">#{procinsId},</if>
             <if test="deployId != null">#{deployId},</if>
+            <if test="linkName != null">#{linkName},</if>
+            <if test="linkStatus != null">#{linkStatus},</if>
+            <if test="address != null">#{address},</if>
+            <if test="rate != null">#{rate},</if>
+            <if test="phone != null">#{phone},</if>
         </trim>
     </insert>
 
@@ -109,6 +129,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="approvalUserId != null">approval_user_id = #{approvalUserId},</if>
             <if test="procinsId != null">procIns_id = #{procinsId},</if>
             <if test="deployId != null">deploy_id = #{deployId},</if>
+            <if test="linkName != null">link_name = #{linkName},</if>
+            <if test="linkStatus != null">link_status = #{linkStatus},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="rate != null">rate = #{rate},</if>
+            <if test="phone != null">phone = #{phone},</if>
         </trim>
         where motion_id = #{motionId}
     </update>

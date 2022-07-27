@@ -18,6 +18,7 @@ import com.shahenpc.system.domain.SysForm;
 import com.shahenpc.system.domain.represent.RepresentMotion;
 import com.shahenpc.system.domain.represent.RepresentMotionRecord;
 import com.shahenpc.system.domain.standard.StandardCensor;
+import com.shahenpc.system.domain.standard.StandardCensorRecord;
 import com.shahenpc.system.mapper.FlowDeployMapper;
 import com.shahenpc.system.service.ISysDeptService;
 import com.shahenpc.system.service.ISysDictDataService;
@@ -25,6 +26,7 @@ import com.shahenpc.system.service.ISysPostService;
 import com.shahenpc.system.service.ISysUserService;
 import com.shahenpc.system.service.represent.IRepresentMotionRecordService;
 import com.shahenpc.system.service.represent.IRepresentMotionService;
+import com.shahenpc.system.service.standard.IStandardCensorRecordService;
 import com.shahenpc.system.service.standard.IStandardCensorService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -73,15 +75,15 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
     private FlowDeployMapper flowDeployMapper;
 
     @Resource
-    private IStandardCensorService standardCensorService;
-
+    private ISysDictDataService dictDataService;
     @Resource
     private IRepresentMotionService representMotionService;
     @Resource
     private IRepresentMotionRecordService representMotionRecordService;
     @Resource
-    private ISysDictDataService dictDataService;
-
+    private IStandardCensorService standardCensorService;
+    @Resource
+    private IStandardCensorRecordService standardCensorRecordService;
 
     private static final String BPMN_FILE_SUFFIX = ".bpmn";
 
@@ -305,20 +307,23 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
     }
 
     @Override
-    public AjaxResult addCensor(String procDefId, Map<String, Object> variables) {
+    @Transactional
+    public AjaxResult addCensor(StandardCensor standardCensor, String procDefId) {
         try {
             ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(procDefId)
                     .latestVersion().singleResult();
             if (Objects.nonNull(processDefinition) && processDefinition.isSuspended()) {
-                return AjaxResult.error("流程已被挂起,请先激活流程");
+                return AjaxResult.error("流程已被挂起,请先联系管理员！");
             }
 //           variables.put("skip", true);
 //           variables.put(ProcessConstants.FLOWABLE_SKIP_EXPRESSION_ENABLED, true);
             // 设置流程发起人Id到流程中
             SysUser sysUser = SecurityUtils.getLoginUser().getUser();
             identityService.setAuthenticatedUserId(sysUser.getUserId().toString());
+            Map<String, Object> variables = new HashMap<>();
+            variables.put("approval",standardCensor.getApprovalUserId());
             variables.put(ProcessConstants.PROCESS_INITIATOR, "");
-            ProcessInstance processInstance = runtimeService.startProcessInstanceById(procDefId, variables);
+            ProcessInstance processInstance = runtimeService.startProcessInstanceById(procDefId,variables);
             // 给第一步申请人节点设置任务执行人和意见 todo:第一个节点不设置为申请人节点有点问题？
             Task task = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId()).singleResult();
             if (Objects.nonNull(task)) {
@@ -326,35 +331,35 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
                 taskService.setAssignee(task.getId(), sysUser.getUserId().toString());
                 taskService.complete(task.getId(), variables);
             }
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            StandardCensor censor = new StandardCensor();
-            censor.setFileUrl(variables.get("fileUrl").toString());
-            censor.setFileName(variables.get("fileName").toString());
-            censor.setRecordAgencies(variables.get("recordAgencies").toString());
-            censor.setRecordSerial(variables.get("recordSerial").toString());
-            censor.setReportAgencies(variables.get("reportAgencies").toString());
-            censor.setReportAgencies(variables.get("reportSerial").toString());
-            String passDate = variables.get("passDate").toString();
-            censor.setPassDate(simpleDateFormat.parse(passDate));
-            censor.setPassAgencies(variables.get("passAgencies").toString());
-            String bulletinDate = variables.get("bulletinDate").toString();
-            censor.setBulletinDate(simpleDateFormat.parse(bulletinDate));
-            String enforceDate = variables.get("enforceDate").toString();
-            censor.setEnforceDate(simpleDateFormat.parse(enforceDate));
-            censor.setFileType(Integer.parseInt(variables.get("fileType").toString()));
-            //${INITIATOR}  #{approval}
-            String approval =  variables.get("approval").toString();
-            censor.setAcceptUserId(Long.valueOf(approval));
-            censor.setWorkflowId(task.getProcessInstanceId());
-            censor.setCensorTache(task.getName());
-            standardCensorService.insertStandardCensor(censor);
+            //motion.setMotionType(Integer.parseInt(variables.get("motionType").toString()));
+            // motion.setTitle(variables.get("title").toString());
+            //motion.setContent(variables.get("content").toString());
+            //提议人
+            // motion.setSuggestUserName(variables.get("suggestUserName").toString());
+            //选择审批人
+            // motion.setSuggestUserId(variables.get("approval").toString());
+            //数组存储
+            // List<SysUser> user=sysUserService.selectUserByuserIds(variables.get("approval").toString());
+            //prochsid 3b2bf51d-f863-11ec-a590-24698ed5e50b  创建流程id
+            // deployId 流程模板的id 417b0131-f85d-11ec-a590-24698ed5e50b
+            standardCensor.setProcinsId(task.getProcessInstanceId());
+            standardCensor.setDeployId(processInstance.getDeploymentId());
+            //处理环节
+            task.getName();
+            //处理状态
+            task.getDelegationState();
+            standardCensorService.insertStandardCensor(standardCensor);
+            StandardCensorRecord record = new StandardCensorRecord();
+            record.setCensorId(standardCensor.getCensorId());
+            record.setDeployId(processInstance.getDeploymentId());
+            record.setProcinsId(task.getProcessInstanceId());
+            standardCensorRecordService.insertStandardCensorRecord(record);
             return AjaxResult.success("流程启动成功");
         } catch (Exception e) {
             e.printStackTrace();
             return AjaxResult.error("流程启动错误");
         }
     }
-
 
     /**
      * 激活或挂起流程定义

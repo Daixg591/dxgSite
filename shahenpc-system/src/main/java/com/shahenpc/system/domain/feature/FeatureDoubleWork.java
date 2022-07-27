@@ -47,9 +47,14 @@ public class FeatureDoubleWork extends BaseEntity
     /** 接收人id */
     @Excel(name = "接收人id")
     private Long receiveUserId;
+
     /** 是否已读 */
     @Excel(name = "是否已读")
     private Integer isRead;
+
+    /** 评价 */
+    @Excel(name = "评价")
+    private Long rate;
 
 
     public void setDoubleId(Long doubleId) 

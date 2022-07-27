@@ -1,4 +1,4 @@
-package com.shahenpc.web.controller.represent;
+package com.shahenpc.app.controller.represent;
 
 import com.shahenpc.common.annotation.Log;
 import com.shahenpc.common.core.controller.BaseController;
@@ -30,10 +30,10 @@ import java.util.List;
  * @author ruoyi
  * @date 2022-07-22
  */
-@Api(tags = "议案建议")
+@Api(tags = "app议案建议")
 @RestController
-@RequestMapping("/represent/motion")
-public class RepresentMotionController extends BaseController
+@RequestMapping("/app/represent/motion")
+public class AppRepresentMotionController extends BaseController
 {
     @Autowired
     private IRepresentMotionService representMotionService;

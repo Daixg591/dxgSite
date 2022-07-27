@@ -28,7 +28,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  * @date 2022-07-26
  */
 @RestController
-@RequestMapping("/system/record")
+@RequestMapping("/represent/motion/record")
 public class RepresentMotionRecordController extends BaseController
 {
     @Autowired

@@ -64,6 +64,26 @@ public class RepresentMotion extends BaseEntity
     @Excel(name = "模板id")
     private String deployId;
 
+    /** 环节名字 */
+    @Excel(name = "环节名字")
+    private String linkName;
+
+    /** 环节状态 */
+    @Excel(name = "环节状态")
+    private String linkStatus;
+
+    /** 通讯地点 */
+    @Excel(name = "通讯地点")
+    private String address;
+
+    /** 评价 */
+    @Excel(name = "评价")
+    private Long rate;
+
+    /** 电话 */
+    @Excel(name = "电话")
+    private String phone;
+
     public void setMotionId(Long motionId) 
     {
         this.motionId = motionId;

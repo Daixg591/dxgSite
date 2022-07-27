@@ -5,6 +5,7 @@ import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.flowable.domain.dto.CakeDto;
 import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.system.domain.represent.RepresentMotion;
+import com.shahenpc.system.domain.standard.StandardCensor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,14 +39,12 @@ public interface IFlowDefinitionService {
      * @param in
      */
     void importFile(String name, String category, InputStream in);
-
     /**
      * 读取xml
      * @param deployId
      * @return
      */
     AjaxResult readXml(String deployId) throws IOException;
-
     /**
      * 根据流程定义ID启动流程实例
      *
@@ -55,22 +54,6 @@ public interface IFlowDefinitionService {
      */
 
     AjaxResult startProcessInstanceById(String procDefId, Map<String, Object> variables);
-
-    /**
-     * 议案 发起流程 启动
-     * @param procDefId
-     * @param variables
-     * @return
-     */
-    AjaxResult addMotion(RepresentMotion representMotion,String procDefId);
-
-    /**
-     * 审查 发起流程 启动
-     * @param procDefId
-     * @param variables
-     * @return
-     */
-    AjaxResult addCensor(String procDefId, Map<String, Object> variables);
     /**
      * 激活或挂起流程定义
      *
@@ -78,8 +61,6 @@ public interface IFlowDefinitionService {
      * @param deployId 流程部署ID
      */
     void updateState(Integer state, String deployId);
-
-
     /**
      * 删除流程定义
      *
@@ -100,4 +81,9 @@ public interface IFlowDefinitionService {
     public List<CakeDto> fileTypeCake();
     //仪表盘
     public List<CakeDto> receiveRate(String taskName,String deployName);
+
+    /**以下下*/
+    AjaxResult addMotion(RepresentMotion representMotion,String procDefId);
+
+    AjaxResult addCensor(StandardCensor standardCensor, String procDefId);
 }
