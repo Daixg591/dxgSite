@@ -3,6 +3,8 @@ package com.shahenpc.web.controller.represent;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.flowable.service.IFlowTaskService;
+import com.shahenpc.system.domain.represent.dto.PerformDutieConutDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,7 +39,8 @@ public class RepresentActivityController extends BaseController
 {
     @Autowired
     private IRepresentActivityService representActivityService;
-
+    @Autowired
+    private IFlowTaskService flowTaskService;
     /**
      * 查询代-活动列列表
      */
@@ -111,4 +114,12 @@ public class RepresentActivityController extends BaseController
     {
         return toAjax(representActivityService.deleteRepresentActivityByActivityIds(activityIds));
     }
+
+    @ApiOperation("履职统计")
+    @GetMapping("/count")
+    public AjaxResult totalConut(){
+        return AjaxResult.success(representActivityService.totalConut());
+    }
+
+
 }

@@ -65,5 +65,7 @@ public interface RepresentMotionMapper
      * @param workflowId
      * @return
      */
-    public RepresentMotion selectByWorkflowId(String workflowId);
+    public RepresentMotion selectByWorkflowId(String procinsId);
+
+    public Integer getCount();
 }

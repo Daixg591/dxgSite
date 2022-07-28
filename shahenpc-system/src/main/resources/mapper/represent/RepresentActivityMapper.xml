@@ -154,4 +154,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
         from represent_activity where activity_id = #{activityId}
     </select>
+
+    <select id="getCount" resultType="java.lang.Integer">
+        select COUNT(activity_id) from represent_activity
+    </select>
 </mapper>

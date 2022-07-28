@@ -29,7 +29,7 @@ public class StandardCensorServiceImpl implements IStandardCensorService
     @Override
     public StandardCensor selectStandardCensorByProcessId(Long processId)
     {
-        return standardCensorMapper.selectStandardCensorByProcessId(processId);
+        return standardCensorMapper.selectStandardCensorByCensorId(processId);
     }
 
     /**
@@ -79,7 +79,7 @@ public class StandardCensorServiceImpl implements IStandardCensorService
     @Override
     public int deleteStandardCensorByProcessIds(Long[] processIds)
     {
-        return standardCensorMapper.deleteStandardCensorByProcessIds(processIds);
+        return standardCensorMapper.deleteStandardCensorByCensorIds(processIds);
     }
 
     /**
@@ -91,18 +91,14 @@ public class StandardCensorServiceImpl implements IStandardCensorService
     @Override
     public int deleteStandardCensorByProcessId(Long processId)
     {
-        return standardCensorMapper.deleteStandardCensorByProcessId(processId);
+        return standardCensorMapper.deleteStandardCensorByCensorId(processId);
     }
 
-    /**
-     *
-     * @param workflowId
-     * @return
-     */
     @Override
-    public StandardCensor selectCensorProcessByWorkflowId(String workflowId) {
+    public StandardCensor selectByProcessId(String processId) {
 
-        return standardCensorMapper.selectCensorProcessByWorkflowId(workflowId);
+        return standardCensorMapper.selectByProcessId(processId);
     }
+
 
 }

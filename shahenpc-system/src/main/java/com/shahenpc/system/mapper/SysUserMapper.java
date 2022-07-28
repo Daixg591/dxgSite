@@ -133,7 +133,7 @@ public interface SysUserMapper
 
     //public List<SysUser> selectUserByUserIds(@Param("userIds") String userIds);
 
-    public Integer selectByWomanCount();
+    public Integer selectByWomanCount(String identity);
 
-    public Integer selectByManCount();
+    public Integer selectByManCount(String identity);
 }

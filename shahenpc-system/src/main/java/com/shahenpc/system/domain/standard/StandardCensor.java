@@ -2,6 +2,7 @@ package com.shahenpc.system.domain.standard;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -13,12 +14,13 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-22
  */
+@Data
 public class StandardCensor extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /**  */
-    private Long processId;
+    /** $column.columnComment */
+    private Long censorId;
 
     /** 文件类型 */
     @Excel(name = "文件类型")
@@ -87,10 +89,6 @@ public class StandardCensor extends BaseEntity
     @Excel(name = "流程类型")
     private Integer processType;
 
-    /** 关联 原 流程id */
-    @Excel(name = "关联 原 流程id")
-    private String workflowId;
-
     /** 流程位置 */
     @Excel(name = "流程位置")
     private String censorTache;
@@ -99,15 +97,23 @@ public class StandardCensor extends BaseEntity
     @Excel(name = "状态")
     private Integer status;
 
-    public void setProcessId(Long processId) 
-    {
-        this.processId = processId;
-    }
+    /**  */
+    @Excel(name = "")
+    private Long approvalUserId;
 
-    public Long getProcessId() 
-    {
-        return processId;
-    }
+    /** 流程id */
+    @Excel(name = "流程id")
+    private String procinsId;
+
+    /** 模板id */
+    @Excel(name = "模板id")
+    private String deployId;
+
+    /** 发送id */
+    @Excel(name = "发送id")
+    private Long sendUserId;
+
+
     public void setFileType(Integer fileType) 
     {
         this.fileType = fileType;
@@ -252,16 +258,7 @@ public class StandardCensor extends BaseEntity
     {
         return processType;
     }
-    public void setWorkflowId(String workflowId) 
-    {
-        this.workflowId = workflowId;
-    }
-
-    public String getWorkflowId() 
-    {
-        return workflowId;
-    }
-    public void setCensorTache(String censorTache) 
+    public void setCensorTache(String censorTache)
     {
         this.censorTache = censorTache;
     }
@@ -283,7 +280,6 @@ public class StandardCensor extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("processId", getProcessId())
             .append("fileType", getFileType())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
@@ -305,7 +301,6 @@ public class StandardCensor extends BaseEntity
             .append("copyUserId", getCopyUserId())
             .append("copyUserName", getCopyUserName())
             .append("processType", getProcessType())
-            .append("workflowId", getWorkflowId())
             .append("censorTache", getCensorTache())
             .append("status", getStatus())
             .toString();

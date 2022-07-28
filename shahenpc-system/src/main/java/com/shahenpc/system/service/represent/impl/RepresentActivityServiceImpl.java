@@ -1,15 +1,15 @@
 package com.shahenpc.system.service.represent.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.represent.RepresentActivityRecord;
-import com.shahenpc.system.domain.represent.dto.ActivityAppListDto;
-import com.shahenpc.system.domain.represent.dto.ActivityFinishCountDto;
-import com.shahenpc.system.domain.represent.dto.RepresentActivityAddDto;
-import com.shahenpc.system.mapper.represent.RepresentActivityRecordMapper;
+import com.shahenpc.system.domain.represent.dto.*;
+import com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper;
+import com.shahenpc.system.mapper.represent.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.shahenpc.system.mapper.represent.RepresentActivityMapper;
 import com.shahenpc.system.domain.represent.RepresentActivity;
 import com.shahenpc.system.service.represent.IRepresentActivityService;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +27,14 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
     private RepresentActivityMapper representActivityMapper;
     @Autowired
     private RepresentActivityRecordMapper representActivityRecordMapper;
+    @Autowired
+    private RepresentExperienceMapper representExperienceMapper;
+    @Autowired
+    private FeatureDoubleWorkMapper featureDoubleWorkMapper;
+    @Autowired
+    private RepresentDiscoverMapper representDiscoverMapper;
+    @Autowired
+    private RepresentMotionMapper representMotionMapper;
     /**
      * 查询代-活动列
      * 
@@ -131,4 +139,19 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
     public ActivityAppListDto appDetail(Long activityId) {
         return representActivityMapper.appDetail(activityId);
     }
+
+
+    @Override
+    public PerformDutieConutDto totalConut() {
+        PerformDutieConutDto dto = new PerformDutieConutDto();
+        dto.setActivityCount(representActivityMapper.getCount());
+        dto.setExperienceCount(representExperienceMapper.getCount());
+        dto.setDoubleCount(featureDoubleWorkMapper.getCount());
+        dto.setDiscoveryCount(representDiscoverMapper.getCount());
+        dto.setMotionCount(representMotionMapper.getCount());
+        dto.setTotalCount(dto.getActivityCount()+dto.getDoubleCount()+dto.getDiscoveryCount()+dto.getMotionCount()+dto.getExperienceCount());
+        return dto;
+    }
+
+
 }

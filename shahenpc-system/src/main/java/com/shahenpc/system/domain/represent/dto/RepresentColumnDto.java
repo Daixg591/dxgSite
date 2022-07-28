@@ -5,5 +5,6 @@ import lombok.Data;
 
 @Data
 public class RepresentColumnDto extends RepresentColumn {
-    private Integer count;
+
+    private Integer conuts;
 }

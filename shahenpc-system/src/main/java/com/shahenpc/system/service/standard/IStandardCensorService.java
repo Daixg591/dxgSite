@@ -63,9 +63,9 @@ public interface IStandardCensorService
 
     /**
      *
-     * @param workflowId
+     * @param processId
      * @return
      */
-    public StandardCensor selectCensorProcessByWorkflowId(String workflowId);
+    public StandardCensor selectByProcessId(String processId);
 
 }

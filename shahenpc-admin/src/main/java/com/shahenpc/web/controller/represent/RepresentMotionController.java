@@ -7,10 +7,12 @@ import com.shahenpc.common.core.page.TableDataInfo;
 import com.shahenpc.common.enums.BusinessType;
 import com.shahenpc.common.utils.poi.ExcelUtil;
 import com.shahenpc.flowable.domain.dto.FlowTaskDto;
+import com.shahenpc.flowable.domain.vo.FlowTaskVo;
 import com.shahenpc.flowable.service.IFlowDefinitionService;
 import com.shahenpc.flowable.service.IFlowTaskService;
 import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.system.domain.represent.RepresentMotion;
+import com.shahenpc.system.domain.represent.vo.MotionTaskVo;
 import com.shahenpc.system.service.represent.IRepresentMotionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 工作-建议议案处理Controller
@@ -67,24 +68,22 @@ public class RepresentMotionController extends BaseController
 
     /**
      * 获取工作-建议议案处理详细信息
-     */
     @PreAuthorize("@ss.hasPermi('represent:motion:query')")
     @GetMapping(value = "/{motionId}")
     public AjaxResult getInfo(@PathVariable("motionId") Long motionId)
     {
         return AjaxResult.success(representMotionService.selectRepresentMotionByMotionId(motionId));
-    }
+    }*/
 
     /**
      * 新增工作-建议议案处理
-     */
-//    @PreAuthorize("@ss.hasPermi('represent:motion:add')")
-//    @Log(title = "工作-建议议案处理", businessType = BusinessType.INSERT)
-//    @PostMapping
-//    public AjaxResult add(@RequestBody RepresentMotion representMotion)
-//    {
-//        return toAjax(representMotionService.insertRepresentMotion(representMotion));
-//    }
+    @PreAuthorize("@ss.hasPermi('represent:motion:add')")
+    @Log(title = "工作-建议议案处理", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody RepresentMotion representMotion)
+    {
+        return toAjax(representMotionService.insertRepresentMotion(representMotion));
+    }*/
 
     /**
      * 修改工作-建议议案处理
@@ -109,12 +108,13 @@ public class RepresentMotionController extends BaseController
     }
 
     @ApiOperation(value = "创建建议议案")
-    @PreAuthorize("@ss.hasPermi('represent:motion:add')")
     @Log(title = "工作-建议议案处理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@ApiParam(value = "变量集合,json对象") @RequestBody Map<String, Object> variables) {
+    public AjaxResult add(@RequestBody RepresentMotion representMotion) {
         FlowProcDefDto dto=flowDefinitionService.detail("建议议案");
-        return flowDefinitionService.addMotion(dto.getId(),variables);
+        representMotion.setCreateBy(getUsername());
+        representMotion.setSendUserId(getUserId());
+        return flowDefinitionService.addMotion(representMotion,dto.getId());
     }
 
     /**
@@ -123,12 +123,75 @@ public class RepresentMotionController extends BaseController
      * @param pageSize
      * @return
      */
-    @ApiOperation(value = "我发起的流程", response = FlowTaskDto.class)
-    @PreAuthorize("@ss.hasPermi('represent:motion:list')")
-    @GetMapping(value = "/motion/myProcess")
+    @ApiOperation(value = "我发起的流程列表", response = FlowTaskDto.class)
+    @GetMapping(value = "/myProcess")
     public AjaxResult motionMyProcess(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
                                       @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize) {
         return flowTaskService.motionMyProcess(pageNum, pageSize,"建议议案");
     }
+
+    @ApiOperation(value = "流程历史流转记录", response = FlowTaskDto.class)
+    @GetMapping(value = "/{motionId}")
+    public AjaxResult flowRecord(@PathVariable("motionId") Long motionId) {
+        RepresentMotion motion= representMotionService.selectRepresentMotionByMotionId(motionId);
+        return flowTaskService.motionFlowRecord(motion.getProcinsId(), motion.getDeployId());
+    }
+
+    @ApiOperation(value = "获取待办列表", response = FlowTaskDto.class)
+    @GetMapping(value = "/todoList")
+    public AjaxResult newTodoList(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
+                                  @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize,@ApiParam(value = "类型1.接收2.受理3.分发4.审查5.反馈", required = true) @RequestParam String type) {
+        return flowTaskService.motionTodoList(pageNum, pageSize,type);
+    }
+
+    @ApiOperation(value = "获取已办任务", response = FlowTaskDto.class)
+    @GetMapping(value = "/finishedList")
+    public AjaxResult finishedList(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
+                                   @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize,
+                                   @ApiParam(value = "各个工作流名称", required = true) @RequestParam String name) {
+        return flowTaskService.motionFinishedList(pageNum, pageSize,name);
+    }
+
+    @ApiOperation(value = "审批任务")
+    @PostMapping(value = "/complete")
+    public AjaxResult complete(@RequestBody FlowTaskVo flowTaskVo) {
+        return flowTaskService.motionComplete(flowTaskVo);
+    }
+
+    @ApiOperation(value = "驳回任务")
+    @PostMapping(value = "/reject")
+    public AjaxResult taskReject(@RequestBody FlowTaskVo flowTaskVo) {
+        flowTaskService.motionTaskReject(flowTaskVo);
+        return AjaxResult.success();
+    }
+
+    @ApiOperation(value = "退回任务")
+    @PostMapping(value = "/return")
+    public AjaxResult taskReturn(@RequestBody FlowTaskVo flowTaskVo) {
+        flowTaskService.motionTaskReturn(flowTaskVo);
+        return AjaxResult.success();
+    }
+
+    @ApiOperation("按月曲线")
+    @GetMapping("/line")
+    public AjaxResult line(MotionTaskVo vo){
+        vo.setProcessName("建议议案");
+        return  AjaxResult.success(flowTaskService.line(vo));
+    }
+
+    @ApiOperation("按类别饼图")
+    @GetMapping("/pie")
+    public AjaxResult pie(MotionTaskVo vo){
+        vo.setProcessName("建议议案");
+        return AjaxResult.success(flowTaskService.pie(vo));
+    }
+
+    @ApiOperation("落实率")
+    @GetMapping("/ring")
+    public AjaxResult ring(MotionTaskVo vo){
+        vo.setProcessName("建议议案");
+        return AjaxResult.success(flowTaskService.ring(vo));
+    }
+
 
 }

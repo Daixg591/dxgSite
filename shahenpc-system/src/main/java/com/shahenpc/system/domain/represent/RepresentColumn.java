@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.represent;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-21
  */
+@Data
 public class RepresentColumn extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -41,6 +43,8 @@ public class RepresentColumn extends BaseEntity
     /** 是否手机显示 */
     @Excel(name = "是否手机显示")
     private Integer isWxShow;
+    @Excel(name = "类型")
+    private Integer category;
 
     public void setColumnId(Long columnId) 
     {

@@ -2,9 +2,7 @@ package com.shahenpc.system.service.represent;
 
 import java.util.List;
 import com.shahenpc.system.domain.represent.RepresentActivity;
-import com.shahenpc.system.domain.represent.dto.ActivityAppListDto;
-import com.shahenpc.system.domain.represent.dto.ActivityFinishCountDto;
-import com.shahenpc.system.domain.represent.dto.RepresentActivityAddDto;
+import com.shahenpc.system.domain.represent.dto.*;
 
 /**
  * 代-活动列Service接口
@@ -69,4 +67,9 @@ public interface IRepresentActivityService
     public List<ActivityAppListDto> appList(RepresentActivity representActivity);
 
     public ActivityAppListDto appDetail(Long activityId);
+
+    /** 履职 总数  排行*/
+    public PerformDutieConutDto totalConut();
+
+
 }

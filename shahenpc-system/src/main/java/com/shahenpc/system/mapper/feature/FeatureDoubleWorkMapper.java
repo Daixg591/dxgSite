@@ -66,4 +66,6 @@ public interface FeatureDoubleWorkMapper
     public List<FeatureMonthDto> selectByMonth();
 
     public FeatureEachCount eachCount();
+
+    public Integer getCount();
 }

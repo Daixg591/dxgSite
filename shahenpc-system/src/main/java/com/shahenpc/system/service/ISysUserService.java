@@ -210,9 +210,9 @@ public interface ISysUserService
     public List<SysUser> selectUserByuserIds(String userIds);
 
 
-    public List<NpcCakeDto> genderCake();
+    public List<NpcCakeDto> genderCake(String identity);
 
-    public List<NpcCakeDto> ageCake();
+    public List<NpcCakeDto> ageCake(String identity);
 
-    public List<NpcCakeDto> degreeCake();
+    public List<NpcCakeDto> degreeCake(String identity);
 }

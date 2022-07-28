@@ -566,38 +566,43 @@ public class SysUserServiceImpl implements ISysUserService
 //    }
 
     @Override
-    public List<NpcCakeDto> genderCake() {
+    public List<NpcCakeDto> genderCake(String identity) {
         List<NpcCakeDto> BpcList = new ArrayList();
         NpcCakeDto man = new NpcCakeDto();
         man.setName("男");
-        man.setValue(userMapper.selectByManCount());
+        man.setValue(userMapper.selectByManCount(identity));
         NpcCakeDto woman = new NpcCakeDto();
         woman.setName("女");
-        woman.setValue(userMapper.selectByWomanCount());
+        woman.setValue(userMapper.selectByWomanCount(identity));
         BpcList.add(man);
         BpcList.add(woman);
         return BpcList;
     }
 
     @Override
-    public List<NpcCakeDto> ageCake() {
+    public List<NpcCakeDto> ageCake(String identity) {
         List<NpcCakeDto> BpcList = new ArrayList();
         SysUser sysUser = new SysUser();
-        sysUser.setIdentity("1");
+        sysUser.setIdentity(identity);
         List<SysUser> listuser=userMapper.selectUserList(sysUser);
         List<Integer> age = new ArrayList<>();
         for (SysUser item :listuser){
             age.add(AgeUtils.bornDate(DateUtils.dateYear(item.getBornDate())));
         }
         int thirty = 0;
+        int forty = 0;
         int fifty = 0;
+
         int sixty = 0;
         int sixty1 = 0;
         for(Integer aaa: age){
             if(aaa <36){
                 thirty++;
             }
-            if(aaa>35 && aaa<51){
+            if(aaa>35 && aaa<41){
+                forty++;
+            }
+            if(aaa>40 && aaa<51){
                 fifty++;
             }
             if(aaa>50 && aaa<61){
@@ -606,29 +611,36 @@ public class SysUserServiceImpl implements ISysUserService
             if(aaa>60){
                 sixty1++;
             }
-
         }
         NpcCakeDto dto = new NpcCakeDto();
         dto.setName("35岁以下");
         dto.setValue(thirty);
         BpcList.add(dto);
+
         NpcCakeDto dto1 = new NpcCakeDto();
-        dto1.setName("36~50岁");
-        dto1.setValue(fifty);
+        dto1.setName("35~40岁");
+        dto1.setValue(forty);
         BpcList.add(dto1);
+
         NpcCakeDto dto2 = new NpcCakeDto();
-        dto2.setName("51~60岁");
-        dto2.setValue(sixty);
+        dto2.setName("40~50岁");
+        dto2.setValue(fifty);
         BpcList.add(dto2);
+
+        NpcCakeDto dto4 = new NpcCakeDto();
+        dto4.setName("50~60岁");
+        dto4.setValue(sixty);
+        BpcList.add(dto4);
+
         NpcCakeDto dto3 = new NpcCakeDto();
         dto3.setName("60岁以上");
         dto3.setValue(sixty1);
-        BpcList.add(dto2);
+        BpcList.add(dto3);
         return BpcList;
     }
 
     @Override
-    public List<NpcCakeDto> degreeCake() {
+    public List<NpcCakeDto> degreeCake(String identity) {
         List<NpcCakeDto> dto = new ArrayList<>();
         SysUser sysUser = new SysUser();
         sysUser.setIdentity("1");

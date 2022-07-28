@@ -68,4 +68,6 @@ public interface RepresentActivityMapper
     public List<ActivityAppListDto> appList(RepresentActivity representActivity);
 
     public ActivityAppListDto appDetail(Long activityId);
+
+    public Integer getCount();
 }
