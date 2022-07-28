@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.represent.RepresentWorkLogMapper">
+    
+    <resultMap type="RepresentWorkLog" id="RepresentWorkLogResult">
+        <result property="id"    column="id"    />
+        <result property="eventType"    column="event_type"    />
+        <result property="eventId"    column="event_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectRepresentWorkLogVo">
+        select id, event_type, event_id, user_id, remark, create_by, create_time, update_by, update_time from represent_work_log
+    </sql>
+
+    <select id="selectRepresentWorkLogList" parameterType="RepresentWorkLog" resultMap="RepresentWorkLogResult">
+        <include refid="selectRepresentWorkLogVo"/>
+        <where>  
+            <if test="eventType != null  and eventType != ''"> and event_type = #{eventType}</if>
+            <if test="eventId != null "> and event_id = #{eventId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectRepresentWorkLogById" parameterType="Long" resultMap="RepresentWorkLogResult">
+        <include refid="selectRepresentWorkLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRepresentWorkLog" parameterType="RepresentWorkLog" useGeneratedKeys="true" keyProperty="id">
+        insert into represent_work_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eventType != null">event_type,</if>
+            <if test="eventId != null">event_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eventType != null">#{eventType},</if>
+            <if test="eventId != null">#{eventId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRepresentWorkLog" parameterType="RepresentWorkLog">
+        update represent_work_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eventType != null">event_type = #{eventType},</if>
+            <if test="eventId != null">event_id = #{eventId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRepresentWorkLogById" parameterType="Long">
+        delete from represent_work_log where id = #{id}
+    </delete>
+
+    <delete id="deleteRepresentWorkLogByIds" parameterType="String">
+        delete from represent_work_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--==========================================分割线-->
+    <select id="selectByRanking" resultType="com.shahenpc.system.domain.represent.dto.PerformDutieRankingDto">
+        SELECT l.id,l.user_id as userId,COUNT(l.id) AS counts,u.avatar,u.nick_name as nickName
+        FROM represent_work_log l LEFT JOIN sys_user u ON u.user_id = l.user_id
+        GROUP BY l.user_id ORDER BY counts DESC;
+    </select>
+</mapper>

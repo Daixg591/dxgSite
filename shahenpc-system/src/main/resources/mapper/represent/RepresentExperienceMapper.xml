@@ -85,4 +85,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{experienceId}
         </foreach>
     </delete>
+
+    <!--=====================================分割线-->
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(experience_id) from represent_experience
+    </select>
 </mapper>

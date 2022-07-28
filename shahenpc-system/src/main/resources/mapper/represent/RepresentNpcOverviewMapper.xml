@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.represent.RepresentNpcOverviewMapper">
-    
+
     <resultMap type="RepresentNpcOverview" id="RepresentNpcOverviewResult">
         <result property="npcId"    column="npc_id"    />
         <result property="picUrl"    column="pic_url"    />
@@ -24,21 +24,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectRepresentNpcOverviewList" parameterType="RepresentNpcOverview" resultMap="RepresentNpcOverviewResult">
         <include refid="selectRepresentNpcOverviewVo"/>
-        <where>  
+        <where>
             <if test="picUrl != null  and picUrl != ''"> and pic_url = #{picUrl}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
-            <if test="directorId != null "> and director_id = #{directorId}</if>
-            <if test="deputyDirectorId != null "> and deputy_director_id = #{deputyDirectorId}</if>
-            <if test="secretaryId != null "> and secretary_id = #{secretaryId}</if>
-            <if test="standingId != null "> and standing_id = #{standingId}</if>
+            <if test="directorId != null  and directorId != ''"> and director_id = #{directorId}</if>
+            <if test="deputyDirectorId != null  and deputyDirectorId != ''"> and deputy_director_id = #{deputyDirectorId}</if>
+            <if test="secretaryId != null  and secretaryId != ''"> and secretary_id = #{secretaryId}</if>
+            <if test="standingId != null  and standingId != ''"> and standing_id = #{standingId}</if>
         </where>
     </select>
-    
+
     <select id="selectRepresentNpcOverviewByNpcId" parameterType="Long" resultMap="RepresentNpcOverviewResult">
         <include refid="selectRepresentNpcOverviewVo"/>
         where npc_id = #{npcId}
     </select>
-        
+
     <insert id="insertRepresentNpcOverview" parameterType="RepresentNpcOverview" useGeneratedKeys="true" keyProperty="npcId">
         insert into represent_npc_overview
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -52,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="deputyDirectorId != null">deputy_director_id,</if>
             <if test="secretaryId != null">secretary_id,</if>
             <if test="standingId != null">standing_id,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="picUrl != null">#{picUrl},</if>
             <if test="content != null">#{content},</if>
@@ -64,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="deputyDirectorId != null">#{deputyDirectorId},</if>
             <if test="secretaryId != null">#{secretaryId},</if>
             <if test="standingId != null">#{standingId},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateRepresentNpcOverview" parameterType="RepresentNpcOverview">
@@ -89,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteRepresentNpcOverviewByNpcIds" parameterType="String">
-        delete from represent_npc_overview where npc_id in 
+        delete from represent_npc_overview where npc_id in
         <foreach item="npcId" collection="array" open="(" separator="," close=")">
             #{npcId}
         </foreach>

@@ -153,4 +153,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectRepresentMotionVo"/>
         where procins_id = #{procinsId}
     </select>
+
+    <select id="getCount" resultType="java.lang.Integer">
+        select COUNT(motion_id) FROM represent_motion
+    </select>
 </mapper>

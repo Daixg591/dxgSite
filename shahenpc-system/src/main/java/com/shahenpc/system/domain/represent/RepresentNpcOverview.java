@@ -1,5 +1,7 @@
 package com.shahenpc.system.domain.represent;
 
+import com.alibaba.fastjson2.JSON;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,6 +13,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-21
  */
+@Data
 public class RepresentNpcOverview extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -26,21 +29,21 @@ public class RepresentNpcOverview extends BaseEntity
     @Excel(name = "")
     private String content;
 
-    /**  */
-    @Excel(name = "")
-    private Long directorId;
+    /** 主任 */
+    @Excel(name = "主任")
+    private String directorId;
 
-    /**  */
-    @Excel(name = "")
-    private Long deputyDirectorId;
+    /** 副主任 */
+    @Excel(name = "副主任")
+    private String deputyDirectorId;
 
-    /**  */
-    @Excel(name = "")
-    private Long secretaryId;
+    /** 秘书 */
+    @Excel(name = "秘书")
+    private String secretaryId;
 
-    /**  */
-    @Excel(name = "")
-    private Long standingId;
+    /** 常委 */
+    @Excel(name = "常委")
+    private String standingId;
 
     public void setNpcId(Long npcId) 
     {
@@ -69,42 +72,7 @@ public class RepresentNpcOverview extends BaseEntity
     {
         return content;
     }
-    public void setDirectorId(Long directorId) 
-    {
-        this.directorId = directorId;
-    }
 
-    public Long getDirectorId() 
-    {
-        return directorId;
-    }
-    public void setDeputyDirectorId(Long deputyDirectorId) 
-    {
-        this.deputyDirectorId = deputyDirectorId;
-    }
-
-    public Long getDeputyDirectorId() 
-    {
-        return deputyDirectorId;
-    }
-    public void setSecretaryId(Long secretaryId) 
-    {
-        this.secretaryId = secretaryId;
-    }
-
-    public Long getSecretaryId() 
-    {
-        return secretaryId;
-    }
-    public void setStandingId(Long standingId) 
-    {
-        this.standingId = standingId;
-    }
-
-    public Long getStandingId() 
-    {
-        return standingId;
-    }
 
     @Override
     public String toString() {
@@ -116,10 +84,6 @@ public class RepresentNpcOverview extends BaseEntity
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
-            .append("directorId", getDirectorId())
-            .append("deputyDirectorId", getDeputyDirectorId())
-            .append("secretaryId", getSecretaryId())
-            .append("standingId", getStandingId())
             .toString();
     }
 }

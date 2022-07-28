@@ -58,4 +58,6 @@ public interface RepresentExperienceMapper
      * @return 结果
      */
     public int deleteRepresentExperienceByExperienceIds(Long[] experienceIds);
+
+    public Integer getCount();
 }
