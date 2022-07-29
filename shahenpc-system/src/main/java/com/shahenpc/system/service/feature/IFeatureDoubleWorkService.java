@@ -4,6 +4,7 @@ import java.util.List;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
 import com.shahenpc.system.domain.feature.dto.FeatureEachCount;
+import com.shahenpc.system.domain.feature.dto.FeatureLineDto;
 import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
 
 /**
@@ -71,6 +72,9 @@ public interface IFeatureDoubleWorkService
     public int newUpdate(FeatureDoubleWork featureDoubleWork);
 
     public int appNewAdd(FeatureDoubleWork featureDoubleWork);
-
+    //百分比
     public FeatureEachCount eachCount();
+
+    //曲线
+    public FeatureLineDto line();
 }

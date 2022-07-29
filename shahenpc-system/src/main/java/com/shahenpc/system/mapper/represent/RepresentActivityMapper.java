@@ -3,6 +3,7 @@ package com.shahenpc.system.mapper.represent;
 import java.util.List;
 import com.shahenpc.system.domain.represent.RepresentActivity;
 import com.shahenpc.system.domain.represent.dto.ActivityAppListDto;
+import com.shahenpc.system.domain.represent.dto.ActivityDetailDto;
 import com.shahenpc.system.domain.represent.dto.ActivityFinishCountDto;
 
 /**
@@ -70,4 +71,6 @@ public interface RepresentActivityMapper
     public ActivityAppListDto appDetail(Long activityId);
 
     public Integer getCount();
+
+    public ActivityDetailDto newDetail(Long activityId);
 }

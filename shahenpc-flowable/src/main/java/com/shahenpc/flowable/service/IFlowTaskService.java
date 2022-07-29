@@ -21,6 +21,7 @@ public interface IFlowTaskService {
      * 催办
      */
     void remind(FlowTaskVo flowTaskVo);
+
     /**
      * 审批任务
      *
@@ -196,6 +197,10 @@ public interface IFlowTaskService {
     AjaxResult motionMyProcess(Integer pageNum, Integer pageSize,String processDefinitionName);
 
     AjaxResult motionTodoList(Integer pageNum, Integer pageSize,String type);
+
+    AjaxResult motionSuperviseList(Integer pageNum, Integer pageSize);
+
+    void motionRemind(FlowTaskVo flowTaskVo);
 
     AjaxResult motionFlowRecord(String procInsId,String deployId);
 

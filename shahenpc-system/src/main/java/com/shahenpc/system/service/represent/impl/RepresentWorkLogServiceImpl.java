@@ -99,7 +99,6 @@ public class RepresentWorkLogServiceImpl implements IRepresentWorkLogService
     /**排行 */
     @Override
     public List<PerformDutieRankingDto> ranking() {
-
         return representWorkLogMapper.selectByRanking();
     }
 }

@@ -13,7 +13,7 @@ public interface FeatureDoubleWorkTraceMapper
 {
     /**
      * 查询双连工作 聊天
-     * 
+     *
      * @param traceId 双连工作 聊天主键
      * @return 双连工作 聊天
      */
@@ -21,7 +21,7 @@ public interface FeatureDoubleWorkTraceMapper
 
     /**
      * 查询双连工作 聊天列表
-     * 
+     *
      * @param featureDoubleWorkTrace 双连工作 聊天
      * @return 双连工作 聊天集合
      */
@@ -29,7 +29,7 @@ public interface FeatureDoubleWorkTraceMapper
 
     /**
      * 新增双连工作 聊天
-     * 
+     *
      * @param featureDoubleWorkTrace 双连工作 聊天
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface FeatureDoubleWorkTraceMapper
 
     /**
      * 修改双连工作 聊天
-     * 
+     *
      * @param featureDoubleWorkTrace 双连工作 聊天
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface FeatureDoubleWorkTraceMapper
 
     /**
      * 删除双连工作 聊天
-     * 
+     *
      * @param traceId 双连工作 聊天主键
      * @return 结果
      */
@@ -53,7 +53,7 @@ public interface FeatureDoubleWorkTraceMapper
 
     /**
      * 批量删除双连工作 聊天
-     * 
+     *
      * @param traceIds 需要删除的数据主键集合
      * @return 结果
      */

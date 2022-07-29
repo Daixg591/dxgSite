@@ -78,7 +78,7 @@ public class RepresentMotion extends BaseEntity
 
     /** 评价 */
     @Excel(name = "评价")
-    private Long rate;
+    private Integer rate;
 
     /** 电话 */
     @Excel(name = "电话")

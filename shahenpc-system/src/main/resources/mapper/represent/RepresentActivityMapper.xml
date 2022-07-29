@@ -158,4 +158,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getCount" resultType="java.lang.Integer">
         select COUNT(activity_id) from represent_activity
     </select>
+
+    <resultMap id="detail" type="com.shahenpc.system.domain.represent.dto.ActivityDetailDto" extends="RepresentActivityResult">
+        <association property="record" column="activity_id" select="com.shahenpc.system.mapper.represent.RepresentActivityRecordMapper.selectByActivityId"></association>
+    </resultMap>
+    <select id="newDetail" parameterType="Long" resultMap="detail">
+        <include refid="selectRepresentActivityVo"/>
+        where activity_id = #{activityId}
+    </select>
 </mapper>

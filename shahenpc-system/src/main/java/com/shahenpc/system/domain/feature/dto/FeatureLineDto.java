@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class FeatureCurveDto {
+public class FeatureLineDto {
     private List<Integer> data;
     private List<String> label;
 }

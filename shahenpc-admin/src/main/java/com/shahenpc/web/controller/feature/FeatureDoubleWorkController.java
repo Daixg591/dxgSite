@@ -146,6 +146,15 @@ public class FeatureDoubleWorkController extends BaseController
     {
         return AjaxResult.success(featureDoubleWorkService.eachCount());
     }
+
+    @ApiOperation("曲线")
+    @GetMapping("/line")
+    public AjaxResult line(){
+        return AjaxResult.success(featureDoubleWorkService.line());
+    }
+
+
+
     /**
      * 添加流程
     @ApiOperation("添加")
@@ -157,4 +166,5 @@ public class FeatureDoubleWorkController extends BaseController
         featureDoubleWork.setSubmitUserId(getUserId());
         return toAjax(featureDoubleWorkService.newAdd(featureDoubleWork));
     } */
+
 }

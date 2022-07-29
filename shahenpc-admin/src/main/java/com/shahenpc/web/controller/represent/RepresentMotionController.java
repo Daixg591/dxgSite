@@ -107,6 +107,23 @@ public class RepresentMotionController extends BaseController
         return toAjax(representMotionService.deleteRepresentMotionByMotionIds(motionIds));
     }
 
+
+
+    @ApiOperation(value = "催办")
+    @PostMapping(value = "/remind")
+    public AjaxResult remind(@RequestBody FlowTaskVo flowTaskVo) {
+        flowTaskVo.setUserId(getUserId().toString());
+        flowTaskService.motionRemind(flowTaskVo);
+        return AjaxResult.success();
+    }
+
+    @ApiOperation(value = "督办列表", response = FlowTaskDto.class)
+    @GetMapping(value = "/superviseList")
+    public AjaxResult newTodoList(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
+                                  @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize) {
+        return flowTaskService.motionSuperviseList(pageNum, pageSize);
+    }
+
     @ApiOperation(value = "创建建议议案")
     @Log(title = "工作-建议议案处理", businessType = BusinessType.INSERT)
     @PostMapping
@@ -117,12 +134,6 @@ public class RepresentMotionController extends BaseController
         return flowDefinitionService.addMotion(representMotion,dto.getId());
     }
 
-    /**
-     * 建议议案
-     * @param pageNum
-     * @param pageSize
-     * @return
-     */
     @ApiOperation(value = "我发起的流程列表", response = FlowTaskDto.class)
     @GetMapping(value = "/myProcess")
     public AjaxResult motionMyProcess(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
@@ -144,12 +155,13 @@ public class RepresentMotionController extends BaseController
         return flowTaskService.motionTodoList(pageNum, pageSize,type);
     }
 
+
     @ApiOperation(value = "获取已办任务", response = FlowTaskDto.class)
     @GetMapping(value = "/finishedList")
     public AjaxResult finishedList(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
                                    @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize,
                                    @ApiParam(value = "各个工作流名称", required = true) @RequestParam String name) {
-        return flowTaskService.motionFinishedList(pageNum, pageSize,name);
+        return flowTaskService.motionFinishedList(pageNum, pageSize,"建议议案");
     }
 
     @ApiOperation(value = "审批任务")

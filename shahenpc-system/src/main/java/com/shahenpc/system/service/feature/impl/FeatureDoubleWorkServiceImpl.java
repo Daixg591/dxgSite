@@ -1,15 +1,21 @@
 package com.shahenpc.system.service.feature.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.shahenpc.common.core.domain.entity.SysDictData;
+import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.common.utils.SecurityUtils;
 import com.shahenpc.system.domain.feature.FeatureDoubleWorkTrace;
 import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
 import com.shahenpc.system.domain.feature.dto.FeatureEachCount;
+import com.shahenpc.system.domain.feature.dto.FeatureLineDto;
 import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
+import com.shahenpc.system.mapper.SysUserMapper;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkTraceMapper;
 import com.shahenpc.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +39,8 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     private ISysDictDataService dictDataService;
     @Autowired
     private FeatureDoubleWorkTraceMapper featureDoubleWorkTraceMapper;
+    @Autowired
+    private SysUserMapper sysUserMapper;
     /**
      * 查询双联工作
      * 
@@ -134,17 +142,23 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
 
     @Override
     public int newAdd(FeatureDoubleWork featureDoubleWork) {
-        featureDoubleWork.setCreateTime(DateUtils.getNowDate());
-        int a =  featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork);
-        FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
-        featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
-        featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
-        featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
-        featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
-        featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
-        featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
-        featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
-        return a;
+        SysUser user = sysUserMapper.selectUserById(featureDoubleWork.getSubmitUserId());
+        if(!user.getStatus().equals(1)){
+            featureDoubleWork.setCreateTime(DateUtils.getNowDate());
+            int a =  featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork);
+            FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
+            featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
+            featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
+            featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
+            featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
+            featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
+            featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
+            featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
+            return a;
+        }else {
+            return 0;
+        }
+
     }
 
     @Override
@@ -181,12 +195,52 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     @Override
     public FeatureEachCount eachCount() {
         FeatureEachCount each =  featureDoubleWorkMapper.eachCount();
-        if(each.getProcessed() != 0 && each.getProportion() != 0) {
-            each.setProportion(each.getProcessed() / (each.getProcessed() + each.getProportion()));
-        }
-        each.setProportion(Double.valueOf(String.format("%.2f", each.getProportion())));
+        each.setProcessRate((double) (each.getProcessCount()/each.getTotal()));
+        each.setCollectRate((double)(each.getCollectCount()/each.getTotal()));
+        each.setCollectRate(Double.valueOf(String.format("%.2f", each.getCollectRate())));
+        each.setProcessRate(Double.valueOf(String.format("%.2f", each.getProcessRate())));
         return each;
     }
 
+    @Override
+    public FeatureLineDto line() {
+        List<String> monthList = getNearSixMonth();
+        FeatureLineDto res = new FeatureLineDto();
+        res.setLabel(monthList);
+        List<Integer> yList = new ArrayList<>();
+        FeatureDoubleWork work = new FeatureDoubleWork();
+        List<FeatureDoubleWork>  list=featureDoubleWorkMapper.selectFeatureDoubleWorkList(work);
+        for (int i = 0; i < monthList.size(); i++) {
+            int finalI = i;
+            String cntt = monthList.get(finalI);
+            List<FeatureDoubleWork> nearlist1 = list.stream().
+                    filter(w -> DateUtils.dateTime(w.getCreateTime()).contains(cntt)).collect(Collectors.toList());
+            yList.add(nearlist1.size());
+        }
+        res.setData(yList);
+        Collections.reverse(res.getData());
+        Collections.reverse(res.getLabel());
+        return res;
+    }
+    /**
+     * 获取最近六个月份  ["2022-07","2022-06","2022-05"...]
+     *
+     * @return
+     */
+    public List<String> getNearSixMonth() {
+        List<String> resultList = new ArrayList<String>();
+        Calendar cal = Calendar.getInstance();
+        //近六个月
+        //要先+1,才能把本月的算进去
+        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
+        for (int i = 0; i < 6; i++) {
+            //逐次往前推1个月
+            cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
+            resultList.add(String.valueOf(cal.get(Calendar.YEAR))
+                    + "-" + (cal.get(Calendar.MONTH) + 1 < 10 ? "0" +
+                    (cal.get(Calendar.MONTH) + 1) : (cal.get(Calendar.MONTH) + 1)));
+        }
+        return resultList;
+    }
 
 }

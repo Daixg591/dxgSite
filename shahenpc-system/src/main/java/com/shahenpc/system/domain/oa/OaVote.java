@@ -2,6 +2,7 @@ package com.shahenpc.system.domain.oa;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -13,6 +14,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-19
  */
+@Data
 public class OaVote extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -25,13 +27,13 @@ public class OaVote extends BaseEntity
     private String title;
 
     /**  */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @Excel(name = "", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
 
     /**  */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @Excel(name = "", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
     /**  */
@@ -48,15 +50,15 @@ public class OaVote extends BaseEntity
 
     /**  */
     @Excel(name = "")
-    private Long total;
+    private Integer total;
 
     /**  */
     @Excel(name = "")
-    private Long voter;
+    private Integer voter;
 
     /**  */
     @Excel(name = "")
-    private Long visit;
+    private Integer visit;
 
     /** 是否多选 */
     @Excel(name = "是否多选")
@@ -64,11 +66,11 @@ public class OaVote extends BaseEntity
 
     /** 最少 */
     @Excel(name = "最少")
-    private Long least;
+    private Integer least;
 
     /** 最多 */
     @Excel(name = "最多")
-    private Long biggest;
+    private Integer biggest;
 
     public void setVoteId(Long voteId) 
     {
@@ -133,33 +135,7 @@ public class OaVote extends BaseEntity
     {
         return status;
     }
-    public void setTotal(Long total) 
-    {
-        this.total = total;
-    }
 
-    public Long getTotal() 
-    {
-        return total;
-    }
-    public void setVoter(Long voter) 
-    {
-        this.voter = voter;
-    }
-
-    public Long getVoter() 
-    {
-        return voter;
-    }
-    public void setVisit(Long visit) 
-    {
-        this.visit = visit;
-    }
-
-    public Long getVisit() 
-    {
-        return visit;
-    }
     public void setIsMany(Integer isMany) 
     {
         this.isMany = isMany;
@@ -169,24 +145,7 @@ public class OaVote extends BaseEntity
     {
         return isMany;
     }
-    public void setLeast(Long least) 
-    {
-        this.least = least;
-    }
 
-    public Long getLeast() 
-    {
-        return least;
-    }
-    public void setBiggest(Long biggest) 
-    {
-        this.biggest = biggest;
-    }
-
-    public Long getBiggest() 
-    {
-        return biggest;
-    }
 
     @Override
     public String toString() {
@@ -203,12 +162,7 @@ public class OaVote extends BaseEntity
             .append("content", getContent())
             .append("coverUrl", getCoverUrl())
             .append("status", getStatus())
-            .append("total", getTotal())
-            .append("voter", getVoter())
-            .append("visit", getVisit())
             .append("isMany", getIsMany())
-            .append("least", getLeast())
-            .append("biggest", getBiggest())
             .toString();
     }
 }

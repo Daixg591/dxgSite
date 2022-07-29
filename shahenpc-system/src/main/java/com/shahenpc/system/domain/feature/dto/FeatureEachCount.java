@@ -4,9 +4,11 @@ import lombok.Data;
 
 @Data
 public class FeatureEachCount {
-    private Integer participate;
-    private Integer masses;
-    private Integer processed;
-    private Double proportion;
-
+    private Integer total;
+    private Integer collectCount;
+    private Integer processCount;
+    //收集率
+    private Double collectRate;
+    //处理率
+    private Double processRate;
 }

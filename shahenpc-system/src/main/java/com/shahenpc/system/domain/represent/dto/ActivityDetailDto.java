@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class RepresentActivityAddDto extends RepresentActivity {
+public class ActivityDetailDto extends RepresentActivity {
 
     private List<RepresentActivityRecord> record;
 }

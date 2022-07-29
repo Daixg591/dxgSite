@@ -2,6 +2,7 @@ package com.shahenpc.system.service.oa.impl;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.mapper.oa.OaVoteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.oa.OaVotePlayerMapper;
@@ -19,7 +20,8 @@ public class OaVotePlayerServiceImpl implements IOaVotePlayerService
 {
     @Autowired
     private OaVotePlayerMapper oaVotePlayerMapper;
-
+    @Autowired
+    private OaVoteMapper oaVoteMapper;
     /**
      * 查询投票选手
      * 
@@ -54,6 +56,7 @@ public class OaVotePlayerServiceImpl implements IOaVotePlayerService
     public int insertOaVotePlayer(OaVotePlayer oaVotePlayer)
     {
         oaVotePlayer.setCreateTime(DateUtils.getNowDate());
+
         return oaVotePlayerMapper.insertOaVotePlayer(oaVotePlayer);
     }
 

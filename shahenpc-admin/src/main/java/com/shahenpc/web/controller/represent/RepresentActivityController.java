@@ -4,7 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.shahenpc.flowable.service.IFlowTaskService;
-import com.shahenpc.system.domain.represent.dto.PerformDutieConutDto;
+import com.shahenpc.system.domain.represent.dto.ActivityAddDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -76,12 +76,11 @@ public class RepresentActivityController extends BaseController
     @GetMapping(value = "/{activityId}")
     public AjaxResult getInfo(@PathVariable("activityId") Long activityId)
     {
-        return AjaxResult.success(representActivityService.selectRepresentActivityByActivityId(activityId));
+        return AjaxResult.success(representActivityService.newDetail(activityId));
     }
 
     /**
      * 新增代-活动列
-     */
     @ApiOperation("新增")
     @PreAuthorize("@ss.hasPermi('represent:activity:add')")
     @Log(title = "代-活动列", businessType = BusinessType.INSERT)
@@ -89,7 +88,7 @@ public class RepresentActivityController extends BaseController
     public AjaxResult add(@RequestBody RepresentActivity representActivity)
     {
         return toAjax(representActivityService.insertRepresentActivity(representActivity));
-    }
+    }*/
 
     /**
      * 修改代-活动列
@@ -98,9 +97,9 @@ public class RepresentActivityController extends BaseController
     @PreAuthorize("@ss.hasPermi('represent:activity:edit')")
     @Log(title = "代-活动列", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody RepresentActivity representActivity)
+    public AjaxResult edit(@RequestBody ActivityAddDto representActivity)
     {
-        return toAjax(representActivityService.updateRepresentActivity(representActivity));
+        return toAjax(representActivityService.newUpdate(representActivity));
     }
 
     /**
@@ -122,4 +121,12 @@ public class RepresentActivityController extends BaseController
     }
 
 
+    @ApiOperation("新增")
+    @PreAuthorize("@ss.hasPermi('represent:activity:add')")
+    @Log(title = "代-活动列", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody ActivityAddDto representActivity)
+    {
+        return toAjax(representActivityService.newAdd(representActivity));
+    }
 }

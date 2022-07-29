@@ -119,11 +119,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="eachCount" resultType="com.shahenpc.system.domain.feature.dto.FeatureEachCount">
         SELECT
-                (SELECT COUNT(f.receive_user_id) FROM feature_double_work f)AS participate,
-                (SELECT COUNT(s.submit_user_id) FROM feature_double_work s)AS masses,
-                (SELECT COUNT(d.double_id) FROM feature_double_work d WHERE d.`status` = 3) AS processed,
-                (SELECT COUNT(g.double_id) FROM feature_double_work g WHERE g.`status`= 2)AS proportion
-        FROM feature_double_work LIMIT 1;
+            COUNT(double_id)AS total,
+            (SELECT COUNT(g.double_id) FROM feature_double_work g WHERE g.`status`= 2)AS collectCount,
+            (SELECT COUNT(d.double_id) FROM feature_double_work d WHERE d.`status` = 3) AS processCount
+        FROM feature_double_work
     </select>
 
     <select id="getCount" resultType="java.lang.Integer">

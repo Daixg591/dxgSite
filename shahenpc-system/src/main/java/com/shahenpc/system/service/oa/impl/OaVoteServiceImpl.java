@@ -1,7 +1,11 @@
 package com.shahenpc.system.service.oa.impl;
 
 import java.util.List;
+
+import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.oa.OaVotePlayer;
+import com.shahenpc.system.mapper.oa.OaVotePlayerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.oa.OaVoteMapper;
@@ -15,11 +19,12 @@ import com.shahenpc.system.service.oa.IOaVoteService;
  * @date 2022-07-19
  */
 @Service
-public class OaVoteServiceImpl implements IOaVoteService 
+public class OaVoteServiceImpl extends BaseController implements IOaVoteService
 {
     @Autowired
     private OaVoteMapper oaVoteMapper;
-
+    @Autowired
+    private OaVotePlayerMapper oaVotePlayerMapper;
     /**
      * 查询投票窗口
      * 
@@ -41,6 +46,24 @@ public class OaVoteServiceImpl implements IOaVoteService
     @Override
     public List<OaVote> selectOaVoteList(OaVote oaVote)
     {
+        List<OaVote>  list= oaVoteMapper.selectOaVoteList(oaVote);
+        for (OaVote item: list){
+            Long star= item.getStartTime().getTime();
+            Long dang = DateUtils.getNowDate().getTime();
+            Long end = item.getEndTime().getTime();
+            if(dang < star){
+                item.setStatus(0);
+            }else if(dang >= star && dang <= end){
+                item.setStatus(1);
+            }else if(end< dang){
+                item.setStatus(2);
+            }
+            OaVotePlayer pl = new OaVotePlayer();
+            pl.setVoteId(item.getVoteId());
+            item.setVoter(oaVotePlayerMapper.selectOaVotePlayerList(pl).size());
+            oaVoteMapper.updateOaVote(item);
+        }
+        startPage();
         return oaVoteMapper.selectOaVoteList(oaVote);
     }
 
@@ -54,6 +77,16 @@ public class OaVoteServiceImpl implements IOaVoteService
     public int insertOaVote(OaVote oaVote)
     {
         oaVote.setCreateTime(DateUtils.getNowDate());
+        Long dang = oaVote.getCreateTime().getTime();
+        Long end =  oaVote.getEndTime().getTime();
+        Long star  = oaVote.getStartTime().getTime();
+        if(dang < star){
+            oaVote.setStatus(0);
+        }else if(dang >= star && dang <= end){
+            oaVote.setStatus(1);
+        }else if(end< dang){
+            oaVote.setStatus(2);
+        }
         return oaVoteMapper.insertOaVote(oaVote);
     }
 
