@@ -147,6 +147,11 @@ public class FeatureDoubleWorkController extends BaseController
         return AjaxResult.success(featureDoubleWorkService.eachCount());
     }
 
+    @ApiOperation("环数")
+    @GetMapping("/ring")
+    public AjaxResult ring(){
+        return AjaxResult.success(featureDoubleWorkService.ring());
+    }
     @ApiOperation("曲线")
     @GetMapping("/line")
     public AjaxResult line(){

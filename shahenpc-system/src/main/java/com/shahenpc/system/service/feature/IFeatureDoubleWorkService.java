@@ -2,10 +2,7 @@ package com.shahenpc.system.service.feature;
 
 import java.util.List;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
-import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
-import com.shahenpc.system.domain.feature.dto.FeatureEachCount;
-import com.shahenpc.system.domain.feature.dto.FeatureLineDto;
-import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
+import com.shahenpc.system.domain.feature.dto.*;
 
 /**
  * 双联工作Service接口
@@ -72,9 +69,10 @@ public interface IFeatureDoubleWorkService
     public int newUpdate(FeatureDoubleWork featureDoubleWork);
 
     public int appNewAdd(FeatureDoubleWork featureDoubleWork);
-    //百分比
+    //误伤 这是 活动列表 上的
     public FeatureEachCount eachCount();
-
+    //两个率
+    public FeatureRing ring();
     //曲线
     public FeatureLineDto line();
 }

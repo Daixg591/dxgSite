@@ -11,10 +11,7 @@ import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.SecurityUtils;
 import com.shahenpc.system.domain.feature.FeatureDoubleWorkTrace;
-import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
-import com.shahenpc.system.domain.feature.dto.FeatureEachCount;
-import com.shahenpc.system.domain.feature.dto.FeatureLineDto;
-import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
+import com.shahenpc.system.domain.feature.dto.*;
 import com.shahenpc.system.mapper.SysUserMapper;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkTraceMapper;
 import com.shahenpc.system.service.ISysDictDataService;
@@ -195,11 +192,23 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     @Override
     public FeatureEachCount eachCount() {
         FeatureEachCount each =  featureDoubleWorkMapper.eachCount();
-        each.setProcessRate((double) (each.getProcessCount()/each.getTotal()));
-        each.setCollectRate((double)(each.getCollectCount()/each.getTotal()));
-        each.setCollectRate(Double.valueOf(String.format("%.2f", each.getCollectRate())));
-        each.setProcessRate(Double.valueOf(String.format("%.2f", each.getProcessRate())));
+        if(each.getProcessed() != 0 && each.getProportion() != 0) {
+            each.setProportion(each.getProcessed() / (each.getProcessed() + each.getProportion()));
+        }
+        each.setProportion(Double.valueOf(String.format("%.2f", each.getProportion())));
         return each;
+    }
+
+    @Override
+    public FeatureRing ring() {
+        FeatureRing ring= featureDoubleWorkMapper.selectByRing();
+
+        ring.setProcessRate((double) (ring.getProcessCount()/ring.getTotal()));
+        ring.setCollectRate((double)(ring.getCollectCount()/ring.getTotal()));
+
+        ring.setCollectRate(Double.valueOf(String.format("%.2f", ring.getCollectRate())));
+        ring.setProcessRate(Double.valueOf(String.format("%.2f", ring.getProcessRate())));
+        return ring;
     }
 
     @Override

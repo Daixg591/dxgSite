@@ -4,6 +4,7 @@ import java.util.List;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.feature.dto.FeatureEachCount;
 import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
+import com.shahenpc.system.domain.feature.dto.FeatureRing;
 
 /**
  * 双联工作Mapper接口
@@ -66,6 +67,8 @@ public interface FeatureDoubleWorkMapper
     public List<FeatureMonthDto> selectByMonth();
 
     public FeatureEachCount eachCount();
+
+    public FeatureRing selectByRing();
 
     public Integer getCount();
 }
