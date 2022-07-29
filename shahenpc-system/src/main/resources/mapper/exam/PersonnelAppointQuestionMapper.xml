@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.exam.PersonnelAppointQuestionMapper">
+    
+    <resultMap type="PersonnelAppointQuestion" id="PersonnelAppointQuestionResult">
+        <result property="quId"    column="qu_id"    />
+        <result property="quType"    column="qu_type"    />
+        <result property="quBankId"    column="qu_bank_id"    />
+        <result property="level"    column="level"    />
+        <result property="quCon"    column="qu_con"    />
+        <result property="analysis"    column="analysis"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectPersonnelAppointQuestionVo">
+        select qu_id, qu_type, qu_bank_id, level, qu_con, analysis, remark, create_by, create_time, update_by, update_time, del_flag from personnel_appoint_question
+    </sql>
+
+    <select id="selectPersonnelAppointQuestionList" parameterType="PersonnelAppointQuestion" resultMap="PersonnelAppointQuestionResult">
+        <include refid="selectPersonnelAppointQuestionVo"/>
+        <where>  
+            <if test="quType != null  and quType != ''"> and qu_type = #{quType}</if>
+            <if test="quBankId != null "> and qu_bank_id = #{quBankId}</if>
+            <if test="level != null  and level != ''"> and level = #{level}</if>
+            <if test="quCon != null  and quCon != ''"> and qu_con = #{quCon}</if>
+            <if test="analysis != null  and analysis != ''"> and analysis = #{analysis}</if>
+        </where>
+    </select>
+    
+    <select id="selectPersonnelAppointQuestionByQuId" parameterType="Long" resultMap="PersonnelAppointQuestionResult">
+        <include refid="selectPersonnelAppointQuestionVo"/>
+        where qu_id = #{quId}
+    </select>
+        
+    <insert id="insertPersonnelAppointQuestion" parameterType="PersonnelAppointQuestion" useGeneratedKeys="true" keyProperty="quId">
+        insert into personnel_appoint_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="quType != null">qu_type,</if>
+            <if test="quBankId != null">qu_bank_id,</if>
+            <if test="level != null">level,</if>
+            <if test="quCon != null">qu_con,</if>
+            <if test="analysis != null">analysis,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="quType != null">#{quType},</if>
+            <if test="quBankId != null">#{quBankId},</if>
+            <if test="level != null">#{level},</if>
+            <if test="quCon != null">#{quCon},</if>
+            <if test="analysis != null">#{analysis},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePersonnelAppointQuestion" parameterType="PersonnelAppointQuestion">
+        update personnel_appoint_question
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="quType != null">qu_type = #{quType},</if>
+            <if test="quBankId != null">qu_bank_id = #{quBankId},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="quCon != null">qu_con = #{quCon},</if>
+            <if test="analysis != null">analysis = #{analysis},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where qu_id = #{quId}
+    </update>
+
+    <delete id="deletePersonnelAppointQuestionByQuId" parameterType="Long">
+        delete from personnel_appoint_question where qu_id = #{quId}
+    </delete>
+
+    <delete id="deletePersonnelAppointQuestionByQuIds" parameterType="String">
+        delete from personnel_appoint_question where qu_id in 
+        <foreach item="quId" collection="array" open="(" separator="," close=")">
+            #{quId}
+        </foreach>
+    </delete>
+</mapper>

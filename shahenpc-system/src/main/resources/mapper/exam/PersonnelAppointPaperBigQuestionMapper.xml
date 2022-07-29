@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.exam.PersonnelAppointPaperBigQuestionMapper">
+    
+    <resultMap type="PersonnelAppointPaperBigQuestion" id="PersonnelAppointPaperBigQuestionResult">
+        <result property="bigQuestionId"    column="big_question_id"    />
+        <result property="examPaperId"    column="exam_paper_id"    />
+        <result property="questionType"    column="question_type"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectPersonnelAppointPaperBigQuestionVo">
+        select big_question_id, exam_paper_id, question_type, create_by, create_time, update_by, update_time, del_flag from personnel_appoint_paper_big_question
+    </sql>
+
+    <select id="selectPersonnelAppointPaperBigQuestionList" parameterType="PersonnelAppointPaperBigQuestion" resultMap="PersonnelAppointPaperBigQuestionResult">
+        <include refid="selectPersonnelAppointPaperBigQuestionVo"/>
+        <where>  
+            <if test="examPaperId != null  and examPaperId != ''"> and exam_paper_id = #{examPaperId}</if>
+            <if test="questionType != null  and questionType != ''"> and question_type = #{questionType}</if>
+        </where>
+    </select>
+    
+    <select id="selectPersonnelAppointPaperBigQuestionByBigQuestionId" parameterType="Long" resultMap="PersonnelAppointPaperBigQuestionResult">
+        <include refid="selectPersonnelAppointPaperBigQuestionVo"/>
+        where big_question_id = #{bigQuestionId}
+    </select>
+        
+    <insert id="insertPersonnelAppointPaperBigQuestion" parameterType="PersonnelAppointPaperBigQuestion" useGeneratedKeys="true" keyProperty="bigQuestionId">
+        insert into personnel_appoint_paper_big_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="examPaperId != null">exam_paper_id,</if>
+            <if test="questionType != null">question_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="examPaperId != null">#{examPaperId},</if>
+            <if test="questionType != null">#{questionType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePersonnelAppointPaperBigQuestion" parameterType="PersonnelAppointPaperBigQuestion">
+        update personnel_appoint_paper_big_question
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="examPaperId != null">exam_paper_id = #{examPaperId},</if>
+            <if test="questionType != null">question_type = #{questionType},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where big_question_id = #{bigQuestionId}
+    </update>
+
+    <delete id="deletePersonnelAppointPaperBigQuestionByBigQuestionId" parameterType="Long">
+        delete from personnel_appoint_paper_big_question where big_question_id = #{bigQuestionId}
+    </delete>
+
+    <delete id="deletePersonnelAppointPaperBigQuestionByBigQuestionIds" parameterType="String">
+        delete from personnel_appoint_paper_big_question where big_question_id in 
+        <foreach item="bigQuestionId" collection="array" open="(" separator="," close=")">
+            #{bigQuestionId}
+        </foreach>
+    </delete>
+</mapper>

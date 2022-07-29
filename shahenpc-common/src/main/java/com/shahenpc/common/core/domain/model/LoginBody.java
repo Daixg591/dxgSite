@@ -27,6 +27,16 @@ public class LoginBody
      */
     private String uuid;
 
+    /**
+     * 微信唯一标识
+     */
+    private String wxOpenId;
+
+    /**
+     * 微信登录Code
+     */
+    private String jsCode;
+
     public String getUsername()
     {
         return username;
@@ -65,5 +75,21 @@ public class LoginBody
     public void setUuid(String uuid)
     {
         this.uuid = uuid;
+    }
+
+    public String getWxOpenId() {
+        return wxOpenId;
+    }
+
+    public void setWxOpenId(String wxOpenId) {
+        this.wxOpenId = wxOpenId;
+    }
+
+    public String getJsCode() {
+        return jsCode;
+    }
+
+    public void setJsCode(String jsCode) {
+        this.jsCode = jsCode;
     }
 }

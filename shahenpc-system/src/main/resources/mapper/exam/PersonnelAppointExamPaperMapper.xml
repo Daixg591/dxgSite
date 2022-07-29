@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.exam.PersonnelAppointExamPaperMapper">
+    
+    <resultMap type="PersonnelAppointExamPaper" id="PersonnelAppointExamPaperResult">
+        <result property="examPaperId"    column="exam_paper_id"    />
+        <result property="examPaperName"    column="exam_paper_name"    />
+        <result property="makePaperType"    column="make_paper_type"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectPersonnelAppointExamPaperVo">
+        select exam_paper_id, exam_paper_name, make_paper_type, remark, create_by, create_time, update_by, update_time, del_flag from personnel_appoint_exam_paper
+    </sql>
+
+    <select id="selectPersonnelAppointExamPaperList" parameterType="PersonnelAppointExamPaper" resultMap="PersonnelAppointExamPaperResult">
+        <include refid="selectPersonnelAppointExamPaperVo"/>
+        <where>  
+            <if test="examPaperName != null  and examPaperName != ''"> and exam_paper_name like concat('%', #{examPaperName}, '%')</if>
+            <if test="makePaperType != null  and makePaperType != ''"> and make_paper_type = #{makePaperType}</if>
+        </where>
+    </select>
+    
+    <select id="selectPersonnelAppointExamPaperByExamPaperId" parameterType="Long" resultMap="PersonnelAppointExamPaperResult">
+        <include refid="selectPersonnelAppointExamPaperVo"/>
+        where exam_paper_id = #{examPaperId}
+    </select>
+        
+    <insert id="insertPersonnelAppointExamPaper" parameterType="PersonnelAppointExamPaper" useGeneratedKeys="true" keyProperty="examPaperId">
+        insert into personnel_appoint_exam_paper
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="examPaperName != null">exam_paper_name,</if>
+            <if test="makePaperType != null">make_paper_type,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="examPaperName != null">#{examPaperName},</if>
+            <if test="makePaperType != null">#{makePaperType},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePersonnelAppointExamPaper" parameterType="PersonnelAppointExamPaper">
+        update personnel_appoint_exam_paper
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="examPaperName != null">exam_paper_name = #{examPaperName},</if>
+            <if test="makePaperType != null">make_paper_type = #{makePaperType},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where exam_paper_id = #{examPaperId}
+    </update>
+
+    <delete id="deletePersonnelAppointExamPaperByExamPaperId" parameterType="Long">
+        delete from personnel_appoint_exam_paper where exam_paper_id = #{examPaperId}
+    </delete>
+
+    <delete id="deletePersonnelAppointExamPaperByExamPaperIds" parameterType="String">
+        delete from personnel_appoint_exam_paper where exam_paper_id in 
+        <foreach item="examPaperId" collection="array" open="(" separator="," close=")">
+            #{examPaperId}
+        </foreach>
+    </delete>
+</mapper>

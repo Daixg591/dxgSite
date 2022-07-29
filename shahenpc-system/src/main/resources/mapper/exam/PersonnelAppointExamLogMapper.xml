@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.exam.PersonnelAppointExamLogMapper">
+    
+    <resultMap type="PersonnelAppointExamLog" id="PersonnelAppointExamLogResult">
+        <result property="logId"    column="log_id"    />
+        <result property="quId"    column="qu_id"    />
+        <result property="answerId"    column="answer_id"    />
+        <result property="answerCon"    column="answer_con"    />
+        <result property="examId"    column="exam_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectPersonnelAppointExamLogVo">
+        select log_id, qu_id, answer_id, answer_con, exam_id, user_id, create_by, create_time, update_by, update_time, del_flag from personnel_appoint_exam_log
+    </sql>
+
+    <select id="selectPersonnelAppointExamLogList" parameterType="PersonnelAppointExamLog" resultMap="PersonnelAppointExamLogResult">
+        <include refid="selectPersonnelAppointExamLogVo"/>
+        <where>  
+            <if test="quId != null "> and qu_id = #{quId}</if>
+            <if test="answerId != null "> and answer_id = #{answerId}</if>
+            <if test="answerCon != null  and answerCon != ''"> and answer_con = #{answerCon}</if>
+            <if test="examId != null  and examId != ''"> and exam_id = #{examId}</if>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectPersonnelAppointExamLogByLogId" parameterType="Long" resultMap="PersonnelAppointExamLogResult">
+        <include refid="selectPersonnelAppointExamLogVo"/>
+        where log_id = #{logId}
+    </select>
+        
+    <insert id="insertPersonnelAppointExamLog" parameterType="PersonnelAppointExamLog" useGeneratedKeys="true" keyProperty="logId">
+        insert into personnel_appoint_exam_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="quId != null">qu_id,</if>
+            <if test="answerId != null">answer_id,</if>
+            <if test="answerCon != null">answer_con,</if>
+            <if test="examId != null">exam_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="quId != null">#{quId},</if>
+            <if test="answerId != null">#{answerId},</if>
+            <if test="answerCon != null">#{answerCon},</if>
+            <if test="examId != null">#{examId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePersonnelAppointExamLog" parameterType="PersonnelAppointExamLog">
+        update personnel_appoint_exam_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="quId != null">qu_id = #{quId},</if>
+            <if test="answerId != null">answer_id = #{answerId},</if>
+            <if test="answerCon != null">answer_con = #{answerCon},</if>
+            <if test="examId != null">exam_id = #{examId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where log_id = #{logId}
+    </update>
+
+    <delete id="deletePersonnelAppointExamLogByLogId" parameterType="Long">
+        delete from personnel_appoint_exam_log where log_id = #{logId}
+    </delete>
+
+    <delete id="deletePersonnelAppointExamLogByLogIds" parameterType="String">
+        delete from personnel_appoint_exam_log where log_id in 
+        <foreach item="logId" collection="array" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+</mapper>

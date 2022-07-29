@@ -26,7 +26,7 @@ public class SysUser extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
 
-    private Object eduLogList;
+    private String eduLogList;
 
 
     /**
@@ -40,6 +40,19 @@ public class SysUser extends BaseEntity {
      */
     @Excel(name = "部门编号", type = Type.IMPORT)
     private Long deptId;
+
+    /**
+     * 所属单位
+     */
+    private String organName;
+
+    /**
+     * 在职状态
+     */
+    private String jobState;
+
+
+
 
     /**
      * 用户账号
@@ -138,7 +151,13 @@ public class SysUser extends BaseEntity {
     /**
      * 民族
      */
-    @Excel(name = "民族")
+    @Excel(name = "民族", readConverterExp = "0=汉族,1=壮族,2=满族,3=回族,4=苗族,5=维吾尔族,6=土家族,7=彝族," +
+            "8=蒙古族,9=藏族,10=布依族,11=侗族,12=瑶族,13=朝鲜族,14=白族,15=哈尼族," +
+            "16=哈萨克族,17=黎族,18=傣族,19=畲族,20=傈僳族,21=仡佬族,22=东乡族,23=高山族," +
+            "24=拉祜族,25=水族,26=佤族,27=纳西族,28=羌族,29=土族,30=仫佬族,31=锡伯族," +
+            "32=柯尔克孜族,33=达斡尔族,34=景颇族,35=毛南族,36=撒拉族,37=布朗族,38=塔吉克族,39=阿昌族," +
+            "40=普米族,41=鄂温克族,42=怒族,43=京族,44=基诺族,45=德昂族,46=保安族,47=俄罗斯族," +
+            "48=裕固族,49=乌孜别克族,50=门巴族,51=鄂伦春族,52=独龙族,53=塔塔尔族,54=赫哲族,55=珞巴族")
     private String nation;
 
     /** 用户状态 */
@@ -236,6 +255,22 @@ public class SysUser extends BaseEntity {
 
     public SysUser() {
 
+    }
+
+    public String getOrganName() {
+        return organName;
+    }
+
+    public void setOrganName(String organName) {
+        this.organName = organName;
+    }
+
+    public String getJobState() {
+        return jobState;
+    }
+
+    public void setJobState(String jobState) {
+        this.jobState = jobState;
     }
 
     public SysUser(Long userId) {
@@ -584,7 +619,7 @@ public class SysUser extends BaseEntity {
         return eduLogList;
     }
 
-    public void setEduLogList(Object eduLogList) {
+    public void setEduLogList(String eduLogList) {
         this.eduLogList = eduLogList;
     }
 }
