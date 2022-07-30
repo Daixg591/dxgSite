@@ -261,7 +261,7 @@ public class HttpUtils
      * @return
      * @throws IOException
      */
-    public static String SendPost(String url,Map<String, String> map) throws IOException
+    public static String SendPost(String url,Map<String, Object> map) throws IOException
     {
 
         //创建一个获取连接客户端的工具

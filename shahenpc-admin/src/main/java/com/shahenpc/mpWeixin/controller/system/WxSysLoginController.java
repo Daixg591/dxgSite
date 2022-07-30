@@ -19,14 +19,18 @@ import com.shahenpc.framework.web.service.SysLoginService;
 import com.shahenpc.framework.web.service.TokenService;
 import com.shahenpc.system.domain.BackVo.LawInfo;
 import com.shahenpc.system.domain.dto.XcxLoginDto;
+import com.shahenpc.system.domain.wxsmallprogram.dto.SmProCodeDto;
+import com.shahenpc.system.domain.wxsmallprogram.dto.SmProLinkDto;
 import com.shahenpc.system.domain.wxsmallprogram.dto.WxAuthDto;
 import com.shahenpc.system.domain.wxsmallprogram.dto.WxMassesDto;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxAccessTokenVo;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxAuthVo;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxPhoneVo;
 import com.shahenpc.system.service.ISysUserService;
+import com.sun.org.apache.xerces.internal.parsers.DTDParser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import liquibase.pro.packaged.T;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -113,7 +117,7 @@ public class WxSysLoginController {
     public AjaxResult getWxPhone(@RequestBody WxAuthDto dto) throws IOException {
         AjaxResult ajax = AjaxResult.success();
         String accessToken = getWxAccessToken();
-        Map<String, String> map = new HashMap<>(1);
+        Map<String, Object> map = new HashMap<>(1);
         map.put("code", dto.getJs_code());
         String res = HttpUtils.SendPost("https://api.weixin.qq.com/wxa/business/getuserphonenumber" +
                 "?access_token=" + accessToken, map);
@@ -123,6 +127,7 @@ public class WxSysLoginController {
     }
     //endregion
 
+    //region // 群众注册登录微信小程序
 
     /**
      * 群众注册登录微信小程序
@@ -163,9 +168,60 @@ public class WxSysLoginController {
         ajax.put(Constants.TOKEN, token);
         return ajax;
     }
+    //endregion
+
+    //region  // 获取投票小程序码==> 待测试
+    // todo-ht 获取投票小程序码==>发布后方可进行测试
+
+    /**
+     * 获取投票小程序码
+     *
+     * @param dto
+     * @return
+     * @throws IOException
+     */
+    @ApiOperation("获取投票小程序码")
+    @PostMapping("/getvotecode")
+    public String getSmProCode(@RequestBody SmProCodeDto dto) throws IOException {
+        AjaxResult ajax = AjaxResult.success();
+        dto.setAccess_token(getWxAccessToken());
+        dto.setAuto_color(Boolean.FALSE);
+        Map<String, Object> map = new HashMap<>();
+        map.put("scene", dto.getScene());
+        map.put("page", dto.getPage());
+        map.put("env_version", dto.getEnv_version());
 
 
-    //region Tools
+        String res = HttpUtils.SendPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + dto.getAccess_token(), map);
+        return res;
+    }
+    //endregion
+
+    //region // 获取投票小程序链接==> 待测试
+    // todo-ht  获取投票小程序链接==>发布后方可进行测试
+    /**
+     * 获取投票小程序链接
+     * @param dto
+     * @return
+     * @throws IOException
+     */
+    @ApiOperation("获取投票小程序链接")
+    @PostMapping("/getvotelink")
+    public String getSmProLink(@RequestBody SmProLinkDto dto) throws IOException {
+        AjaxResult ajax = AjaxResult.success();
+        dto.setAccess_token(getWxAccessToken());
+        dto.setExpire_type(0);
+        Map<String, Object> map = new HashMap<>();
+        map.put("path", dto.getPath());
+        map.put("query", dto.getQuery());
+        map.put("env_version", dto.getEnv_version());
+        map.put("expire_type", 0);
+        String res = HttpUtils.SendPost("https://api.weixin.qq.com/wxa/generate_urllink?access_token="+dto.getAccess_token(),map);
+        return res;
+    }
+    //endregion
+
+    //region // Tools
 
     //region 获取微信OpenId
 
@@ -189,6 +245,8 @@ public class WxSysLoginController {
     }
     //endregion
 
+    //region // 获取微信AccessToken getWxAccessToken()
+
     /**
      * 获取微信AccessToken
      *
@@ -207,6 +265,7 @@ public class WxSysLoginController {
         }
         return redisToken.getAccess_token();
     }
+    //endregion
 
     /**
      * 微信accessToken存入Redis

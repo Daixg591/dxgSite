@@ -10,6 +10,7 @@ import com.shahenpc.system.domain.BackVo.LawInfo;
 import com.shahenpc.system.domain.law.dto.DyAuthCodeDto;
 import com.shahenpc.system.domain.law.dto.LawQueryDto;
 import com.shahenpc.system.domain.law.vo.HotNewsVo;
+import com.shahenpc.system.domain.law.vo.HotSearchVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jsoup.Jsoup;
@@ -95,18 +96,23 @@ public class LawController {
     }
     //endregion
 
-
+    //region // 爬虫获取百度热搜排行榜
     /**
-     * 获取百度热搜排行
+     * 爬虫获取百度热搜排行榜
      *
      * @return
      */
-    public String getHotWords() {
+    @ApiOperation("获取百度热搜排行榜")
+    @GetMapping("/gethotsearch")
+    public AjaxResult getHotSearch() {
         // 使用爬虫获取
-        String url = "https://top.baidu.com/api/board?platform=wise&tab=realtime&tag=%7B%7D";
-        List<Object> list = new ArrayList<>();
+//        String url = "https://top.baidu.com/api/board?platform=wise&tab=realtime";
+        String url = "https://top.baidu.com/board?tab=realtime&sa=fyb_realtime_31065";
+        List<HotSearchVo> list = new ArrayList<>();
+        AjaxResult ajax = AjaxResult.success();
         try {
-            Document doc = Jsoup.connect(url).get();
+//            Document doc = Jsoup.connect(url).get();
+            Document doc = Jsoup.connect(url).ignoreContentType(true).userAgent("Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.15)").timeout(5000).get();
             //标题
             Elements titles = doc.select(".c-single-text-ellipsis");
             //图片
@@ -118,21 +124,22 @@ public class LawController {
             //热搜指数
             Elements levels = doc.select(".hot-index_1Bl1a");
             for (int i = 0; i < levels.size(); i++) {
-//                News o = new News();
-//                o.setTitle(titles.get(i).text().trim());
-//                o.setImg(imgs.get(i).attr("src"));
-//                o.setContent(contents.get(i).text().replaceAll("查看更多>", "").trim());
-//                o.setUrl(urls.get(i).attr("href"));
-//                o.setLevel(levels.get(i).text().trim());
-//                list.add(o);
+                HotSearchVo o = new HotSearchVo();
+                o.setTitle(titles.get(i).text().trim());
+                o.setImg(imgs.get(i).attr("src"));
+                o.setContent(contents.get(i).text().replaceAll("查看更多>", "").trim());
+                o.setUrl(urls.get(i).attr("href"));
+                o.setLevel(levels.get(i).text().trim());
+                list.add(o);
             }
-//            System.out.println(JSONArray.toJSONString(list));
+            ajax.put("data", list);
+            return ajax;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "";
+        return ajax;
     }
-
+    //endregion
 
     //region // 获取抖音授权码==>作废
 
@@ -155,10 +162,7 @@ public class LawController {
     }
     //endregion
 
-
-    // todo-ht  热搜排行
-
-    //region 法律列表参数组成
+    //region // 法律列表参数组成
 
 
     /**
