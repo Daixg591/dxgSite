@@ -28,9 +28,9 @@ public class AppSysUserController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(SysUser user)
     {
-        startPage();
         user.setIdentity("1");
-        List<SysUser> list = userService.selectUserList(user);
+        startPage();
+        List<SysUser> list = userService.appSelectUserList(user);
         return getDataTable(list);
     }
 }

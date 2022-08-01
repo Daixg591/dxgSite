@@ -9,4 +9,5 @@ public class FeatureEachCount {
     private Integer processed;
     private Double proportion;
 
+
 }

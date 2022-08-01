@@ -88,4 +88,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{recordId}
         </foreach>
     </delete>
+    <!--===========================================分割线-->
+    <delete id="delectByActivityId" parameterType="Long">
+        delete from represent_activity_record where activity_id = #{activityId}
+    </delete>
+
+    <select id="selectByActivityId" parameterType="Long" resultMap="RepresentActivityRecordResult">
+        select r.record_id, r.activity_id, r.user_id, r.content, r.submit_time, r.remark, r.create_time, r.update_by, r.update_time, r.create_by,
+        u.nick_name as nickName,u.avatar
+        from represent_activity_record r LEFT JOIN sys_user u ON u.user_id = r.user_id
+        where activity_id = #{activityId}
+    </select>
+
 </mapper>

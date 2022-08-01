@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper">
+    
+    <resultMap type="RepresentDiscoverTrack" id="RepresentDiscoverTrackResult">
+        <result property="trackId"    column="track_id"    />
+        <result property="discoverId"    column="discover_id"    />
+        <result property="sendUserId"    column="send_user_id"    />
+        <result property="receiveUserId"    column="receive_user_id"    />
+        <result property="content"    column="content"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+    </resultMap>
+
+    <sql id="selectRepresentDiscoverTrackVo">
+        select track_id, discover_id, send_user_id, receive_user_id, content, status, remark, create_time, update_by, update_time, create_by from represent_discover_track
+    </sql>
+
+    <select id="selectRepresentDiscoverTrackList" parameterType="RepresentDiscoverTrack" resultMap="RepresentDiscoverTrackResult">
+        <include refid="selectRepresentDiscoverTrackVo"/>
+        <where>  
+            <if test="discoverId != null "> and discover_id = #{discoverId}</if>
+            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectRepresentDiscoverTrackByTrackId" parameterType="Long" resultMap="RepresentDiscoverTrackResult">
+        <include refid="selectRepresentDiscoverTrackVo"/>
+        where track_id = #{trackId}
+    </select>
+        
+    <insert id="insertRepresentDiscoverTrack" parameterType="RepresentDiscoverTrack" useGeneratedKeys="true" keyProperty="trackId">
+        insert into represent_discover_track
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="discoverId != null">discover_id,</if>
+            <if test="sendUserId != null">send_user_id,</if>
+            <if test="receiveUserId != null">receive_user_id,</if>
+            <if test="content != null">content,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="discoverId != null">#{discoverId},</if>
+            <if test="sendUserId != null">#{sendUserId},</if>
+            <if test="receiveUserId != null">#{receiveUserId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRepresentDiscoverTrack" parameterType="RepresentDiscoverTrack">
+        update represent_discover_track
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="discoverId != null">discover_id = #{discoverId},</if>
+            <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
+            <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+        </trim>
+        where track_id = #{trackId}
+    </update>
+
+    <delete id="deleteRepresentDiscoverTrackByTrackId" parameterType="Long">
+        delete from represent_discover_track where track_id = #{trackId}
+    </delete>
+
+    <delete id="deleteRepresentDiscoverTrackByTrackIds" parameterType="String">
+        delete from represent_discover_track where track_id in 
+        <foreach item="trackId" collection="array" open="(" separator="," close=")">
+            #{trackId}
+        </foreach>
+    </delete>
+
+    <!--=======================================================分割线-->
+    <resultMap id="detail" type="com.shahenpc.system.domain.represent.dto.DiscoverTrackDetailListDto" extends="RepresentDiscoverTrackResult">
+
+    </resultMap>
+    <select id="selectByDiscoverId" parameterType="Long" resultMap="detail">
+        select track_id, discover_id, send_user_id, receive_user_id, content, status, remark, create_time, update_by, update_time, create_by,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName
+        from represent_discover_track
+        where discover_id = #{discoverId}
+    </select>
+</mapper>

@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.shahenpc.common.utils.DateUtils;
-import com.shahenpc.system.domain.feature.dto.FeatureCurveDto;
+import com.shahenpc.system.domain.feature.dto.FeatureLineDto;
 import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -104,9 +104,9 @@ public class FeatureWorkEventServiceImpl implements IFeatureWorkEventService
     }
 
     @Override
-    public FeatureCurveDto monthCount(Integer workType) {
+    public FeatureLineDto monthCount(Integer workType) {
         List<String> monthList = getNearSixMonth();
-        FeatureCurveDto res = new FeatureCurveDto();
+        FeatureLineDto res = new FeatureLineDto();
         res.setLabel(monthList);
 
         List<Integer> yList = new ArrayList<>();

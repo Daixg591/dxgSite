@@ -280,4 +280,14 @@ public class SysUserController extends BaseController
 
         return AjaxResult.success(userService.degreeCake(identity));
     }
+
+
+    @PreAuthorize("@ss.hasPermi('system:user:edit')")
+    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
+    @PutMapping("/update")
+    public AjaxResult update(@Validated @RequestBody SysUser user)
+    {
+        user.setStatus("1");
+        return toAjax(userService.updateUser(user));
+    }
 }

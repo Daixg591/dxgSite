@@ -107,6 +107,8 @@ public class AppRepresentMotionController extends BaseController
         return toAjax(representMotionService.deleteRepresentMotionByMotionIds(motionIds));
     }
 
+
+    /**  */
     @ApiOperation(value = "创建建议议案")
     @Log(title = "工作-建议议案处理", businessType = BusinessType.INSERT)
     @PostMapping
@@ -117,12 +119,6 @@ public class AppRepresentMotionController extends BaseController
         return flowDefinitionService.addMotion(representMotion,dto.getId());
     }
 
-    /**
-     * 建议议案
-     * @param pageNum
-     * @param pageSize
-     * @return
-     */
     @ApiOperation(value = "我发起的流程列表", response = FlowTaskDto.class)
     @GetMapping(value = "/myProcess")
     public AjaxResult motionMyProcess(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
@@ -138,7 +134,7 @@ public class AppRepresentMotionController extends BaseController
     }
 
     @ApiOperation(value = "获取待办列表", response = FlowTaskDto.class)
-    @GetMapping(value = "/todoList")
+        @GetMapping(value = "/todoList")
     public AjaxResult newTodoList(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
                                   @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize,@ApiParam(value = "类型1.接收2.受理3.分发4.审查5.反馈", required = true) @RequestParam String type) {
         return flowTaskService.motionTodoList(pageNum, pageSize,type);
@@ -147,9 +143,8 @@ public class AppRepresentMotionController extends BaseController
     @ApiOperation(value = "获取已办任务", response = FlowTaskDto.class)
     @GetMapping(value = "/finishedList")
     public AjaxResult finishedList(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
-                                   @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize,
-                                   @ApiParam(value = "各个工作流名称", required = true) @RequestParam String name) {
-        return flowTaskService.motionFinishedList(pageNum, pageSize,name);
+                                   @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize) {
+        return flowTaskService.motionFinishedList(pageNum, pageSize,"建议议案");
     }
 
     @ApiOperation(value = "审批任务")
@@ -171,27 +166,5 @@ public class AppRepresentMotionController extends BaseController
         flowTaskService.motionTaskReturn(flowTaskVo);
         return AjaxResult.success();
     }
-
-    @ApiOperation("按月曲线")
-    @GetMapping("/line")
-    public AjaxResult line(MotionTaskVo vo){
-        vo.setProcessName("建议议案");
-        return  AjaxResult.success(flowTaskService.line(vo));
-    }
-
-    @ApiOperation("按类别饼图")
-    @GetMapping("/pie")
-    public AjaxResult pie(MotionTaskVo vo){
-        vo.setProcessName("建议议案");
-        return AjaxResult.success(flowTaskService.pie(vo));
-    }
-
-    @ApiOperation("落实率")
-    @GetMapping("/ring")
-    public AjaxResult ring(MotionTaskVo vo){
-        vo.setProcessName("建议议案");
-        return AjaxResult.success(flowTaskService.ring(vo));
-    }
-
 
 }

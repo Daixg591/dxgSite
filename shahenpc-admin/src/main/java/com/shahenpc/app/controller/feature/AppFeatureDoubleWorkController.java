@@ -6,6 +6,7 @@ import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.page.TableDataInfo;
 import com.shahenpc.common.enums.BusinessType;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
+import com.shahenpc.system.domain.feature.dto.DoubleAppListDto;
 import com.shahenpc.system.service.feature.IFeatureDoubleWorkService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -46,6 +47,7 @@ public class AppFeatureDoubleWorkController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody FeatureDoubleWork featureDoubleWork)
     {
+        featureDoubleWork.setCreateBy(getUsername());
         featureDoubleWork.setSubmitUserId(getUserId());
         return toAjax(featureDoubleWorkService.newAdd(featureDoubleWork));
     }
@@ -60,8 +62,11 @@ public class AppFeatureDoubleWorkController extends BaseController {
     public TableDataInfo myList(FeatureDoubleWork featureDoubleWork)
     {
         startPage();
+        if(featureDoubleWork.getStatus() == 0){
+            featureDoubleWork.setStatus(null);
+        }
         featureDoubleWork.setSubmitUserId(getUserId());
-        List<FeatureDoubleWork> list = featureDoubleWorkService.selectFeatureDoubleWorkList(featureDoubleWork);
+        List<DoubleAppListDto> list = featureDoubleWorkService.appList(featureDoubleWork);
         return getDataTable(list);
     }
     /**
@@ -72,7 +77,10 @@ public class AppFeatureDoubleWorkController extends BaseController {
     public TableDataInfo auditList(FeatureDoubleWork featureDoubleWork)
     {
         startPage();
-        featureDoubleWork.setSubmitUserId(getUserId());
+        if(featureDoubleWork.getStatus() == 0){
+            featureDoubleWork.setStatus(null);
+        }
+        featureDoubleWork.setReceiveUserId(getUserId());
         List<FeatureDoubleWork> list = featureDoubleWorkService.selectFeatureDoubleWorkList(featureDoubleWork);
         return getDataTable(list);
     }

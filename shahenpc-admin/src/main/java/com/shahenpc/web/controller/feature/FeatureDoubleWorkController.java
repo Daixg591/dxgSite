@@ -101,6 +101,7 @@ public class FeatureDoubleWorkController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody FeatureDoubleWork featureDoubleWork)
     {
+        featureDoubleWork.setCreateBy(getUsername());
         featureDoubleWork.setSubmitUserId(getUserId());
         return toAjax(featureDoubleWorkService.newAdd(featureDoubleWork));
     }
@@ -114,6 +115,7 @@ public class FeatureDoubleWorkController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody FeatureDoubleWork featureDoubleWork)
     {
+        featureDoubleWork.setUpdateBy(getUsername());
         return toAjax(featureDoubleWorkService.newUpdate(featureDoubleWork));
     }
 
@@ -146,6 +148,21 @@ public class FeatureDoubleWorkController extends BaseController
     {
         return AjaxResult.success(featureDoubleWorkService.eachCount());
     }
+
+    @ApiOperation("环数")
+    @GetMapping("/ring")
+    public AjaxResult ring(){
+        return AjaxResult.success(featureDoubleWorkService.ring());
+    }
+
+    @ApiOperation("曲线")
+    @GetMapping("/line")
+    public AjaxResult line(){
+        return AjaxResult.success(featureDoubleWorkService.line());
+    }
+
+
+
     /**
      * 添加流程
     @ApiOperation("添加")
@@ -157,4 +174,5 @@ public class FeatureDoubleWorkController extends BaseController
         featureDoubleWork.setSubmitUserId(getUserId());
         return toAjax(featureDoubleWorkService.newAdd(featureDoubleWork));
     } */
+
 }

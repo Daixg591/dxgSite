@@ -130,4 +130,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{voteId}
         </foreach>
     </delete>
+    <!--投票 列表
+    <select id="">
+        select vote_id, title, remark, create_time, update_by, update_time, create_by, start_time, end_time, content, cover_url, status, total, voter, visit, is_many, least, biggest
+        from oa_vote
+    </select>-->
 </mapper>

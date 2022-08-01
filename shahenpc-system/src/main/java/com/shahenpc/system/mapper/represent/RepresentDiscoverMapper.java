@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper.represent;
 
 import java.util.List;
 import com.shahenpc.system.domain.represent.RepresentDiscover;
+import com.shahenpc.system.domain.represent.dto.*;
 
 /**
  * 代-代发现Mapper接口
@@ -59,5 +60,15 @@ public interface RepresentDiscoverMapper
      */
     public int deleteRepresentDiscoverByDiscoverIds(Long[] discoverIds);
 
+    public List<DiscoverAppListDto> appList(RepresentDiscover representDiscover);
+
+    public DiscoverAppDetailDto appDetail(Long discoverId);
+
+    public DiscoverDetailDto detail(Long discoverId);
+
+    public List<DiscoverListDto> adminList(RepresentDiscover representDiscover);
+
     public Integer getCount();
+
+    public DiscoverRingDto selectByRate();
 }

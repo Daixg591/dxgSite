@@ -48,7 +48,7 @@ public class RepresentActivity extends BaseEntity
 
     /** 参会人员 */
     @Excel(name = "参会人员")
-    private Long participateConut;
+    private Integer participateConut;
 
     /**  */
     @Excel(name = "")
@@ -117,12 +117,12 @@ public class RepresentActivity extends BaseEntity
     {
         return status;
     }
-    public void setParticipateConut(Long participateConut) 
+    public void setParticipateConut(Integer participateConut)
     {
         this.participateConut = participateConut;
     }
 
-    public Long getParticipateConut() 
+    public Integer getParticipateConut()
     {
         return participateConut;
     }

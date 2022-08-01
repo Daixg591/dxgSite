@@ -1,9 +1,7 @@
 package com.shahenpc.system.service.represent.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
-import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.represent.RepresentActivityRecord;
 import com.shahenpc.system.domain.represent.dto.*;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper;
@@ -111,7 +109,7 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
 
     @Override
     @Transactional
-    public int newAdd(RepresentActivityAddDto dto) {
+    public int newAdd(ActivityAddDto dto) {
         dto.setCreateTime(DateUtils.getNowDate());
        int suss = representActivityMapper.insertRepresentActivity(dto);
         for(RepresentActivityRecord item:dto.getRecord()){
@@ -119,13 +117,38 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
             item.setCreateTime(DateUtils.getNowDate());
             representActivityRecordMapper.insertRepresentActivityRecord(item);
         }
+        RepresentActivity ac = new  RepresentActivity();
+        ac.setActivityId(dto.getActivityId());
+        ac.setParticipateConut(dto.getRecord().size());
+        representActivityMapper.updateRepresentActivity(ac);
         return suss;
     }
 
     @Override
+    public int newUpdate(ActivityAddDto dto) {
+       int a =  representActivityMapper.updateRepresentActivity(dto);
+            representActivityRecordMapper.delectByActivityId(dto.getActivityId());
+            for(RepresentActivityRecord item:dto.getRecord()){
+                item.setActivityId(dto.getActivityId());
+                item.setCreateTime(DateUtils.getNowDate());
+                representActivityRecordMapper.insertRepresentActivityRecord(item);
+            }
+            RepresentActivity ac = new  RepresentActivity();
+            ac.setActivityId(dto.getActivityId());
+            ac.setParticipateConut(dto.getRecord().size());
+            representActivityMapper.updateRepresentActivity(ac);
+        return a;
+    }
+
+    @Override
+    public ActivityDetailDto newDetail(Long activityId) {
+
+        return representActivityMapper.newDetail(activityId);
+    }
+
+    @Override
     public ActivityFinishCountDto selectByFinishCount(Long userId) {
-        ActivityFinishCountDto dto = new ActivityFinishCountDto();
-        dto = representActivityMapper.selectByFinishCount(userId);
+        ActivityFinishCountDto  dto = representActivityMapper.selectByFinishCount(userId);
         dto.setActivityList(representActivityMapper.selectByAppHomeList());
         return dto;
     }

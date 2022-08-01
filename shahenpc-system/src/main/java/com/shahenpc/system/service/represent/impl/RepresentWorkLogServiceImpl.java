@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.system.domain.represent.dto.PerformDutieRankingDto;
+import com.shahenpc.system.domain.represent.dto.WorkLogListDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.represent.RepresentWorkLogMapper;
@@ -99,7 +100,12 @@ public class RepresentWorkLogServiceImpl implements IRepresentWorkLogService
     /**排行 */
     @Override
     public List<PerformDutieRankingDto> ranking() {
-
         return representWorkLogMapper.selectByRanking();
+    }
+
+    @Override
+    public List<WorkLogListDto> appList(RepresentWorkLog representWorkLog) {
+
+        return representWorkLogMapper.appList(representWorkLog);
     }
 }

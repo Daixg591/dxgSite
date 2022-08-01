@@ -2,6 +2,7 @@ package com.shahenpc.system.service.feature.impl;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.feature.dto.TraceListDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkTraceMapper;
@@ -92,5 +93,11 @@ public class FeatureDoubleWorkTraceServiceImpl implements IFeatureDoubleWorkTrac
     public int deleteFeatureDoubleWorkTraceByTraceId(Long traceId)
     {
         return featureDoubleWorkTraceMapper.deleteFeatureDoubleWorkTraceByTraceId(traceId);
+    }
+
+
+    @Override
+    public List<TraceListDto> adminList(FeatureDoubleWorkTrace featureDoubleWorkTrace) {
+        return featureDoubleWorkTraceMapper.adminList(featureDoubleWorkTrace);
     }
 }

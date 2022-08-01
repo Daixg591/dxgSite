@@ -37,6 +37,9 @@ spring:
     basename: i18n/messages
   profiles: 
     active: local
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
   # 文件上传
   servlet:
      multipart:

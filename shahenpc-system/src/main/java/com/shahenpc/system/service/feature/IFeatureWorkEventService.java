@@ -2,7 +2,7 @@ package com.shahenpc.system.service.feature;
 
 import java.util.List;
 import com.shahenpc.system.domain.feature.FeatureWorkEvent;
-import com.shahenpc.system.domain.feature.dto.FeatureCurveDto;
+import com.shahenpc.system.domain.feature.dto.FeatureLineDto;
 import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
 
 /**
@@ -71,7 +71,7 @@ public interface IFeatureWorkEventService
      * @param workType
      * @return
      */
-    public FeatureCurveDto monthCount(Integer workType);
+    public FeatureLineDto monthCount(Integer workType);
 
     public String ringScale(Integer workType);
 }

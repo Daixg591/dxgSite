@@ -122,5 +122,7 @@ public class FlowTaskDto implements Serializable {
 
     @ApiModelProperty("建议议案id")
     private Long motionId;
+    @ApiModelProperty("评价")
+    private Integer rate;
 
 }

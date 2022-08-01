@@ -215,4 +215,6 @@ public interface ISysUserService
     public List<NpcCakeDto> ageCake(String identity);
 
     public List<NpcCakeDto> degreeCake(String identity);
+
+    public List<SysUser> appSelectUserList(SysUser user);
 }

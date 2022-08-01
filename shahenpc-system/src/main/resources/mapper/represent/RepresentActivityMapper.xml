@@ -118,23 +118,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM represent_activity a1 LEFT JOIN represent_activity_record r1 ON a1.activity_id = r1.activity_id
         WHERE r1.user_id= #{userId}
     </select>
-    <resultMap id="activityList" type="com.shahenpc.system.domain.represent.dto.ActivityAppListDto" extends="RepresentActivityResult">
 
+    <!--app  详情-->
+    <resultMap id="activityList" type="com.shahenpc.system.domain.represent.dto.ActivityAppListDto" extends="RepresentActivityResult">
+        <association property="record" column="activity_id" select="com.shahenpc.system.mapper.represent.RepresentActivityRecordMapper.selectByActivityId"></association>
     </resultMap>
     <select id="selectByAppHomeList" resultMap="activityList">
         select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type )AS activityTypeName,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
-        from represent_activity
+        from represent_activity a
         WHERE `status` IN(1,2)
         ORDER BY start_time DESC
     </select>
+
 
     <select id="appList" parameterType="RepresentActivity" resultMap="activityList">
         select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type )AS activityTypeName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
-        from represent_activity
+        from represent_activity a
         <where>
             <if test="activityType != null "> and activity_type = #{activityType}</if>
             <if test="title != null  and title != ''"> and title = #{title}</if>
@@ -152,10 +155,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type )AS activityTypeName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
-        from represent_activity where activity_id = #{activityId}
+        from represent_activity a where activity_id = #{activityId}
     </select>
 
     <select id="getCount" resultType="java.lang.Integer">
         select COUNT(activity_id) from represent_activity
+    </select>
+
+    <resultMap id="detail" type="com.shahenpc.system.domain.represent.dto.ActivityDetailDto" extends="RepresentActivityResult">
+        <association property="record" column="activity_id" select="com.shahenpc.system.mapper.represent.RepresentActivityRecordMapper.selectByActivityId"></association>
+    </resultMap>
+    <select id="newDetail" parameterType="Long" resultMap="detail">
+        <include refid="selectRepresentActivityVo"/>
+        where activity_id = #{activityId}
     </select>
 </mapper>

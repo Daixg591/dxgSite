@@ -2,6 +2,7 @@ package com.shahenpc.system.domain.represent;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -13,6 +14,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-21
  */
+@Data
 public class RepresentActivityRecord extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -36,6 +38,10 @@ public class RepresentActivityRecord extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "提交时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date submitTime;
+    /**姓名*/
+    private String nickName;
+    /**头像*/
+    private String avatar;
 
     public void setRecordId(Long recordId) 
     {

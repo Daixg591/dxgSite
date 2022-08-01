@@ -60,7 +60,10 @@ public interface IRepresentActivityService
      */
     public int deleteRepresentActivityByActivityId(Long activityId);
 
-    public int newAdd(RepresentActivityAddDto dto);
+
+    public int newAdd(ActivityAddDto dto);
+    public int newUpdate(ActivityAddDto dto);
+    public ActivityDetailDto newDetail(Long activityId);
 
     public ActivityFinishCountDto selectByFinishCount(Long userId);
 
@@ -70,6 +73,5 @@ public interface IRepresentActivityService
 
     /** 履职 总数  排行*/
     public PerformDutieConutDto totalConut();
-
 
 }
