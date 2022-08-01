@@ -18,8 +18,8 @@ public class RepresentExperience extends BaseEntity
     /**  */
     private Long experienceId;
 
-    /**  */
-    @Excel(name = "")
+    /** 标题 */
+    @Excel(name = "标题")
     private String title;
 
     /**  */

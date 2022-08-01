@@ -660,5 +660,10 @@ public class SysUserServiceImpl implements ISysUserService
         return dto;
     }
 
+    @Override
+    public List<SysUser> appSelectUserList(SysUser user) {
+        return userMapper.appSelectUserList(user);
+    }
+
 
 }

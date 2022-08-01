@@ -19,10 +19,12 @@
         <result property="status"    column="status"    />
         <result property="reply"    column="reply"    />
         <result property="rate"    column="rate"    />
+        <result property="sendUserId"    column="send_user_id"    />
+        <result property="receiveUserId"    column="receive_user_id"    />
     </resultMap>
 
     <sql id="selectRepresentDiscoverVo">
-        select discover_id, title, content, discover_type, remark, create_time, update_by, update_time, create_by, address, location, status, reply, rate from represent_discover
+        select discover_id, title, content, discover_type, remark, create_time, update_by, update_time, create_by, address, location, status, reply, rate, send_user_id, receive_user_id from represent_discover
     </sql>
 
     <select id="selectRepresentDiscoverList" parameterType="RepresentDiscover" resultMap="RepresentDiscoverResult">
@@ -36,6 +38,8 @@
             <if test="status != null "> and status = #{status}</if>
             <if test="reply != null  and reply != ''"> and reply = #{reply}</if>
             <if test="rate != null "> and rate = #{rate}</if>
+            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
         </where>
     </select>
 
@@ -60,6 +64,8 @@
             <if test="status != null">status,</if>
             <if test="reply != null">reply,</if>
             <if test="rate != null">rate,</if>
+            <if test="sendUserId != null">send_user_id,</if>
+            <if test="receiveUserId != null">receive_user_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null">#{title},</if>
@@ -75,6 +81,8 @@
             <if test="status != null">#{status},</if>
             <if test="reply != null">#{reply},</if>
             <if test="rate != null">#{rate},</if>
+            <if test="sendUserId != null">#{sendUserId},</if>
+            <if test="receiveUserId != null">#{receiveUserId},</if>
         </trim>
     </insert>
 
@@ -94,6 +102,8 @@
             <if test="status != null">status = #{status},</if>
             <if test="reply != null">reply = #{reply},</if>
             <if test="rate != null">rate = #{rate},</if>
+            <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
+            <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
         </trim>
         where discover_id = #{discoverId}
     </update>
@@ -111,5 +121,79 @@
     <!-- ==========================================分割线-->
     <select id="getCount" resultType="java.lang.Integer">
         SELECT COUNT(discover_id) FROM represent_discover
+    </select>
+    <select id="selectByRate" resultType="com.shahenpc.system.domain.represent.dto.DiscoverRingDto">
+        SELECT
+            CONCAT(CAST(CONVERT(100 * CAST((SELECT COUNT(d1.discover_id)  FROM represent_discover d1 WHERE d1.`status` = 2) AS DECIMAL) / CAST(COUNT(discover_id) AS DECIMAL), DECIMAL) AS CHAR)) AS assignRate,
+            CONCAT(CAST(CONVERT(100 * CAST((SELECT COUNT(d1.discover_id)  FROM represent_discover d1 WHERE d1.rate >= 4) AS DECIMAL) / CAST(COUNT(discover_id) AS DECIMAL), DECIMAL) AS CHAR)) AS processRate
+        FROM represent_discover
+    </select>
+
+    <resultMap id="adminDetail" type="com.shahenpc.system.domain.represent.dto.DiscoverDetailDto" extends="RepresentDiscoverResult">
+            <association property="track" column="discover_id" select="com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper.selectByDiscoverId"></association>
+    </resultMap>
+    <select id="detail" parameterType="Long" resultMap="adminDetail">
+        select discover_id, title, content, discover_type, remark, create_time, update_by, update_time, create_by, address, location, status, reply, rate, send_user_id, receive_user_id,
+               (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
+               (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName
+        from represent_discover where discover_id = #{discoverId}
+    </select>
+
+    <resultMap id="adminList" type="com.shahenpc.system.domain.represent.dto.DiscoverListDto" extends="RepresentDiscoverResult">
+
+    </resultMap>
+    <select id="adminList" parameterType="RepresentDiscover" resultMap="adminList">
+        select discover_id, title, content, discover_type, remark, create_time, update_by, update_time, create_by, address, location, status, reply, rate, send_user_id, receive_user_id,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName
+        from represent_discover
+        <where>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="discoverType != null "> and discover_type = #{discoverType}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="reply != null  and reply != ''"> and reply = #{reply}</if>
+            <if test="rate != null "> and rate = #{rate}</if>
+            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
+        </where>
+    </select>
+
+    <resultMap id="appList" type="com.shahenpc.system.domain.represent.dto.DiscoverAppListDto" extends="RepresentDiscoverResult">
+
+    </resultMap>
+    <select id="appList" parameterType="RepresentDiscover" resultMap="appList">
+        select discover_id, title, content, discover_type, remark, create_time, update_by, update_time, create_by, address, location, status, reply, rate, send_user_id, receive_user_id,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_type' AND d.dict_value = a.discover_type)AS discoverTypeName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_status' AND d.dict_value = a.status )AS discoverStatusName
+        from represent_discover a
+        <where>
+            <if test="title != null  and title != ''"> and a.title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="discoverType != null "> and discover_type = #{discoverType}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="reply != null  and reply != ''"> and reply = #{reply}</if>
+            <if test="rate != null "> and rate = #{rate}</if>
+            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
+        </where>
+    </select>
+
+    <resultMap id="appDetail" type="com.shahenpc.system.domain.represent.dto.DiscoverAppDetailDto" extends="RepresentDiscoverResult">
+
+    </resultMap>
+    <select id="appDetail" parameterType="Long" resultMap="appDetail">
+        select discover_id, title, content, discover_type, remark, create_time, update_by, update_time, create_by, address, location, status, reply, rate, send_user_id, receive_user_id,
+               (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
+               (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_type' AND d.dict_value = a.discover_type)AS discoverTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_status' AND d.dict_value = a.status )AS discoverStatusName
+        from represent_discover a  where discover_id = #{discoverId}
     </select>
 </mapper>

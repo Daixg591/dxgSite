@@ -3,6 +3,7 @@ package com.shahenpc.system.service.represent;
 import java.util.List;
 import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.domain.represent.dto.PerformDutieRankingDto;
+import com.shahenpc.system.domain.represent.dto.WorkLogListDto;
 
 /**
  * 代履职日志Service接口
@@ -61,4 +62,6 @@ public interface IRepresentWorkLogService
     public int deleteRepresentWorkLogById(Long id);
 
     public List<PerformDutieRankingDto> ranking();
+
+    public List<WorkLogListDto> appList(RepresentWorkLog representWorkLog);
 }

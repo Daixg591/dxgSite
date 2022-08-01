@@ -7,6 +7,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
 import com.shahenpc.common.enums.BusinessType;
 import com.shahenpc.common.utils.poi.ExcelUtil;
 import com.shahenpc.system.domain.represent.RepresentDiscover;
+import com.shahenpc.system.domain.represent.dto.DiscoverAppListDto;
 import com.shahenpc.system.service.represent.IRepresentDiscoverService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +41,7 @@ public class AppRepresentDiscoverController extends BaseController
     public TableDataInfo list(RepresentDiscover representDiscover)
     {
         startPage();
-        List<RepresentDiscover> list = representDiscoverService.selectRepresentDiscoverList(representDiscover);
+        List<DiscoverAppListDto> list = representDiscoverService.appList(representDiscover);
         return getDataTable(list);
     }
 
@@ -66,7 +67,7 @@ public class AppRepresentDiscoverController extends BaseController
     @GetMapping(value = "/{discoverId}")
     public AjaxResult getInfo(@PathVariable("discoverId") Long discoverId)
     {
-        return AjaxResult.success(representDiscoverService.selectRepresentDiscoverByDiscoverId(discoverId));
+        return AjaxResult.success(representDiscoverService.appDetail(discoverId));
     }
 
     /**
@@ -78,6 +79,7 @@ public class AppRepresentDiscoverController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody RepresentDiscover representDiscover)
     {
+        representDiscover.setSendUserId(getUserId());
         return toAjax(representDiscoverService.insertRepresentDiscover(representDiscover));
     }
 

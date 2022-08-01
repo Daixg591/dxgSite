@@ -108,7 +108,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{traceId}
         </foreach>
     </delete>
+    <!--===============================================================分割线-->
+    <resultMap id="adminList" type="com.shahenpc.system.domain.feature.dto.TraceListDto" extends="FeatureDoubleWorkTraceResult">
 
-
-
+    </resultMap>
+    <select id="adminList" parameterType="FeatureDoubleWorkTrace" resultMap="adminList">
+        select trace_id, double_id, send_user_id, receive_user_id, parent_trace_id, status, content, create_by, create_time, update_by, update_time, remark, pic_urls, is_read,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = a.send_user_id)AS sendUserName,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = a.receive_user_id)AS receiveUserName
+        from feature_double_work_trace a
+        <where>
+            <if test="doubleId != null "> and double_id = #{doubleId}</if>
+            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
+            <if test="parentTraceId != null "> and parent_trace_id = #{parentTraceId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="picUrls != null  and picUrls != ''"> and pic_urls = #{picUrls}</if>
+            <if test="isRead != null "> and is_read = #{isRead}</if>
+        </where>
+    </select>
 </mapper>

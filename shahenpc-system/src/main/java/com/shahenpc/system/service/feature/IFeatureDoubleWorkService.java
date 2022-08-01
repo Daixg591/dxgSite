@@ -68,6 +68,8 @@ public interface IFeatureDoubleWorkService
 
     public int newUpdate(FeatureDoubleWork featureDoubleWork);
 
+    //public FeatureDoubleWork  newDetail(Long doubleId);
+
     public int appNewAdd(FeatureDoubleWork featureDoubleWork);
     //误伤 这是 活动列表 上的
     public FeatureEachCount eachCount();
@@ -75,4 +77,6 @@ public interface IFeatureDoubleWorkService
     public FeatureRing ring();
     //曲线
     public FeatureLineDto line();
+
+    public List<DoubleAppListDto> appList(FeatureDoubleWork featureDoubleWork);
 }

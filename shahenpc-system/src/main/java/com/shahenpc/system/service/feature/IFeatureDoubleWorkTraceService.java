@@ -2,6 +2,7 @@ package com.shahenpc.system.service.feature;
 
 import java.util.List;
 import com.shahenpc.system.domain.feature.FeatureDoubleWorkTrace;
+import com.shahenpc.system.domain.feature.dto.TraceListDto;
 
 /**
  * 双连工作 聊天Service接口
@@ -58,4 +59,7 @@ public interface IFeatureDoubleWorkTraceService
      * @return 结果
      */
     public int deleteFeatureDoubleWorkTraceByTraceId(Long traceId);
+
+
+    public List<TraceListDto> adminList(FeatureDoubleWorkTrace featureDoubleWorkTrace);
 }

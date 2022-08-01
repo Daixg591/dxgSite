@@ -117,11 +117,11 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         List<FeatureCakeDto> dtoList = new ArrayList<>();
         List<FeatureDoubleWork> alarBudg=featureDoubleWorkMapper.selectByCakeType();
         SysDictData dictParam = new SysDictData();
-        dictParam.setDictType("opinion_type");
+        dictParam.setDictType("double_type");
         List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getDoubleType()))
+            int v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getDoubleType().toString()))
                     .collect(Collectors.toList()).size();
             FeatureCakeDto item = new FeatureCakeDto();
             item.setName(dictList.get(i).getDictLabel());
@@ -148,8 +148,9 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
             featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
             featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
             featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
-            featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
+            //featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
             featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
+            featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getCreateBy());
             featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
             return a;
         }else {
@@ -163,12 +164,14 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         featureDoubleWork.setUpdateTime(DateUtils.getNowDate());
         int a =  featureDoubleWorkMapper.updateFeatureDoubleWork(featureDoubleWork);
         FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
+        featureDoubleWorkTrace.setContent(featureDoubleWork.getReply());
         featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
         featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
         featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
         featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
-        featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
+        //featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
         featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
+        featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getUpdateBy());
         featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
         return a;
     }
@@ -201,14 +204,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
 
     @Override
     public FeatureRing ring() {
-        FeatureRing ring= featureDoubleWorkMapper.selectByRing();
-
-        ring.setProcessRate((double) (ring.getProcessCount()/ring.getTotal()));
-        ring.setCollectRate((double)(ring.getCollectCount()/ring.getTotal()));
-
-        ring.setCollectRate(Double.valueOf(String.format("%.2f", ring.getCollectRate())));
-        ring.setProcessRate(Double.valueOf(String.format("%.2f", ring.getProcessRate())));
-        return ring;
+        return featureDoubleWorkMapper.selectByRing();
     }
 
     @Override
@@ -231,6 +227,12 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         Collections.reverse(res.getLabel());
         return res;
     }
+
+    @Override
+    public List<DoubleAppListDto> appList(FeatureDoubleWork featureDoubleWork) {
+        return featureDoubleWorkMapper.appList(featureDoubleWork);
+    }
+
     /**
      * 获取最近六个月份  ["2022-07","2022-06","2022-05"...]
      *

@@ -136,4 +136,6 @@ public interface SysUserMapper
     public Integer selectByWomanCount(String identity);
 
     public Integer selectByManCount(String identity);
+
+    public List<SysUser> appSelectUserList(SysUser user);
 }

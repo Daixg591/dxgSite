@@ -101,6 +101,7 @@ public class FeatureDoubleWorkController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody FeatureDoubleWork featureDoubleWork)
     {
+        featureDoubleWork.setCreateBy(getUsername());
         featureDoubleWork.setSubmitUserId(getUserId());
         return toAjax(featureDoubleWorkService.newAdd(featureDoubleWork));
     }
@@ -114,6 +115,7 @@ public class FeatureDoubleWorkController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody FeatureDoubleWork featureDoubleWork)
     {
+        featureDoubleWork.setUpdateBy(getUsername());
         return toAjax(featureDoubleWorkService.newUpdate(featureDoubleWork));
     }
 
@@ -152,6 +154,7 @@ public class FeatureDoubleWorkController extends BaseController
     public AjaxResult ring(){
         return AjaxResult.success(featureDoubleWorkService.ring());
     }
+
     @ApiOperation("曲线")
     @GetMapping("/line")
     public AjaxResult line(){

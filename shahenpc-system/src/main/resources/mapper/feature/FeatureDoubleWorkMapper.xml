@@ -128,9 +128,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectByRing" resultType="com.shahenpc.system.domain.feature.dto.FeatureRing">
         SELECT
-            COUNT(double_id)AS total,
-            (SELECT COUNT(g.double_id) FROM feature_double_work g WHERE g.`status`= 2)AS collectCount,
-            (SELECT COUNT(d.double_id) FROM feature_double_work d WHERE d.`status` = 3) AS processCount
+            CONCAT(CAST(CONVERT(100 * CAST((SELECT COUNT(g.double_id) FROM feature_double_work g WHERE g.`status` IN(3,4)) AS DECIMAL) / CAST(COUNT(double_id) AS DECIMAL), DECIMAL) AS CHAR)) AS collectRate,
+            CONCAT(CAST(CONVERT(100 * CAST((SELECT COUNT(g.double_id) FROM feature_double_work g WHERE g.rate >= 4) AS DECIMAL) / CAST(COUNT(double_id) AS DECIMAL), DECIMAL) AS CHAR)) AS processRate
         FROM feature_double_work
     </select>
 
@@ -138,4 +137,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT COUNT(double_id) FROM feature_double_work;
     </select>
 
+
+    <resultMap id="appList" type="com.shahenpc.system.domain.feature.dto.DoubleAppListDto" extends="FeatureDoubleWorkResult">
+
+    </resultMap>
+    <select id="appList" parameterType="FeatureDoubleWork" resultMap="appList">
+        select double_id, double_type, title, status, content, pic_urls, create_by, create_time, update_by, update_time, remark, submit_user_id, receive_user_id, is_read,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = a.double_type )AS doubleTypeName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_status' AND d.dict_value = a.status )AS doubleStatusName,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = a.submit_user_id)AS sendUserName,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = a.receive_user_id)AS receiveUserName
+        from feature_double_work a
+        <where>
+            <if test="doubleType != null "> and double_type = #{doubleType}</if>
+            <if test="title != null  and title != ''"> and a.title = #{title}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="picUrls != null  and picUrls != ''"> and pic_urls = #{picUrls}</if>
+            <if test="submitUserId != null "> and submit_user_id = #{submitUserId}</if>
+            <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
+            <if test="isRead != null "> and is_read = #{isRead}</if>
+        </where>
+    </select>
 </mapper>

@@ -3,7 +3,9 @@ package com.shahenpc.web.controller.represent;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.system.domain.represent.dto.DiscoverListDto;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +47,7 @@ public class RepresentDiscoverController extends BaseController
     public TableDataInfo list(RepresentDiscover representDiscover)
     {
         startPage();
-        List<RepresentDiscover> list = representDiscoverService.selectRepresentDiscoverList(representDiscover);
+        List<DiscoverListDto> list = representDiscoverService.adminList(representDiscover);
         return getDataTable(list);
     }
 
@@ -69,9 +71,8 @@ public class RepresentDiscoverController extends BaseController
     @GetMapping(value = "/{discoverId}")
     public AjaxResult getInfo(@PathVariable("discoverId") Long discoverId)
     {
-        return AjaxResult.success(representDiscoverService.selectRepresentDiscoverByDiscoverId(discoverId));
+        return AjaxResult.success(representDiscoverService.detail(discoverId));
     }
-
     /**
      * 新增代-代发现
      */
@@ -80,6 +81,8 @@ public class RepresentDiscoverController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody RepresentDiscover representDiscover)
     {
+        representDiscover.setSendUserId(getUserId());
+        representDiscover.setUpdateBy(getUsername());
         return toAjax(representDiscoverService.insertRepresentDiscover(representDiscover));
     }
 
@@ -103,5 +106,26 @@ public class RepresentDiscoverController extends BaseController
     public AjaxResult remove(@PathVariable Long[] discoverIds)
     {
         return toAjax(representDiscoverService.deleteRepresentDiscoverByDiscoverIds(discoverIds));
+    }
+
+
+    @ApiOperation("环数")
+    @GetMapping("/ring")
+    public AjaxResult ring(){
+        return AjaxResult.success(representDiscoverService.ring());
+    }
+
+    @ApiOperation("曲线")
+    @GetMapping("/line")
+    public AjaxResult line(){
+        return AjaxResult.success(representDiscoverService.line());
+    }
+
+
+    @ApiOperation("饼图")
+    @GetMapping(value = "/pie")
+    public AjaxResult cake()
+    {
+        return AjaxResult.success(representDiscoverService.pie());
     }
 }

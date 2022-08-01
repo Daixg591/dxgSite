@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.represent;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-28
  */
+@Data
 public class RepresentDiscover extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -19,7 +21,7 @@ public class RepresentDiscover extends BaseEntity
     private Long discoverId;
 
     /**  */
-    @Excel(name = "")
+    @Excel(name = "标题")
     private String title;
 
     /**  */
@@ -49,6 +51,14 @@ public class RepresentDiscover extends BaseEntity
     /** 评价 */
     @Excel(name = "评价")
     private Long rate;
+
+    /** 发送用户id 0-系统消息 */
+    @Excel(name = "发送用户id 0-系统消息")
+    private Long sendUserId;
+
+    /** 接收人用户id 0-全部 */
+    @Excel(name = "接收人用户id 0-全部")
+    private Long receiveUserId;
 
     public void setDiscoverId(Long discoverId)
     {

@@ -2,6 +2,7 @@ package com.shahenpc.system.service.represent;
 
 import java.util.List;
 import com.shahenpc.system.domain.represent.RepresentDiscover;
+import com.shahenpc.system.domain.represent.dto.*;
 
 /**
  * 代-代发现Service接口
@@ -58,4 +59,17 @@ public interface IRepresentDiscoverService
      * @return 结果
      */
     public int deleteRepresentDiscoverByDiscoverId(Long discoverId);
+    /***/
+    public List<DiscoverAppListDto> appList(RepresentDiscover representDiscover);
+    public DiscoverAppDetailDto appDetail(Long discoverId);
+    /** 列表*/
+    public List<DiscoverListDto> adminList(RepresentDiscover representDiscover);
+    /**详情*/
+    public DiscoverDetailDto detail(Long discoverId);
+    /**环*/
+    public DiscoverRingDto ring();
+    /**曲线*/
+    public DiscoverLineDto line();
+    /**饼图*/
+    public List<DiscoverPieDto> pie();
 }

@@ -304,4 +304,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectByManCount" resultType="java.lang.Integer" parameterType="java.lang.String">
 		SELECT COUNT(u.user_id) FROM sys_user u WHERE u.sex = 1 AND u.identity = #{identity}
 	</select>
+
+	<select id="appSelectUserList" parameterType="SysUser" resultMap="SysUserResult">
+		select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
+		u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date, u.job_date, u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu
+	   from sys_user u WHERE u.identity = #{identity}
+	</select>
 </mapper>

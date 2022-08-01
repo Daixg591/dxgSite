@@ -56,6 +56,9 @@ public class FeatureDoubleWork extends BaseEntity
     @Excel(name = "评价")
     private Long rate;
 
+    /** 回复 */
+    @Excel(name = "回复")
+    private String reply;
 
     public void setDoubleId(Long doubleId) 
     {

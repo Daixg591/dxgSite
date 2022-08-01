@@ -89,4 +89,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM represent_work_log l LEFT JOIN sys_user u ON u.user_id = l.user_id
         GROUP BY l.user_id ORDER BY counts DESC
     </select>
+
+    <resultMap id="appList" type="com.shahenpc.system.domain.represent.dto.WorkLogListDto" extends="RepresentWorkLogResult">
+
+    </resultMap>
+    <select id="appList" resultMap="appList" parameterType="RepresentWorkLog">
+        select id, event_type, event_id, user_id, remark, create_by, create_time, update_by, update_time,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='event_type' AND d.dict_value = a.event_type)AS eventTypeName
+        from represent_work_log a ORDER BY a.create_time DESC
+    </select>
 </mapper>

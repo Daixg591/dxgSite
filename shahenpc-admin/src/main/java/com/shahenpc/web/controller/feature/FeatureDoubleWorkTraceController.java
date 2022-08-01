@@ -3,6 +3,7 @@ package com.shahenpc.web.controller.feature;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.system.domain.feature.dto.TraceListDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,7 +48,7 @@ public class FeatureDoubleWorkTraceController extends BaseController
     public TableDataInfo list(FeatureDoubleWorkTrace featureDoubleWorkTrace)
     {
         startPage();
-        List<FeatureDoubleWorkTrace> list = featureDoubleWorkTraceService.selectFeatureDoubleWorkTraceList(featureDoubleWorkTrace);
+        List<TraceListDto> list = featureDoubleWorkTraceService.adminList(featureDoubleWorkTrace);
         return getDataTable(list);
     }
 
