@@ -7,77 +7,93 @@ import com.shahenpc.common.core.domain.BaseEntity;
 
 /**
  * 人事任免_法律知识考试_题库管理对象 personnel_appoint_question_bank
- * 
+ *
  * @author ruoyi
  * @date 2022-07-27
  */
-public class PersonnelAppointQuestionBank extends BaseEntity
-{
+public class PersonnelAppointQuestionBank extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 题库id */
+    /**
+     * 题库id
+     */
     private Long questionBankId;
 
-    /** 题库名称 */
+    /**
+     * 题库名称
+     */
     @Excel(name = "题库名称")
     private String bankName;
 
-    /** 题库描述 */
+    /**
+     * 题库描述
+     */
     @Excel(name = "题库描述")
     private String bankDescribe;
 
-    /** 删除标识 */
+    /**
+     * 删除标识
+     */
     private String delFlag;
 
-    public void setQuestionBankId(Long questionBankId) 
-    {
+    /**
+     * 题库分类
+     */
+    private String bankType;
+
+    public void setQuestionBankId(Long questionBankId) {
         this.questionBankId = questionBankId;
     }
 
-    public Long getQuestionBankId() 
-    {
+    public Long getQuestionBankId() {
         return questionBankId;
     }
-    public void setBankName(String bankName) 
-    {
+
+    public void setBankName(String bankName) {
         this.bankName = bankName;
     }
 
-    public String getBankName() 
-    {
+    public String getBankName() {
         return bankName;
     }
-    public void setBankDescribe(String bankDescribe) 
-    {
+
+    public void setBankDescribe(String bankDescribe) {
         this.bankDescribe = bankDescribe;
     }
 
-    public String getBankDescribe() 
-    {
+    public String getBankDescribe() {
         return bankDescribe;
     }
-    public void setDelFlag(String delFlag) 
-    {
+
+    public void setDelFlag(String delFlag) {
         this.delFlag = delFlag;
     }
 
-    public String getDelFlag() 
-    {
+    public String getDelFlag() {
         return delFlag;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("questionBankId", getQuestionBankId())
-            .append("bankName", getBankName())
-            .append("bankDescribe", getBankDescribe())
-            .append("remark", getRemark())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("delFlag", getDelFlag())
-            .toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("questionBankId", getQuestionBankId())
+                .append("bankName", getBankName())
+                .append("bankDescribe", getBankDescribe())
+                .append("remark", getRemark())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .append("delFlag", getDelFlag())
+                .append("bankType", getBankType())
+                .toString();
+    }
+
+    public String getBankType() {
+        return bankType;
+    }
+
+    public void setBankType(String bankType) {
+        this.bankType = bankType;
     }
 }

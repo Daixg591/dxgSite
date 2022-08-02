@@ -8,7 +8,7 @@ package com.shahenpc.common.core.domain.model;
 public class LoginBody
 {
     /**
-     * 用户名
+     * 模拟用户名(手机号)
      */
     private String username;
 

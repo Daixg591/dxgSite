@@ -2,6 +2,9 @@ package com.shahenpc.web.controller.exam;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +31,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  * @date 2022-07-27
  */
 @RestController
+@Api(tags = "考试_题库管理")
 @RequestMapping("/exam/bank")
 public class PersonnelAppointQuestionBankController extends BaseController
 {
@@ -37,6 +41,7 @@ public class PersonnelAppointQuestionBankController extends BaseController
     /**
      * 查询人事任免_法律知识考试_题库管理列表
      */
+    @ApiOperation("考试_题库列表")
     @PreAuthorize("@ss.hasPermi('system:bank:list')")
     @GetMapping("/list")
     public TableDataInfo list(PersonnelAppointQuestionBank personnelAppointQuestionBank)
@@ -62,6 +67,7 @@ public class PersonnelAppointQuestionBankController extends BaseController
     /**
      * 获取人事任免_法律知识考试_题库管理详细信息
      */
+    @ApiOperation("考试_题库详情")
     @PreAuthorize("@ss.hasPermi('system:bank:query')")
     @GetMapping(value = "/{questionBankId}")
     public AjaxResult getInfo(@PathVariable("questionBankId") Long questionBankId)
@@ -72,6 +78,7 @@ public class PersonnelAppointQuestionBankController extends BaseController
     /**
      * 新增人事任免_法律知识考试_题库管理
      */
+    @ApiOperation("考试_新增题库")
     @PreAuthorize("@ss.hasPermi('system:bank:add')")
     @Log(title = "人事任免_法律知识考试_题库管理", businessType = BusinessType.INSERT)
     @PostMapping
@@ -83,6 +90,7 @@ public class PersonnelAppointQuestionBankController extends BaseController
     /**
      * 修改人事任免_法律知识考试_题库管理
      */
+    @ApiOperation("考试_编辑题库")
     @PreAuthorize("@ss.hasPermi('system:bank:edit')")
     @Log(title = "人事任免_法律知识考试_题库管理", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -94,6 +102,7 @@ public class PersonnelAppointQuestionBankController extends BaseController
     /**
      * 删除人事任免_法律知识考试_题库管理
      */
+    @ApiOperation("考试_删除题库")
     @PreAuthorize("@ss.hasPermi('system:bank:remove')")
     @Log(title = "人事任免_法律知识考试_题库管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{questionBankIds}")

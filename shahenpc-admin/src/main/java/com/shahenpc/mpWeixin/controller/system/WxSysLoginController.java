@@ -7,12 +7,10 @@ import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.common.core.domain.model.LoginBody;
 import com.shahenpc.common.core.domain.model.LoginUser;
 import com.shahenpc.common.core.redis.RedisCache;
-import com.shahenpc.common.utils.DateUtils;
-import com.shahenpc.common.utils.MessageUtils;
-import com.shahenpc.common.utils.ServletUtils;
-import com.shahenpc.common.utils.StringUtils;
+import com.shahenpc.common.utils.*;
 import com.shahenpc.common.utils.http.HttpUtils;
 import com.shahenpc.common.utils.ip.IpUtils;
+import com.shahenpc.common.utils.sign.Md5Utils;
 import com.shahenpc.framework.manager.AsyncManager;
 import com.shahenpc.framework.manager.factory.AsyncFactory;
 import com.shahenpc.framework.web.service.SysLoginService;
@@ -31,6 +29,7 @@ import com.sun.org.apache.xerces.internal.parsers.DTDParser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import liquibase.pro.packaged.T;
+import org.flowable.idm.engine.impl.persistence.entity.UserEntity;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -85,7 +84,10 @@ public class WxSysLoginController {
     @PostMapping("/wxlogin")
     public AjaxResult wxLogin(@RequestBody LoginBody loginBody) {
         AjaxResult ajax = AjaxResult.success();
-        SysUser userEntity = userService.selectUserByUserPhone(loginBody.getUsername());
+        SysUser userEntity = userService.selectUserByUserPhone(loginBody.getUsername(), "1");
+        if (userEntity == null) {
+            return AjaxResult.isEmpty("无此用户信息");
+        }
         if (userEntity != null && StringUtils.isEmpty(userEntity.getOpenId())) {
             String wxOpenId = getWxOpenId(loginBody.getCode());
             userEntity.setOpenId(wxOpenId);
@@ -100,6 +102,7 @@ public class WxSysLoginController {
         recordLoginInfo(loginUser.getUserId());
         String token = tokenService.createToken(loginUser);
         ajax.put(Constants.TOKEN, token);
+        ajax.put("userInfo", userEntity);
         return ajax;
     }
     //endregion
@@ -141,12 +144,13 @@ public class WxSysLoginController {
         AjaxResult ajax = AjaxResult.success();
 
         //判断是否已经存在该手机用户
-        SysUser exitUser = userService.selectUserByUserPhone(dto.getPhoneNumber());
+        SysUser exitUser = userService.selectUserByUserPhone(dto.getPhoneNumber(), "3");
+        SysUser userEntity = new SysUser();
+        String defaultPwd = "defaultpwd";
         // 不存在则将客户进新新增注册
         if (exitUser == null) {
-            SysUser userEntity = new SysUser();
             userEntity.setPhonenumber(dto.getPhoneNumber());
-            userEntity.setPassword("123456");
+            userEntity.setPassword(SecurityUtils.encryptPassword(defaultPwd));
             userEntity.setIdentity("3");
             userEntity.setNickName(dto.getNickName());
             userEntity.setAvatar(dto.getAvatarUrl());
@@ -157,6 +161,9 @@ public class WxSysLoginController {
             userEntity.setUserName(dto.getPhoneNumber());
             userEntity.setDelFlag("0");
             userService.insertUser(userEntity);
+            ajax.put("user", userEntity);
+        } else {
+            ajax.put("user", exitUser);
         }
 
         LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(dto.getPhoneNumber());
@@ -199,8 +206,10 @@ public class WxSysLoginController {
 
     //region // 获取投票小程序链接==> 待测试
     // todo-ht  获取投票小程序链接==>发布后方可进行测试
+
     /**
      * 获取投票小程序链接
+     *
      * @param dto
      * @return
      * @throws IOException
@@ -216,7 +225,7 @@ public class WxSysLoginController {
         map.put("query", dto.getQuery());
         map.put("env_version", dto.getEnv_version());
         map.put("expire_type", 0);
-        String res = HttpUtils.SendPost("https://api.weixin.qq.com/wxa/generate_urllink?access_token="+dto.getAccess_token(),map);
+        String res = HttpUtils.SendPost("https://api.weixin.qq.com/wxa/generate_urllink?access_token=" + dto.getAccess_token(), map);
         return res;
     }
     //endregion
@@ -237,7 +246,7 @@ public class WxSysLoginController {
         String param = getParamStr(dto);
         String res = HttpUtils.sendGet("https://api.weixin.qq.com/sns/jscode2session", param);
         WxAuthVo authVo = JSON.parseObject(JSON.parse(res).toString(), WxAuthVo.class);
-        if (authVo.getErrcode() == 0) {
+        if (authVo != null) {
             return authVo.getOpenid();
         } else {
             return "";

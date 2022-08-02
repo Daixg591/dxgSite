@@ -49,7 +49,7 @@ public interface ISysUserService
      * @param phonenumber
      * @return
      */
-    public SysUser selectUserByUserPhone(String phonenumber);
+    public SysUser selectUserByUserPhone(String phonenumber,String identity);
 
     /**
      * 通过用户ID查询用户

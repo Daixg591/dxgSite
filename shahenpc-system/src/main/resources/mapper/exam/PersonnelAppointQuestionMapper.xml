@@ -20,7 +20,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPersonnelAppointQuestionVo">
-        select qu_id, qu_type, qu_bank_id, level, qu_con, analysis, remark, create_by, create_time, update_by, update_time, del_flag from personnel_appoint_question
+        select qu_id, qu_type, qu_bank_id, level, qu_con, analysis, remark, create_by, create_time,
+               update_by, update_time, del_flag from personnel_appoint_question
     </sql>
 
     <select id="selectPersonnelAppointQuestionList" parameterType="PersonnelAppointQuestion" resultMap="PersonnelAppointQuestionResult">
@@ -97,4 +98,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{quId}
         </foreach>
     </delete>
+
+
 </mapper>

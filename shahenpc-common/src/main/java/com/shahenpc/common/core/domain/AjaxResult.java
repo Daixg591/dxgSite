@@ -3,6 +3,7 @@ package com.shahenpc.common.core.domain;
 import java.util.HashMap;
 import com.shahenpc.common.constant.HttpStatus;
 import com.shahenpc.common.utils.StringUtils;
+import io.lettuce.core.api.push.PushListener;
 
 /**
  * 操作消息提醒
@@ -122,6 +123,12 @@ public class AjaxResult extends HashMap<String, Object>
         return AjaxResult.error(msg, null);
     }
 
+
+    public static AjaxResult isEmpty(String msg)
+    {
+        return AjaxResult.isEmpty(msg, null);
+    }
+
     /**
      * 返回错误消息
      * 
@@ -132,6 +139,12 @@ public class AjaxResult extends HashMap<String, Object>
     public static AjaxResult error(String msg, Object data)
     {
         return new AjaxResult(HttpStatus.ERROR, msg, data);
+    }
+
+    public static AjaxResult isEmpty(String msg, Object data)
+    {
+
+        return new AjaxResult(HttpStatus.BAD_REQUEST, msg, data);
     }
 
     /**
@@ -145,6 +158,11 @@ public class AjaxResult extends HashMap<String, Object>
     {
         return new AjaxResult(code, msg, null);
     }
+
+    public static  AjaxResult isEmpty(int code, String msg){
+        return new AjaxResult(code, msg, null);
+    }
+
 
     /**
      * 方便链式调用

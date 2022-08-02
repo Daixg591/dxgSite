@@ -205,7 +205,7 @@
 
     <select id="selectUserByUserPhone" parameterType="String" resultMap="SysUserResult">
         <include refid="selectUserVo"></include>
-        where u.phonenumber=#{phonenumber}
+        where u.phonenumber=#{phonenumber} and u.identity=#{identity}
     </select>
 
     <select id="selectUserById" parameterType="Long" resultMap="SysUserResult">

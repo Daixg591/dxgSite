@@ -11,6 +11,7 @@ import com.shahenpc.system.domain.law.dto.DyAuthCodeDto;
 import com.shahenpc.system.domain.law.dto.LawQueryDto;
 import com.shahenpc.system.domain.law.vo.HotNewsVo;
 import com.shahenpc.system.domain.law.vo.HotSearchVo;
+import com.sun.xml.internal.bind.v2.runtime.output.Encoded;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jsoup.Jsoup;
@@ -21,7 +22,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.beans.Encoder;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +51,7 @@ public class LawController {
      */
     @ApiOperation("法律集合")
     @GetMapping("/list")
-    public Object list(LawQueryDto dto) {
+    public Object list(LawQueryDto dto) throws UnsupportedEncodingException {
         String param = getDto(dto);
         String res = HttpUtils.sendGet("https://flk.npc.gov.cn/api/", param);
         return res;
@@ -97,6 +101,7 @@ public class LawController {
     //endregion
 
     //region // 爬虫获取百度热搜排行榜
+
     /**
      * 爬虫获取百度热搜排行榜
      *
@@ -170,7 +175,7 @@ public class LawController {
      *
      * @return
      */
-    private String getDto(LawQueryDto dto) {
+    private String getDto(LawQueryDto dto) throws UnsupportedEncodingException {
         String res = "";
         if (StringUtils.isNull(dto.getPage()) || StringUtils.isEmpty(dto.getPage())) {
             dto.setPage("1");
@@ -183,7 +188,8 @@ public class LawController {
         res += "&size=" + dto.getSize();
 
         if (StringUtils.isNotNull(dto.getFgbt()) || StringUtils.isNotEmpty(dto.getFgbt())) {
-            res += "&fgbt=" + dto.getFgbt();
+//            res += "&fgbt=" + dto.getFgbt();
+            res += "&fgbt=" + URLEncoder.encode(dto.getFgbt(), "utf-8");
         }
 
         if (StringUtils.isNotNull(dto.getType()) || StringUtils.isNotEmpty(dto.getType())) {
@@ -191,7 +197,7 @@ public class LawController {
         }
 
         if (StringUtils.isNotNull(dto.getSearchType()) || StringUtils.isNotEmpty(dto.getSearchType())) {
-            res += "&searchType=" + dto.getSearchType();
+            res += "&searchType=" + dto.getSearchType() + "%3Baccurate";
         }
 
         if (StringUtils.isNotNull(dto.getGbrqStart()) || StringUtils.isNotEmpty(dto.getGbrqStart())) {

@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
 import com.shahenpc.common.core.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 人事任免_法律知识考虑_试卷管理对象 personnel_appoint_exam_paper
  * 
@@ -14,6 +16,11 @@ import com.shahenpc.common.core.domain.BaseEntity;
 public class PersonnelAppointExamPaper extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 本试卷试题集合
+     */
+    private List<PersonnelAppointQuestion> quList;
 
     /** 试卷id */
     private Long examPaperId;
@@ -79,5 +86,13 @@ public class PersonnelAppointExamPaper extends BaseEntity
             .append("updateTime", getUpdateTime())
             .append("delFlag", getDelFlag())
             .toString();
+    }
+
+    public List<PersonnelAppointQuestion> getQuList() {
+        return quList;
+    }
+
+    public void setQuList(List<PersonnelAppointQuestion> quList) {
+        this.quList = quList;
     }
 }

@@ -130,8 +130,9 @@ public class SysUserServiceImpl implements ISysUserService
      * @return
      */
     @Override
-    public SysUser selectUserByUserPhone(String phonenumber){
-        return userMapper.selectUserByUserPhone(phonenumber);
+    public SysUser selectUserByUserPhone(String phonenumber,String identity){
+        SysUser entity=userMapper.selectUserByUserPhone(phonenumber,identity);
+        return entity;
     }
 
     /**

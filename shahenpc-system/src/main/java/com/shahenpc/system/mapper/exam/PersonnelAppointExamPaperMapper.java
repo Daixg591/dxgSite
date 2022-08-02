@@ -2,6 +2,8 @@ package com.shahenpc.system.mapper.exam;
 
 import java.util.List;
 import com.shahenpc.system.domain.exam.PersonnelAppointExamPaper;
+import com.shahenpc.system.domain.exam.PersonnelAppointQuestion;
+import com.shahenpc.system.domain.exam.dto.RandomQuDto;
 
 /**
  * 人事任免_法律知识考虑_试卷管理Mapper接口
@@ -58,4 +60,11 @@ public interface PersonnelAppointExamPaperMapper
      * @return 结果
      */
     public int deletePersonnelAppointExamPaperByExamPaperIds(Long[] examPaperIds);
+
+    /**
+     * 根据随机组题参数,随机生成试卷的试题
+     * @param dto
+     * @return
+     */
+    public List<PersonnelAppointQuestion> selectRandomQuestionList(RandomQuDto dto);
 }

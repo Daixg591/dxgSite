@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
 import com.shahenpc.common.core.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 人事任免_法律知识考试_试题管理对象 personnel_appoint_question
  * 
@@ -14,6 +16,9 @@ import com.shahenpc.common.core.domain.BaseEntity;
 public class PersonnelAppointQuestion extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
+
+    /** 答案集合 */
+    private List<PersonnelAppointAnswer> answerList;
 
     /** 试题Id */
     private Long quId;
@@ -40,6 +45,7 @@ public class PersonnelAppointQuestion extends BaseEntity
 
     /** 删除标识 */
     private String delFlag;
+
 
     public void setQuId(Long quId) 
     {
@@ -121,5 +127,13 @@ public class PersonnelAppointQuestion extends BaseEntity
             .append("updateTime", getUpdateTime())
             .append("delFlag", getDelFlag())
             .toString();
+    }
+
+    public List<PersonnelAppointAnswer> getAnswerList() {
+        return answerList;
+    }
+
+    public void setAnswerList(List<PersonnelAppointAnswer> answerList) {
+        this.answerList = answerList;
     }
 }

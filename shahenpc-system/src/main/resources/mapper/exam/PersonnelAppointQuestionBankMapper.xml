@@ -1,39 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.exam.PersonnelAppointQuestionBankMapper">
-    
+
     <resultMap type="PersonnelAppointQuestionBank" id="PersonnelAppointQuestionBankResult">
-        <result property="questionBankId"    column="question_bank_id"    />
-        <result property="bankName"    column="bank_name"    />
-        <result property="bankDescribe"    column="bank_describe"    />
-        <result property="remark"    column="remark"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="delFlag"    column="del_flag"    />
+        <result property="questionBankId" column="question_bank_id"/>
+        <result property="bankName" column="bank_name"/>
+        <result property="bankDescribe" column="bank_describe"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="bankType" column="bank_type"/>
     </resultMap>
 
     <sql id="selectPersonnelAppointQuestionBankVo">
-        select question_bank_id, bank_name, bank_describe, remark, create_by, create_time, update_by, update_time, del_flag from personnel_appoint_question_bank
+        select question_bank_id,
+               bank_name,
+               bank_describe,
+               remark,
+               create_by,
+               bank_type,
+               create_time,
+               update_by,
+               update_time,
+               del_flag
+        from personnel_appoint_question_bank
     </sql>
 
-    <select id="selectPersonnelAppointQuestionBankList" parameterType="PersonnelAppointQuestionBank" resultMap="PersonnelAppointQuestionBankResult">
+    <select id="selectPersonnelAppointQuestionBankList" parameterType="PersonnelAppointQuestionBank"
+            resultMap="PersonnelAppointQuestionBankResult">
         <include refid="selectPersonnelAppointQuestionBankVo"/>
-        <where>  
-            <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
-            <if test="bankDescribe != null  and bankDescribe != ''"> and bank_describe = #{bankDescribe}</if>
+        <where>
+            <if test="bankName != null  and bankName != ''">and bank_name like concat('%', #{bankName}, '%')</if>
+            <if test="bankDescribe != null  and bankDescribe != ''">and bank_describe = #{bankDescribe}</if>
         </where>
     </select>
-    
-    <select id="selectPersonnelAppointQuestionBankByQuestionBankId" parameterType="Long" resultMap="PersonnelAppointQuestionBankResult">
+
+    <select id="selectPersonnelAppointQuestionBankByQuestionBankId" parameterType="Long"
+            resultMap="PersonnelAppointQuestionBankResult">
         <include refid="selectPersonnelAppointQuestionBankVo"/>
         where question_bank_id = #{questionBankId}
     </select>
-        
-    <insert id="insertPersonnelAppointQuestionBank" parameterType="PersonnelAppointQuestionBank" useGeneratedKeys="true" keyProperty="questionBankId">
+
+    <insert id="insertPersonnelAppointQuestionBank" parameterType="PersonnelAppointQuestionBank" useGeneratedKeys="true"
+            keyProperty="questionBankId">
         insert into personnel_appoint_question_bank
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="bankName != null">bank_name,</if>
@@ -44,7 +58,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
-         </trim>
+            <if test="bankType != null">bank_type,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="bankName != null">#{bankName},</if>
             <if test="bankDescribe != null">#{bankDescribe},</if>
@@ -54,7 +69,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
-         </trim>
+            <if test="bankType != null">#{bankType},</if>
+        </trim>
     </insert>
 
     <update id="updatePersonnelAppointQuestionBank" parameterType="PersonnelAppointQuestionBank">
@@ -68,16 +84,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="bankType != null">bank_type = #{bankType},</if>
         </trim>
         where question_bank_id = #{questionBankId}
     </update>
 
     <delete id="deletePersonnelAppointQuestionBankByQuestionBankId" parameterType="Long">
-        delete from personnel_appoint_question_bank where question_bank_id = #{questionBankId}
+        delete
+        from personnel_appoint_question_bank
+        where question_bank_id = #{questionBankId}
     </delete>
 
     <delete id="deletePersonnelAppointQuestionBankByQuestionBankIds" parameterType="String">
-        delete from personnel_appoint_question_bank where question_bank_id in 
+        delete from personnel_appoint_question_bank where question_bank_id in
         <foreach item="questionBankId" collection="array" open="(" separator="," close=")">
             #{questionBankId}
         </foreach>

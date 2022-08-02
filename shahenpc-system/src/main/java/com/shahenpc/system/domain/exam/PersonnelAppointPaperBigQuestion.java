@@ -20,7 +20,7 @@ public class PersonnelAppointPaperBigQuestion extends BaseEntity
 
     /** 试卷id */
     @Excel(name = "试卷id")
-    private String examPaperId;
+    private Long examPaperId;
 
     /** 大题类型 */
     @Excel(name = "大题类型")
@@ -38,12 +38,12 @@ public class PersonnelAppointPaperBigQuestion extends BaseEntity
     {
         return bigQuestionId;
     }
-    public void setExamPaperId(String examPaperId) 
+    public void setExamPaperId(Long examPaperId)
     {
         this.examPaperId = examPaperId;
     }
 
-    public String getExamPaperId() 
+    public Long getExamPaperId()
     {
         return examPaperId;
     }
