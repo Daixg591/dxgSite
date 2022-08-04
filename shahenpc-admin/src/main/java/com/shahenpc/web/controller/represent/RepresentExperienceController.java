@@ -85,6 +85,7 @@ public class RepresentExperienceController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody RepresentExperience representExperience)
     {
+        representExperience.setUserId(getUserId());
         return toAjax(representExperienceService.insertRepresentExperience(representExperience));
     }
 

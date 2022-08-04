@@ -861,9 +861,12 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             }
             StandardCensor censor=standardCensorService.selectByProcessId(hisIns.getId());
             if(censor != null) {
+                flowTask.setStartUserName(censor.getCreateBy());
+                flowTask.setOrganName(censor.getOrganName());
                 flowTask.setSerial(censor.getCensorId());
                 flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
+
             }
             flowList.add(flowTask);
         }
@@ -1013,6 +1016,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             flowTask.setStartDeptName(startUser.getDept().getDeptName());
             StandardCensor censor = standardCensorService.selectByProcessId(task.getProcessInstanceId());
             if(censor != null) {
+                flowTask.setStartUserName(censor.getCreateBy());
+                flowTask.setOrganName(censor.getOrganName());
                 flowTask.setSerial(censor.getCensorId());
                 flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
@@ -1075,6 +1080,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             //个性值
             StandardCensor censor=standardCensorService.selectByProcessId(histTask.getProcessInstanceId());
             if(censor != null) {
+                flowTask.setStartUserName(censor.getCreateBy());
+                flowTask.setOrganName(censor.getOrganName());
                 flowTask.setSerial(censor.getCensorId());
                 flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
@@ -2471,7 +2478,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         StandardCensor censorProcess = new StandardCensor();
         List<StandardCensor> listuser= standardCensorService.selectStandardCensorList(censorProcess);
         SysDictData dictParam = new SysDictData();
-        dictParam.setDictType("motion_type");
+        dictParam.setDictType("censor_type");
         List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;

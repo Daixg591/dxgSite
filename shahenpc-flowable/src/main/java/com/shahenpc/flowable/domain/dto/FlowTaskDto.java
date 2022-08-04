@@ -125,4 +125,8 @@ public class FlowTaskDto implements Serializable {
     @ApiModelProperty("评价")
     private Integer rate;
 
+    /**发文机关*/
+    @ApiModelProperty("发文机关")
+    private String organName;
+
 }

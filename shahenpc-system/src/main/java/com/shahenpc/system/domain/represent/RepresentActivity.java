@@ -2,6 +2,7 @@ package com.shahenpc.system.domain.represent;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -13,6 +14,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-21
  */
+@Data
 public class RepresentActivity extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -53,6 +55,8 @@ public class RepresentActivity extends BaseEntity
     /**  */
     @Excel(name = "")
     private String content;
+
+    private Long sendUserId;
 
     public void setActivityId(Long activityId) 
     {

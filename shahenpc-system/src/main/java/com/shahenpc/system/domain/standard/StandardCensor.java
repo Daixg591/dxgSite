@@ -112,9 +112,14 @@ public class StandardCensor extends BaseEntity
     /** 发送id */
     @Excel(name = "发送id")
     private Long sendUserId;
+    /**发文机关*/
+    private String organName;
 
+    private String address;
 
-    public void setFileType(Integer fileType) 
+    private Integer rate;
+
+    public void setFileType(Integer fileType)
     {
         this.fileType = fileType;
     }

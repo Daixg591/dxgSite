@@ -12,9 +12,11 @@ import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.SecurityUtils;
 import com.shahenpc.system.domain.feature.FeatureDoubleWorkTrace;
 import com.shahenpc.system.domain.feature.dto.*;
+import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.mapper.SysUserMapper;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkTraceMapper;
 import com.shahenpc.system.service.ISysDictDataService;
+import com.shahenpc.system.service.represent.IRepresentWorkLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper;
@@ -136,13 +138,22 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         return featureDoubleWorkMapper.selectByMonth();
     }
 
-
+    @Autowired
+    private IRepresentWorkLogService representWorkLogService;
     @Override
     public int newAdd(FeatureDoubleWork featureDoubleWork) {
         SysUser user = sysUserMapper.selectUserById(featureDoubleWork.getSubmitUserId());
         if(!user.getStatus().equals(1)){
             featureDoubleWork.setCreateTime(DateUtils.getNowDate());
             int a =  featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork);
+            //添加日志
+            RepresentWorkLog log = new RepresentWorkLog();
+            log.setEventType(3);
+            log.setEventId(featureDoubleWork.getDoubleId());
+            log.setUserId(featureDoubleWork.getSubmitUserId());
+            log.setRemark("双联工作！");
+            representWorkLogService.insertRepresentWorkLog(log);
+
             FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
             featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
             featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());

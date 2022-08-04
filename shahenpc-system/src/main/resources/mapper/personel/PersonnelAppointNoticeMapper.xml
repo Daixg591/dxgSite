@@ -19,10 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="type"    column="type"    />
         <result property="readCnt"    column="read_cnt"    />
         <result property="shareCnt"    column="share_cnt"    />
+        <result property="banner"    column="banner"    />
     </resultMap>
 
     <sql id="selectPersonnelAppointNoticeVo">
-        select notice_id, cover_url, title, details, state, remark, create_by, create_time, update_by, update_time, del_flag,type,read_cnt,share_cnt
+        select notice_id, cover_url, title, details, state, remark, create_by, create_time, update_by, update_time, del_flag,type,read_cnt,share_cnt,banner
         from personnel_appoint_notice
     </sql>
 
@@ -33,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="details != null  and details != ''"> and details = #{details}</if>
             <if test="state != null  and state != ''"> and state = #{state}</if>
+            <if test="banner != null  and banner != ''"> and banner = #{banner}</if>
              <if test="type != null and type != ''">
                  and type = #{type}
              </if>
@@ -61,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null">type,</if>
             <if test="readCnt != null">read_cnt,</if>
             <if test="shareCnt != null">share_cnt,</if>
+            <if test="banner != null">banner,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="coverUrl != null">#{coverUrl},</if>
@@ -76,6 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null">#{type},</if>
             <if test="readCnt != null">#{readCnt},</if>
             <if test="shareCnt != null">#{shareCnt},</if>
+            <if test="banner != null">#{banner},</if>
          </trim>
     </insert>
 
@@ -95,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null">type = #{type},</if>
             <if test="readCnt != null">read_cnt = #{readCnt},</if>
             <if test="shareCnt != null">share_cnt = #{shareCnt},</if>
+            <if test="banner != null">banner = #{banner},</if>
         </trim>
         where notice_id = #{noticeId}
     </update>

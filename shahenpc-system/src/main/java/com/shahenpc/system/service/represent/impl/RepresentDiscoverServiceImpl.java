@@ -12,9 +12,11 @@ import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
 import com.shahenpc.system.domain.feature.dto.FeatureLineDto;
 import com.shahenpc.system.domain.represent.RepresentDiscoverTrack;
+import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.domain.represent.dto.*;
 import com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper;
 import com.shahenpc.system.service.ISysDictDataService;
+import com.shahenpc.system.service.represent.IRepresentWorkLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.represent.RepresentDiscoverMapper;
@@ -66,11 +68,20 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
      * @param representDiscover 代-代发现
      * @return 结果
      */
+    @Autowired
+    private IRepresentWorkLogService representWorkLogService;
     @Override
     public int insertRepresentDiscover(RepresentDiscover representDiscover)
     {
         representDiscover.setCreateTime(DateUtils.getNowDate());
         int disc =  representDiscoverMapper.insertRepresentDiscover(representDiscover);
+        RepresentWorkLog log = new RepresentWorkLog();
+        log.setEventType(4);
+        log.setEventId(representDiscover.getDiscoverId());
+        log.setUserId(representDiscover.getSendUserId());
+        log.setRemark("代表发现！");
+        representWorkLogService.insertRepresentWorkLog(log);
+
         RepresentDiscoverTrack track = new RepresentDiscoverTrack();
         track.setSendUserId(representDiscover.getSendUserId());
         track.setReceiveUserId(representDiscover.getReceiveUserId());

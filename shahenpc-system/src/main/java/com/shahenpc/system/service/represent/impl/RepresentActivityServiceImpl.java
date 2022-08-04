@@ -3,9 +3,11 @@ package com.shahenpc.system.service.represent.impl;
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.system.domain.represent.RepresentActivityRecord;
+import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.domain.represent.dto.*;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper;
 import com.shahenpc.system.mapper.represent.*;
+import com.shahenpc.system.service.represent.IRepresentWorkLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.domain.represent.RepresentActivity;
@@ -107,11 +109,20 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
         return representActivityMapper.deleteRepresentActivityByActivityId(activityId);
     }
 
+    @Autowired
+    private IRepresentWorkLogService representWorkLogService;
+
     @Override
     @Transactional
     public int newAdd(ActivityAddDto dto) {
         dto.setCreateTime(DateUtils.getNowDate());
        int suss = representActivityMapper.insertRepresentActivity(dto);
+        RepresentWorkLog log = new RepresentWorkLog();
+        log.setEventType(1);
+        log.setEventId(dto.getActivityId());
+        log.setUserId(dto.getSendUserId());
+        log.setRemark("履职活动！");
+        representWorkLogService.insertRepresentWorkLog(log);
         for(RepresentActivityRecord item:dto.getRecord()){
             item.setActivityId(dto.getActivityId());
             item.setCreateTime(DateUtils.getNowDate());

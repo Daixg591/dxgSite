@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.represent;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-26
  */
+@Data
 public class RepresentExperience extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -29,6 +31,8 @@ public class RepresentExperience extends BaseEntity
     /**  */
     @Excel(name = "")
     private String picUrl;
+
+    private Long userId;
 
     public void setExperienceId(Long experienceId) 
     {
