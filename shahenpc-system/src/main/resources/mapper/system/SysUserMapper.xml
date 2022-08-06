@@ -126,40 +126,6 @@
     </sql>
 
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
-<<<<<<< HEAD
-		select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
-               u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date, u.job_date, u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,
-		       d.dept_name, d.leader from sys_user u
-		left join sys_dept d on u.dept_id = d.dept_id
-		where u.del_flag = '0'
-		<if test="userId != null and userId != 0">
-			AND u.user_id = #{userId}
-		</if>
-		<if test="userName != null and userName != ''">
-			AND u.user_name like concat('%', #{userName}, '%')
-		</if>
-		<if test="status != null and status != ''">
-			AND u.status = #{status}
-		</if>
-		<if test="identity != null and identity != ''">
-			AND u.identity = #{identity}
-		</if>
-		<if test="phonenumber != null and phonenumber != ''">
-			AND u.phonenumber like concat('%', #{phonenumber}, '%')
-		</if>
-		<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-			AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
-		</if>
-		<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-			AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
-		</if>
-		<if test="deptId != null and deptId != 0">
-			AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
-		</if>
-		<!-- 数据范围过滤 -->
-		${params.dataScope}
-	</select>
-=======
         select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status,
         u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
         u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date,
@@ -196,7 +162,6 @@
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
->>>>>>> HuangTao
 
     <select id="selectAllocatedList" parameterType="SysUser" resultMap="SysUserResult">
         select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber, u.status, u.create_time
@@ -411,7 +376,6 @@
         </foreach>
     </delete>
 
-<<<<<<< HEAD
 	<!--===================================分割线-->
 	<select id="selectUserByuserIds" resultMap="SysUserResult">
 		<include refid="selectUserVo"/>
@@ -429,23 +393,4 @@
 		u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date, u.job_date, u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu
 	   from sys_user u WHERE u.identity = #{identity}
 	</select>
-=======
-    <!--===================================分割线-->
-    <select id="selectUserByuserIds" resultMap="SysUserResult">
-        <include refid="selectUserVo"/>
-        where u.user_id in(#{userIds})
-    </select>
-    <select id="selectByWomanCount" resultType="java.lang.Integer">
-        SELECT COUNT(u.user_id)
-        FROM sys_user u
-        WHERE u.sex = 0
-          AND u.identity = 1
-    </select>
-    <select id="selectByManCount" resultType="java.lang.Integer">
-        SELECT COUNT(u.user_id)
-        FROM sys_user u
-        WHERE u.sex = 1
-          AND u.identity = 1
-    </select>
->>>>>>> HuangTao
 </mapper>

@@ -242,30 +242,17 @@ public class SysUserController extends BaseController {
      * 人大代表性别分布
      */
     @ApiOperation("性别饼图")
-<<<<<<< HEAD
     @GetMapping("/gender/cake/{identity}")
     public AjaxResult genderCake(@PathVariable("identity")String identity){
         return AjaxResult.success(userService.genderCake(identity));
-=======
-    @PreAuthorize("@ss.hasPermi('user:gender:cake')")
-    @GetMapping("/gender/cake")
-    public AjaxResult genderCake() {
-        return AjaxResult.success(userService.genderCake());
->>>>>>> HuangTao
     }
 
     /**
      * 人大代表年龄分布
      */
     @ApiOperation("年龄饼图")
-<<<<<<< HEAD
     @GetMapping("/age/cake/{identity}")
     public AjaxResult ageCake(@PathVariable("identity")String identity){
-=======
-    @PreAuthorize("@ss.hasPermi('user:age:cake')")
-    @GetMapping("/age/cake")
-    public AjaxResult ageCake() {
->>>>>>> HuangTao
 
         return AjaxResult.success(userService.ageCake(identity));
     }
@@ -274,14 +261,8 @@ public class SysUserController extends BaseController {
      * 人大代表学历分布
      */
     @ApiOperation("学历饼图")
-<<<<<<< HEAD
     @GetMapping("/degree/cake/{identity}")
     public AjaxResult degreeCake(@PathVariable("identity")String identity){
-=======
-    @PreAuthorize("@ss.hasPermi('user:degree:cake')")
-    @GetMapping("/degree/cake")
-    public AjaxResult degreeCake() {
->>>>>>> HuangTao
 
         return AjaxResult.success(userService.degreeCake(identity));
     }
