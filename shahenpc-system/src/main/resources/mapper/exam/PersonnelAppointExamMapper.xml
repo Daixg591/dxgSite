@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.exam.PersonnelAppointExamMapper">
+
+    <resultMap type="PersonnelAppointExam" id="PersonnelAppointExamResult">
+        <result property="examId" column="exam_id"/>
+        <result property="examName" column="exam_name"/>
+        <result property="passSocre" column="pass_socre"/>
+        <result property="duration" column="duration"/>
+        <result property="notice" column="notice"/>
+        <result property="thanksWords" column="thanks_words"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="paperId" column="paper_id"/>
+    </resultMap>
+
+    <sql id="selectPersonnelAppointExamVo">
+        select exam_id,
+               exam_name,
+               pass_socre,
+               duration,
+               notice,
+               thanks_words,
+               remark,
+               create_by,
+               paper_id,
+               create_time,
+               update_by,
+               update_time,
+               del_flag
+        from personnel_appoint_exam
+    </sql>
+
+    <select id="selectPersonnelAppointExamList" parameterType="PersonnelAppointExam"
+            resultMap="PersonnelAppointExamResult">
+        <include refid="selectPersonnelAppointExamVo"/>
+        <where>
+            <if test="examName != null  and examName != ''">and exam_name like concat('%', #{examName}, '%')</if>
+            <if test="passSocre != null ">and pass_socre = #{passSocre}</if>
+            <if test="duration != null ">and duration = #{duration}</if>
+            <if test="notice != null  and notice != ''">and notice = #{notice}</if>
+            <if test="thanksWords != null  and thanksWords != ''">and thanks_words = #{thanksWords}</if>
+            <if test="ids != null and ids.length>0 ">and exam_id in
+                <foreach item="item" collection="ids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPersonnelAppointExamByExamId" parameterType="Long" resultMap="PersonnelAppointExamResult">
+        <include refid="selectPersonnelAppointExamVo"/>
+        where exam_id = #{examId}
+    </select>
+
+    <insert id="insertPersonnelAppointExam" parameterType="PersonnelAppointExam" useGeneratedKeys="true"
+            keyProperty="examId">
+        insert into personnel_appoint_exam
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="examName != null">exam_name,</if>
+            <if test="passSocre != null">pass_socre,</if>
+            <if test="duration != null">duration,</if>
+            <if test="notice != null">notice,</if>
+            <if test="thanksWords != null">thanks_words,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="paperId != null">paper_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="examName != null">#{examName},</if>
+            <if test="passSocre != null">#{passSocre},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="notice != null">#{notice},</if>
+            <if test="thanksWords != null">#{thanksWords},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="paperId != null">#{paperId},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePersonnelAppointExam" parameterType="PersonnelAppointExam">
+        update personnel_appoint_exam
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="examName != null">exam_name = #{examName},</if>
+            <if test="passSocre != null">pass_socre = #{passSocre},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="notice != null">notice = #{notice},</if>
+            <if test="thanksWords != null">thanks_words = #{thanksWords},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="paperId != null">paper_id = #{paperId},</if>
+        </trim>
+        where exam_id = #{examId}
+    </update>
+
+    <delete id="deletePersonnelAppointExamByExamId" parameterType="Long">
+        delete
+        from personnel_appoint_exam
+        where exam_id = #{examId}
+    </delete>
+
+    <delete id="deletePersonnelAppointExamByExamIds" parameterType="String">
+        delete from personnel_appoint_exam where exam_id in
+        <foreach item="examId" collection="array" open="(" separator="," close=")">
+            #{examId}
+        </foreach>
+    </delete>
+</mapper>

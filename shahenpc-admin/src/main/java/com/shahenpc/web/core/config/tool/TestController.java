@@ -57,7 +57,7 @@ public class TestController extends BaseController
         }
         else
         {
-            return R.fail("用户不存在");
+            return R.fail("用户名或密码错误");
         }
     }
 

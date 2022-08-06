@@ -8,7 +8,7 @@ package com.shahenpc.common.core.domain.model;
 public class LoginBody
 {
     /**
-     * 用户名
+     * 模拟用户名(手机号)
      */
     private String username;
 
@@ -26,6 +26,16 @@ public class LoginBody
      * 唯一标识
      */
     private String uuid;
+
+    /**
+     * 微信唯一标识
+     */
+    private String wxOpenId;
+
+    /**
+     * 微信登录Code
+     */
+    private String jsCode;
 
     public String getUsername()
     {
@@ -65,5 +75,21 @@ public class LoginBody
     public void setUuid(String uuid)
     {
         this.uuid = uuid;
+    }
+
+    public String getWxOpenId() {
+        return wxOpenId;
+    }
+
+    public void setWxOpenId(String wxOpenId) {
+        this.wxOpenId = wxOpenId;
+    }
+
+    public String getJsCode() {
+        return jsCode;
+    }
+
+    public void setJsCode(String jsCode) {
+        this.jsCode = jsCode;
     }
 }

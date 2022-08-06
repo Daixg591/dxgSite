@@ -217,14 +217,15 @@ public class PersonnelAppointRegisterController extends BaseController {
         //获取最小日期
         Date minMonth = DateUtils.parseDate(monthList.get(monthList.size() - 1));
         PersonnelQueryDto dto = new PersonnelQueryDto();
-        dto.setStartTime(minMonth);
+//        dto.setStartTime(minMonth);
         List<PersonnelAppointRegister> nearlist = personnelAppointRegisterService.selectPersonnelAppointRegisterList(dto);
         for (int i = 0; i < monthList.size(); i++) {
             int finalI = i;
             dto.setCurrentData(DateUtils.parseDate(monthList.get(finalI)));
             String cntt = monthList.get(finalI);
             List<PersonnelAppointRegister> nearlist1 = nearlist.stream().
-                    filter(w -> DateUtils.dateTime(w.getRegTime()).contains(cntt)).collect(Collectors.toList());
+                    filter(w -> DateUtils.dateTime(w.getCreateTime()).contains(cntt)).collect(Collectors.toList());
+//                    filter(w -> DateUtils.dateTime(w.getRegTime()).contains(cntt)).collect(Collectors.toList());
             yList.add(nearlist1.size());
         }
         res.tendencyY = yList;

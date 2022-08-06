@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.exam.PersonnelAppointBillExamRelationMapper">
+    
+    <resultMap type="PersonnelAppointBillExamRelation" id="PersonnelAppointBillExamRelationResult">
+        <result property="regExamId"    column="reg_exam_id"    />
+        <result property="registerId"    column="register_id"    />
+        <result property="examId"    column="exam_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectPersonnelAppointBillExamRelationVo">
+        select reg_exam_id, register_id, exam_id, remark, create_by, create_time, update_by, update_time, del_flag from personnel_appoint_bill_exam_relation
+    </sql>
+
+    <select id="selectPersonnelAppointBillExamRelationList" parameterType="PersonnelAppointBillExamRelation" resultMap="PersonnelAppointBillExamRelationResult">
+        <include refid="selectPersonnelAppointBillExamRelationVo"/>
+        <where>  
+            <if test="registerId != null  and registerId != ''"> and register_id = #{registerId}</if>
+            <if test="examId != null  and examId != ''"> and exam_id = #{examId}</if>
+        </where>
+    </select>
+    
+    <select id="selectPersonnelAppointBillExamRelationByRegExamId" parameterType="Long" resultMap="PersonnelAppointBillExamRelationResult">
+        <include refid="selectPersonnelAppointBillExamRelationVo"/>
+        where reg_exam_id = #{regExamId}
+    </select>
+        
+    <insert id="insertPersonnelAppointBillExamRelation" parameterType="PersonnelAppointBillExamRelation" useGeneratedKeys="true" keyProperty="regExamId">
+        insert into personnel_appoint_bill_exam_relation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="registerId != null">register_id,</if>
+            <if test="examId != null">exam_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="registerId != null">#{registerId},</if>
+            <if test="examId != null">#{examId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePersonnelAppointBillExamRelation" parameterType="PersonnelAppointBillExamRelation">
+        update personnel_appoint_bill_exam_relation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="registerId != null">register_id = #{registerId},</if>
+            <if test="examId != null">exam_id = #{examId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where reg_exam_id = #{regExamId}
+    </update>
+
+    <delete id="deletePersonnelAppointBillExamRelationByRegExamId" parameterType="Long">
+        delete from personnel_appoint_bill_exam_relation where reg_exam_id = #{regExamId}
+    </delete>
+
+    <delete id="deletePersonnelAppointBillExamRelationByRegExamIds" parameterType="String">
+        delete from personnel_appoint_bill_exam_relation where reg_exam_id in 
+        <foreach item="regExamId" collection="array" open="(" separator="," close=")">
+            #{regExamId}
+        </foreach>
+    </delete>
+</mapper>

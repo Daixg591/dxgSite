@@ -11,12 +11,22 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
+import java.util.Map;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import com.alibaba.fastjson2.JSONObject;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.shahenpc.common.constant.Constants;
@@ -243,6 +253,42 @@ public class HttpUtils
         }
         return result.toString();
     }
+
+    /**
+     * 向指定 URL 发送POST方法的请求
+     * @param url
+     * @param map
+     * @return
+     * @throws IOException
+     */
+    public static String SendPost(String url,Map<String, Object> map) throws IOException
+    {
+
+        //创建一个获取连接客户端的工具
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        //创建Post请求
+        HttpPost httpPost = new HttpPost(url);
+        //添加请求头
+        httpPost.addHeader("Content-Type","application/json;charset=UTF-8");
+        //封装请求参数，将map集合转换成json格式
+        JSONObject jsonString = new JSONObject(map);
+        //使用StringEntity转换成实体类型
+        StringEntity entity = new StringEntity(jsonString.toString(),"UTF-8");
+        //将封装的参数添加到Post请求中
+        httpPost.setEntity(entity);
+        //执行请求
+        CloseableHttpResponse response =  httpClient.execute(httpPost);
+        //获取响应的实体
+        HttpEntity responseEntity = response.getEntity();
+        //转化成字符串
+        String entityString = EntityUtils.toString(responseEntity);
+        //转换成JSON格式输出
+//        JSONObject result =  JSONObject.parseObject(entityString);
+//        response.close();
+//        httpClient.close();
+        return entityString;
+    }
+
 
     private static class TrustAnyTrustManager implements X509TrustManager
     {
