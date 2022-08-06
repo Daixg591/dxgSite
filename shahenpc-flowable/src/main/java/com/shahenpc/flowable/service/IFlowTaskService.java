@@ -230,6 +230,6 @@ public interface IFlowTaskService {
 
     List<MotionPieDto> pie(MotionTaskVo vo);
 
-    BigDecimal ring(MotionTaskVo vo);
+    String ring(MotionTaskVo vo);
 
 }

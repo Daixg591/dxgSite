@@ -45,7 +45,6 @@ public class FeatureDoubleWorkController extends BaseController
      * 查询双联工作列表
      */
     @ApiOperation("双联工作列表")
-    @PreAuthorize("@ss.hasPermi('feature:work:list')")
     @GetMapping("/list")
     public TableDataInfo list(FeatureDoubleWork featureDoubleWork)
     {

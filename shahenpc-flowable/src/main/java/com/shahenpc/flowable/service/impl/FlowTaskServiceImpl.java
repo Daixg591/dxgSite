@@ -2493,7 +2493,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
     }
 
     @Override
-    public BigDecimal ring(MotionTaskVo vo) {
+    public String ring(MotionTaskVo vo) {
         Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
         //先拿流程id 根据流程名字
         FlowProcDefDto dto =  flowDeployMapper.detail(vo.getProcessName());
@@ -2523,13 +2523,12 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 .desc().list().size();
         // 待处理的  已处理的   全部接收的
         int count = stayTotal+receiveTotal+doneTotal;
-
         MotionRingDto cakedto =new MotionRingDto();
         BigDecimal a = new BigDecimal(stayTotal);
         BigDecimal b = new BigDecimal(count);
-        BigDecimal gd =  a.divide(b,0,BigDecimal.ROUND_UP);
-        cakedto.setValue(Integer.parseInt(gd.toString()));
-        return gd;
+        BigDecimal gd =  a.divide(b,2,BigDecimal.ROUND_CEILING);
+        cakedto.setValue(gd.toString());
+        return cakedto.getValue();
     }
 
 
