@@ -43,6 +43,15 @@ public interface SysUserMapper
      */
     public SysUser selectUserByUserName(String userName);
 
+
+    /**
+     * 通过用户手机号查询用户
+     * @param phonenumber
+     * @param identity
+     * @return
+     */
+    public SysUser selectUserByUserPhone(@Param("phonenumber")String phonenumber,@Param("identity")String identity);
+
     /**
      * 通过用户ID查询用户
      * 

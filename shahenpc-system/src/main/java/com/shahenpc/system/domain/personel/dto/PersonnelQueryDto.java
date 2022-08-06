@@ -1,6 +1,8 @@
 package com.shahenpc.system.domain.personel.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,6 +15,10 @@ import java.util.Date;
 @Data
 public class PersonnelQueryDto implements Serializable
 {
+
+
+
+    private String idCard;
     /**
      * 姓名
      */
@@ -31,11 +37,15 @@ public class PersonnelQueryDto implements Serializable
     /**
      * 开始时间
      */
+    @DateTimeFormat(style = "yyyy-MM-dd")
+    @JsonFormat(pattern ="yyyy-MM-dd",timezone = "GMT+8",shape = JsonFormat.Shape.STRING)
     private Date startTime;
 
     /**
      * 结束时间
      */
+    @DateTimeFormat(style = "yyyy-MM-dd")
+    @JsonFormat(pattern ="yyyy-MM-dd",timezone = "GMT+8",shape = JsonFormat.Shape.STRING)
     private Date endTime;
 
     /**

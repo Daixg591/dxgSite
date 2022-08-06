@@ -128,6 +128,17 @@ public class SysUserServiceImpl implements ISysUserService
     }
 
     /**
+     * 通过手机号查询用户
+     * @param phonenumber
+     * @return
+     */
+    @Override
+    public SysUser selectUserByUserPhone(String phonenumber,String identity){
+        SysUser entity=userMapper.selectUserByUserPhone(phonenumber,identity);
+        return entity;
+    }
+
+    /**
      * 通过用户ID查询用户
      * 
      * @param userId 用户ID
@@ -139,8 +150,8 @@ public class SysUserServiceImpl implements ISysUserService
         SysUser res=userMapper.selectUserById(userId);
         PersonnelAppointEduLog param=new PersonnelAppointEduLog();
         param.setUserId(userId);
-        List<PersonnelAppointEduLog> eduList=eduLogService.selectPersonnelAppointEduLogList(param);
-        res.setEduLogList(eduList);
+//        List<PersonnelAppointEduLog> eduList=eduLogService.selectPersonnelAppointEduLogList(param);
+//        res.setEduLogList(eduList);
         return res;
     }
 

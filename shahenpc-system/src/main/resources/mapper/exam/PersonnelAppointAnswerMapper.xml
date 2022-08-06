@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.exam.PersonnelAppointAnswerMapper">
+
+    <resultMap type="PersonnelAppointAnswer" id="PersonnelAppointAnswerResult">
+        <result property="answerId" column="answer_id"/>
+        <result property="itemImg" column="item_img"/>
+        <result property="itemCon" column="item_con"/>
+        <result property="itemAnalysis" column="item_analysis"/>
+        <result property="itemTag" column="item_tag"/>
+        <result property="isAnswer" column="is_answer"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="quId" column="qu_id"/>
+    </resultMap>
+
+    <sql id="selectPersonnelAppointAnswerVo">
+        select answer_id,
+               item_img,
+               item_con,
+               item_analysis,
+               qu_id,
+               item_tag,
+               is_answer,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               del_flag
+        from personnel_appoint_answer
+    </sql>
+
+    <select id="selectPersonnelAppointAnswerList" parameterType="PersonnelAppointAnswer"
+            resultMap="PersonnelAppointAnswerResult">
+        <include refid="selectPersonnelAppointAnswerVo"/>
+        <where>
+            <if test="itemImg != null  and itemImg != ''">and item_img = #{itemImg}</if>
+            <if test="itemCon != null  and itemCon != ''">and item_con = #{itemCon}</if>
+            <if test="itemAnalysis != null  and itemAnalysis != ''">and item_analysis = #{itemAnalysis}</if>
+            <if test="itemTag != null  and itemTag != ''">and item_tag = #{itemTag}</if>
+            <if test="isAnswer != null ">and is_answer = #{isAnswer}</if>
+            <if test="quId != null ">and qu_id = #{quId}</if>
+        </where>
+    </select>
+
+    <select id="selectPersonnelAppointAnswerByAnswerId" parameterType="Long" resultMap="PersonnelAppointAnswerResult">
+        <include refid="selectPersonnelAppointAnswerVo"/>
+        where answer_id = #{answerId}
+    </select>
+
+    <insert id="insertPersonnelAppointAnswer" parameterType="PersonnelAppointAnswer" useGeneratedKeys="true"
+            keyProperty="answerId">
+        insert into personnel_appoint_answer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="itemImg != null">item_img,</if>
+            <if test="itemCon != null">item_con,</if>
+            <if test="itemAnalysis != null">item_analysis,</if>
+            <if test="itemTag != null">item_tag,</if>
+            <if test="isAnswer != null">is_answer,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="quId != null">qu_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="itemImg != null">#{itemImg},</if>
+            <if test="itemCon != null">#{itemCon},</if>
+            <if test="itemAnalysis != null">#{itemAnalysis},</if>
+            <if test="itemTag != null">#{itemTag},</if>
+            <if test="isAnswer != null">#{isAnswer},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="quId != null">#{quId},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePersonnelAppointAnswer" parameterType="PersonnelAppointAnswer">
+        update personnel_appoint_answer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="itemImg != null">item_img = #{itemImg},</if>
+            <if test="itemCon != null">item_con = #{itemCon},</if>
+            <if test="itemAnalysis != null">item_analysis = #{itemAnalysis},</if>
+            <if test="itemTag != null">item_tag = #{itemTag},</if>
+            <if test="isAnswer != null">is_answer = #{isAnswer},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="quId != null">qu_id = #{quId},</if>
+        </trim>
+        where answer_id = #{answerId}
+    </update>
+
+    <delete id="deletePersonnelAppointAnswerByAnswerId" parameterType="Long">
+        delete
+        from personnel_appoint_answer
+        where answer_id = #{answerId}
+    </delete>
+
+    <delete id="deletePersonnelAppointAnswerByAnswerIds" parameterType="String">
+        delete from personnel_appoint_answer where answer_id in
+        <foreach item="answerId" collection="array" open="(" separator="," close=")">
+            #{answerId}
+        </foreach>
+    </delete>
+</mapper>
