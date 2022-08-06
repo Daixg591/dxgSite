@@ -127,6 +127,7 @@ public class RepresentActivityController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody ActivityAddDto representActivity)
     {
+        representActivity.setSendUserId(getUserId());
         return toAjax(representActivityService.newAdd(representActivity));
     }
 }

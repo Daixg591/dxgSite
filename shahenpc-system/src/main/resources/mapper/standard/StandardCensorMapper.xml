@@ -33,10 +33,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="procinsId"    column="procIns_id"    />
         <result property="deployId"    column="deploy_id"    />
         <result property="sendUserId"    column="send_user_id"    />
+        <result property="address"    column="address"    />
+        <result property="rate"    column="rate"    />
+        <result property="organName"    column="organ_name"    />
     </resultMap>
 
     <sql id="selectStandardCensorVo">
-        select censor_id, file_type, create_by, create_time, update_by, update_time, remark, file_name, record_agencies, record_serial, report_agencies, report_serial, pass_date, pass_agencies, bulletin_date, enforce_date, file_url, accept_user_id, accept_user_name, copy_user_id, copy_user_name, process_type, censor_tache, status, approval_user_id, procIns_id, deploy_id, send_user_id from standard_censor
+        select censor_id, file_type, create_by, create_time, update_by, update_time, remark, file_name, record_agencies, record_serial, report_agencies, report_serial, pass_date, pass_agencies, bulletin_date, enforce_date, file_url, accept_user_id, accept_user_name, copy_user_id, copy_user_name, process_type, censor_tache, status, approval_user_id, procIns_id, deploy_id, send_user_id, address, rate, organ_name from standard_censor
     </sql>
 
     <select id="selectStandardCensorList" parameterType="StandardCensor" resultMap="StandardCensorResult">
@@ -64,6 +67,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="procinsId != null  and procinsId != ''"> and procIns_id = #{procinsId}</if>
             <if test="deployId != null  and deployId != ''"> and deploy_id = #{deployId}</if>
             <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="rate != null "> and rate = #{rate}</if>
+            <if test="organName != null  and organName != ''"> and organ_name like concat('%', #{organName}, '%')</if>
         </where>
     </select>
 
@@ -102,6 +108,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="procinsId != null">procIns_id,</if>
             <if test="deployId != null">deploy_id,</if>
             <if test="sendUserId != null">send_user_id,</if>
+            <if test="address != null">address,</if>
+            <if test="rate != null">rate,</if>
+            <if test="organName != null">organ_name,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="fileType != null">#{fileType},</if>
@@ -131,6 +140,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="procinsId != null">#{procinsId},</if>
             <if test="deployId != null">#{deployId},</if>
             <if test="sendUserId != null">#{sendUserId},</if>
+            <if test="address != null">#{address},</if>
+            <if test="rate != null">#{rate},</if>
+            <if test="organName != null">#{organName},</if>
         </trim>
     </insert>
 
@@ -164,6 +176,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="procinsId != null">procIns_id = #{procinsId},</if>
             <if test="deployId != null">deploy_id = #{deployId},</if>
             <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="rate != null">rate = #{rate},</if>
+            <if test="organName != null">organ_name = #{organName},</if>
         </trim>
         where censor_id = #{censorId}
     </update>

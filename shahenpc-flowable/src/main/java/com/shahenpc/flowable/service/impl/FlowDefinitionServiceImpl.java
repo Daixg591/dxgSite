@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.shahenpc.common.core.domain.entity.SysDictData;
+import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.flowable.common.constant.ProcessConstants;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysUser;
@@ -17,6 +18,7 @@ import com.shahenpc.flowable.service.ISysDeployFormService;
 import com.shahenpc.system.domain.SysForm;
 import com.shahenpc.system.domain.represent.RepresentMotion;
 import com.shahenpc.system.domain.represent.RepresentMotionRecord;
+import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.domain.standard.StandardCensorRecord;
 import com.shahenpc.system.mapper.FlowDeployMapper;
@@ -26,6 +28,7 @@ import com.shahenpc.system.service.ISysPostService;
 import com.shahenpc.system.service.ISysUserService;
 import com.shahenpc.system.service.represent.IRepresentMotionRecordService;
 import com.shahenpc.system.service.represent.IRepresentMotionService;
+import com.shahenpc.system.service.represent.IRepresentWorkLogService;
 import com.shahenpc.system.service.standard.IStandardCensorRecordService;
 import com.shahenpc.system.service.standard.IStandardCensorService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +40,7 @@ import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.image.impl.DefaultProcessDiagramGenerator;
 import org.flowable.task.api.Task;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -250,6 +254,8 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
         }
     }
 
+    @Autowired
+    private IRepresentWorkLogService representWorkLogService;
 
     @Override
     @Transactional
@@ -294,6 +300,12 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
             //处理状态
             task.getDelegationState();
             representMotionService.insertRepresentMotion(representMotion);
+            RepresentWorkLog log = new RepresentWorkLog();
+            log.setEventType(5);
+            log.setEventId(representMotion.getMotionId());
+            log.setUserId(representMotion.getSendUserId());
+            log.setRemark("议案建议！");
+            representWorkLogService.insertRepresentWorkLog(log);
             RepresentMotionRecord  record = new RepresentMotionRecord();
             record.setMotionId(representMotion.getMotionId());
             record.setDeployId(processInstance.getDeploymentId());
@@ -315,14 +327,14 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
             if (Objects.nonNull(processDefinition) && processDefinition.isSuspended()) {
                 return AjaxResult.error("流程已被挂起,请先联系管理员！");
             }
-//           variables.put("skip", true);
-//           variables.put(ProcessConstants.FLOWABLE_SKIP_EXPRESSION_ENABLED, true);
             // 设置流程发起人Id到流程中
             SysUser sysUser = SecurityUtils.getLoginUser().getUser();
             identityService.setAuthenticatedUserId(sysUser.getUserId().toString());
             Map<String, Object> variables = new HashMap<>();
             variables.put("approval",standardCensor.getApprovalUserId());
             variables.put(ProcessConstants.PROCESS_INITIATOR, "");
+            variables.put("skip", true);
+            //variables.put(ProcessConstants.FLOWABLE_SKIP_EXPRESSION_ENABLED, true);
             ProcessInstance processInstance = runtimeService.startProcessInstanceById(procDefId,variables);
             // 给第一步申请人节点设置任务执行人和意见 todo:第一个节点不设置为申请人节点有点问题？
             Task task = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId()).singleResult();
@@ -331,28 +343,19 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
                 taskService.setAssignee(task.getId(), sysUser.getUserId().toString());
                 taskService.complete(task.getId(), variables);
             }
-            //motion.setMotionType(Integer.parseInt(variables.get("motionType").toString()));
-            // motion.setTitle(variables.get("title").toString());
-            //motion.setContent(variables.get("content").toString());
-            //提议人
-            // motion.setSuggestUserName(variables.get("suggestUserName").toString());
-            //选择审批人
-            // motion.setSuggestUserId(variables.get("approval").toString());
-            //数组存储
-            // List<SysUser> user=sysUserService.selectUserByuserIds(variables.get("approval").toString());
-            //prochsid 3b2bf51d-f863-11ec-a590-24698ed5e50b  创建流程id
-            // deployId 流程模板的id 417b0131-f85d-11ec-a590-24698ed5e50b
-            standardCensor.setProcinsId(task.getProcessInstanceId());
-            standardCensor.setDeployId(processInstance.getDeploymentId());
             //处理环节
             task.getName();
             //处理状态
             task.getDelegationState();
+            standardCensor.setProcinsId(task.getProcessInstanceId());
+            standardCensor.setDeployId(processInstance.getDeploymentId());
+            standardCensor.setCreateTime(DateUtils.getNowDate());
             standardCensorService.insertStandardCensor(standardCensor);
             StandardCensorRecord record = new StandardCensorRecord();
             record.setCensorId(standardCensor.getCensorId());
             record.setDeployId(processInstance.getDeploymentId());
             record.setProcinsId(task.getProcessInstanceId());
+            record.setCreateTime(DateUtils.getNowDate());
             standardCensorRecordService.insertStandardCensorRecord(record);
             return AjaxResult.success("流程启动成功");
         } catch (Exception e) {

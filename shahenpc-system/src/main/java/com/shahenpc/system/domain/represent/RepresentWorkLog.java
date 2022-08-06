@@ -20,7 +20,7 @@ public class RepresentWorkLog extends BaseEntity
 
     /** 事件类型 */
     @Excel(name = "事件类型")
-    private String eventType;
+    private Integer eventType;
 
     /** 事件id */
     @Excel(name = "事件id")
@@ -39,12 +39,12 @@ public class RepresentWorkLog extends BaseEntity
     {
         return id;
     }
-    public void setEventType(String eventType) 
+    public void setEventType(Integer eventType)
     {
         this.eventType = eventType;
     }
 
-    public String getEventType() 
+    public Integer getEventType()
     {
         return eventType;
     }
