@@ -2,6 +2,8 @@ package com.shahenpc.system.service.represent.impl;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.represent.RepresentWorkLog;
+import com.shahenpc.system.service.represent.IRepresentWorkLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.represent.RepresentExperienceMapper;
@@ -50,11 +52,20 @@ public class RepresentExperienceServiceImpl implements IRepresentExperienceServi
      * @param representExperience 代履职体会
      * @return 结果
      */
+    @Autowired
+    private IRepresentWorkLogService representWorkLogService;
+
     @Override
     public int insertRepresentExperience(RepresentExperience representExperience)
-    {
-        representExperience.setCreateTime(DateUtils.getNowDate());
-        return representExperienceMapper.insertRepresentExperience(representExperience);
+    {representExperience.setCreateTime(DateUtils.getNowDate());
+       int aa  =   representExperienceMapper.insertRepresentExperience(representExperience);
+        RepresentWorkLog log = new RepresentWorkLog();
+        log.setEventType(2);
+        log.setEventId(representExperience.getExperienceId());
+        log.setUserId(representExperience.getUserId());
+        log.setRemark("履职体会！");
+        representWorkLogService.insertRepresentWorkLog(log);
+        return aa;
     }
 
     /**

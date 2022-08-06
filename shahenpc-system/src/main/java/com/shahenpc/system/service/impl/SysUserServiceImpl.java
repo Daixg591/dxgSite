@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
 
+import com.shahenpc.system.domain.data.dto.DataCountDto;
 import com.shahenpc.system.domain.personel.PersonnelAppointEduLog;
+import com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper;
+import com.shahenpc.system.mapper.represent.RepresentDiscoverMapper;
 import com.shahenpc.system.service.personel.IPersonnelAppointEduLogService;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
@@ -665,5 +668,19 @@ public class SysUserServiceImpl implements ISysUserService
         return userMapper.appSelectUserList(user);
     }
 
+    @Autowired
+    private FeatureDoubleWorkMapper featureDoubleWorkMapper;
+    @Autowired
+    private RepresentDiscoverMapper representDiscoverMapper;
+    /***/
+    @Override
+    public DataCountDto count() {
+        DataCountDto  dto = new DataCountDto();
+        dto.setRepresentCount(userMapper.selectUserList(null).size());
+        dto.setPerformDutiesCount(1);
+        dto.setDoubleCount(featureDoubleWorkMapper.selectFeatureDoubleWorkList(null).size());
+        dto.setDiscoverCount(representDiscoverMapper.selectRepresentDiscoverList(null).size());
+        return dto;
+    }
 
 }

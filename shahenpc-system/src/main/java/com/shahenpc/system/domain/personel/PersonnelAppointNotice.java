@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.personel;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-08
  */
+@Data
 public class PersonnelAppointNotice extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -64,7 +66,7 @@ public class PersonnelAppointNotice extends BaseEntity {
      */
     private Integer type;
 
-
+    private Integer banner;
     /**
      * 删除标识
      */

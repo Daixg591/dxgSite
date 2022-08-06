@@ -861,9 +861,12 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             }
             StandardCensor censor=standardCensorService.selectByProcessId(hisIns.getId());
             if(censor != null) {
+                flowTask.setStartUserName(censor.getCreateBy());
+                flowTask.setOrganName(censor.getOrganName());
                 flowTask.setSerial(censor.getCensorId());
                 flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
+
             }
             flowList.add(flowTask);
         }
@@ -1013,6 +1016,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             flowTask.setStartDeptName(startUser.getDept().getDeptName());
             StandardCensor censor = standardCensorService.selectByProcessId(task.getProcessInstanceId());
             if(censor != null) {
+                flowTask.setStartUserName(censor.getCreateBy());
+                flowTask.setOrganName(censor.getOrganName());
                 flowTask.setSerial(censor.getCensorId());
                 flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
@@ -1075,6 +1080,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             //个性值
             StandardCensor censor=standardCensorService.selectByProcessId(histTask.getProcessInstanceId());
             if(censor != null) {
+                flowTask.setStartUserName(censor.getCreateBy());
+                flowTask.setOrganName(censor.getOrganName());
                 flowTask.setSerial(censor.getCensorId());
                 flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
@@ -2471,7 +2478,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         StandardCensor censorProcess = new StandardCensor();
         List<StandardCensor> listuser= standardCensorService.selectStandardCensorList(censorProcess);
         SysDictData dictParam = new SysDictData();
-        dictParam.setDictType("motion_type");
+        dictParam.setDictType("censor_type");
         List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
@@ -2486,7 +2493,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
     }
 
     @Override
-    public BigDecimal ring(MotionTaskVo vo) {
+    public String ring(MotionTaskVo vo) {
         Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
         //先拿流程id 根据流程名字
         FlowProcDefDto dto =  flowDeployMapper.detail(vo.getProcessName());
@@ -2516,13 +2523,12 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 .desc().list().size();
         // 待处理的  已处理的   全部接收的
         int count = stayTotal+receiveTotal+doneTotal;
-
         MotionRingDto cakedto =new MotionRingDto();
         BigDecimal a = new BigDecimal(stayTotal);
         BigDecimal b = new BigDecimal(count);
-        BigDecimal gd =  a.divide(b,0,BigDecimal.ROUND_UP);
-        cakedto.setValue(Integer.parseInt(gd.toString()));
-        return gd;
+        BigDecimal gd =  a.divide(b,2,BigDecimal.ROUND_CEILING);
+        cakedto.setValue(gd.toString());
+        return cakedto.getValue();
     }
 
 

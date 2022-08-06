@@ -3,6 +3,7 @@ package com.shahenpc.system.service;
 import java.util.List;
 
 import com.shahenpc.common.core.domain.entity.SysUser;
+import com.shahenpc.system.domain.data.dto.DataCountDto;
 import com.shahenpc.system.domain.dto.NpcCakeDto;
 
 /**
@@ -217,4 +218,7 @@ public interface ISysUserService
     public List<NpcCakeDto> degreeCake(String identity);
 
     public List<SysUser> appSelectUserList(SysUser user);
+
+    /** 大数据页面数据*/
+    public DataCountDto count();
 }
