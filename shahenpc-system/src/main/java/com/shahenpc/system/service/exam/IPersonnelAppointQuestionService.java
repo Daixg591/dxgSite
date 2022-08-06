@@ -2,6 +2,7 @@ package com.shahenpc.system.service.exam;
 
 import java.util.List;
 import com.shahenpc.system.domain.exam.PersonnelAppointQuestion;
+import com.shahenpc.system.domain.exam.dto.RandomQuDto;
 
 /**
  * 人事任免_法律知识考试_试题管理Service接口
@@ -58,4 +59,13 @@ public interface IPersonnelAppointQuestionService
      * @return 结果
      */
     public int deletePersonnelAppointQuestionByQuId(Long quId);
+
+
+    /**
+     * 根据随机组题参数,随机生成试卷的试题
+     *
+     * @param dto
+     * @return
+     */
+    public List<PersonnelAppointQuestion> selectRandomQuestionList(RandomQuDto dto);
 }

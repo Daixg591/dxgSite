@@ -99,13 +99,5 @@
         </foreach>
     </delete>
 
-    <!--    ***********************        自定义     ************************************-->
-    <select id="selectRandomQuestionList" parameterType="com.shahenpc.system.domain.exam.dto.RandomQuDto"
-            resultMap="PersonnelAppointExamPaperResult">
-        <include refid="selectPersonnelAppointExamPaperVo"/>
-        <where>
-            <if test="bankId != null ">and qu_bank_id = #{bankId}</if>
-        </where>
-        ORDER BY RAND() LIMIT #{quCnt}
-    </select>
+
 </mapper>

@@ -61,10 +61,5 @@ public interface IPersonnelAppointExamPaperService
      */
     public int deletePersonnelAppointExamPaperByExamPaperId(Long examPaperId);
 
-    /**
-     * 根据随机组题参数,随机生成试卷的试题
-     * @param dto
-     * @return
-     */
-    public List<PersonnelAppointQuestion> selectRandomQuestionList(RandomQuDto dto);
+
 }

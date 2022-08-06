@@ -33,7 +33,7 @@ public class WxAuthDto {
      */
 
     public String getAppid() {
-        return appid="wxffe2361776a364f5";
+        return appid="wx67cf0baafa8ed699";
     }
 
     public void setAppid(String appid) {
@@ -41,7 +41,7 @@ public class WxAuthDto {
     }
 
     public String getSecret() {
-        return secret="e8c8c52b3cbcdfe062e855375da00c3b";
+        return secret="854c1f03d1263aff18c8cd6bedf910b3";
     }
 
     public void setSecret(String secret) {

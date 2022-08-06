@@ -17,6 +17,12 @@ public class PersonnelAppointQuestion extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+
+    /**
+     * 临时得分
+     */
+    private Double score;
+
     /** 答案集合 */
     private List<PersonnelAppointAnswer> answerList;
 
@@ -135,5 +141,13 @@ public class PersonnelAppointQuestion extends BaseEntity
 
     public void setAnswerList(List<PersonnelAppointAnswer> answerList) {
         this.answerList = answerList;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
     }
 }

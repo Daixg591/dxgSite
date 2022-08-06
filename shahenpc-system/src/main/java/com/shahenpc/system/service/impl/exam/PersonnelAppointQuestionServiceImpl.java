@@ -2,6 +2,7 @@ package com.shahenpc.system.service.impl.exam;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.exam.dto.RandomQuDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.exam.PersonnelAppointQuestionMapper;
@@ -92,5 +93,16 @@ public class PersonnelAppointQuestionServiceImpl implements IPersonnelAppointQue
     public int deletePersonnelAppointQuestionByQuId(Long quId)
     {
         return personnelAppointQuestionMapper.deletePersonnelAppointQuestionByQuId(quId);
+    }
+
+    /**
+     * 根据随机组题参数,随机生成试卷的试题
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    public List<PersonnelAppointQuestion> selectRandomQuestionList(RandomQuDto dto) {
+        return personnelAppointQuestionMapper.selectRandomQuestionList(dto);
     }
 }

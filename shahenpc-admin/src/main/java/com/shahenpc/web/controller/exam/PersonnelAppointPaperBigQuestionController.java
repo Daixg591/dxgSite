@@ -13,6 +13,7 @@ import com.shahenpc.system.domain.exam.dto.PaperQuestionDto;
 import com.shahenpc.system.domain.exam.dto.RandomQuDto;
 import com.shahenpc.system.service.exam.IPersonnelAppointExamPaperService;
 import com.shahenpc.system.service.exam.IPersonnelAppointPaperBigQuestionService;
+import com.shahenpc.system.service.exam.IPersonnelAppointQuestionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2022-07-27
  */
-@Api(tags = "考试_组卷管理")
+@Api(tags = "考试_试卷试题对应")
 @RestController
 @RequestMapping("/exam/bigqu")
 public class PersonnelAppointPaperBigQuestionController extends BaseController {
@@ -40,12 +41,16 @@ public class PersonnelAppointPaperBigQuestionController extends BaseController {
     @Autowired
     private IPersonnelAppointExamPaperService paperService;
 
+    @Autowired
+    private IPersonnelAppointQuestionService quService;
+
 
     /**
      * 查询人事任免_法律知识考试_试卷大题对应列表
      */
     @PreAuthorize("@ss.hasPermi('system:question:list')")
     @GetMapping("/list")
+    @ApiOperation("列表")
     public TableDataInfo list(PersonnelAppointPaperBigQuestion personnelAppointPaperBigQuestion) {
         startPage();
         List<PersonnelAppointPaperBigQuestion> list = personnelAppointPaperBigQuestionService.selectPersonnelAppointPaperBigQuestionList(personnelAppointPaperBigQuestion);
@@ -112,22 +117,30 @@ public class PersonnelAppointPaperBigQuestionController extends BaseController {
 
     /**
      * 新增/编辑 试卷试题逻辑
+     *
      * @param dto
      * @return
      */
     @NotNull
     private AjaxResult getAjaxResult(@RequestBody PaperQuestionDto dto) {
         PersonnelAppointExamPaper paperEntity = paperService.selectPersonnelAppointExamPaperByExamPaperId(dto.getPaperID());
+        if (paperEntity == null) {
+            return AjaxResult.isEmpty("无试卷信息");
+        }
         String tempType = "1";
-        if (paperEntity.getMakePaperType() == tempType) {
+        if (paperEntity.getMakePaperType().equals(tempType)) {
             // 随机组卷
             List<PersonnelAppointQuestion> resList = getRandomQuList(dto);
             return AjaxResult.success(resList);
         } else {
             // 选题组件
+            if (dto.getQuList() == null || dto.getQuList().size() < 1) {
+                return AjaxResult.isEmpty("无试题信息");
+            }
             for (int i = 0; i < dto.getQuList().size(); i++) {
                 PersonnelAppointPaperBigQuestion entity = new PersonnelAppointPaperBigQuestion();
-                entity.setBigQuestionId(dto.getQuList().get(i).getQuId());
+                entity.setQuId(dto.getQuList().get(i).getQuId());
+                entity.setScore(dto.getQuList().get(i).getScore());
                 entity.setExamPaperId(dto.getPaperID());
                 entity.setQuestionType(dto.getQuList().get(i).getQuType());
                 entity.setCreateBy(getUsername());
@@ -148,7 +161,7 @@ public class PersonnelAppointPaperBigQuestionController extends BaseController {
         List<PersonnelAppointQuestion> resList = new ArrayList<>();
         List<RandomQuDto> dtoList = dto.getRandomInfo();
         for (int i = 0; i < dtoList.size(); i++) {
-            List<PersonnelAppointQuestion> itemList = paperService.selectRandomQuestionList(dtoList.get(i));
+            List<PersonnelAppointQuestion> itemList = quService.selectRandomQuestionList(dtoList.get(i));
             for (int j = 0; j < itemList.size(); j++) {
                 resList.add(itemList.get(j));
             }
@@ -156,9 +169,11 @@ public class PersonnelAppointPaperBigQuestionController extends BaseController {
         for (int i = 0; i < resList.size(); i++) {
             PersonnelAppointPaperBigQuestion entity = new PersonnelAppointPaperBigQuestion();
             entity.setBigQuestionId(resList.get(i).getQuId());
+            entity.setScore(dto.getScore());
             entity.setExamPaperId(dto.getPaperID());
             entity.setQuestionType(resList.get(i).getQuType());
             entity.setCreateBy(getUsername());
+            entity.setQuId(resList.get(i).getQuId());
             personnelAppointPaperBigQuestionService.insertPersonnelAppointPaperBigQuestion(entity);
         }
         return resList;

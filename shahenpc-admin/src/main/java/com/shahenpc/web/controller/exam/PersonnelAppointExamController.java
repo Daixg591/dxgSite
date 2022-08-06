@@ -3,6 +3,8 @@ package com.shahenpc.web.controller.exam;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +31,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  * @date 2022-07-27
  */
 @RestController
+@Api(tags = "考试_信息管理")
 @RequestMapping("/exam/examDo")
 public class PersonnelAppointExamController extends BaseController {
     @Autowired
@@ -37,6 +40,7 @@ public class PersonnelAppointExamController extends BaseController {
     /**
      * 查询人事任免_法律知识考试_考试管理列表
      */
+    @ApiOperation("列表")
     @PreAuthorize("@ss.hasPermi('system:exam:list')")
     @GetMapping("/list")
     public TableDataInfo list(PersonnelAppointExam personnelAppointExam) {
@@ -62,6 +66,7 @@ public class PersonnelAppointExamController extends BaseController {
     /**
      * 获取人事任免_法律知识考试_考试管理详细信息
      */
+    @ApiOperation("详情")
     @PreAuthorize("@ss.hasPermi('system:exam:query')")
     @GetMapping(value = "/{examId}")
     public AjaxResult getInfo(@PathVariable("examId") Long examId) {
@@ -73,6 +78,7 @@ public class PersonnelAppointExamController extends BaseController {
     /**
      * 新增人事任免_法律知识考试_考试管理
      */
+    @ApiOperation("新增")
     @PreAuthorize("@ss.hasPermi('system:exam:add')")
     @Log(title = "人事任免_法律知识考试_考试管理", businessType = BusinessType.INSERT)
     @PostMapping
@@ -83,6 +89,7 @@ public class PersonnelAppointExamController extends BaseController {
     /**
      * 修改人事任免_法律知识考试_考试管理
      */
+    @ApiOperation("编辑")
     @PreAuthorize("@ss.hasPermi('system:exam:edit')")
     @Log(title = "人事任免_法律知识考试_考试管理", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -93,6 +100,7 @@ public class PersonnelAppointExamController extends BaseController {
     /**
      * 删除人事任免_法律知识考试_考试管理
      */
+    @ApiOperation("删除")
     @PreAuthorize("@ss.hasPermi('system:exam:remove')")
     @Log(title = "人事任免_法律知识考试_考试管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{examIds}")

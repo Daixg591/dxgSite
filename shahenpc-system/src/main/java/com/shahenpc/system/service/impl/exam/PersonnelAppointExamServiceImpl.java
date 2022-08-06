@@ -1,10 +1,15 @@
 package com.shahenpc.system.service.impl.exam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.system.domain.exam.PersonnelAppointExamPaper;
+import com.shahenpc.system.domain.exam.PersonnelAppointPaperBigQuestion;
+import com.shahenpc.system.domain.exam.PersonnelAppointQuestion;
 import com.shahenpc.system.mapper.exam.PersonnelAppointExamPaperMapper;
+import com.shahenpc.system.mapper.exam.PersonnelAppointPaperBigQuestionMapper;
+import com.shahenpc.system.mapper.exam.PersonnelAppointQuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.exam.PersonnelAppointExamMapper;
@@ -23,7 +28,13 @@ public class PersonnelAppointExamServiceImpl implements IPersonnelAppointExamSer
     private PersonnelAppointExamMapper personnelAppointExamMapper;
 
     @Autowired
+    private PersonnelAppointPaperBigQuestionMapper paperQuMapper;
+
+    @Autowired
     private PersonnelAppointExamPaperMapper paperMapper;
+
+    @Autowired
+    private PersonnelAppointQuestionMapper quMapper;
 
     /**
      * 查询人事任免_法律知识考试_考试管理
@@ -34,8 +45,21 @@ public class PersonnelAppointExamServiceImpl implements IPersonnelAppointExamSer
     @Override
     public PersonnelAppointExam selectPersonnelAppointExamByExamId(Long examId) {
         PersonnelAppointExam entity = personnelAppointExamMapper.selectPersonnelAppointExamByExamId(examId);
-        PersonnelAppointExamPaper paperEntity = paperMapper.selectPersonnelAppointExamPaperByExamPaperId(entity.getPaperId());
-        entity.setPaper(paperEntity);
+        if (entity != null) {
+            PersonnelAppointExamPaper paperEntity = paperMapper.selectPersonnelAppointExamPaperByExamPaperId(entity.getPaperId());
+            PersonnelAppointPaperBigQuestion paperQuParam = new PersonnelAppointPaperBigQuestion();
+            paperQuParam.setExamPaperId(paperEntity.getExamPaperId());
+            List<PersonnelAppointPaperBigQuestion> paperQuList = paperQuMapper.selectPersonnelAppointPaperBigQuestionList(paperQuParam);
+
+            List<PersonnelAppointQuestion> tempList = new ArrayList<>();
+            // 试卷试题对应关系数据集
+            for (int i = 0; i < paperQuList.size(); i++) {
+                PersonnelAppointQuestion quEntity = quMapper.selectPersonnelAppointQuestionByQuId(paperQuList.get(i).getQuId());
+                tempList.add(quEntity);
+            }
+            paperEntity.setQuList(tempList);
+            entity.setPaper(paperEntity);
+        }
         return entity;
     }
 

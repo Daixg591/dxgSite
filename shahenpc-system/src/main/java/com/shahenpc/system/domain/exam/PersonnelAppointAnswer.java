@@ -14,6 +14,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
 public class PersonnelAppointAnswer extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+
     /**
      * 答案Id
      */
@@ -22,7 +23,7 @@ public class PersonnelAppointAnswer extends BaseEntity {
     /**
      * 试题图片
      */
-    @Excel(name = "512")
+    @Excel(name = "试题图片")
     private String itemImg;
 
     /**
@@ -140,4 +141,5 @@ public class PersonnelAppointAnswer extends BaseEntity {
     public void setQuId(Long quId) {
         this.quId = quId;
     }
+
 }

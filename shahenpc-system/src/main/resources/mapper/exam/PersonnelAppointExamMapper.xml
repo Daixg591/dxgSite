@@ -46,6 +46,11 @@
             <if test="duration != null ">and duration = #{duration}</if>
             <if test="notice != null  and notice != ''">and notice = #{notice}</if>
             <if test="thanksWords != null  and thanksWords != ''">and thanks_words = #{thanksWords}</if>
+            <if test="ids != null and ids.length>0 ">and exam_id in
+                <foreach item="item" collection="ids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
     </select>
 

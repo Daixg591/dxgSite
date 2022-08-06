@@ -28,6 +28,11 @@ public class PaperQuestionDto {
      */
     private List<RandomQuDto> randomInfo;
 
+    /**
+     * 随机组卷每题分数
+     */
+    private Double score;
+
 
 }
 

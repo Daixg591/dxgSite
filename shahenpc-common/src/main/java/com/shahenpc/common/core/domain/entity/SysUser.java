@@ -118,8 +118,6 @@ public class SysUser extends BaseEntity {
     /**
      * 身份标识
      */
-//    @Excel(name = "身份标识")
-    @JsonIgnore
     private String identity;
 
     /**

@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
 import com.shahenpc.common.core.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 人事任免_法律知识考试_考试管理对象 personnel_appoint_exam
  *
@@ -13,6 +15,11 @@ import com.shahenpc.common.core.domain.BaseEntity;
  */
 public class PersonnelAppointExam extends BaseEntity {
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 根据Id集合查询
+     */
+    private Long[] ids;
 
     /**
      * 试卷试题信息
@@ -153,5 +160,13 @@ public class PersonnelAppointExam extends BaseEntity {
 
     public void setPaper(PersonnelAppointExamPaper paper) {
         this.paper = paper;
+    }
+
+    public Long[] getIds() {
+        return ids;
+    }
+
+    public void setIds(Long[] ids) {
+        this.ids = ids;
     }
 }

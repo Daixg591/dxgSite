@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.exam.PersonnelAppointAnswer;
 import com.shahenpc.system.domain.exam.PersonnelAppointPaperBigQuestion;
 import com.shahenpc.system.domain.exam.PersonnelAppointQuestion;
-import com.shahenpc.system.domain.exam.dto.RandomQuDto;
+import com.shahenpc.system.mapper.exam.PersonnelAppointAnswerMapper;
 import com.shahenpc.system.mapper.exam.PersonnelAppointPaperBigQuestionMapper;
 import com.shahenpc.system.mapper.exam.PersonnelAppointQuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class PersonnelAppointExamPaperServiceImpl implements IPersonnelAppointEx
     @Autowired
     private PersonnelAppointQuestionMapper quMapper;
 
+    @Autowired
+    private PersonnelAppointAnswerMapper answerMapper;
+
     /**
      * 查询人事任免_法律知识考虑_试卷管理
      *
@@ -41,6 +45,9 @@ public class PersonnelAppointExamPaperServiceImpl implements IPersonnelAppointEx
     @Override
     public PersonnelAppointExamPaper selectPersonnelAppointExamPaperByExamPaperId(Long examPaperId) {
         PersonnelAppointExamPaper entity = personnelAppointExamPaperMapper.selectPersonnelAppointExamPaperByExamPaperId(examPaperId);
+        if (entity == null) {
+            return null;
+        }
         PersonnelAppointPaperBigQuestion paperQuParam = new PersonnelAppointPaperBigQuestion();
         paperQuParam.setExamPaperId(entity.getExamPaperId());
         List<PersonnelAppointPaperBigQuestion> paperQuList = paperQuMapper.selectPersonnelAppointPaperBigQuestionList(paperQuParam);
@@ -48,8 +55,20 @@ public class PersonnelAppointExamPaperServiceImpl implements IPersonnelAppointEx
         List<PersonnelAppointQuestion> tempList = new ArrayList<>();
         // 试卷试题对应关系数据集
         for (int i = 0; i < paperQuList.size(); i++) {
-            PersonnelAppointQuestion quEntity = quMapper.selectPersonnelAppointQuestionByQuId(paperQuList.get(i).getBigQuestionId());
-            tempList.add(quEntity);
+            PersonnelAppointQuestion quEntity = quMapper.selectPersonnelAppointQuestionByQuId(paperQuList.get(i).getQuId());
+            if (quEntity != null) {
+                quEntity.setScore(paperQuList.get(i).getScore());
+                tempList.add(quEntity);
+                PersonnelAppointAnswer param = new PersonnelAppointAnswer();
+                param.setQuId(quEntity.getQuId());
+                List<PersonnelAppointAnswer> answerList = answerMapper.selectPersonnelAppointAnswerList(param);
+                if (answerList != null && answerList.size() > 0) {
+//                    for (int j = 0; j < answerList.size(); j++) {
+////                        answerList.get(j).setScore();
+//                    }
+                    quEntity.setAnswerList(answerList);
+                }
+            }
         }
         entity.setQuList(tempList);
         return entity;
@@ -112,14 +131,5 @@ public class PersonnelAppointExamPaperServiceImpl implements IPersonnelAppointEx
         return personnelAppointExamPaperMapper.deletePersonnelAppointExamPaperByExamPaperId(examPaperId);
     }
 
-    /**
-     * 根据随机组题参数,随机生成试卷的试题
-     *
-     * @param dto
-     * @return
-     */
-    @Override
-    public List<PersonnelAppointQuestion> selectRandomQuestionList(RandomQuDto dto) {
-        return personnelAppointExamPaperMapper.selectRandomQuestionList(dto);
-    }
+
 }

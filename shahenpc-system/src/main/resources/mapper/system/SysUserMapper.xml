@@ -76,6 +76,7 @@
                u.avatar,
                u.phonenumber,
                u.password,
+               u.user_status,
                u.sex,
                u.status,
                u.del_flag,

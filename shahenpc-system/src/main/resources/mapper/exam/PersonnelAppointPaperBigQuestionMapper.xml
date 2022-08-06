@@ -1,38 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.exam.PersonnelAppointPaperBigQuestionMapper">
-    
+
     <resultMap type="PersonnelAppointPaperBigQuestion" id="PersonnelAppointPaperBigQuestionResult">
-        <result property="bigQuestionId"    column="big_question_id"    />
-        <result property="examPaperId"    column="exam_paper_id"    />
-        <result property="questionType"    column="question_type"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="delFlag"    column="del_flag"    />
+        <result property="bigQuestionId" column="big_question_id"/>
+        <result property="examPaperId" column="exam_paper_id"/>
+        <result property="questionType" column="question_type"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="quId" column="qu_id"/>
+        <result property="score" column="score"/>
     </resultMap>
 
     <sql id="selectPersonnelAppointPaperBigQuestionVo">
-        select big_question_id, exam_paper_id, question_type, create_by, create_time, update_by, update_time, del_flag from personnel_appoint_paper_big_question
+        select big_question_id,
+               exam_paper_id,
+               question_type,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               del_flag,
+               qu_id,
+               score
+        from personnel_appoint_paper_big_question
     </sql>
 
-    <select id="selectPersonnelAppointPaperBigQuestionList" parameterType="PersonnelAppointPaperBigQuestion" resultMap="PersonnelAppointPaperBigQuestionResult">
+    <select id="selectPersonnelAppointPaperBigQuestionList" parameterType="PersonnelAppointPaperBigQuestion"
+            resultMap="PersonnelAppointPaperBigQuestionResult">
         <include refid="selectPersonnelAppointPaperBigQuestionVo"/>
-        <where>  
-            <if test="examPaperId != null  and examPaperId != ''"> and exam_paper_id = #{examPaperId}</if>
-            <if test="questionType != null  and questionType != ''"> and question_type = #{questionType}</if>
+        <where>
+            <if test="examPaperId != null  and examPaperId != ''">and exam_paper_id = #{examPaperId}</if>
+            <if test="questionType != null  and questionType != ''">and question_type = #{questionType}</if>
         </where>
     </select>
-    
-    <select id="selectPersonnelAppointPaperBigQuestionByBigQuestionId" parameterType="Long" resultMap="PersonnelAppointPaperBigQuestionResult">
+
+    <select id="selectPersonnelAppointPaperBigQuestionByBigQuestionId" parameterType="Long"
+            resultMap="PersonnelAppointPaperBigQuestionResult">
         <include refid="selectPersonnelAppointPaperBigQuestionVo"/>
         where big_question_id = #{bigQuestionId}
     </select>
-        
-    <insert id="insertPersonnelAppointPaperBigQuestion" parameterType="PersonnelAppointPaperBigQuestion" useGeneratedKeys="true" keyProperty="bigQuestionId">
+
+    <insert id="insertPersonnelAppointPaperBigQuestion" parameterType="PersonnelAppointPaperBigQuestion"
+            useGeneratedKeys="true" keyProperty="bigQuestionId">
         insert into personnel_appoint_paper_big_question
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="examPaperId != null">exam_paper_id,</if>
@@ -42,7 +57,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
-         </trim>
+            <if test="quId != null">qu_id,</if>
+            <if test="score != null">score,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="examPaperId != null">#{examPaperId},</if>
             <if test="questionType != null">#{questionType},</if>
@@ -51,7 +68,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
-         </trim>
+            <if test="quId != null">#{quId},</if>
+            <if test="score != null">#{score},</if>
+        </trim>
     </insert>
 
     <update id="updatePersonnelAppointPaperBigQuestion" parameterType="PersonnelAppointPaperBigQuestion">
@@ -64,16 +83,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="quId != null">qu_id = #{quId},</if>
+            <if test="score != null">score = #{score},</if>
         </trim>
         where big_question_id = #{bigQuestionId}
     </update>
 
     <delete id="deletePersonnelAppointPaperBigQuestionByBigQuestionId" parameterType="Long">
-        delete from personnel_appoint_paper_big_question where big_question_id = #{bigQuestionId}
+        delete
+        from personnel_appoint_paper_big_question
+        where big_question_id = #{bigQuestionId}
     </delete>
 
     <delete id="deletePersonnelAppointPaperBigQuestionByBigQuestionIds" parameterType="String">
-        delete from personnel_appoint_paper_big_question where big_question_id in 
+        delete from personnel_appoint_paper_big_question where big_question_id in
         <foreach item="bigQuestionId" collection="array" open="(" separator="," close=")">
             #{bigQuestionId}
         </foreach>

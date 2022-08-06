@@ -99,5 +99,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
-
+    <!--    ***********************        自定义     ************************************-->
+    <select id="selectRandomQuestionList" parameterType="com.shahenpc.system.domain.exam.dto.RandomQuDto"
+            resultMap="PersonnelAppointQuestionResult">
+        <include refid="selectPersonnelAppointQuestionVo"/>
+        <where>
+            <if test="bankId != null ">and qu_bank_id = #{bankId}</if>
+        </where>
+        ORDER BY RAND() LIMIT #{quCnt}
+    </select>
 </mapper>

@@ -217,7 +217,6 @@ public class WxSysLoginController {
     @ApiOperation("获取投票小程序链接")
     @PostMapping("/getvotelink")
     public String getSmProLink(@RequestBody SmProLinkDto dto) throws IOException {
-        AjaxResult ajax = AjaxResult.success();
         dto.setAccess_token(getWxAccessToken());
         dto.setExpire_type(0);
         Map<String, Object> map = new HashMap<>();

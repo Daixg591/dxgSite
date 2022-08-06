@@ -16,10 +16,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="delFlag"    column="del_flag"    />
+        <result property="score"    column="score"    />
+        <result property="regExamId"    column="reg_exam_id"    />
     </resultMap>
 
     <sql id="selectPersonnelAppointExamLogVo">
-        select log_id, qu_id, answer_id, answer_con, exam_id, user_id, create_by, create_time, update_by, update_time, del_flag from personnel_appoint_exam_log
+        select log_id, qu_id, answer_id, answer_con, exam_id, user_id, create_by, create_time, update_by, update_time, del_flag, score, reg_exam_id from personnel_appoint_exam_log
     </sql>
 
     <select id="selectPersonnelAppointExamLogList" parameterType="PersonnelAppointExamLog" resultMap="PersonnelAppointExamLogResult">
@@ -51,6 +53,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
+            <if test="score != null">score,</if>
+            <if test="regExamId != null">reg_exam_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="quId != null">#{quId},</if>
@@ -63,6 +67,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
+            <if test="score != null">#{score},</if>
+            <if test="regExamId != null">#{regExamId},</if>
          </trim>
     </insert>
 
@@ -79,6 +85,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="regExamId != null">reg_exam_id = #{regExamId},</if>
         </trim>
         where log_id = #{logId}
     </update>
