@@ -244,6 +244,11 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         return featureDoubleWorkMapper.appList(featureDoubleWork);
     }
 
+    @Override
+    public List<DoubleListDto> adminList(FeatureDoubleWork featureDoubleWork) {
+        return featureDoubleWorkMapper.adminList(featureDoubleWork);
+    }
+
     /**
      * 获取最近六个月份  ["2022-07","2022-06","2022-05"...]
      *

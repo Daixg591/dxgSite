@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.system.domain.feature.dto.DoubleListDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -47,7 +48,7 @@ public class FeatureDoubleWorkController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(FeatureDoubleWork featureDoubleWork) {
         startPage();
-        List<FeatureDoubleWork> list = featureDoubleWorkService.selectFeatureDoubleWorkList(featureDoubleWork);
+        List<DoubleListDto> list = featureDoubleWorkService.adminList(featureDoubleWork);
         return getDataTable(list);
     }
 

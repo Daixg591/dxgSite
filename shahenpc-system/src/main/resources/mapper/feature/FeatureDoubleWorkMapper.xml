@@ -19,10 +19,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="submitUserId"    column="submit_user_id"    />
         <result property="receiveUserId"    column="receive_user_id"    />
         <result property="isRead"    column="is_read"    />
+        <result property="rate"    column="rate"    />
+        <result property="address"    column="address"    />
+        <result property="location"    column="location"    />
     </resultMap>
 
     <sql id="selectFeatureDoubleWorkVo">
-        select double_id, double_type, title, status, content, pic_urls, create_by, create_time, update_by, update_time, remark, submit_user_id, receive_user_id, is_read from feature_double_work
+        select double_id, double_type, title, status, content, pic_urls, create_by, create_time, update_by, update_time, remark, submit_user_id, receive_user_id, is_read, rate, address, location from feature_double_work
     </sql>
 
     <select id="selectFeatureDoubleWorkList" parameterType="FeatureDoubleWork" resultMap="FeatureDoubleWorkResult">
@@ -36,6 +39,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="submitUserId != null "> and submit_user_id = #{submitUserId}</if>
             <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
             <if test="isRead != null "> and is_read = #{isRead}</if>
+            <if test="rate != null "> and rate = #{rate}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
         </where>
     </select>
 
@@ -60,6 +66,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="submitUserId != null">submit_user_id,</if>
             <if test="receiveUserId != null">receive_user_id,</if>
             <if test="isRead != null">is_read,</if>
+            <if test="rate != null">rate,</if>
+            <if test="address != null">address,</if>
+            <if test="location != null">location,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="doubleType != null">#{doubleType},</if>
@@ -75,6 +84,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="submitUserId != null">#{submitUserId},</if>
             <if test="receiveUserId != null">#{receiveUserId},</if>
             <if test="isRead != null">#{isRead},</if>
+            <if test="rate != null">#{rate},</if>
+            <if test="address != null">#{address},</if>
+            <if test="location != null">#{location},</if>
         </trim>
     </insert>
 
@@ -94,6 +106,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="submitUserId != null">submit_user_id = #{submitUserId},</if>
             <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
             <if test="isRead != null">is_read = #{isRead},</if>
+            <if test="rate != null">rate = #{rate},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="location != null">location = #{location},</if>
         </trim>
         where double_id = #{doubleId}
     </update>
@@ -109,6 +124,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     <!--======================================分割线-->
+    <resultMap id="adminList" type="com.shahenpc.system.domain.feature.dto.DoubleListDto" extends="FeatureDoubleWorkResult">
+
+    </resultMap>
+    <select id="adminList" resultMap="adminList" parameterType="FeatureDoubleWork">
+        select double_id, double_type, title, status, content, pic_urls, create_by, create_time, update_by, update_time, remark, submit_user_id, receive_user_id,
+               is_read,(SELECT u.avatar FROM sys_user u WHERE u.user_id = receive_user_id) AS avatar from feature_double_work
+        <where>
+            <if test="doubleType != null "> and double_type = #{doubleType}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="picUrls != null  and picUrls != ''"> and pic_urls = #{picUrls}</if>
+            <if test="submitUserId != null "> and submit_user_id = #{submitUserId}</if>
+            <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
+            <if test="isRead != null "> and is_read = #{isRead}</if>
+            <if test="rate != null">rate = #{rate},</if>
+        </where>
+    </select>
+
+
     <select id="selectByCakeType" resultMap="FeatureDoubleWorkResult">
         <include refid="selectFeatureDoubleWorkVo"/>
     </select>

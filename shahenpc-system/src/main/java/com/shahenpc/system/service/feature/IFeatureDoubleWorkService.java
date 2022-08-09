@@ -79,4 +79,6 @@ public interface IFeatureDoubleWorkService
     public FeatureLineDto line();
 
     public List<DoubleAppListDto> appList(FeatureDoubleWork featureDoubleWork);
+
+    public List<DoubleListDto> adminList(FeatureDoubleWork featureDoubleWork);
 }
