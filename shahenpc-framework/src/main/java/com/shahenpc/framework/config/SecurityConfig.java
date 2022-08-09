@@ -112,7 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/login", "/register", "/captchaImage",
                         "/wx/user/wxlogin","/wx/user/massesreg","/wx/user/getwxphone").anonymous()
                 .antMatchers("/app/login","/wx/user/wxlogin","/wx/user/massesreg",
-                        "/wx/user/getwxphone").permitAll()
+                        "/wx/user/getwxphone","/deputy/list").permitAll()
                 // 静态资源，可匿名访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()

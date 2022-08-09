@@ -28,6 +28,16 @@ public class SysUser extends BaseEntity {
 
     private String eduLogList;
 
+    /**
+     * 擅长领域(字典值)
+     */
+    private String goodArea;
+
+    /**
+     * 所属联络站Id
+     */
+    private Long contactStationId;
+
 
     /**
      * 用户ID
@@ -50,8 +60,6 @@ public class SysUser extends BaseEntity {
      * 在职状态
      */
     private String jobState;
-
-
 
 
     /**
@@ -158,7 +166,9 @@ public class SysUser extends BaseEntity {
             "48=裕固族,49=乌孜别克族,50=门巴族,51=鄂伦春族,52=独龙族,53=塔塔尔族,54=赫哲族,55=珞巴族")
     private String nation;
 
-    /** 用户状态 */
+    /**
+     * 用户状态
+     */
     private String userStatus;
 
     /**
@@ -187,7 +197,7 @@ public class SysUser extends BaseEntity {
     @Excel(name = "专业技术职务")
     private String duty;
 
-    @Excel(name="现任职务")
+    @Excel(name = "现任职务")
     private String nowDuty;
 
     /**
@@ -253,6 +263,22 @@ public class SysUser extends BaseEntity {
 
     public SysUser() {
 
+    }
+
+    public String getGoodArea() {
+        return goodArea;
+    }
+
+    public void setGoodArea(String goodArea) {
+        this.goodArea = goodArea;
+    }
+
+    public Long getContactStationId() {
+        return contactStationId;
+    }
+
+    public void setContactStationId(Long contactStationId) {
+        this.contactStationId = contactStationId;
     }
 
     public String getOrganName() {
@@ -386,15 +412,15 @@ public class SysUser extends BaseEntity {
     public String getIdCard() {
         return idCard;
     }
-    public void setUserStatus(String userStatus)
-    {
+
+    public void setUserStatus(String userStatus) {
         this.userStatus = userStatus;
     }
 
-    public String getUserStatus()
-    {
+    public String getUserStatus() {
         return userStatus;
     }
+
     public void setIdentity(String identity) {
         this.identity = identity;
     }
@@ -594,6 +620,8 @@ public class SysUser extends BaseEntity {
                 .append("userStatus", getUserStatus())
                 .append("nowDuty", getNowDuty())
                 .append("edu", getEdu())
+                .append("goodArea", getEdu())
+                .append("contactStationId", getEdu())
                 .toString();
     }
 
