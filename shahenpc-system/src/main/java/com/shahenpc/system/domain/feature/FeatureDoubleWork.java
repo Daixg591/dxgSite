@@ -54,11 +54,20 @@ public class FeatureDoubleWork extends BaseEntity
 
     /** 评价 */
     @Excel(name = "评价")
-    private Long rate;
+    private Integer rate;
 
     /** 回复 */
     @Excel(name = "回复")
     private String reply;
+
+    /** 通讯地点 */
+    @Excel(name = "通讯地点")
+    private String address;
+
+    /** 经纬度逗号分割 */
+    @Excel(name = "经纬度逗号分割")
+    private String location;
+
 
     public void setDoubleId(Long doubleId) 
     {

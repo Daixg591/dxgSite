@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.system.domain.feature.dto.DoubleListDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -49,7 +50,7 @@ public class FeatureDoubleWorkController extends BaseController
     public TableDataInfo list(FeatureDoubleWork featureDoubleWork)
     {
         startPage();
-        List<FeatureDoubleWork> list = featureDoubleWorkService.selectFeatureDoubleWorkList(featureDoubleWork);
+        List<DoubleListDto> list = featureDoubleWorkService.adminList(featureDoubleWork);
         return getDataTable(list);
     }
 
@@ -100,7 +101,7 @@ public class FeatureDoubleWorkController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody FeatureDoubleWork featureDoubleWork)
     {
-        featureDoubleWork.setCreateBy(getUsername());
+        featureDoubleWork.setCreateBy(getNickName());
         featureDoubleWork.setSubmitUserId(getUserId());
         return toAjax(featureDoubleWorkService.newAdd(featureDoubleWork));
     }
@@ -114,7 +115,7 @@ public class FeatureDoubleWorkController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody FeatureDoubleWork featureDoubleWork)
     {
-        featureDoubleWork.setUpdateBy(getUsername());
+        featureDoubleWork.setUpdateBy(getNickName());
         return toAjax(featureDoubleWorkService.newUpdate(featureDoubleWork));
     }
 

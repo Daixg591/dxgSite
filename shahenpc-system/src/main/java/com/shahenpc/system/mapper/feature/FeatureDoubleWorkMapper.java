@@ -2,10 +2,7 @@ package com.shahenpc.system.mapper.feature;
 
 import java.util.List;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
-import com.shahenpc.system.domain.feature.dto.DoubleAppListDto;
-import com.shahenpc.system.domain.feature.dto.FeatureEachCount;
-import com.shahenpc.system.domain.feature.dto.FeatureMonthDto;
-import com.shahenpc.system.domain.feature.dto.FeatureRing;
+import com.shahenpc.system.domain.feature.dto.*;
 
 /**
  * 双联工作Mapper接口
@@ -74,4 +71,6 @@ public interface FeatureDoubleWorkMapper
     public Integer getCount();
 
     public List<DoubleAppListDto> appList(FeatureDoubleWork featureDoubleWork);
+
+    public List<DoubleListDto> adminList(FeatureDoubleWork featureDoubleWork);
 }

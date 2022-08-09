@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.represent.RepresentWorkLogMapper">
-    
+
     <resultMap type="RepresentWorkLog" id="RepresentWorkLogResult">
         <result property="id"    column="id"    />
         <result property="eventType"    column="event_type"    />
@@ -22,18 +22,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectRepresentWorkLogList" parameterType="RepresentWorkLog" resultMap="RepresentWorkLogResult">
         <include refid="selectRepresentWorkLogVo"/>
-        <where>  
+        <where>
             <if test="eventType != null  and eventType != ''"> and event_type = #{eventType}</if>
             <if test="eventId != null "> and event_id = #{eventId}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
         </where>
     </select>
-    
+
     <select id="selectRepresentWorkLogById" parameterType="Long" resultMap="RepresentWorkLogResult">
         <include refid="selectRepresentWorkLogVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertRepresentWorkLog" parameterType="RepresentWorkLog" useGeneratedKeys="true" keyProperty="id">
         insert into represent_work_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -78,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteRepresentWorkLogByIds" parameterType="String">
-        delete from represent_work_log where id in 
+        delete from represent_work_log where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
