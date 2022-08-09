@@ -30,15 +30,14 @@ import com.shahenpc.common.core.page.TableDataInfo;
 
 /**
  * 双联工作Controller
- * 
+ *
  * @author ruoyi
  * @date 2022-07-15
  */
 @Api(tags = "双联工作")
 @RestController
 @RequestMapping("/feature/work")
-public class FeatureDoubleWorkController extends BaseController
-{
+public class FeatureDoubleWorkController extends BaseController {
     @Autowired
     private IFeatureDoubleWorkService featureDoubleWorkService;
 
@@ -47,8 +46,7 @@ public class FeatureDoubleWorkController extends BaseController
      */
     @ApiOperation("双联工作列表")
     @GetMapping("/list")
-    public TableDataInfo list(FeatureDoubleWork featureDoubleWork)
-    {
+    public TableDataInfo list(FeatureDoubleWork featureDoubleWork) {
         startPage();
         List<DoubleListDto> list = featureDoubleWorkService.adminList(featureDoubleWork);
         return getDataTable(list);
@@ -60,8 +58,7 @@ public class FeatureDoubleWorkController extends BaseController
     @PreAuthorize("@ss.hasPermi('feature:work:export')")
     @Log(title = "双联工作", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, FeatureDoubleWork featureDoubleWork)
-    {
+    public void export(HttpServletResponse response, FeatureDoubleWork featureDoubleWork) {
         List<FeatureDoubleWork> list = featureDoubleWorkService.selectFeatureDoubleWorkList(featureDoubleWork);
         ExcelUtil<FeatureDoubleWork> util = new ExcelUtil<FeatureDoubleWork>(FeatureDoubleWork.class);
         util.exportExcel(response, list, "双联工作数据");
@@ -71,11 +68,10 @@ public class FeatureDoubleWorkController extends BaseController
      * 获取双联工作详细信息
      */
     @ApiOperation("双联工作详情")
-    @ApiImplicitParam(name ="opinionId",value = "双联工作Id",required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
-    @PreAuthorize("@ss.hasPermi('feature:work:query')")
+    @ApiImplicitParam(name = "opinionId", value = "双联工作Id", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
+//    @PreAuthorize("@ss.hasPermi('feature:work:query')")
     @GetMapping(value = "/{doubleId}")
-    public AjaxResult getInfo(@PathVariable("doubleId") Long doubleId)
-    {
+    public AjaxResult getInfo(@PathVariable("doubleId") Long doubleId) {
         return AjaxResult.success(featureDoubleWorkService.selectFeatureDoubleWorkByDoubleId(doubleId));
     }
 
@@ -84,38 +80,37 @@ public class FeatureDoubleWorkController extends BaseController
      */
     @ApiOperation("增加双联工作")
     @ApiImplicitParams({
-            @ApiImplicitParam(name ="opinionId",value = "双联工作Id",required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class),
-            @ApiImplicitParam(name ="opinionType",value = "意见类型",required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class),
-            @ApiImplicitParam(name ="content",value = "内容",required = true, dataType = "String", paramType = "path", dataTypeClass = String.class),
-            @ApiImplicitParam(name ="submitUserId",value = "提交人",required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class),
-            @ApiImplicitParam(name ="submitNickName",value = "提交人",required = true, dataType = "String", paramType = "path", dataTypeClass = String.class),
-            @ApiImplicitParam(name ="submitPhone",value = "手机号",required = true, dataType = "String", paramType = "path", dataTypeClass = String.class),
-            @ApiImplicitParam(name ="receiveUserId",value = "接收人",required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class),
-            @ApiImplicitParam(name ="receiveNickName",value = "接收人",required = true, dataType = "String", paramType = "path", dataTypeClass = String.class),
-            @ApiImplicitParam(name ="receiveReply",value = "回复",required = true, dataType = "String", paramType = "path", dataTypeClass = String.class),
-            @ApiImplicitParam(name ="status",value = "状态",required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class),
-            @ApiImplicitParam(name ="replyTime",value = "回复时间",required = true, dataType = "Date", paramType = "path", dataTypeClass = Date.class)
+            @ApiImplicitParam(name = "opinionId", value = "双联工作Id", required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class),
+            @ApiImplicitParam(name = "opinionType", value = "意见类型", required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class),
+            @ApiImplicitParam(name = "content", value = "内容", required = true, dataType = "String", paramType = "path", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "submitUserId", value = "提交人", required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class),
+            @ApiImplicitParam(name = "submitNickName", value = "提交人", required = true, dataType = "String", paramType = "path", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "submitPhone", value = "手机号", required = true, dataType = "String", paramType = "path", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "receiveUserId", value = "接收人", required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class),
+            @ApiImplicitParam(name = "receiveNickName", value = "接收人", required = true, dataType = "String", paramType = "path", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "receiveReply", value = "回复", required = true, dataType = "String", paramType = "path", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "status", value = "状态", required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class),
+            @ApiImplicitParam(name = "replyTime", value = "回复时间", required = true, dataType = "Date", paramType = "path", dataTypeClass = Date.class)
     })
-    @PreAuthorize("@ss.hasPermi('feature:work:add')")
+//    @PreAuthorize("@ss.hasPermi('feature:work:add')")
     @Log(title = "双联工作", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody FeatureDoubleWork featureDoubleWork)
-    {
-        featureDoubleWork.setCreateBy(getNickName());
+    public AjaxResult add(@RequestBody FeatureDoubleWork featureDoubleWork) {
+        featureDoubleWork.setCreateBy(getUsername());
         featureDoubleWork.setSubmitUserId(getUserId());
-        return toAjax(featureDoubleWorkService.newAdd(featureDoubleWork));
+        featureDoubleWorkService.newAdd(featureDoubleWork);
+        return AjaxResult.success(featureDoubleWork.getDoubleId());
     }
 
     /**
      * 修改双联工作
      */
     @ApiOperation("修改双联工作")
-    @PreAuthorize("@ss.hasPermi('feature:work:edit')")
+//    @PreAuthorize("@ss.hasPermi('feature:work:edit')")
     @Log(title = "双联工作", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody FeatureDoubleWork featureDoubleWork)
-    {
-        featureDoubleWork.setUpdateBy(getNickName());
+    public AjaxResult edit(@RequestBody FeatureDoubleWork featureDoubleWork) {
+        featureDoubleWork.setUpdateBy(getUsername());
         return toAjax(featureDoubleWorkService.newUpdate(featureDoubleWork));
     }
 
@@ -125,54 +120,50 @@ public class FeatureDoubleWorkController extends BaseController
     @ApiOperation("删除双联工作")
     @PreAuthorize("@ss.hasPermi('feature:work:remove')")
     @Log(title = "双联工作", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{doubleIds}")
-    public AjaxResult remove(@PathVariable Long[] doubleIds)
-    {
+    @DeleteMapping("/{doubleIds}")
+    public AjaxResult remove(@PathVariable Long[] doubleIds) {
         return toAjax(featureDoubleWorkService.deleteFeatureDoubleWorkByDoubleIds(doubleIds));
     }
 
     /**
      * 饼图
+     *
      * @return
      */
     @ApiOperation("瓶图展示")
     @GetMapping(value = "/cake")
-    public AjaxResult cake()
-    {
+    public AjaxResult cake() {
         return AjaxResult.success(featureDoubleWorkService.speCake());
     }
 
     @ApiOperation("各个总数比例")
     @GetMapping(value = "/each")
-    public AjaxResult each()
-    {
+    public AjaxResult each() {
         return AjaxResult.success(featureDoubleWorkService.eachCount());
     }
 
     @ApiOperation("环数")
     @GetMapping("/ring")
-    public AjaxResult ring(){
+    public AjaxResult ring() {
         return AjaxResult.success(featureDoubleWorkService.ring());
     }
 
     @ApiOperation("曲线")
     @GetMapping("/line")
-    public AjaxResult line(){
+    public AjaxResult line() {
         return AjaxResult.success(featureDoubleWorkService.line());
     }
 
 
-
     /**
      * 添加流程
-    @ApiOperation("添加")
-    @PreAuthorize("@ss.hasPermi('feature:work:add')")
-    @Log(title = "双联工作", businessType = BusinessType.INSERT)
-    @PostMapping("/new/add")
-    public AjaxResult newAdd(@RequestBody FeatureDoubleWork featureDoubleWork)
-    {
-        featureDoubleWork.setSubmitUserId(getUserId());
-        return toAjax(featureDoubleWorkService.newAdd(featureDoubleWork));
-    } */
+     @ApiOperation("添加")
+     @PreAuthorize("@ss.hasPermi('feature:work:add')")
+     @Log(title = "双联工作", businessType = BusinessType.INSERT)
+     @PostMapping("/new/add") public AjaxResult newAdd(@RequestBody FeatureDoubleWork featureDoubleWork)
+     {
+     featureDoubleWork.setSubmitUserId(getUserId());
+     return toAjax(featureDoubleWorkService.newAdd(featureDoubleWork));
+     } */
 
 }

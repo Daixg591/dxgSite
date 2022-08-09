@@ -5,11 +5,16 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.shahenpc.system.domain.exam.PersonnelAppointAnswer;
+import com.shahenpc.system.domain.exam.PersonnelAppointExam;
 import com.shahenpc.system.domain.exam.PersonnelAppointGrade;
 import com.shahenpc.system.domain.exam.dto.AnswerDto;
 import com.shahenpc.system.domain.exam.dto.AnswerLogDto;
+import com.shahenpc.system.domain.exam.vo.ExamResVo;
 import com.shahenpc.system.service.exam.IPersonnelAppointAnswerService;
+import com.shahenpc.system.service.exam.IPersonnelAppointExamService;
+import com.shahenpc.system.service.exam.IPersonnelAppointGradeService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.bytebuddy.asm.Advice;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +51,18 @@ public class PersonnelAppointExamLogController extends BaseController {
     @Autowired
     private IPersonnelAppointAnswerService answerService;
 
+    @Autowired
+    private IPersonnelAppointGradeService gradeService;
+
+    @Autowired
+    private IPersonnelAppointExamService examService;
+
     /**
      * 查询人事任免_法律知识考试_答题记录列表
      */
     @PreAuthorize("@ss.hasPermi('system:log:list')")
     @GetMapping("/list")
+    @ApiOperation("获取考试成绩")
     public TableDataInfo list(PersonnelAppointExamLog personnelAppointExamLog) {
         startPage();
         List<PersonnelAppointExamLog> list = personnelAppointExamLogService.selectPersonnelAppointExamLogList(personnelAppointExamLog);
@@ -81,6 +93,7 @@ public class PersonnelAppointExamLogController extends BaseController {
     /**
      * 新增人事任免_法律知识考试_答题记录
      */
+    @ApiOperation("提交答题记录")
     @PreAuthorize("@ss.hasPermi('system:log:add')")
     @Log(title = "人事任免_法律知识考试_答题记录", businessType = BusinessType.INSERT)
     @PostMapping
@@ -105,13 +118,16 @@ public class PersonnelAppointExamLogController extends BaseController {
             resLogList.add(entity);
         }
 
-
         // 成绩入库
-        PersonnelAppointGrade gradeEntity=addGrade(resLogList);
-
-
-
-        return AjaxResult.success();
+        PersonnelAppointGrade gradeEntity=createGrade(resLogList);
+        if (gradeEntity!=null){
+            gradeService.insertPersonnelAppointGrade(gradeEntity);
+        }
+        PersonnelAppointExam examEntity=examService.selectPersonnelAppointExamByExamId(dto.getExamId());
+        ExamResVo res=new ExamResVo();
+        res.setThanksWords(examEntity.getThanksWords());
+        res.setScore(gradeEntity.getScore());
+        return AjaxResult.success(res);
     }
 
 
@@ -127,11 +143,11 @@ public class PersonnelAppointExamLogController extends BaseController {
 
 
     /**
-     * 添加成绩信息
+     * 创建成绩信息实体
      * @param logList
      * @return
      */
-    private PersonnelAppointGrade addGrade(List<PersonnelAppointExamLog> logList) {
+    private PersonnelAppointGrade createGrade(List<PersonnelAppointExamLog> logList) {
         PersonnelAppointGrade res = new PersonnelAppointGrade();
         if (logList.size() < 1) {
             return null;

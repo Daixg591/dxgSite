@@ -50,7 +50,7 @@ public class PersonnelAppointNoticeController extends BaseController {
      * 查询人事任免_任免通知列表
      */
     @ApiOperation("查询-任免通知")
-    @PreAuthorize("@ss.hasPermi('system:inform:list')")
+//    @PreAuthorize("@ss.hasPermi('system:inform:list')")
     @GetMapping("/list")
     public TableDataInfo list(PersonnelAppointNotice personnelAppointNotice) {
         startPage();
@@ -86,7 +86,7 @@ public class PersonnelAppointNoticeController extends BaseController {
      * 获取人事任免_任免通知详细信息
      */
     @ApiOperation("详情-任免通知")
-    @PreAuthorize("@ss.hasPermi('system:inform:query')")
+//    @PreAuthorize("@ss.hasPermi('system:inform:query')")
     @GetMapping(value = "/{noticeId}")
     public AjaxResult getInfo(@PathVariable("noticeId") Long noticeId) {
         PersonnelAppointNotice entity = personnelAppointNoticeService.selectPersonnelAppointNoticeByNoticeId(noticeId);
@@ -155,6 +155,7 @@ public class PersonnelAppointNoticeController extends BaseController {
 
     /**
      * 通知统计数据-任免通知
+     *
      * @return
      */
     @ApiOperation("通知统计数据-任免通知")
@@ -165,14 +166,14 @@ public class PersonnelAppointNoticeController extends BaseController {
 
         List<PersonnelAppointNotice> list = personnelAppointNoticeService.selectPersonnelAppointNoticeList(param);
         Map<String, String> res = new HashMap<>();
-        res.put("total", afterTextChanged(list.size()+""));
+        res.put("total", afterTextChanged(list.size() + ""));
         Integer readCnt = 0;
         Integer shareCnt = 0;
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getReadCnt()==null){
+            if (list.get(i).getReadCnt() == null) {
                 list.get(i).setReadCnt(0);
             }
-            if (list.get(i).getShareCnt()==null){
+            if (list.get(i).getShareCnt() == null) {
                 list.get(i).setShareCnt(0);
             }
             shareCnt += list.get(i).getShareCnt();
