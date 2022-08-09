@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
-import com.shahenpc.system.service.ISysConfigService;
+import com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo;
+import com.shahenpc.system.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
@@ -31,9 +32,6 @@ import com.shahenpc.common.enums.BusinessType;
 import com.shahenpc.common.utils.SecurityUtils;
 import com.shahenpc.common.utils.StringUtils;
 import com.shahenpc.common.utils.poi.ExcelUtil;
-import com.shahenpc.system.service.ISysPostService;
-import com.shahenpc.system.service.ISysRoleService;
-import com.shahenpc.system.service.ISysUserService;
 
 /**
  * 用户信息
@@ -56,6 +54,9 @@ public class SysUserController extends BaseController {
     @Autowired
     private ISysConfigService configService;
 
+    @Autowired
+    private ISysDictDataService dictDataService;
+
     /**
      * 获取用户列表
      */
@@ -66,6 +67,15 @@ public class SysUserController extends BaseController {
         List<SysUser> list = userService.selectUserList(user);
         return getDataTable(list);
     }
+
+    @GetMapping("/deputy/list")
+    public TableDataInfo wxList(SysUser user) {
+        startPage();
+        user.setIdentity("1");
+        List<SysUser> list = userService.selectUserList(user);
+        return getDataTable(list);
+    }
+
 
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:user:export')")
@@ -112,6 +122,29 @@ public class SysUserController extends BaseController {
         }
         return ajax;
     }
+
+    /**
+     * 小程序获取用户基础信息
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping(value = "/getWxUser/{userId}")
+    public AjaxResult getUser(@PathVariable(value = "userId", required = false) Long userId) {
+        WxUserInfoVo resInfo = new WxUserInfoVo();
+        if (StringUtils.isNotNull(userId)) {
+            SysUser sysUser = userService.selectUserById(userId);
+            resInfo.setUserId(sysUser.getUserId());
+            resInfo.setNickName(sysUser.getNickName());
+            resInfo.setPersonInfo(sysUser.getResume());
+            resInfo.setAvatar(sysUser.getAvatar());
+            resInfo.setGoodAreaName(dictDataService.selectDictLabel("double_type", sysUser.getGoodArea()));
+            // todo-ht 联络站信息获取
+            resInfo.setStationName("暂无信息");
+        }
+        return AjaxResult.success(resInfo);
+    }
+
 
     /**
      * 新增用户
@@ -243,7 +276,7 @@ public class SysUserController extends BaseController {
      */
     @ApiOperation("性别饼图")
     @GetMapping("/gender/cake/{identity}")
-    public AjaxResult genderCake(@PathVariable("identity")String identity){
+    public AjaxResult genderCake(@PathVariable("identity") String identity) {
         return AjaxResult.success(userService.genderCake(identity));
     }
 
@@ -252,7 +285,7 @@ public class SysUserController extends BaseController {
      */
     @ApiOperation("年龄饼图")
     @GetMapping("/age/cake/{identity}")
-    public AjaxResult ageCake(@PathVariable("identity")String identity){
+    public AjaxResult ageCake(@PathVariable("identity") String identity) {
 
         return AjaxResult.success(userService.ageCake(identity));
     }
@@ -262,7 +295,7 @@ public class SysUserController extends BaseController {
      */
     @ApiOperation("学历饼图")
     @GetMapping("/degree/cake/{identity}")
-    public AjaxResult degreeCake(@PathVariable("identity")String identity){
+    public AjaxResult degreeCake(@PathVariable("identity") String identity) {
 
         return AjaxResult.success(userService.degreeCake(identity));
     }
@@ -271,8 +304,7 @@ public class SysUserController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/update")
-    public AjaxResult update(@Validated @RequestBody SysUser user)
-    {
+    public AjaxResult update(@Validated @RequestBody SysUser user) {
         user.setStatus("1");
         return toAjax(userService.updateUser(user));
     }

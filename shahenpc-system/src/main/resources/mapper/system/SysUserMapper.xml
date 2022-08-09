@@ -105,6 +105,8 @@
                u.organ_name,
                u.job_state,
                u.edu_log_list,
+               u.good_area,
+               u.contact_station_id,
                d.dept_id,
                d.parent_id,
                d.ancestors,
@@ -129,7 +131,7 @@
         select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status,
         u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
         u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date,
-        u.job_date,u.edu_log_list,
+        u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,
         u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,
         d.dept_name, d.leader from sys_user u
         left join sys_dept d on u.dept_id = d.dept_id
@@ -137,6 +139,13 @@
         <if test="userId != null and userId != 0">
             AND u.user_id = #{userId}
         </if>
+        <if test="contactStationId != null">
+            AND u.contact_station_id = #{contactStationId}
+        </if>
+        <if test="goodArea != null and userId != ''">
+            AND u.good_area = #{goodArea}
+        </if>
+
         <if test="userName != null and userName != ''">
             AND u.user_name like concat('%', #{userName}, '%')
         </if>
@@ -266,6 +275,8 @@
         <if test="organName != null">organ_name,</if>
         <if test="jobState != null">job_state,</if>
         <if test="eduLogList != null">edu_log_list,</if>
+        <if test="goodArea != null">good_area,</if>
+        <if test="contactStationId != null">contact_station_id,</if>
         create_time
         )values(
         <if test="userId != null and userId != ''">#{userId},</if>
@@ -300,6 +311,8 @@
         <if test="organName != null">#{organName},</if>
         <if test="jobState != null">#{jobState},</if>
         <if test="eduLogList != null">#{eduLogList},</if>
+        <if test="goodArea != null">#{goodArea},</if>
+        <if test="contactStationId != null">#{contactStationId},</if>
         sysdate()
         )
     </insert>
@@ -340,6 +353,8 @@
             <if test="organName != null">organ_name = #{organName},</if>
             <if test="jobState != null">job_state = #{jobState},</if>
             <if test="eduLogList != null">edu_log_list = #{eduLogList},</if>
+            <if test="goodArea != null">good_area = #{goodArea},</if>
+            <if test="contactStationId != null">contact_station_id = #{contactStationId},</if>
             update_time = sysdate()
         </set>
         where user_id = #{userId}
