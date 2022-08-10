@@ -132,7 +132,7 @@
         u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
         u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date,
         u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,
-        u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,
+        u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,u.user_status,
         d.dept_name, d.leader from sys_user u
         left join sys_dept d on u.dept_id = d.dept_id
         where u.del_flag = '0'
@@ -145,7 +145,9 @@
         <if test="goodArea != null and userId != ''">
             AND u.good_area = #{goodArea}
         </if>
-
+        <if test="nickName != null and nickName != ''">
+            AND u.nick_name like concat('%', #{nickName}, '%')
+        </if>
         <if test="userName != null and userName != ''">
             AND u.user_name like concat('%', #{userName}, '%')
         </if>
