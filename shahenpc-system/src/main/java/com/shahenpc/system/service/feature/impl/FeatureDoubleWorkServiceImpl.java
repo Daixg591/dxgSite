@@ -6,22 +6,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.SecurityUtils;
+import com.shahenpc.common.utils.SensitiveWordUtil;
 import com.shahenpc.system.domain.feature.FeatureDoubleWorkTrace;
 import com.shahenpc.system.domain.feature.dto.*;
 import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.mapper.SysUserMapper;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkTraceMapper;
+import com.shahenpc.system.mapper.feature.FeatureSensitiveWordMapper;
 import com.shahenpc.system.service.ISysDictDataService;
+import com.shahenpc.system.service.feature.IFeatureSensitiveWordService;
 import com.shahenpc.system.service.represent.IRepresentWorkLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.service.feature.IFeatureDoubleWorkService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 双联工作Service业务层处理
@@ -140,51 +145,72 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
 
     @Autowired
     private IRepresentWorkLogService representWorkLogService;
-    @Override
-    public int newAdd(FeatureDoubleWork featureDoubleWork) {
-        SysUser user = sysUserMapper.selectUserById(featureDoubleWork.getSubmitUserId());
-        if(!user.getStatus().equals(1)){
-            featureDoubleWork.setCreateTime(DateUtils.getNowDate());
-            int a =  featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork);
-            //添加日志
-            RepresentWorkLog log = new RepresentWorkLog();
-            log.setEventType(3);
-            log.setEventId(featureDoubleWork.getDoubleId());
-            log.setUserId(featureDoubleWork.getSubmitUserId());
-            log.setRemark("双联工作！");
-            representWorkLogService.insertRepresentWorkLog(log);
+    @Autowired
+    private FeatureSensitiveWordMapper featureSensitiveWordMapper;
 
+    @Override
+    @Transactional
+    public AjaxResult newAdd(FeatureDoubleWork featureDoubleWork) {
+        //初始化 敏感词库
+        SensitiveWordUtil.init(featureSensitiveWordMapper.selectAll());
+        //先过滤 敏感词
+        if(SensitiveWordUtil.contains(featureDoubleWork.getTitle())){
+            return AjaxResult.error("标题有敏感词，不可提交！");
+        }else if(SensitiveWordUtil.contains(featureDoubleWork.getContent())){
+            return AjaxResult.error("文本有敏感词，不可提交！");
+        }else {
+            SysUser user = sysUserMapper.selectUserById(featureDoubleWork.getSubmitUserId());
+            if (!user.getUserStatus().equals(1)) {
+                featureDoubleWork.setCreateTime(DateUtils.getNowDate());
+                int a = featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork);
+                //添加日志
+                RepresentWorkLog log = new RepresentWorkLog();
+                log.setEventType(3);
+                log.setEventId(featureDoubleWork.getDoubleId());
+                log.setUserId(featureDoubleWork.getSubmitUserId());
+                log.setRemark("双联工作！");
+                representWorkLogService.insertRepresentWorkLog(log);
+
+                FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
+                featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
+                featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
+                featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
+                featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
+                //featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
+                featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
+                featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getCreateBy());
+                featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
+                return AjaxResult.success();
+            } else {
+                return AjaxResult.error("您已被屏蔽！");
+            }
+        }
+    }
+
+    @Override
+    public AjaxResult newUpdate(FeatureDoubleWork featureDoubleWork) {
+        //初始化 敏感词库
+        SensitiveWordUtil.init(featureSensitiveWordMapper.selectAll());
+        //先过滤 敏感词
+        if(SensitiveWordUtil.contains(featureDoubleWork.getTitle())){
+            return AjaxResult.error("标题有敏感词，不可提交！");
+        }else if(SensitiveWordUtil.contains(featureDoubleWork.getContent())){
+            return AjaxResult.error("文本有敏感词，不可提交！");
+        }else {
+            featureDoubleWork.setUpdateTime(DateUtils.getNowDate());
+            int a = featureDoubleWorkMapper.updateFeatureDoubleWork(featureDoubleWork);
             FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
+            featureDoubleWorkTrace.setContent(featureDoubleWork.getReply());
             featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
             featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
             featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
             featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
             //featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
             featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
-            featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getCreateBy());
+            featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getUpdateBy());
             featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
-            return a;
-        }else {
-            return 0;
+            return AjaxResult.success();
         }
-
-    }
-
-    @Override
-    public int newUpdate(FeatureDoubleWork featureDoubleWork) {
-        featureDoubleWork.setUpdateTime(DateUtils.getNowDate());
-        int a =  featureDoubleWorkMapper.updateFeatureDoubleWork(featureDoubleWork);
-        FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
-        featureDoubleWorkTrace.setContent(featureDoubleWork.getReply());
-        featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
-        featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
-        featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
-        featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
-        //featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
-        featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
-        featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getUpdateBy());
-        featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
-        return a;
     }
 
     @Override
@@ -247,6 +273,11 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     @Override
     public List<DoubleListDto> adminList(FeatureDoubleWork featureDoubleWork) {
         return featureDoubleWorkMapper.adminList(featureDoubleWork);
+    }
+
+    @Override
+    public DoubleCountRanDto countAndranking(Long userId) {
+        return featureDoubleWorkMapper.selectByCountRanking(userId);
     }
 
     /**

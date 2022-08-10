@@ -96,10 +96,9 @@ public class FeatureDoubleWorkController extends BaseController {
     @Log(title = "双联工作", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody FeatureDoubleWork featureDoubleWork) {
-        featureDoubleWork.setCreateBy(getUsername());
+        featureDoubleWork.setCreateBy(getNickName());
         featureDoubleWork.setSubmitUserId(getUserId());
-        featureDoubleWorkService.newAdd(featureDoubleWork);
-        return AjaxResult.success(featureDoubleWork.getDoubleId());
+        return AjaxResult.success(featureDoubleWorkService.newAdd(featureDoubleWork));
     }
 
     /**
@@ -110,8 +109,8 @@ public class FeatureDoubleWorkController extends BaseController {
     @Log(title = "双联工作", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody FeatureDoubleWork featureDoubleWork) {
-        featureDoubleWork.setUpdateBy(getUsername());
-        return toAjax(featureDoubleWorkService.newUpdate(featureDoubleWork));
+        featureDoubleWork.setUpdateBy(getNickName());
+        return AjaxResult.success(featureDoubleWorkService.newUpdate(featureDoubleWork));
     }
 
     /**

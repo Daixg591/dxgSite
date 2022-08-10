@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.feature.FeatureSensitiveWordMapper">
+
+    <resultMap type="FeatureSensitiveWord" id="FeatureSensitiveWordResult">
+        <result property="sensitiveId"    column="sensitive_id"    />
+        <result property="badword"    column="badword"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectFeatureSensitiveWordVo">
+        select sensitive_id, badword, status, create_by, create_time, update_by, update_time, remark from feature_sensitive_word
+    </sql>
+
+    <select id="selectFeatureSensitiveWordList" parameterType="FeatureSensitiveWord" resultMap="FeatureSensitiveWordResult">
+        <include refid="selectFeatureSensitiveWordVo"/>
+        <where>
+            <if test="badword != null  and badword != ''"> and badword = #{badword}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectFeatureSensitiveWordBySensitiveId" parameterType="Long" resultMap="FeatureSensitiveWordResult">
+        <include refid="selectFeatureSensitiveWordVo"/>
+        where sensitive_id = #{sensitiveId}
+    </select>
+
+    <insert id="insertFeatureSensitiveWord" parameterType="FeatureSensitiveWord" useGeneratedKeys="true" keyProperty="sensitiveId">
+        insert into feature_sensitive_word
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="badword != null">badword,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="badword != null">#{badword},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFeatureSensitiveWord" parameterType="FeatureSensitiveWord">
+        update feature_sensitive_word
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="badword != null">badword = #{badword},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where sensitive_id = #{sensitiveId}
+    </update>
+
+    <delete id="deleteFeatureSensitiveWordBySensitiveId" parameterType="Long">
+        delete from feature_sensitive_word where sensitive_id = #{sensitiveId}
+    </delete>
+
+    <delete id="deleteFeatureSensitiveWordBySensitiveIds" parameterType="String">
+        delete from feature_sensitive_word where sensitive_id in
+        <foreach item="sensitiveId" collection="array" open="(" separator="," close=")">
+            #{sensitiveId}
+        </foreach>
+    </delete>
+    <!--===========================================分割线-->
+    <select id="selectAll" resultType="java.util.Set">
+        select badword from feature_sensitive_word where status = 1
+    </select>
+</mapper>

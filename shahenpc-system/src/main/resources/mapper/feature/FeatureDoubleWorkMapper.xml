@@ -194,4 +194,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isRead != null "> and is_read = #{isRead}</if>
         </where>
     </select>
+
+    <select id="selectByCountRanking" resultType="com.shahenpc.system.domain.feature.dto.DoubleCountRanDto" parameterType="java.lang.Long">
+        SELECT
+            `count`,@rownum := @rownum + 1 AS rownum
+        FROM
+            (SELECT receive_user_id,COUNT(double_id) AS `count` FROM `feature_double_work` GROUP BY receive_user_id  ORDER BY `count` DESC) AS obj,
+            (SELECT @rownum := 0) r WHERE receive_user_id = #{userId}
+    </select>
 </mapper>

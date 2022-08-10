@@ -73,4 +73,6 @@ public interface FeatureDoubleWorkMapper
     public List<DoubleAppListDto> appList(FeatureDoubleWork featureDoubleWork);
 
     public List<DoubleListDto> adminList(FeatureDoubleWork featureDoubleWork);
+
+    public DoubleCountRanDto selectByCountRanking(Long userId);
 }
