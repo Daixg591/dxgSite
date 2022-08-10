@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.contactstation.ContactStationActMapper">
+    
+    <resultMap type="ContactStationAct" id="ContactStationActResult">
+        <result property="contactStationActId"    column="contact_station_act_id"    />
+        <result property="actName"    column="act_name"    />
+        <result property="actSubhead"    column="act_subhead"    />
+        <result property="address"    column="address"    />
+        <result property="avator"    column="avator"    />
+        <result property="details"    column="details"    />
+        <result property="readNum"    column="read_num"    />
+        <result property="contactStationId"    column="contact_station_id"    />
+        <result property="actType"    column="act_type"    />
+        <result property="actStatus"    column="act_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectContactStationActVo">
+        select contact_station_act_id, act_name, act_subhead, address, avator, details, read_num, contact_station_id, act_type, act_status, create_by, create_time, update_by, update_time, del_flag, remark from contact_station_act
+    </sql>
+
+    <select id="selectContactStationActList" parameterType="ContactStationAct" resultMap="ContactStationActResult">
+        <include refid="selectContactStationActVo"/>
+        <where>  
+            <if test="actName != null  and actName != ''"> and act_name like concat('%', #{actName}, '%')</if>
+            <if test="actSubhead != null  and actSubhead != ''"> and act_subhead = #{actSubhead}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="avator != null  and avator != ''"> and avator = #{avator}</if>
+            <if test="details != null  and details != ''"> and details = #{details}</if>
+            <if test="readNum != null "> and read_num = #{readNum}</if>
+            <if test="contactStationId != null "> and contact_station_id = #{contactStationId}</if>
+            <if test="actType != null  and actType != ''"> and act_type = #{actType}</if>
+            <if test="actStatus != null  and actStatus != ''"> and act_status = #{actStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectContactStationActByContactStationActId" parameterType="Long" resultMap="ContactStationActResult">
+        <include refid="selectContactStationActVo"/>
+        where contact_station_act_id = #{contactStationActId}
+    </select>
+        
+    <insert id="insertContactStationAct" parameterType="ContactStationAct" useGeneratedKeys="true" keyProperty="contactStationActId">
+        insert into contact_station_act
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="actName != null">act_name,</if>
+            <if test="actSubhead != null">act_subhead,</if>
+            <if test="address != null">address,</if>
+            <if test="avator != null">avator,</if>
+            <if test="details != null">details,</if>
+            <if test="readNum != null">read_num,</if>
+            <if test="contactStationId != null">contact_station_id,</if>
+            <if test="actType != null">act_type,</if>
+            <if test="actStatus != null">act_status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="actName != null">#{actName},</if>
+            <if test="actSubhead != null">#{actSubhead},</if>
+            <if test="address != null">#{address},</if>
+            <if test="avator != null">#{avator},</if>
+            <if test="details != null">#{details},</if>
+            <if test="readNum != null">#{readNum},</if>
+            <if test="contactStationId != null">#{contactStationId},</if>
+            <if test="actType != null">#{actType},</if>
+            <if test="actStatus != null">#{actStatus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateContactStationAct" parameterType="ContactStationAct">
+        update contact_station_act
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="actName != null">act_name = #{actName},</if>
+            <if test="actSubhead != null">act_subhead = #{actSubhead},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="avator != null">avator = #{avator},</if>
+            <if test="details != null">details = #{details},</if>
+            <if test="readNum != null">read_num = #{readNum},</if>
+            <if test="contactStationId != null">contact_station_id = #{contactStationId},</if>
+            <if test="actType != null">act_type = #{actType},</if>
+            <if test="actStatus != null">act_status = #{actStatus},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where contact_station_act_id = #{contactStationActId}
+    </update>
+
+    <delete id="deleteContactStationActByContactStationActId" parameterType="Long">
+        delete from contact_station_act where contact_station_act_id = #{contactStationActId}
+    </delete>
+
+    <delete id="deleteContactStationActByContactStationActIds" parameterType="String">
+        delete from contact_station_act where contact_station_act_id in 
+        <foreach item="contactStationActId" collection="array" open="(" separator="," close=")">
+            #{contactStationActId}
+        </foreach>
+    </delete>
+</mapper>

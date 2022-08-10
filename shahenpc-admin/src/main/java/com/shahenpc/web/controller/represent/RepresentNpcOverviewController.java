@@ -113,7 +113,7 @@ public class RepresentNpcOverviewController extends BaseController
     }
 
     @ApiOperation("默认一条概览")
-    @PreAuthorize("@ss.hasPermi('represent:overview:overview')")
+//    @PreAuthorize("@ss.hasPermi('represent:overview:overview')")
     @GetMapping("/overview")
     public AjaxResult getOverview()
     {
