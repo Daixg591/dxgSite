@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper.oa;
 
 import java.util.List;
 import com.shahenpc.system.domain.oa.OaVote;
+import com.shahenpc.system.domain.oa.dto.VoteCount;
 
 /**
  * 投票窗口Mapper接口
@@ -58,4 +59,7 @@ public interface OaVoteMapper
      * @return 结果
      */
     public int deleteOaVoteByVoteIds(Long[] voteIds);
+
+
+    public VoteCount selectCount();
 }

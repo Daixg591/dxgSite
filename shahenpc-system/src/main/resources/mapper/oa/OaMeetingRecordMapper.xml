@@ -3,11 +3,12 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.oa.OaMeetingRecordMapper">
-    
+
     <resultMap type="OaMeetingRecord" id="OaMeetingRecordResult">
         <result property="recordId"    column="record_id"    />
         <result property="meetingId"    column="meeting_id"    />
         <result property="userId"    column="user_id"    />
+        <result property="title"    column="title"    />
         <result property="content"    column="content"    />
         <result property="remark"    column="remark"    />
         <result property="createTime"    column="create_time"    />
@@ -17,47 +18,50 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectOaMeetingRecordVo">
-        select record_id, meeting_id, user_id, content, remark, create_time, update_by, update_time, create_by from oa_meeting_record
+        select record_id, meeting_id, user_id, title, content, remark, create_time, update_by, update_time, create_by from oa_meeting_record
     </sql>
 
     <select id="selectOaMeetingRecordList" parameterType="OaMeetingRecord" resultMap="OaMeetingRecordResult">
         <include refid="selectOaMeetingRecordVo"/>
-        <where>  
+        <where>
             <if test="meetingId != null "> and meeting_id = #{meetingId}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
         </where>
     </select>
-    
+
     <select id="selectOaMeetingRecordByRecordId" parameterType="Long" resultMap="OaMeetingRecordResult">
         <include refid="selectOaMeetingRecordVo"/>
         where record_id = #{recordId}
     </select>
-        
+
     <insert id="insertOaMeetingRecord" parameterType="OaMeetingRecord">
         insert into oa_meeting_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="recordId != null">record_id,</if>
             <if test="meetingId != null">meeting_id,</if>
             <if test="userId != null">user_id,</if>
+            <if test="title != null">title,</if>
             <if test="content != null">content,</if>
             <if test="remark != null">remark,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="createBy != null">create_by,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="recordId != null">#{recordId},</if>
             <if test="meetingId != null">#{meetingId},</if>
             <if test="userId != null">#{userId},</if>
+            <if test="title != null">#{title},</if>
             <if test="content != null">#{content},</if>
             <if test="remark != null">#{remark},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="createBy != null">#{createBy},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateOaMeetingRecord" parameterType="OaMeetingRecord">
@@ -65,6 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="meetingId != null">meeting_id = #{meetingId},</if>
             <if test="userId != null">user_id = #{userId},</if>
+            <if test="title != null">title = #{title},</if>
             <if test="content != null">content = #{content},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
@@ -80,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteOaMeetingRecordByRecordIds" parameterType="String">
-        delete from oa_meeting_record where record_id in 
+        delete from oa_meeting_record where record_id in
         <foreach item="recordId" collection="array" open="(" separator="," close=")">
             #{recordId}
         </foreach>

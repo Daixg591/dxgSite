@@ -51,6 +51,7 @@ public interface OaMeetingPersonnelMapper
      */
     public int deleteOaMeetingPersonnelByPersonnelId(Long personnelId);
 
+    public int deleteOaMeetingPersonnelByMeetingId(Long meetingId);
     /**
      * 批量删除会议人员
      * 

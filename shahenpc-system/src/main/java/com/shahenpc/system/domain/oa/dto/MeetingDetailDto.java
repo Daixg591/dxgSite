@@ -16,7 +16,7 @@ public class MeetingDetailDto extends OaMeeting{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<OaMeetingSign> sign;
+	private List<SignListDto> sign;
     private List<OaMeetingRecord> record;
     private List<Long> personnel;
 }

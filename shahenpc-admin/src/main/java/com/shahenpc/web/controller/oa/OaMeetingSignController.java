@@ -2,6 +2,9 @@ package com.shahenpc.web.controller.oa;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +30,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  * @author ruoyi
  * @date 2022-07-19
  */
+@Api(tags = "会议签到管理")
 @RestController
 @RequestMapping("/oa/sign")
 public class OaMeetingSignController extends BaseController
@@ -37,6 +41,7 @@ public class OaMeetingSignController extends BaseController
     /**
      * 查询会议签到记录列表
      */
+    @ApiOperation("列表")
     @PreAuthorize("@ss.hasPermi('oa:sign:list')")
     @GetMapping("/list")
     public TableDataInfo list(OaMeetingSign oaMeetingSign)
@@ -49,6 +54,7 @@ public class OaMeetingSignController extends BaseController
     /**
      * 导出会议签到记录列表
      */
+    @ApiOperation("导出")
     @PreAuthorize("@ss.hasPermi('oa:sign:export')")
     @Log(title = "会议签到记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -62,6 +68,7 @@ public class OaMeetingSignController extends BaseController
     /**
      * 获取会议签到记录详细信息
      */
+    @ApiOperation("详情")
     @PreAuthorize("@ss.hasPermi('oa:sign:query')")
     @GetMapping(value = "/{signId}")
     public AjaxResult getInfo(@PathVariable("signId") Long signId)
@@ -72,6 +79,7 @@ public class OaMeetingSignController extends BaseController
     /**
      * 新增会议签到记录
      */
+    @ApiOperation("新增")
     @PreAuthorize("@ss.hasPermi('oa:sign:add')")
     @Log(title = "会议签到记录", businessType = BusinessType.INSERT)
     @PostMapping
@@ -83,6 +91,7 @@ public class OaMeetingSignController extends BaseController
     /**
      * 修改会议签到记录
      */
+    @ApiOperation("修改")
     @PreAuthorize("@ss.hasPermi('oa:sign:edit')")
     @Log(title = "会议签到记录", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -94,11 +103,19 @@ public class OaMeetingSignController extends BaseController
     /**
      * 删除会议签到记录
      */
+    @ApiOperation("删除")
     @PreAuthorize("@ss.hasPermi('oa:sign:remove')")
     @Log(title = "会议签到记录", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{signIds}")
     public AjaxResult remove(@PathVariable Long[] signIds)
     {
         return toAjax(oaMeetingSignService.deleteOaMeetingSignBySignIds(signIds));
+    }
+
+    @ApiOperation("签到")
+    @GetMapping("/sign/{meetingId}")
+    public AjaxResult sign(@PathVariable("meetingId")Long meetingId)
+    {
+        return toAjax(oaMeetingSignService.sign(meetingId,getUserId()));
     }
 }
