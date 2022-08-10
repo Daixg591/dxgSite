@@ -169,7 +169,7 @@ public class SysUser extends BaseEntity {
     /**
      * 用户状态
      */
-    private String userStatus;
+    private Integer userStatus;
 
     /**
      * 入党时间
@@ -413,11 +413,11 @@ public class SysUser extends BaseEntity {
         return idCard;
     }
 
-    public void setUserStatus(String userStatus) {
+    public void setUserStatus(Integer userStatus) {
         this.userStatus = userStatus;
     }
 
-    public String getUserStatus() {
+    public Integer getUserStatus() {
         return userStatus;
     }
 
