@@ -173,6 +173,32 @@ public class SysUserController extends BaseController {
         return AjaxResult.success(resInfo);
     }
 
+    /**
+     * 小程序获取人大信息列表(用户信息处理,不返所有信息)
+     *
+     * @param user
+     * @return
+     */
+    @GetMapping(value = "/getWxUser/list")
+    public AjaxResult getUserList(SysUser user) {
+        startPage();
+        user.setIdentity("1");
+        List<SysUser> list = userService.selectUserList(user);
+        List<WxUserInfoVo> res = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            WxUserInfoVo item = new WxUserInfoVo();
+            item.setUserId(list.get(i).getUserId());
+            item.setNickName(list.get(i).getNickName());
+            item.setPersonInfo(list.get(i).getResume());
+            item.setAvatar(list.get(i).getAvatar());
+            item.setGoodAreaName(dictDataService.selectDictLabel("double_type", list.get(i).getGoodArea()));
+            // todo-ht 联络站信息获取
+            item.setStationName("暂无信息");
+            res.add(item);
+        }
+
+        return AjaxResult.success(res);
+    }
 
     /**
      * 新增用户

@@ -160,7 +160,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
             return AjaxResult.error("文本有敏感词，不可提交！");
         }else {
             SysUser user = sysUserMapper.selectUserById(featureDoubleWork.getSubmitUserId());
-            if (!user.getUserStatus().equals(1)) {
+            if (user.getUserStatus().equals(1)) {
                 featureDoubleWork.setCreateTime(DateUtils.getNowDate());
                 int a = featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork);
                 //添加日志

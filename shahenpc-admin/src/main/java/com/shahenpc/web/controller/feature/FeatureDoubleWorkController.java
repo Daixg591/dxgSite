@@ -98,7 +98,7 @@ public class FeatureDoubleWorkController extends BaseController {
     public AjaxResult add(@RequestBody FeatureDoubleWork featureDoubleWork) {
         featureDoubleWork.setCreateBy(getNickName());
         featureDoubleWork.setSubmitUserId(getUserId());
-        return AjaxResult.success(featureDoubleWorkService.newAdd(featureDoubleWork));
+        return featureDoubleWorkService.newAdd(featureDoubleWork);
     }
 
     /**
@@ -110,7 +110,7 @@ public class FeatureDoubleWorkController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody FeatureDoubleWork featureDoubleWork) {
         featureDoubleWork.setUpdateBy(getNickName());
-        return AjaxResult.success(featureDoubleWorkService.newUpdate(featureDoubleWork));
+        return featureDoubleWorkService.newUpdate(featureDoubleWork);
     }
 
     /**
