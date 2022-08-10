@@ -100,6 +100,16 @@ public class OaVoteServiceImpl extends BaseController implements IOaVoteService
     public int updateOaVote(OaVote oaVote)
     {
         oaVote.setUpdateTime(DateUtils.getNowDate());
+        Long dang = DateUtils.getNowDate().getTime();
+        Long end =  oaVote.getEndTime().getTime();
+        Long star  = oaVote.getStartTime().getTime();
+        if(dang < star){
+            oaVote.setStatus(0);
+        }else if(dang >= star && dang <= end){
+            oaVote.setStatus(1);
+        }else if(end< dang){
+            oaVote.setStatus(2);
+        }
         return oaVoteMapper.updateOaVote(oaVote);
     }
 

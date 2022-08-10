@@ -167,7 +167,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                 RepresentWorkLog log = new RepresentWorkLog();
                 log.setEventType(3);
                 log.setEventId(featureDoubleWork.getDoubleId());
-                log.setUserId(featureDoubleWork.getSubmitUserId());
+                log.setUserId(featureDoubleWork.getReceiveUserId());
                 log.setRemark("双联工作！");
                 representWorkLogService.insertRepresentWorkLog(log);
 

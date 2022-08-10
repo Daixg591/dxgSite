@@ -74,6 +74,7 @@ public interface IOaMeetingService
     public MeetingColumnarDto columnarCount();
 
     public int newAdd(MeetingAddDto request);
+    public int newUpdate(MeetingAddDto request);
 
     public MeetingDetailDto newDetail(Long meetingId);
 

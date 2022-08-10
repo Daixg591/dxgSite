@@ -3,12 +3,14 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.oa.OaMeetingSignMapper">
-    
+
     <resultMap type="OaMeetingSign" id="OaMeetingSignResult">
         <result property="signId"    column="sign_id"    />
         <result property="meetingId"    column="meeting_id"    />
         <result property="personnelId"    column="personnel_id"    />
         <result property="userId"    column="user_id"    />
+        <result property="status"    column="status"    />
+        <result property="signTime"    column="sign_time"    />
         <result property="remark"    column="remark"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -17,45 +19,51 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectOaMeetingSignVo">
-        select sign_id, meeting_id, personnel_id, user_id, remark, create_time, update_by, update_time, create_by from oa_meeting_sign
+        select sign_id, meeting_id, personnel_id, user_id, status, sign_time, remark, create_time, update_by, update_time, create_by from oa_meeting_sign
     </sql>
 
     <select id="selectOaMeetingSignList" parameterType="OaMeetingSign" resultMap="OaMeetingSignResult">
         <include refid="selectOaMeetingSignVo"/>
-        <where>  
+        <where>
             <if test="meetingId != null "> and meeting_id = #{meetingId}</if>
             <if test="personnelId != null "> and personnel_id = #{personnelId}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="signTime != null "> and sign_time = #{signTime}</if>
         </where>
     </select>
-    
+
     <select id="selectOaMeetingSignBySignId" parameterType="Long" resultMap="OaMeetingSignResult">
         <include refid="selectOaMeetingSignVo"/>
         where sign_id = #{signId}
     </select>
-        
+
     <insert id="insertOaMeetingSign" parameterType="OaMeetingSign" useGeneratedKeys="true" keyProperty="signId">
         insert into oa_meeting_sign
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="meetingId != null">meeting_id,</if>
             <if test="personnelId != null">personnel_id,</if>
             <if test="userId != null">user_id,</if>
+            <if test="status != null">status,</if>
+            <if test="signTime != null">sign_time,</if>
             <if test="remark != null">remark,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="createBy != null">create_by,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="meetingId != null">#{meetingId},</if>
             <if test="personnelId != null">#{personnelId},</if>
             <if test="userId != null">#{userId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="signTime != null">#{signTime},</if>
             <if test="remark != null">#{remark},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="createBy != null">#{createBy},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateOaMeetingSign" parameterType="OaMeetingSign">
@@ -64,6 +72,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="meetingId != null">meeting_id = #{meetingId},</if>
             <if test="personnelId != null">personnel_id = #{personnelId},</if>
             <if test="userId != null">user_id = #{userId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="signTime != null">sign_time = #{signTime},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
@@ -78,15 +88,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteOaMeetingSignBySignIds" parameterType="String">
-        delete from oa_meeting_sign where sign_id in 
+        delete from oa_meeting_sign where sign_id in
         <foreach item="signId" collection="array" open="(" separator="," close=")">
             #{signId}
         </foreach>
     </delete>
 
     <!--====================================================分割线 -->
-    <select id="selectByMeetingId" parameterType="java.lang.Long" resultMap="OaMeetingSignResult">
-        <include refid="selectOaMeetingSignVo"/>
+    <delete id="deleteOaMeetingSignByMeetingId" parameterType="Long">
+        delete from oa_meeting_sign where meeting_id = #{meetingId}
+    </delete>
+
+    <resultMap id="selectByMeetingId" type="com.shahenpc.system.domain.oa.dto.SignListDto" extends="OaMeetingSignResult">
+
+    </resultMap>
+    <select id="selectByMeetingId" parameterType="java.lang.Long" resultMap="selectByMeetingId">
+        select sign_id, meeting_id, personnel_id, s.user_id, s.status, sign_time, s.remark, s.create_time, s.update_by, s.update_time, s.create_by,
+        u.nick_name as nickName
+        from oa_meeting_sign s LEFT JOIN sys_user u ON u.user_id = s.user_id
         where meeting_id = #{meetingId}
     </select>
 

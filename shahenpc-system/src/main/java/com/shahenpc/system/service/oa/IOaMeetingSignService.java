@@ -58,4 +58,6 @@ public interface IOaMeetingSignService
      * @return 结果
      */
     public int deleteOaMeetingSignBySignId(Long signId);
+
+    public int sign(Long meeting,Long userId);
 }

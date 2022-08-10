@@ -1,7 +1,11 @@
 package com.shahenpc.system.service.oa.impl;
 
 import java.util.List;
+
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.oa.OaMeetingSign;
+import com.shahenpc.system.mapper.oa.OaMeetingSignMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.oa.OaMeetingRecordMapper;
@@ -19,6 +23,8 @@ public class OaMeetingRecordServiceImpl implements IOaMeetingRecordService
 {
     @Autowired
     private OaMeetingRecordMapper oaMeetingRecordMapper;
+    @Autowired
+    private OaMeetingSignMapper oaMeetingSignMapper;
 
     /**
      * 查询会议记录
@@ -53,6 +59,7 @@ public class OaMeetingRecordServiceImpl implements IOaMeetingRecordService
     @Override
     public int insertOaMeetingRecord(OaMeetingRecord oaMeetingRecord)
     {
+
         oaMeetingRecord.setCreateTime(DateUtils.getNowDate());
         return oaMeetingRecordMapper.insertOaMeetingRecord(oaMeetingRecord);
     }
@@ -92,5 +99,18 @@ public class OaMeetingRecordServiceImpl implements IOaMeetingRecordService
     public int deleteOaMeetingRecordByRecordId(Long recordId)
     {
         return oaMeetingRecordMapper.deleteOaMeetingRecordByRecordId(recordId);
+    }
+
+    @Override
+    public AjaxResult adminAdd(OaMeetingRecord oaMeetingRecord) {
+        OaMeetingSign sign = new OaMeetingSign();
+        sign.setMeetingId(oaMeetingRecord.getMeetingId());
+        sign.setUserId(oaMeetingRecord.getUserId());
+        //查询签到 是否有这个人
+        if(oaMeetingSignMapper.selectByMeetingIdAndUserId(sign) != null){
+            oaMeetingRecord.setCreateTime(DateUtils.getNowDate());
+            return AjaxResult.success(oaMeetingRecordMapper.insertOaMeetingRecord(oaMeetingRecord));
+        }
+        return AjaxResult.error("该会议没有邀请您！不能添加会议记录！");
     }
 }

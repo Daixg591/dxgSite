@@ -2,6 +2,8 @@ package com.shahenpc.system.service.oa.impl;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.oa.OaMeetingPersonnel;
+import com.shahenpc.system.mapper.oa.OaMeetingPersonnelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.oa.OaMeetingSignMapper;
@@ -19,7 +21,8 @@ public class OaMeetingSignServiceImpl implements IOaMeetingSignService
 {
     @Autowired
     private OaMeetingSignMapper oaMeetingSignMapper;
-
+    @Autowired
+    private OaMeetingPersonnelMapper oaMeetingPersonnelMapper;
     /**
      * 查询会议签到记录
      * 
@@ -92,5 +95,21 @@ public class OaMeetingSignServiceImpl implements IOaMeetingSignService
     public int deleteOaMeetingSignBySignId(Long signId)
     {
         return oaMeetingSignMapper.deleteOaMeetingSignBySignId(signId);
+    }
+
+    @Override
+    public int sign(Long meeting, Long userId) {
+        OaMeetingPersonnel per = new OaMeetingPersonnel();
+        per.setMeetingId(meeting);
+        per.setUserId(userId);
+        if(oaMeetingPersonnelMapper.selectOaMeetingPersonnelList(per).size() != 0){
+            OaMeetingSign sign = new OaMeetingSign();
+            sign.setUserId(userId);
+            sign.setPersonnelId(oaMeetingPersonnelMapper.selectOaMeetingPersonnelList(per).get(0).getPersonnelId());
+            sign.setMeetingId(meeting);
+            sign.setCreateTime(DateUtils.getNowDate());
+            return oaMeetingSignMapper.insertOaMeetingSign(sign);
+        }
+        return 0;
     }
 }

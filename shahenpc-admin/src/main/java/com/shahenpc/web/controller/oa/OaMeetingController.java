@@ -79,7 +79,7 @@ public class OaMeetingController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody MeetingAddDto oaMeeting)
     {
-        oaMeeting.setCreateBy(getUsername());
+        oaMeeting.setCreateBy(getNickName());
         return toAjax(oaMeetingService.newAdd(oaMeeting));
     }
 
@@ -90,9 +90,10 @@ public class OaMeetingController extends BaseController
     @PreAuthorize("@ss.hasPermi('oa:meeting:edit')")
     @Log(title = "人大办公-会议管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody OaMeeting oaMeeting)
+    public AjaxResult edit(@RequestBody MeetingAddDto oaMeeting)
     {
-        return toAjax(oaMeetingService.updateOaMeeting(oaMeeting));
+        oaMeeting.setCreateBy(getNickName());
+        return toAjax(oaMeetingService.newUpdate(oaMeeting));
     }
 
     /**

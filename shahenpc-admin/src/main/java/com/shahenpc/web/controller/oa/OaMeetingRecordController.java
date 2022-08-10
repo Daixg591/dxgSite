@@ -2,6 +2,9 @@ package com.shahenpc.web.controller.oa;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +30,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  * @author ruoyi
  * @date 2022-07-19
  */
+@Api(tags = "会议记录表")
 @RestController
 @RequestMapping("/oa/record")
 public class OaMeetingRecordController extends BaseController
@@ -37,6 +41,7 @@ public class OaMeetingRecordController extends BaseController
     /**
      * 查询会议记录列表
      */
+    @ApiOperation("列表")
     @PreAuthorize("@ss.hasPermi('oa:record:list')")
     @GetMapping("/list")
     public TableDataInfo list(OaMeetingRecord oaMeetingRecord)
@@ -49,6 +54,7 @@ public class OaMeetingRecordController extends BaseController
     /**
      * 导出会议记录列表
      */
+    @ApiOperation("导出")
     @PreAuthorize("@ss.hasPermi('oa:record:export')")
     @Log(title = "会议记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -62,6 +68,7 @@ public class OaMeetingRecordController extends BaseController
     /**
      * 获取会议记录详细信息
      */
+    @ApiOperation("详情")
     @PreAuthorize("@ss.hasPermi('oa:record:query')")
     @GetMapping(value = "/{recordId}")
     public AjaxResult getInfo(@PathVariable("recordId") Long recordId)
@@ -72,17 +79,21 @@ public class OaMeetingRecordController extends BaseController
     /**
      * 新增会议记录
      */
+    @ApiOperation("新增")
     @PreAuthorize("@ss.hasPermi('oa:record:add')")
     @Log(title = "会议记录", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody OaMeetingRecord oaMeetingRecord)
     {
-        return toAjax(oaMeetingRecordService.insertOaMeetingRecord(oaMeetingRecord));
+        oaMeetingRecord.setUserId(getUserId());
+        oaMeetingRecord.setCreateBy(getNickName());
+        return oaMeetingRecordService.adminAdd(oaMeetingRecord);
     }
 
     /**
      * 修改会议记录
      */
+    @ApiOperation("修改")
     @PreAuthorize("@ss.hasPermi('oa:record:edit')")
     @Log(title = "会议记录", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -94,6 +105,7 @@ public class OaMeetingRecordController extends BaseController
     /**
      * 删除会议记录
      */
+    @ApiOperation("删除")
     @PreAuthorize("@ss.hasPermi('oa:record:remove')")
     @Log(title = "会议记录", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{recordIds}")

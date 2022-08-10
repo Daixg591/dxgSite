@@ -87,6 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectByRanking" resultType="com.shahenpc.system.domain.represent.dto.PerformDutieRankingDto">
         SELECT l.id,l.user_id as userId,COUNT(l.id) AS counts,u.avatar,u.nick_name as nickName
         FROM represent_work_log l LEFT JOIN sys_user u ON u.user_id = l.user_id
+        WHERE u.identity = 1
         GROUP BY l.user_id ORDER BY counts DESC
     </select>
 

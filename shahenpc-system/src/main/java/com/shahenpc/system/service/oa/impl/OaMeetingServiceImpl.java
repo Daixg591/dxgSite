@@ -61,6 +61,23 @@ public class OaMeetingServiceImpl implements IOaMeetingService
     @Override
     public List<OaMeeting> selectOaMeetingList(OaMeeting oaMeeting)
     {
+        List<OaMeeting> list =  oaMeetingMapper.selectOaMeetingList(oaMeeting);
+        for (OaMeeting item : list) {
+            if (item.getStatus() != 0) {
+                if (item.getStartTime().getTime() > DateUtils.getNowDate().getTime()) {
+                    item.setStatus(1);
+                    oaMeetingMapper.updateOaMeeting(item);
+                }
+                if (item.getStartTime().getTime() < DateUtils.getNowDate().getTime() && item.getEndTime().getTime() > DateUtils.getNowDate().getTime()) {
+                    item.setStatus(2);
+                    oaMeetingMapper.updateOaMeeting(item);
+                }
+                if (item.getEndTime().getTime() < DateUtils.getNowDate().getTime()) {
+                    item.setStatus(3);
+                    oaMeetingMapper.updateOaMeeting(item);
+                }
+            }
+        }
         return oaMeetingMapper.selectOaMeetingList(oaMeeting);
     }
 
@@ -86,7 +103,43 @@ public class OaMeetingServiceImpl implements IOaMeetingService
             item.setMeetingId(request.getMeetingId());
             item.setCreateTime(DateUtils.getNowDate());
             item.setUserId(userId);
-            oaMeetingPersonnelMapper.insertOaMeetingPersonnel(item);
+           int personn = oaMeetingPersonnelMapper.insertOaMeetingPersonnel(item);
+            OaMeetingSign sign = new OaMeetingSign();
+            if(request.getIsSign() == 0){
+                sign.setStatus(1);
+            }
+            sign.setPersonnelId((long)personn);
+            sign.setCreateTime(DateUtils.getNowDate());
+            sign.setMeetingId(request.getMeetingId());
+            sign.setUserId(userId);
+            oaMeetingSignMapper.insertOaMeetingSign(sign);
+        }
+        return success;
+    }
+
+    @Override
+    public int newUpdate(MeetingAddDto request) {
+        //先删除人员 然后在添加
+        oaMeetingPersonnelMapper.deleteOaMeetingPersonnelByMeetingId(request.getMeetingId());
+        oaMeetingSignMapper.deleteOaMeetingSignByMeetingId(request.getMeetingId());
+        //修改会议
+        request.setUpdateTime(DateUtils.getNowDate());
+        int success= oaMeetingMapper.updateOaMeeting(request);
+        for (Long userId :request.getPersonnel()){
+            OaMeetingPersonnel item = new OaMeetingPersonnel();
+            item.setMeetingId(request.getMeetingId());
+            item.setCreateTime(DateUtils.getNowDate());
+            item.setUserId(userId);
+            int personn = oaMeetingPersonnelMapper.insertOaMeetingPersonnel(item);
+            OaMeetingSign sign = new OaMeetingSign();
+            if(request.getIsSign() == 0){
+                sign.setStatus(1);
+            }
+            sign.setPersonnelId((long)personn);
+            sign.setCreateTime(DateUtils.getNowDate());
+            sign.setMeetingId(request.getMeetingId());
+            sign.setUserId(userId);
+            oaMeetingSignMapper.insertOaMeetingSign(sign);
         }
         return success;
     }

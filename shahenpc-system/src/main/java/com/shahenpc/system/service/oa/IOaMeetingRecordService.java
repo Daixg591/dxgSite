@@ -1,6 +1,8 @@
 package com.shahenpc.system.service.oa;
 
 import java.util.List;
+
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.system.domain.oa.OaMeetingRecord;
 
 /**
@@ -58,4 +60,6 @@ public interface IOaMeetingRecordService
      * @return 结果
      */
     public int deleteOaMeetingRecordByRecordId(Long recordId);
+
+    public AjaxResult adminAdd(OaMeetingRecord oaMeetingRecord);
 }
