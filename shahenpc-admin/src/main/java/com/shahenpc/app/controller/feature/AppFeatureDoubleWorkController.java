@@ -49,7 +49,7 @@ public class AppFeatureDoubleWorkController extends BaseController {
     {
         featureDoubleWork.setCreateBy(getUsername());
         featureDoubleWork.setSubmitUserId(getUserId());
-        return toAjax(featureDoubleWorkService.newAdd(featureDoubleWork));
+        return AjaxResult.success(featureDoubleWorkService.newAdd(featureDoubleWork));
     }
 
     /**
@@ -92,6 +92,15 @@ public class AppFeatureDoubleWorkController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody FeatureDoubleWork featureDoubleWork)
     {
-        return toAjax(featureDoubleWorkService.newUpdate(featureDoubleWork));
+        return AjaxResult.success(featureDoubleWorkService.newUpdate(featureDoubleWork));
+    }
+
+    /**总数-排名*/
+    @ApiOperation("展示")
+    @Log(title = "双联工作")
+    @GetMapping("/countran")
+    public AjaxResult countAndranking()
+    {
+        return AjaxResult.success(featureDoubleWorkService.countAndranking(getUserId()));
     }
 }

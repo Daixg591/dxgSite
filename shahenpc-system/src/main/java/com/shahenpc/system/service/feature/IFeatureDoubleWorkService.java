@@ -1,6 +1,8 @@
 package com.shahenpc.system.service.feature;
 
 import java.util.List;
+
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.feature.dto.*;
 
@@ -64,9 +66,9 @@ public interface IFeatureDoubleWorkService
 
     public List<FeatureMonthDto> selectByMonth();
 
-    public int newAdd(FeatureDoubleWork featureDoubleWork);
+    public AjaxResult newAdd(FeatureDoubleWork featureDoubleWork);
 
-    public int newUpdate(FeatureDoubleWork featureDoubleWork);
+    public AjaxResult newUpdate(FeatureDoubleWork featureDoubleWork);
 
     //public FeatureDoubleWork  newDetail(Long doubleId);
 
@@ -81,4 +83,7 @@ public interface IFeatureDoubleWorkService
     public List<DoubleAppListDto> appList(FeatureDoubleWork featureDoubleWork);
 
     public List<DoubleListDto> adminList(FeatureDoubleWork featureDoubleWork);
+
+
+    public DoubleCountRanDto countAndranking(Long userId);
 }
