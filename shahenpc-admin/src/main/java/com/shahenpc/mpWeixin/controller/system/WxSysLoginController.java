@@ -11,7 +11,6 @@ import com.shahenpc.common.core.redis.RedisCache;
 import com.shahenpc.common.utils.*;
 import com.shahenpc.common.utils.http.HttpUtils;
 import com.shahenpc.common.utils.ip.IpUtils;
-import com.shahenpc.common.utils.sign.Base64;
 import com.shahenpc.common.utils.sign.Md5Utils;
 import com.shahenpc.framework.manager.AsyncManager;
 import com.shahenpc.framework.manager.factory.AsyncFactory;
@@ -202,40 +201,6 @@ public class WxSysLoginController {
     @ApiOperation("获取投票小程序码")
     @PostMapping("/getvotecode")
     public AjaxResult getSmProCode(@RequestBody SmProCodeDto dto) throws IOException {
-//        AjaxResult ajax = AjaxResult.success();
-//        dto.setAccess_token(getWxAccessToken());
-//        dto.setAuto_color(Boolean.FALSE);
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("scene", dto.getScene());
-//        map.put("page", dto.getPage());
-//        map.put("env_version", dto.getEnv_version());
-//        String res = HttpUtils.SendPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + dto.getAccess_token(), map);
-//        System.out.println(res);
-//        //BufferedImage
-//        return AjaxResult.success(Base64.encodeBase64(res.getBytes()));
-//                return AjaxResult.success(getWxResponse(dto));
-        ResponseBody body=getWxResponse(dto);
-        return AjaxResult.success(body);
-    }
-
-
-    private ResponseBody getWxResponse(SmProCodeDto dto) throws IOException {
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .build();
-        dto.setAccess_token(getWxAccessToken());
-        final okhttp3.RequestBody body =new  FormBody.Builder()
-                .add("scene",dto.getScene())
-                .add("page",dto.getPage())
-                .add("env_version",dto.getEnv_version())
-                .build();
-        Request request = new Request.Builder()
-                .url("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token="+dto.getAccess_token())
-                .method("POST", body)
-                .addHeader("Content-Type", "application/json")
-                .build();
-        Call call = client.newCall(request);
-        Response response=call.execute();
-        return response.body();
         AjaxResult ajax = AjaxResult.success();
         dto.setAccess_token(getWxAccessToken());
         dto.setAuto_color(Boolean.FALSE);
@@ -243,11 +208,8 @@ public class WxSysLoginController {
         map.put("scene", dto.getScene());
         map.put("page", dto.getPage());
         map.put("env_version", dto.getEnv_version());
-        byte[] res = HttpUtils.SendPosts("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + dto.getAccess_token(), map);
-        //byte[] result = res.getBytes();
-//        result = res.toBy
-        //二进制  转  base64
-        return AjaxResult.success(Base64.encode(res));
+        byte[] res = HttpUtils.SendPostByQrCode("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + dto.getAccess_token(), map);
+        return ajax.put("data",com.shahenpc.common.utils.sign.Base64.encode(res));
     }
 
     //endregion
