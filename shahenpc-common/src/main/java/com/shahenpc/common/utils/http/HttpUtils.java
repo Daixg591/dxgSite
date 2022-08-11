@@ -289,15 +289,15 @@ public class HttpUtils
         return entityString;
     }
     /**
-     * 向指定 URL 发送POST方法的请求
+     *  一物一码
+     * 向指定 URL 发送POST方法的请求  获取 小程序二维码数据流
      * @param url
      * @param map
      * @return
      * @throws IOException
      */
-    public static byte[] SendPosts(String url,Map<String, Object> map) throws IOException
+    public static byte[] SendPostByQrCode(String url,Map<String, Object> map) throws IOException
     {
-
         //创建一个获取连接客户端的工具
         CloseableHttpClient httpClient = HttpClients.createDefault();
         //创建Post请求
@@ -308,6 +308,7 @@ public class HttpUtils
         JSONObject jsonString = new JSONObject(map);
         //使用StringEntity转换成实体类型
         StringEntity entity = new StringEntity(jsonString.toString(),"UTF-8");
+        //类型
         entity.setContentType("image/png");
         //将封装的参数添加到Post请求中
         httpPost.setEntity(entity);
@@ -317,9 +318,7 @@ public class HttpUtils
         System.out.println(inputStream);
         //获取响应的实体
         HttpEntity responseEntity = response.getEntity();
-        //转化成字符串
-
-        //EntityUtils.toString(responseEntity);
+        //转化成 byte
         byte[] result = EntityUtils.toByteArray(responseEntity);
         //转换成JSON格式输出
         //JSONObject result =  JSONObject.parseObject(entityString);
