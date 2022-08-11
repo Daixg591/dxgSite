@@ -2,6 +2,7 @@ package com.shahenpc.system.service.oa;
 
 import java.util.List;
 import com.shahenpc.system.domain.oa.OaVote;
+import com.shahenpc.system.domain.oa.dto.VoteCount;
 
 /**
  * 投票窗口Service接口
@@ -58,4 +59,6 @@ public interface IOaVoteService
      * @return 结果
      */
     public int deleteOaVoteByVoteId(Long voteId);
+
+    public VoteCount selectByCount();
 }

@@ -111,4 +111,12 @@ public class OaVoteController extends BaseController
     {
         return toAjax(oaVoteService.deleteOaVoteByVoteIds(voteIds));
     }
+
+
+    @ApiOperation("统计")
+    @GetMapping("/count")
+    public AjaxResult count()
+    {
+        return AjaxResult.success(oaVoteService.selectByCount());
+    }
 }

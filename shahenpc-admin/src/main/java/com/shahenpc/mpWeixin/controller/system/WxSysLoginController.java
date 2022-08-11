@@ -1,6 +1,7 @@
 package com.shahenpc.mpWeixin.controller.system;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.shahenpc.common.constant.Constants;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysUser;
@@ -10,6 +11,7 @@ import com.shahenpc.common.core.redis.RedisCache;
 import com.shahenpc.common.utils.*;
 import com.shahenpc.common.utils.http.HttpUtils;
 import com.shahenpc.common.utils.ip.IpUtils;
+import com.shahenpc.common.utils.sign.Base64;
 import com.shahenpc.common.utils.sign.Md5Utils;
 import com.shahenpc.framework.manager.AsyncManager;
 import com.shahenpc.framework.manager.factory.AsyncFactory;
@@ -46,6 +48,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -232,6 +236,18 @@ public class WxSysLoginController {
         Call call = client.newCall(request);
         Response response=call.execute();
         return response.body();
+        AjaxResult ajax = AjaxResult.success();
+        dto.setAccess_token(getWxAccessToken());
+        dto.setAuto_color(Boolean.FALSE);
+        Map<String, Object> map = new HashMap<>();
+        map.put("scene", dto.getScene());
+        map.put("page", dto.getPage());
+        map.put("env_version", dto.getEnv_version());
+        byte[] res = HttpUtils.SendPosts("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + dto.getAccess_token(), map);
+        //byte[] result = res.getBytes();
+//        result = res.toBy
+        //二进制  转  base64
+        return AjaxResult.success(Base64.encode(res));
     }
 
     //endregion

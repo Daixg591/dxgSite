@@ -288,7 +288,45 @@ public class HttpUtils
 //        httpClient.close();
         return entityString;
     }
+    /**
+     * 向指定 URL 发送POST方法的请求
+     * @param url
+     * @param map
+     * @return
+     * @throws IOException
+     */
+    public static byte[] SendPosts(String url,Map<String, Object> map) throws IOException
+    {
 
+        //创建一个获取连接客户端的工具
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        //创建Post请求
+        HttpPost httpPost = new HttpPost(url);
+        //添加请求头
+        httpPost.addHeader("Content-Type","application/json;charset=UTF-8");
+        //封装请求参数，将map集合转换成json格式
+        JSONObject jsonString = new JSONObject(map);
+        //使用StringEntity转换成实体类型
+        StringEntity entity = new StringEntity(jsonString.toString(),"UTF-8");
+        entity.setContentType("image/png");
+        //将封装的参数添加到Post请求中
+        httpPost.setEntity(entity);
+        //执行请求
+        CloseableHttpResponse response =  httpClient.execute(httpPost);
+        InputStream inputStream = response.getEntity().getContent();
+        System.out.println(inputStream);
+        //获取响应的实体
+        HttpEntity responseEntity = response.getEntity();
+        //转化成字符串
+
+        //EntityUtils.toString(responseEntity);
+        byte[] result = EntityUtils.toByteArray(responseEntity);
+        //转换成JSON格式输出
+        //JSONObject result =  JSONObject.parseObject(entityString);
+//        response.close();
+//        httpClient.close();
+        return result;
+    }
 
     private static class TrustAnyTrustManager implements X509TrustManager
     {

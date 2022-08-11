@@ -137,10 +137,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>-->
     <!--=========================================================分割线-->
     <select id="selectCount" resultType="com.shahenpc.system.domain.oa.dto.VoteCount">
-        SELECT COUNT(o.vote_id) AS `count`,
-        (SELECT COUNT(b.vote_id) FROM oa_vote b WHERE b.start_time <![CDATA[>]]> NOW() AND b.`status` = 0) AS notCount,
-        (SELECT COUNT(c.vote_id) FROM oa_vote c WHERE c.start_time <![CDATA[<=]]> NOW() AND c.end_time >= NOW() AND c.`status` = 1) AS oneCount,
-        (SELECT COUNT(d.vote_id) FROM oa_vote d WHERE d.end_time <![CDATA[<]]> NOW() AND d.`status` = 2) AS endCount
+        SELECT COUNT(o.vote_id) AS `all`,
+        (SELECT COUNT(b.vote_id) FROM oa_vote b WHERE b.start_time <![CDATA[>]]> NOW() AND b.`status` = 0) AS `notstart`,
+        (SELECT COUNT(c.vote_id) FROM oa_vote c WHERE c.start_time <![CDATA[<=]]> NOW() AND c.end_time >= NOW() AND c.`status` = 1) AS `starting`,
+        (SELECT COUNT(d.vote_id) FROM oa_vote d WHERE d.end_time <![CDATA[<]]> NOW() AND d.`status` = 2) AS `complete`
         FROM oa_vote o
     </select>
 
