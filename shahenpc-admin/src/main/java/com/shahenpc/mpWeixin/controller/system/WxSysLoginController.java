@@ -1,6 +1,7 @@
 package com.shahenpc.mpWeixin.controller.system;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.shahenpc.common.constant.Constants;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysUser;
@@ -10,6 +11,7 @@ import com.shahenpc.common.core.redis.RedisCache;
 import com.shahenpc.common.utils.*;
 import com.shahenpc.common.utils.http.HttpUtils;
 import com.shahenpc.common.utils.ip.IpUtils;
+import com.shahenpc.common.utils.sign.Base64;
 import com.shahenpc.common.utils.sign.Md5Utils;
 import com.shahenpc.framework.manager.AsyncManager;
 import com.shahenpc.framework.manager.factory.AsyncFactory;
@@ -29,16 +31,28 @@ import com.sun.org.apache.xerces.internal.parsers.DTDParser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import liquibase.pro.packaged.T;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.flowable.idm.engine.impl.persistence.entity.UserEntity;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -189,7 +203,7 @@ public class WxSysLoginController {
      */
     @ApiOperation("获取投票小程序码")
     @PostMapping("/getvotecode")
-    public String getSmProCode(@RequestBody SmProCodeDto dto) throws IOException {
+    public AjaxResult getSmProCode(@RequestBody SmProCodeDto dto) throws IOException {
         AjaxResult ajax = AjaxResult.success();
         dto.setAccess_token(getWxAccessToken());
         dto.setAuto_color(Boolean.FALSE);
@@ -197,11 +211,13 @@ public class WxSysLoginController {
         map.put("scene", dto.getScene());
         map.put("page", dto.getPage());
         map.put("env_version", dto.getEnv_version());
-
-
-        String res = HttpUtils.SendPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + dto.getAccess_token(), map);
-        return res;
+        byte[] res = HttpUtils.SendPosts("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + dto.getAccess_token(), map);
+        //byte[] result = res.getBytes();
+//        result = res.toBy
+        //二进制  转  base64
+        return AjaxResult.success(Base64.encode(res));
     }
+
     //endregion
 
     //region // 获取投票小程序链接==> 待测试
