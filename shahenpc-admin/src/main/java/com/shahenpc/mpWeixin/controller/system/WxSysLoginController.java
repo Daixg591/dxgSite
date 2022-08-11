@@ -26,17 +26,14 @@ import com.shahenpc.system.domain.wxsmallprogram.dto.WxMassesDto;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxAccessTokenVo;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxAuthVo;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxPhoneVo;
+import com.shahenpc.system.domain.wxsmallprogram.vo.WxQrcodeVo;
 import com.shahenpc.system.service.ISysUserService;
 import com.sun.org.apache.xerces.internal.parsers.DTDParser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import liquibase.pro.packaged.T;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import okhttp3.*;
+import org.apache.commons.codec.binary.Base64;
 import org.flowable.idm.engine.impl.persistence.entity.UserEntity;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +46,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -139,6 +136,7 @@ public class WxSysLoginController {
         String res = HttpUtils.SendPost("https://api.weixin.qq.com/wxa/business/getuserphonenumber" +
                 "?access_token=" + accessToken, map);
         WxPhoneVo wxPhoneVo = JSON.parseObject(JSON.parse(res).toString(), WxPhoneVo.class);
+
         ajax.put("data", wxPhoneVo.getPhone_info().getPurePhoneNumber());
         return ajax;
     }
@@ -204,6 +202,40 @@ public class WxSysLoginController {
     @ApiOperation("获取投票小程序码")
     @PostMapping("/getvotecode")
     public AjaxResult getSmProCode(@RequestBody SmProCodeDto dto) throws IOException {
+//        AjaxResult ajax = AjaxResult.success();
+//        dto.setAccess_token(getWxAccessToken());
+//        dto.setAuto_color(Boolean.FALSE);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("scene", dto.getScene());
+//        map.put("page", dto.getPage());
+//        map.put("env_version", dto.getEnv_version());
+//        String res = HttpUtils.SendPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + dto.getAccess_token(), map);
+//        System.out.println(res);
+//        //BufferedImage
+//        return AjaxResult.success(Base64.encodeBase64(res.getBytes()));
+//                return AjaxResult.success(getWxResponse(dto));
+        ResponseBody body=getWxResponse(dto);
+        return AjaxResult.success(body);
+    }
+
+
+    private ResponseBody getWxResponse(SmProCodeDto dto) throws IOException {
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        dto.setAccess_token(getWxAccessToken());
+        final okhttp3.RequestBody body =new  FormBody.Builder()
+                .add("scene",dto.getScene())
+                .add("page",dto.getPage())
+                .add("env_version",dto.getEnv_version())
+                .build();
+        Request request = new Request.Builder()
+                .url("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token="+dto.getAccess_token())
+                .method("POST", body)
+                .addHeader("Content-Type", "application/json")
+                .build();
+        Call call = client.newCall(request);
+        Response response=call.execute();
+        return response.body();
         AjaxResult ajax = AjaxResult.success();
         dto.setAccess_token(getWxAccessToken());
         dto.setAuto_color(Boolean.FALSE);
@@ -331,5 +363,26 @@ public class WxSysLoginController {
     }
 
     //endregion
+
+
+    /**
+     * BufferedImage 转base64
+     *
+     * @param img
+     * @return
+     */
+    public String GetBase64FromImage(BufferedImage img) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        try {
+            // 设置图片的格式
+            ImageIO.write(img, "jpg", stream);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        byte[] bytes = Base64.encodeBase64(stream.toByteArray());
+        String base64 = new String(bytes);
+        return "data:image/jpeg;base64," + base64;
+    }
 
 }
