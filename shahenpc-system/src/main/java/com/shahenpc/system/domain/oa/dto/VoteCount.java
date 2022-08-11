@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class VoteCount {
-    private Integer count;
-    private Integer notCount;
-    private Integer oneCount;
-    private Integer endCount;
+    private Integer all;
+    private Integer notstart;
+    private Integer starting;
+    private Integer complete;
 }

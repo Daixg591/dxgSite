@@ -5,6 +5,7 @@ import java.util.List;
 import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.system.domain.oa.OaVotePlayer;
+import com.shahenpc.system.domain.oa.dto.VoteCount;
 import com.shahenpc.system.mapper.oa.OaVotePlayerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -135,5 +136,10 @@ public class OaVoteServiceImpl extends BaseController implements IOaVoteService
     public int deleteOaVoteByVoteId(Long voteId)
     {
         return oaVoteMapper.deleteOaVoteByVoteId(voteId);
+    }
+
+    @Override
+    public VoteCount selectByCount() {
+        return oaVoteMapper.selectCount();
     }
 }
