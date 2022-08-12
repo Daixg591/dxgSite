@@ -79,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     <!--===========================================分割线-->
-    <select id="selectAll" resultType="java.util.Set">
-        select badword from feature_sensitive_word where status = 1
+    <select id="selectAll" resultType="String">
+        select badword from feature_sensitive_word where `status` = 1
     </select>
 </mapper>

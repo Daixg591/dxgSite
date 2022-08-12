@@ -1,12 +1,19 @@
 package com.shahenpc.system.service.represent.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.feature.FeatureDoubleWork;
+import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
 import com.shahenpc.system.domain.represent.RepresentActivityRecord;
 import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.domain.represent.dto.*;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper;
 import com.shahenpc.system.mapper.represent.*;
+import com.shahenpc.system.service.ISysDictDataService;
 import com.shahenpc.system.service.represent.IRepresentWorkLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -185,6 +192,27 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
         dto.setMotionCount(representMotionMapper.getCount());
         dto.setTotalCount(dto.getActivityCount()+dto.getDoubleCount()+dto.getDiscoveryCount()+dto.getMotionCount()+dto.getExperienceCount());
         return dto;
+    }
+    @Autowired
+    private ISysDictDataService dictDataService;
+    @Override
+    public List<ActivityPieDto> pie() {
+        List<ActivityPieDto> dtoList = new ArrayList<>();
+        List<RepresentActivity> alarBudg=representActivityMapper.selectRepresentActivityList(null);
+        SysDictData dictParam = new SysDictData();
+        dictParam.setDictType("activity_type");
+        List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            int v = 0;
+            v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getActivityType().toString()))
+                    .collect(Collectors.toList()).size();
+            ActivityPieDto item = new ActivityPieDto();
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
+            dtoList.add(item);
+        }
+        return dtoList;
     }
 
 

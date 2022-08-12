@@ -111,7 +111,10 @@ public class AjaxResult extends HashMap<String, Object>
     {
         return AjaxResult.error("操作失败");
     }
-
+    public static AjaxResult notFound()
+    {
+        return AjaxResult.error("资源，服务未找到");
+    }
     /**
      * 返回错误消息
      * 
@@ -123,6 +126,10 @@ public class AjaxResult extends HashMap<String, Object>
         return AjaxResult.error(msg, null);
     }
 
+    public static AjaxResult notFound(String msg)
+    {
+        return AjaxResult.notFound(msg, null);
+    }
 
     public static AjaxResult isEmpty(String msg)
     {
@@ -139,6 +146,11 @@ public class AjaxResult extends HashMap<String, Object>
     public static AjaxResult error(String msg, Object data)
     {
         return new AjaxResult(HttpStatus.ERROR, msg, data);
+    }
+
+    public static AjaxResult notFound(String msg, Object data)
+    {
+        return new AjaxResult(HttpStatus.NOT_FOUND, msg, data);
     }
 
     public static AjaxResult isEmpty(String msg, Object data)
@@ -160,6 +172,11 @@ public class AjaxResult extends HashMap<String, Object>
     }
 
     public static  AjaxResult isEmpty(int code, String msg){
+        return new AjaxResult(code, msg, null);
+    }
+
+    public static AjaxResult notFound(int code, String msg)
+    {
         return new AjaxResult(code, msg, null);
     }
 

@@ -74,4 +74,6 @@ public interface IRepresentActivityService
     /** 履职 总数  排行*/
     public PerformDutieConutDto totalConut();
 
+    public List<ActivityPieDto> pie();
+
 }

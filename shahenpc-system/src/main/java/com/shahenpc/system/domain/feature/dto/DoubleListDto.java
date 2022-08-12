@@ -7,5 +7,6 @@ import lombok.Data;
 public class DoubleListDto extends FeatureDoubleWork {
     private String avatar;
     private String nickName;
-    private String phonenumber;
+    private String receivePhone;
+    private String sendPhone;
 }

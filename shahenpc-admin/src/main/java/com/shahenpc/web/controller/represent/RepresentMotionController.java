@@ -205,5 +205,11 @@ public class RepresentMotionController extends BaseController
         return AjaxResult.success(flowTaskService.ring(vo));
     }
 
+//    @ApiOperation("按类别饼图")
+//    @GetMapping("/bar")
+//    public AjaxResult bar(MotionTaskVo vo){
+//        vo.setProcessName("建议议案");
+//        return AjaxResult.success(flowTaskService.bar(vo));
+//    }
 
 }

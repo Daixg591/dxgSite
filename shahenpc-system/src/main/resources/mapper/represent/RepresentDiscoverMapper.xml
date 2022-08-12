@@ -196,4 +196,12 @@
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_status' AND d.dict_value = a.status )AS discoverStatusName
         from represent_discover a  where discover_id = #{discoverId}
     </select>
+
+
+    <select id="selectRepresentStatusList" parameterType="RepresentDiscover" resultMap="RepresentDiscoverResult">
+        <include refid="selectRepresentDiscoverVo"/>
+        <where>
+            <if test="status != null "> and status != 5</if>
+        </where>
+    </select>
 </mapper>
