@@ -99,4 +99,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='event_type' AND d.dict_value = a.event_type)AS eventTypeName
         from represent_work_log a ORDER BY a.create_time DESC
     </select>
+
+    <!--排行数 误删-->
+    <select id="selectByRankingList" resultType="com.shahenpc.system.domain.represent.dto.WorkLogRankingDto">
+        SELECT t.total,t.typeCount, t.user_id as userId, @rownum :=@rownum + 1 AS ranking
+        FROM (SELECT @rownum := 0) r,
+            (
+            SELECT COUNT(id) AS total,
+            user_id,
+            COUNT(DISTINCT event_type)AS typeCount
+            FROM  represent_work_log  GROUP BY user_id ORDER BY COUNT(id)  DESC
+            ) t
+    </select>
 </mapper>

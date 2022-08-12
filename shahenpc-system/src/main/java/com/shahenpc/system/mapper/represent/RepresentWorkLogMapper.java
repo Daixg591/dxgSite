@@ -4,6 +4,7 @@ import java.util.List;
 import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.domain.represent.dto.PerformDutieRankingDto;
 import com.shahenpc.system.domain.represent.dto.WorkLogListDto;
+import com.shahenpc.system.domain.represent.dto.WorkLogRankingDto;
 
 /**
  * 代履职日志Mapper接口
@@ -64,4 +65,6 @@ public interface RepresentWorkLogMapper
     List<PerformDutieRankingDto> selectByRanking();
 
     public List<WorkLogListDto> appList(RepresentWorkLog representWorkLog);
+
+    public List<WorkLogRankingDto> selectByRankingList();
 }

@@ -128,7 +128,8 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getDoubleType().toString()))
+            int v = 0;
+            v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getDoubleType().toString()))
                     .collect(Collectors.toList()).size();
             FeatureCakeDto item = new FeatureCakeDto();
             item.setName(dictList.get(i).getDictLabel());

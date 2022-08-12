@@ -128,18 +128,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </resultMap>
     <select id="adminList" resultMap="adminList" parameterType="FeatureDoubleWork">
-        select double_id, double_type, title, status, content, pic_urls, create_by, create_time, update_by, update_time, remark, submit_user_id, receive_user_id,
-               is_read,(SELECT u.avatar FROM sys_user u WHERE u.user_id = receive_user_id) AS avatar from feature_double_work
+        select w.double_id, w.double_type, w.title, w.status, w.content, w.pic_urls, w.create_by, w.create_time, w.update_by, w.update_time, w.remark, w.submit_user_id, w.receive_user_id,
+        w.is_read,u.avatar,u.nick_name AS nickName,u.phonenumber from feature_double_work w LEFT JOIN sys_user u ON u.user_id = w.receive_user_id
         <where>
-            <if test="doubleType != null "> and double_type = #{doubleType}</if>
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="content != null  and content != ''"> and content = #{content}</if>
-            <if test="picUrls != null  and picUrls != ''"> and pic_urls = #{picUrls}</if>
-            <if test="submitUserId != null "> and submit_user_id = #{submitUserId}</if>
-            <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
-            <if test="isRead != null "> and is_read = #{isRead}</if>
-            <if test="rate != null">rate = #{rate},</if>
+            <if test="doubleType != null "> and w.double_type = #{doubleType}</if>
+            <if test="title != null  and title != ''"> and w.title = #{title}</if>
+            <if test="status != null "> and w.status = #{status}</if>
+            <if test="content != null  and content != ''"> and w.content = #{content}</if>
+            <if test="picUrls != null  and picUrls != ''"> and w.pic_urls = #{picUrls}</if>
+            <if test="submitUserId != null "> and w.submit_user_id = #{submitUserId}</if>
+            <if test="receiveUserId != null "> and w.receive_user_id = #{receiveUserId}</if>
+            <if test="isRead != null "> and w.is_read = #{isRead}</if>
+            <if test="rate != null">and w.rate = #{rate},</if>
         </where>
     </select>
 
