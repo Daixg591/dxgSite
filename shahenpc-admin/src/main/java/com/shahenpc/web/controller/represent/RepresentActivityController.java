@@ -130,4 +130,12 @@ public class RepresentActivityController extends BaseController
         representActivity.setSendUserId(getUserId());
         return toAjax(representActivityService.newAdd(representActivity));
     }
+
+
+    @ApiOperation("分类饼图")
+    @GetMapping(value = "/pie")
+    public AjaxResult cake() {
+        return AjaxResult.success(representActivityService.pie());
+    }
+
 }

@@ -72,4 +72,6 @@ public interface IRepresentDiscoverService
     public DiscoverLineDto line();
     /**饼图*/
     public List<DiscoverPieDto> pie();
+
+    public List<DiscoverPieDto> funnel();
 }

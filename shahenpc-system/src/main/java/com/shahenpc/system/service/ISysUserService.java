@@ -228,4 +228,5 @@ public interface ISysUserService
 
     /** 大数据页面数据*/
     public DataCountDto count();
+
 }

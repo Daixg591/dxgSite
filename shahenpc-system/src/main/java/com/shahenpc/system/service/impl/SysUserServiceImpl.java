@@ -76,6 +76,11 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     private IPersonnelAppointEduLogService eduLogService;
+
+    @Autowired
+    private FeatureDoubleWorkMapper featureDoubleWorkMapper;
+    @Autowired
+    private RepresentDiscoverMapper representDiscoverMapper;
     /**
      * 根据条件分页查询用户列表
      * 
@@ -679,10 +684,7 @@ public class SysUserServiceImpl implements ISysUserService
         return userMapper.appSelectUserList(user);
     }
 
-    @Autowired
-    private FeatureDoubleWorkMapper featureDoubleWorkMapper;
-    @Autowired
-    private RepresentDiscoverMapper representDiscoverMapper;
+
     /***/
     @Override
     public DataCountDto count() {

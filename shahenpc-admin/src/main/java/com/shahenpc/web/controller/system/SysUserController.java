@@ -211,13 +211,13 @@ public class SysUserController extends BaseController {
     public AjaxResult edit(@Validated @RequestBody SysUser user) {
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
-        if (StringUtils.isNotEmpty(user.getPhonenumber())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
-            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
-        } else if (StringUtils.isNotEmpty(user.getEmail())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
-            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
-        }
+//        if (StringUtils.isNotEmpty(user.getPhonenumber())
+//                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
+//            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
+//        } else if (StringUtils.isNotEmpty(user.getEmail())
+//                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
+//            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
+//        }
         user.setUpdateBy(getUsername());
         return toAjax(userService.updateUser(user));
     }
@@ -334,8 +334,8 @@ public class SysUserController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/update")
-    public AjaxResult update(@Validated @RequestBody SysUser user) {
-        user.setStatus("1");
+    public AjaxResult update(@RequestBody SysUser user) {
+        //user.setStatus("1");
         return toAjax(userService.updateUser(user));
     }
 }

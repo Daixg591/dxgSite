@@ -71,4 +71,6 @@ public interface RepresentDiscoverMapper
     public Integer getCount();
 
     public DiscoverRingDto selectByRate();
+
+    public List<RepresentDiscover> selectRepresentStatusList();
 }

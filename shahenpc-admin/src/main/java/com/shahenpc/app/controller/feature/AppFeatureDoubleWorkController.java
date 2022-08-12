@@ -57,7 +57,7 @@ public class AppFeatureDoubleWorkController extends BaseController {
      * @param featureDoubleWork
      * @return
      */
-    @ApiOperation("双联工作列表")
+    @ApiOperation("我提交的工作列表")
     @GetMapping("/my/list")
     public TableDataInfo myList(FeatureDoubleWork featureDoubleWork)
     {
@@ -72,7 +72,7 @@ public class AppFeatureDoubleWorkController extends BaseController {
     /**
      * 我审核的
      */
-    @ApiOperation("双联工作列表")
+    @ApiOperation("待我批准双联工作列表")
     @GetMapping("/audit/list")
     public TableDataInfo auditList(FeatureDoubleWork featureDoubleWork)
     {
@@ -84,6 +84,23 @@ public class AppFeatureDoubleWorkController extends BaseController {
         List<FeatureDoubleWork> list = featureDoubleWorkService.selectFeatureDoubleWorkList(featureDoubleWork);
         return getDataTable(list);
     }
+    /**
+     * 获取双联工作详细信息
+     */
+    @ApiOperation("双联工作详情")
+    @ApiImplicitParam(name = "opinionId", value = "双联工作Id", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
+    @GetMapping(value = "/{doubleId}")
+    public AjaxResult getInfo(@PathVariable("doubleId") Long doubleId) {
+        FeatureDoubleWork work =featureDoubleWorkService.selectFeatureDoubleWorkByDoubleId(doubleId);
+        if(work != null){
+            return AjaxResult.success(work);
+        }else{
+            return AjaxResult.notFound();
+        }
+
+    }
+
+
     /**
      * 修改双联工作
      */

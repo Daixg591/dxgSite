@@ -156,9 +156,9 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         SensitiveWordUtil.init(featureSensitiveWordMapper.selectAll());
         //先过滤 敏感词
         if(SensitiveWordUtil.contains(featureDoubleWork.getTitle())){
-            return AjaxResult.error("标题有敏感词，不可提交！");
+            return AjaxResult.error("提交失败：标题中存在敏感词。");
         }else if(SensitiveWordUtil.contains(featureDoubleWork.getContent())){
-            return AjaxResult.error("文本有敏感词，不可提交！");
+            return AjaxResult.error("提交失败：文本中存在敏感词。");
         }else {
             SysUser user = sysUserMapper.selectUserById(featureDoubleWork.getSubmitUserId());
             if (user.getUserStatus().equals(1)) {
@@ -171,17 +171,15 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                 log.setUserId(featureDoubleWork.getReceiveUserId());
                 log.setRemark("双联工作！");
                 representWorkLogService.insertRepresentWorkLog(log);
-
                 FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
                 featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
                 featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
                 featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
                 featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
-                //featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
                 featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
                 featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getCreateBy());
                 featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
-                return AjaxResult.success();
+                return AjaxResult.success(featureDoubleWork.getDoubleId());
             } else {
                 return AjaxResult.error("您已被屏蔽！");
             }
@@ -190,14 +188,6 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
 
     @Override
     public AjaxResult newUpdate(FeatureDoubleWork featureDoubleWork) {
-        //初始化 敏感词库
-        SensitiveWordUtil.init(featureSensitiveWordMapper.selectAll());
-        //先过滤 敏感词
-        if(SensitiveWordUtil.contains(featureDoubleWork.getTitle())){
-            return AjaxResult.error("标题有敏感词，不可提交！");
-        }else if(SensitiveWordUtil.contains(featureDoubleWork.getContent())){
-            return AjaxResult.error("文本有敏感词，不可提交！");
-        }else {
             featureDoubleWork.setUpdateTime(DateUtils.getNowDate());
             int a = featureDoubleWorkMapper.updateFeatureDoubleWork(featureDoubleWork);
             FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
@@ -206,12 +196,10 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
             featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
             featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
             featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
-            //featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
             featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
             featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getUpdateBy());
             featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
-            return AjaxResult.success();
-        }
+            return AjaxResult.success(a);
     }
 
     @Override

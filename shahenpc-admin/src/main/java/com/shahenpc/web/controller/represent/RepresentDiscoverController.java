@@ -128,4 +128,12 @@ public class RepresentDiscoverController extends BaseController
     {
         return AjaxResult.success(representDiscoverService.pie());
     }
+
+
+    @ApiOperation("漏斗")
+    @GetMapping(value = "/funnel")
+    public AjaxResult funnel()
+    {
+        return AjaxResult.success(representDiscoverService.funnel());
+    }
 }

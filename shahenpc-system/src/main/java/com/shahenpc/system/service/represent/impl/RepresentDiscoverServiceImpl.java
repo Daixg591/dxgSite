@@ -223,4 +223,28 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
         }
         return dtoList;
     }
+
+    @Override
+    public List<DiscoverPieDto> funnel() {
+        List<DiscoverPieDto> dtoList = new ArrayList<>();
+        Integer shangchuang =  representDiscoverMapper.selectRepresentDiscoverList(null).size();
+        List<RepresentDiscover> alarBudg=representDiscoverMapper.selectRepresentStatusList();
+        SysDictData dictParam = new SysDictData();
+        dictParam.setDictType("discover_status");
+        List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            int v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getStatus().toString()))
+                    .collect(Collectors.toList()).size();
+            DiscoverPieDto item = new DiscoverPieDto();
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
+            dtoList.add(item);
+        }
+        DiscoverPieDto item = new DiscoverPieDto();
+        item.setValue(shangchuang);
+        item.setName("上传");
+        dtoList.add(item);
+        return dtoList;
+    }
 }
