@@ -42,7 +42,7 @@ public class RepresentHomeAccessController extends BaseController
      * 查询代之家访问列表
      */
     @ApiOperation("列表")
-    @PreAuthorize("@ss.hasPermi('represent:access:list')")
+    //@PreAuthorize("@ss.hasPermi('represent:access:list')")
     @GetMapping("/list")
     public TableDataInfo list(RepresentHomeAccess representHomeAccess)
     {
@@ -69,7 +69,7 @@ public class RepresentHomeAccessController extends BaseController
      * 获取代之家访问详细信息
      */
     @ApiOperation("详情")
-    @PreAuthorize("@ss.hasPermi('represent:access:query')")
+    //@PreAuthorize("@ss.hasPermi('represent:access:query')")
     @GetMapping(value = "/{accessId}")
     public AjaxResult getInfo(@PathVariable("accessId") Long accessId)
     {

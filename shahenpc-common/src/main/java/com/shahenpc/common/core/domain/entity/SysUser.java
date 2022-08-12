@@ -25,6 +25,7 @@ import com.shahenpc.common.xss.Xss;
 public class SysUser extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+    private String nationName;
 
     private String eduLogList;
 

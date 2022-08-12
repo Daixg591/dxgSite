@@ -314,8 +314,6 @@ public class HttpUtils
         httpPost.setEntity(entity);
         //执行请求
         CloseableHttpResponse response =  httpClient.execute(httpPost);
-        InputStream inputStream = response.getEntity().getContent();
-        System.out.println(inputStream);
         //获取响应的实体
         HttpEntity responseEntity = response.getEntity();
         //转化成 byte

@@ -133,6 +133,7 @@
         u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date,
         u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,
         u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,u.user_status,
+        (SELECT dict_label	FROM sys_dict_data WHERE dict_type = 'sys_user_nation' AND dict_value =u. nation)AS nationName,
         d.dept_name, d.leader from sys_user u
         left join sys_dept d on u.dept_id = d.dept_id
         where u.del_flag = '0'

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.represent.RepresentWorkRankingMapper">
+    
+    <resultMap type="RepresentWorkRanking" id="RepresentWorkRankingResult">
+        <result property="rankingId"    column="ranking_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="total"    column="total"    />
+        <result property="typeCount"    column="type_count"    />
+        <result property="userId"    column="user_id"    />
+        <result property="ranking"    column="ranking"    />
+    </resultMap>
+
+    <sql id="selectRepresentWorkRankingVo">
+        select ranking_id, remark, create_by, create_time, update_by, update_time, total, type_count, user_id, ranking from represent_work_ranking
+    </sql>
+
+    <select id="selectRepresentWorkRankingList" parameterType="RepresentWorkRanking" resultMap="RepresentWorkRankingResult">
+        <include refid="selectRepresentWorkRankingVo"/>
+        <where>  
+            <if test="total != null "> and total = #{total}</if>
+            <if test="typeCount != null "> and type_count = #{typeCount}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="ranking != null "> and ranking = #{ranking}</if>
+        </where>
+    </select>
+    
+    <select id="selectRepresentWorkRankingByRankingId" parameterType="Long" resultMap="RepresentWorkRankingResult">
+        <include refid="selectRepresentWorkRankingVo"/>
+        where ranking_id = #{rankingId}
+    </select>
+        
+    <insert id="insertRepresentWorkRanking" parameterType="RepresentWorkRanking">
+        insert into represent_work_ranking
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rankingId != null">ranking_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="total != null">total,</if>
+            <if test="typeCount != null">type_count,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="ranking != null">ranking,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rankingId != null">#{rankingId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="total != null">#{total},</if>
+            <if test="typeCount != null">#{typeCount},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="ranking != null">#{ranking},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRepresentWorkRanking" parameterType="RepresentWorkRanking">
+        update represent_work_ranking
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="total != null">total = #{total},</if>
+            <if test="typeCount != null">type_count = #{typeCount},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="ranking != null">ranking = #{ranking},</if>
+        </trim>
+        where ranking_id = #{rankingId}
+    </update>
+
+    <delete id="deleteRepresentWorkRankingByRankingId" parameterType="Long">
+        delete from represent_work_ranking where ranking_id = #{rankingId}
+    </delete>
+
+    <delete id="deleteRepresentWorkRankingByRankingIds" parameterType="String">
+        delete from represent_work_ranking where ranking_id in 
+        <foreach item="rankingId" collection="array" open="(" separator="," close=")">
+            #{rankingId}
+        </foreach>
+    </delete>
+    <!-- =============================================================自定义-->
+    <delete id="deleteAll">
+        DELETE  FROM represent_work_ranking;
+    </delete>
+</mapper>
