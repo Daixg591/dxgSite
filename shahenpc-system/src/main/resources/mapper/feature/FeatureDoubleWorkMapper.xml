@@ -129,7 +129,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     <select id="adminList" resultMap="adminList" parameterType="FeatureDoubleWork">
         select w.double_id, w.double_type, w.title, w.status, w.content, w.pic_urls, w.create_by, w.create_time, w.update_by, w.update_time, w.remark, w.submit_user_id, w.receive_user_id,
-               w.rate,
+               w.rate,w.location,
         w.is_read,u.avatar,u.nick_name AS nickName,u.phonenumber as receivePhone,u2.phonenumber as sendPhone
         from feature_double_work w
             LEFT JOIN sys_user u ON u.user_id = w.receive_user_id
@@ -182,7 +182,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     <select id="appList" parameterType="FeatureDoubleWork" resultMap="appList">
         select double_id, double_type, title, status, content, pic_urls, create_by, create_time, update_by, update_time, remark, submit_user_id,
-               receive_user_id, is_read,a.rate,
+               receive_user_id, is_read,a.rate,a.location,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = a.double_type )AS doubleTypeName,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_status' AND d.dict_value = a.status )AS doubleStatusName,
         (SELECT u.nick_name FROM sys_user u WHERE u.user_id = a.submit_user_id)AS sendUserName,
@@ -206,5 +206,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM
             (SELECT receive_user_id,COUNT(double_id) AS `count` FROM `feature_double_work` GROUP BY receive_user_id  ORDER BY `count` DESC) AS obj,
             (SELECT @rownum := 0) r WHERE receive_user_id = #{userId}
+    </select>
+
+
+
+    <select id="selectByStatusCount" resultType="com.shahenpc.system.domain.feature.dto.DoubleStatusCountDto">
+        SELECT
+            COUNT(double_id) total,
+            SUM(if(status=1 ,1,0))AS jiaoTotal,
+            SUM(if(status=2 ,1,0))AS jieTotal,
+            SUM(if(status=3 ,1,0))AS pingTotal,
+            SUM(if(status=4 ,1,0))AS yiTotal
+        FROM feature_double_work WHERE `status` != 5
+    </select>
+
+    <select id="selectByTotal" resultType="java.lang.Integer">
+        SELECT COUNT(double_id) total FROM feature_double_work where `status` != 5
+    </select>
+
+    <select id="selectByLocation" resultType="java.lang.String">
+        select location from feature_double_work
     </select>
 </mapper>

@@ -153,7 +153,18 @@ public class FeatureDoubleWorkController extends BaseController {
         return AjaxResult.success(featureDoubleWorkService.line());
     }
 
+    @ApiOperation("状态数")
+    @GetMapping(value = "/status/count")
+    public AjaxResult statusCount() {
+        return AjaxResult.success(featureDoubleWorkService.selectByStatusCount());
+    }
 
+
+    @ApiOperation("热力图")
+    @GetMapping(value = "/heatmap")
+    public AjaxResult heatmap() {
+        return AjaxResult.success(featureDoubleWorkService.heatmap());
+    }
     /**
      * 添加流程
      @ApiOperation("添加")

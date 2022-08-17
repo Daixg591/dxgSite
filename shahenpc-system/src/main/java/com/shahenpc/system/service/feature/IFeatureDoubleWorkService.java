@@ -64,6 +64,12 @@ public interface IFeatureDoubleWorkService
 
     public List<FeatureCakeDto> speCake();
 
+    public List<FeatureCakeDto> statusCount();
+
+    public DoubleStatusCountDto selectByStatusCount();
+
+    public List<String> heatmap();
+
     public List<FeatureMonthDto> selectByMonth();
 
     public AjaxResult newAdd(FeatureDoubleWork featureDoubleWork);

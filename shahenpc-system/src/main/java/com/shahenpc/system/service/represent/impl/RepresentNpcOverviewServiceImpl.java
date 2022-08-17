@@ -2,6 +2,7 @@ package com.shahenpc.system.service.represent.impl;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.represent.dto.NpcOverviewWxDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.represent.RepresentNpcOverviewMapper;
@@ -97,5 +98,10 @@ public class RepresentNpcOverviewServiceImpl implements IRepresentNpcOverviewSer
     @Override
     public RepresentNpcOverview selectByOverview() {
         return representNpcOverviewMapper.selectByOverview();
+    }
+
+    @Override
+    public NpcOverviewWxDto selectByWxOverview() {
+        return representNpcOverviewMapper.selectByWxOverview();
     }
 }

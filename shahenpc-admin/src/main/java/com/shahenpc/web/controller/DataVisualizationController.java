@@ -41,4 +41,5 @@ public class DataVisualizationController extends BaseController {
         List<RepresentHomeAccess> list = representHomeAccessService.selectRepresentHomeAccessList(representHomeAccess);
         return getDataTable(list);
     }
+
 }

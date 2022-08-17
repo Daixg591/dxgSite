@@ -111,9 +111,10 @@ public class AjaxResult extends HashMap<String, Object>
     {
         return AjaxResult.error("操作失败");
     }
+
     public static AjaxResult notFound()
     {
-        return AjaxResult.error("资源，服务未找到");
+        return AjaxResult.notFound("资源，服务未找到");
     }
     /**
      * 返回错误消息

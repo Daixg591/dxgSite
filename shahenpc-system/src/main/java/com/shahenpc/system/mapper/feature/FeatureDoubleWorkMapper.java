@@ -75,4 +75,10 @@ public interface FeatureDoubleWorkMapper
     public List<DoubleListDto> adminList(FeatureDoubleWork featureDoubleWork);
 
     public DoubleCountRanDto selectByCountRanking(Long userId);
+
+    public DoubleStatusCountDto selectByStatusCount();
+
+    public Integer selectByTotal();
+
+    public List<String> selectByLocation();
 }

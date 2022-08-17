@@ -2,7 +2,6 @@ package com.shahenpc.web.controller.lawhelper;
 
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.utils.StringUtils;
 import com.shahenpc.common.utils.http.HttpUtils;
@@ -11,18 +10,15 @@ import com.shahenpc.system.domain.law.dto.DyAuthCodeDto;
 import com.shahenpc.system.domain.law.dto.LawQueryDto;
 import com.shahenpc.system.domain.law.vo.HotNewsVo;
 import com.shahenpc.system.domain.law.vo.HotSearchVo;
-import com.sun.xml.internal.bind.v2.runtime.output.Encoded;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.beans.Encoder;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

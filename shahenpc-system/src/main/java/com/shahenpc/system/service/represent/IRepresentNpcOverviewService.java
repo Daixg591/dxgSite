@@ -2,6 +2,7 @@ package com.shahenpc.system.service.represent;
 
 import java.util.List;
 import com.shahenpc.system.domain.represent.RepresentNpcOverview;
+import com.shahenpc.system.domain.represent.dto.NpcOverviewWxDto;
 
 /**
  * 人大概览 只存一条信息Service接口
@@ -64,4 +65,6 @@ public interface IRepresentNpcOverviewService
      * @return
      */
     public RepresentNpcOverview selectByOverview();
+
+    public NpcOverviewWxDto selectByWxOverview();
 }

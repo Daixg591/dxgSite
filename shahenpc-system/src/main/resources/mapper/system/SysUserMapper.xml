@@ -411,4 +411,8 @@
 		u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date, u.job_date, u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu
 	   from sys_user u WHERE u.identity = #{identity}
 	</select>
+
+    <select id="selectByNickName" resultType="String">
+        select nick_name from sys_user where FIND_IN_SET(user_id,#{userId})
+    </select>
 </mapper>

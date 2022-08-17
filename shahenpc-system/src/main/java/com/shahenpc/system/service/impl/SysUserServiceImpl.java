@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 import javax.validation.Validator;
 
 import com.shahenpc.system.domain.data.dto.DataCountDto;
+import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.personel.PersonnelAppointEduLog;
+import com.shahenpc.system.domain.represent.RepresentDiscover;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper;
 import com.shahenpc.system.mapper.represent.RepresentDiscoverMapper;
 import com.shahenpc.system.service.personel.IPersonnelAppointEduLogService;
@@ -689,10 +691,10 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public DataCountDto count() {
         DataCountDto  dto = new DataCountDto();
-        dto.setRepresentCount(userMapper.selectUserList(null).size());
-        dto.setPerformDutiesCount(1);
-        dto.setDoubleCount(featureDoubleWorkMapper.selectFeatureDoubleWorkList(null).size());
-        dto.setDiscoverCount(representDiscoverMapper.selectRepresentDiscoverList(null).size());
+        //dto.setRepresentCount(userMapper.selectUserList(null).size());
+        //dto.setPerformDutiesCount(1);
+        dto.setDoubleCount(featureDoubleWorkMapper.selectByTotal());
+        dto.setDiscoverCount(representDiscoverMapper.selectByTotal());
         return dto;
     }
 

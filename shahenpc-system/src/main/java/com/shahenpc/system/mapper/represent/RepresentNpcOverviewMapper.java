@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper.represent;
 
 import java.util.List;
 import com.shahenpc.system.domain.represent.RepresentNpcOverview;
+import com.shahenpc.system.domain.represent.dto.NpcOverviewWxDto;
 
 /**
  * 人大概览 只存一条信息Mapper接口
@@ -60,4 +61,6 @@ public interface RepresentNpcOverviewMapper
     public int deleteRepresentNpcOverviewByNpcIds(Long[] npcIds);
 
     public RepresentNpcOverview selectByOverview();
+
+    public NpcOverviewWxDto selectByWxOverview();
 }

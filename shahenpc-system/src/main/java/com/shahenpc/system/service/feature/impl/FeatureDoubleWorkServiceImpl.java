@@ -10,7 +10,6 @@ import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.common.utils.DateUtils;
-import com.shahenpc.common.utils.SecurityUtils;
 import com.shahenpc.common.utils.SensitiveWordUtil;
 import com.shahenpc.system.domain.feature.FeatureDoubleWorkTrace;
 import com.shahenpc.system.domain.feature.dto.*;
@@ -19,7 +18,7 @@ import com.shahenpc.system.mapper.SysUserMapper;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkTraceMapper;
 import com.shahenpc.system.mapper.feature.FeatureSensitiveWordMapper;
 import com.shahenpc.system.service.ISysDictDataService;
-import com.shahenpc.system.service.feature.IFeatureSensitiveWordService;
+import com.shahenpc.system.service.ISysDictTypeService;
 import com.shahenpc.system.service.represent.IRepresentWorkLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +44,8 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     private FeatureDoubleWorkTraceMapper featureDoubleWorkTraceMapper;
     @Autowired
     private SysUserMapper sysUserMapper;
+    @Autowired
+    private ISysDictTypeService sysDictTypeService;
     /**
      * 查询双联工作
      * 
@@ -137,6 +138,36 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
             dtoList.add(item);
         }
         return dtoList;
+    }
+
+    @Override
+    public List<FeatureCakeDto> statusCount() {
+        List<FeatureCakeDto> dtoList = new ArrayList<>();
+        List<FeatureDoubleWork> alarBudg=featureDoubleWorkMapper.selectByCakeType();
+        List<SysDictData> dictList = sysDictTypeService.selectDictDataByType("double_status");
+        dictList =  dictList.stream().filter(w -> !w.getDictValue().equals("5")).collect(Collectors.toList());
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            int v = 0;
+            List<SysDictData> finalDictList = dictList;
+            v = alarBudg.stream().filter(p -> finalDictList.get(finalI).getDictValue().equals(p.getDoubleType().toString()))
+                    .collect(Collectors.toList()).size();
+            FeatureCakeDto item = new FeatureCakeDto();
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
+            dtoList.add(item);
+        }
+        return dtoList;
+    }
+
+    @Override
+    public DoubleStatusCountDto selectByStatusCount() {
+        return featureDoubleWorkMapper.selectByStatusCount();
+    }
+
+    @Override
+    public List<String> heatmap() {
+        return featureDoubleWorkMapper.selectByLocation();
     }
 
     @Override
