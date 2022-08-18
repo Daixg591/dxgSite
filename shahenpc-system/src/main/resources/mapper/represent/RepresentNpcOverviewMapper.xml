@@ -98,4 +98,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectByOverview" resultMap="RepresentNpcOverviewResult">
         <include refid="selectRepresentNpcOverviewVo"/> ORDER BY create_time DESC LIMIT 1;
     </select>
+
+    <resultMap id="wxOverview" type="com.shahenpc.system.domain.represent.dto.NpcOverviewWxDto" extends="RepresentNpcOverviewResult">
+        <association property="secretaryName" column="secretary_id" select="com.shahenpc.system.mapper.SysUserMapper.selectByNickName"></association>
+        <association property="standingName" column="standing_id" select="com.shahenpc.system.mapper.SysUserMapper.selectByNickName"></association>
+        <association property="directorName" column="director_id" select="com.shahenpc.system.mapper.SysUserMapper.selectByNickName"></association>
+        <association property="deputyName" column="deputy_director_id" select="com.shahenpc.system.mapper.SysUserMapper.selectByNickName"></association>
+
+    </resultMap>
+    <select id="selectByWxOverview" resultMap="wxOverview">
+        <include refid="selectRepresentNpcOverviewVo"/> ORDER BY create_time DESC LIMIT 1;
+    </select>
 </mapper>

@@ -14,6 +14,7 @@ import com.shahenpc.system.domain.represent.dto.*;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper;
 import com.shahenpc.system.mapper.represent.*;
 import com.shahenpc.system.service.ISysDictDataService;
+import com.shahenpc.system.service.ISysDictTypeService;
 import com.shahenpc.system.service.represent.IRepresentWorkLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,8 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
     private RepresentDiscoverMapper representDiscoverMapper;
     @Autowired
     private RepresentMotionMapper representMotionMapper;
+    @Autowired
+    private ISysDictTypeService sysDictTypeService;
     /**
      * 查询代-活动列
      * 
@@ -199,9 +202,7 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
     public List<ActivityPieDto> pie() {
         List<ActivityPieDto> dtoList = new ArrayList<>();
         List<RepresentActivity> alarBudg=representActivityMapper.selectRepresentActivityList(null);
-        SysDictData dictParam = new SysDictData();
-        dictParam.setDictType("activity_type");
-        List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
+        List<SysDictData> dictList=sysDictTypeService.selectDictDataByType("activity_type");
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
             int v = 0;

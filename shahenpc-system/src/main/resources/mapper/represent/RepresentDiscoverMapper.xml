@@ -200,8 +200,24 @@
 
     <select id="selectRepresentStatusList" parameterType="RepresentDiscover" resultMap="RepresentDiscoverResult">
         <include refid="selectRepresentDiscoverVo"/>
-        <where>
-            <if test="status != null "> and status != 5</if>
-        </where>
+        where status != 5
+    </select>
+
+    <select id="selectByStatusCount" resultType="com.shahenpc.system.domain.represent.dto.DiscoverStatusCountDto">
+        SELECT
+            COUNT(discover_id)as total,
+            SUM(if(status=1 ,1,0))AS jiaoTotal,
+            SUM(if(status=2 ,1,0))AS jieTotal,
+            SUM(if(status=3 ,1,0))AS pingTotal,
+            SUM(if(status=4 ,1,0))AS yiTotal
+        FROM represent_discover WHERE `status` != 5
+    </select>
+
+    <select id="selectByTotal" resultType="java.lang.Integer">
+        SELECT COUNT(discover_id)as total FROM represent_discover WHERE `status` != 5
+    </select>
+
+    <select id="selectByLocation" resultType="java.lang.String">
+        select location from represent_discover
     </select>
 </mapper>

@@ -129,11 +129,23 @@ public class RepresentDiscoverController extends BaseController
         return AjaxResult.success(representDiscoverService.pie());
     }
 
+    @ApiOperation("状态各个总数")
+    @GetMapping(value = "/status/count")
+    public AjaxResult statusCount()
+    {
+        return AjaxResult.success(representDiscoverService.selectByStatusCount());
+    }
 
     @ApiOperation("漏斗")
     @GetMapping(value = "/funnel")
     public AjaxResult funnel()
     {
         return AjaxResult.success(representDiscoverService.funnel());
+    }
+
+    @ApiOperation("热力图")
+    @GetMapping(value = "/heatmap")
+    public AjaxResult heatmap() {
+        return AjaxResult.success(representDiscoverService.heatmap());
     }
 }

@@ -137,6 +137,13 @@
             <artifactId>weixin-java-miniapp</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.github.yelong0216/yelong-security -->
+        <dependency>
+            <groupId>com.github.yelong0216</groupId>
+            <artifactId>yelong-security</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>

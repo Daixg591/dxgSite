@@ -73,5 +73,11 @@ public interface IRepresentDiscoverService
     /**饼图*/
     public List<DiscoverPieDto> pie();
 
+    public List<DiscoverPieDto> statusCount();
+
+    public DiscoverStatusCountDto selectByStatusCount();
+
     public List<DiscoverPieDto> funnel();
+
+    public List<String> heatmap();
 }

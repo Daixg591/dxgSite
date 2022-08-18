@@ -16,6 +16,7 @@ import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.domain.represent.dto.*;
 import com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper;
 import com.shahenpc.system.service.ISysDictDataService;
+import com.shahenpc.system.service.ISysDictTypeService;
 import com.shahenpc.system.service.represent.IRepresentWorkLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -209,9 +210,7 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     public List<DiscoverPieDto> pie() {
         List<DiscoverPieDto> dtoList = new ArrayList<>();
         List<RepresentDiscover> alarBudg=representDiscoverMapper.selectRepresentDiscoverList(null);
-        SysDictData dictParam = new SysDictData();
-        dictParam.setDictType("discover_type");
-        List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
+        List<SysDictData> dictList = sysDictTypeService.selectDictDataByType("discover_type");
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
             int v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getDiscoverType().toString()))
@@ -225,26 +224,73 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     }
 
     @Override
-    public List<DiscoverPieDto> funnel() {
+    public List<DiscoverPieDto> statusCount() {
         List<DiscoverPieDto> dtoList = new ArrayList<>();
-        Integer shangchuang =  representDiscoverMapper.selectRepresentDiscoverList(null).size();
-        List<RepresentDiscover> alarBudg=representDiscoverMapper.selectRepresentStatusList();
-        SysDictData dictParam = new SysDictData();
-        dictParam.setDictType("discover_status");
-        List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
+        List<RepresentDiscover> alarBudg=representDiscoverMapper.selectRepresentDiscoverList(null);
+        List<SysDictData> dictList = sysDictTypeService.selectDictDataByType("discover_status");
+        dictList =  dictList.stream().filter(w -> !w.getDictValue().equals("5")).collect(Collectors.toList());
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getStatus().toString()))
+            List<SysDictData> finalDictList = dictList;
+            int v = alarBudg.stream().filter(p -> finalDictList.get(finalI).getDictValue().equals(p.getDiscoverType().toString()))
                     .collect(Collectors.toList()).size();
             DiscoverPieDto item = new DiscoverPieDto();
             item.setName(dictList.get(i).getDictLabel());
             item.setValue(v);
             dtoList.add(item);
         }
-        DiscoverPieDto item = new DiscoverPieDto();
-        item.setValue(shangchuang);
-        item.setName("上传");
-        dtoList.add(item);
         return dtoList;
+    }
+
+    @Override
+    public DiscoverStatusCountDto selectByStatusCount() {
+        return representDiscoverMapper.selectByStatusCount();
+    }
+
+    @Autowired
+    private ISysDictTypeService sysDictTypeService;
+
+    @Override
+    public List<DiscoverPieDto> funnel() {
+        List<DiscoverPieDto> dtoList = new ArrayList<>();
+        List<RepresentDiscoverTrack> alarBudg=representDiscoverTrackMapper.selectRepresentDiscoverTrackList(null);
+        List<SysDictData> dictList=sysDictTypeService.selectDictDataByType("discover_status");
+        dictList =  dictList.stream().filter(w -> !w.getDictValue().equals("5")).collect(Collectors.toList());
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            List<SysDictData> finalDictList = dictList;
+            int v = alarBudg.stream().filter(p -> finalDictList.get(finalI).getDictValue().equals(p.getStatus().toString()))
+                    .collect(Collectors.toList()).size();
+            DiscoverPieDto item = new DiscoverPieDto();
+            if(dictList.get(i).getDictLabel().equals("待交办")){
+                item.setName("上传");
+                item.setValue(v);
+            }
+            if(dictList.get(i).getDictLabel().equals("待解决")){
+                item.setName("已交办");
+                item.setValue(v);
+            }
+            if(dictList.get(i).getDictLabel().equals("待评价")){
+                item.setName("已解决");
+                item.setValue(v);
+            }
+            if(dictList.get(i).getDictLabel().equals("已评价")){
+                item.setName("已评价");
+                item.setValue(v);
+            }
+//            item.setName(dictList.get(i).getDictLabel());
+//            item.setValue(v);
+            dtoList.add(item);
+        }
+//        DiscoverPieDto item = new DiscoverPieDto();
+//        item.setValue(shangchuang);
+//        item.setName("上传");
+//        dtoList.add(item);
+        return dtoList;
+    }
+
+    @Override
+    public List<String> heatmap() {
+        return representDiscoverMapper.selectByLocation();
     }
 }

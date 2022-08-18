@@ -32,7 +32,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  * @author ruoyi
  * @date 2022-07-21
  */
-@Api(tags = "代表活动管理")
+@Api(tags = "履职活动管理")
 @RestController
 @RequestMapping("/represent/activity")
 public class RepresentActivityController extends BaseController
