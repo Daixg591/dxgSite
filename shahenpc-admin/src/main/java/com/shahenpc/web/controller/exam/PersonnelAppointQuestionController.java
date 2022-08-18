@@ -53,7 +53,7 @@ public class PersonnelAppointQuestionController extends BaseController {
         startPage();
         List<PersonnelAppointQuestion> list = personnelAppointQuestionService.selectPersonnelAppointQuestionList(personnelAppointQuestion);
         for (int i = 0; i < list.size(); i++) {
-            PersonnelAppointAnswer param=new PersonnelAppointAnswer();
+            PersonnelAppointAnswer param = new PersonnelAppointAnswer();
             param.setQuId(list.get(i).getQuId());
             list.get(i).setAnswerList(answerService.selectPersonnelAppointAnswerList(param));
         }
@@ -114,10 +114,18 @@ public class PersonnelAppointQuestionController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody PersonnelAppointQuestion personnelAppointQuestion) {
         int res = personnelAppointQuestionService.updatePersonnelAppointQuestion(personnelAppointQuestion);
-        List<PersonnelAppointAnswer> answerList=personnelAppointQuestionService.selectPersonnelAppointQuestionByQuId(personnelAppointQuestion.getQuId()).getAnswerList();
-        for (int i = 0; i < answerList.size(); i++) {
-            answerService.updatePersonnelAppointAnswer(answerList.get(i));
+        List<PersonnelAppointAnswer> answerList = personnelAppointQuestionService.selectPersonnelAppointQuestionByQuId(personnelAppointQuestion.getQuId()).getAnswerList();
+        // 删除试题==>再进行添加
+        for (int i = 0; answerList.size() > 0 && i < answerList.size(); i++) {
+//            answerService.updatePersonnelAppointAnswer(answerList.get(i));
+            answerService.deletePersonnelAppointAnswerByAnswerId(answerList.get(i).getAnswerId());
         }
+        for (int i = 0; i < personnelAppointQuestion.getAnswerList().size(); i++) {
+            personnelAppointQuestion.getAnswerList().get(i).setQuId(personnelAppointQuestion.getQuId());
+            answerService.insertPersonnelAppointAnswer(personnelAppointQuestion.getAnswerList().get(i));
+        }
+
+
         return toAjax(res);
     }
 
@@ -130,7 +138,7 @@ public class PersonnelAppointQuestionController extends BaseController {
     @Log(title = "人事任免_法律知识考试_试题管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{quIds}")
     public AjaxResult remove(@PathVariable Long[] quIds) {
-        int res = personnelAppointQuestionService.deletePersonnelAppointQuestionByQuIds(quIds);
+
         // 试题删除之后,答案删除答案
         for (int i = 0; i < quIds.length; i++) {
             Long quId = personnelAppointQuestionService.selectPersonnelAppointQuestionByQuId(quIds[i]).getQuId();
@@ -144,6 +152,7 @@ public class PersonnelAppointQuestionController extends BaseController {
             }
             answerService.deletePersonnelAppointAnswerByAnswerIds(paramArray);
         }
+        int res = personnelAppointQuestionService.deletePersonnelAppointQuestionByQuIds(quIds);
         return toAjax(res);
     }
 }
