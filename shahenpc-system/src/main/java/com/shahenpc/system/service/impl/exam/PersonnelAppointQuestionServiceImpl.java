@@ -1,13 +1,16 @@
 package com.shahenpc.system.service.impl.exam;
 
-import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.exam.PersonnelAppointAnswer;
+import com.shahenpc.system.domain.exam.PersonnelAppointQuestion;
 import com.shahenpc.system.domain.exam.dto.RandomQuDto;
+import com.shahenpc.system.mapper.exam.PersonnelAppointAnswerMapper;
+import com.shahenpc.system.mapper.exam.PersonnelAppointQuestionMapper;
+import com.shahenpc.system.service.exam.IPersonnelAppointQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.shahenpc.system.mapper.exam.PersonnelAppointQuestionMapper;
-import com.shahenpc.system.domain.exam.PersonnelAppointQuestion;
-import com.shahenpc.system.service.exam.IPersonnelAppointQuestionService;
+
+import java.util.List;
 
 /**
  * 人事任免_法律知识考试_试题管理Service业务层处理
@@ -21,6 +24,9 @@ public class PersonnelAppointQuestionServiceImpl implements IPersonnelAppointQue
     @Autowired
     private PersonnelAppointQuestionMapper personnelAppointQuestionMapper;
 
+    @Autowired
+    private PersonnelAppointAnswerMapper answerMapper;
+
     /**
      * 查询人事任免_法律知识考试_试题管理
      * 
@@ -30,7 +36,16 @@ public class PersonnelAppointQuestionServiceImpl implements IPersonnelAppointQue
     @Override
     public PersonnelAppointQuestion selectPersonnelAppointQuestionByQuId(Long quId)
     {
-        return personnelAppointQuestionMapper.selectPersonnelAppointQuestionByQuId(quId);
+        PersonnelAppointQuestion entity=personnelAppointQuestionMapper.selectPersonnelAppointQuestionByQuId(quId);
+
+        //region 试题答案获取
+        PersonnelAppointAnswer answerParam=new PersonnelAppointAnswer();
+        answerParam.setQuId(quId);
+        List<PersonnelAppointAnswer> answerList=answerMapper.selectPersonnelAppointAnswerList(answerParam);
+        entity.setAnswerList(answerList);
+        //endregion
+
+        return entity;
     }
 
     /**

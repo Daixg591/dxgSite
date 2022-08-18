@@ -66,6 +66,7 @@ public class PersonnelAppointExamPaperServiceImpl implements IPersonnelAppointEx
 //                    for (int j = 0; j < answerList.size(); j++) {
 ////                        answerList.get(j).setScore();
 //                    }
+                    quEntity.setDeleteId(paperQuList.get(i).getBigQuestionId());
                     quEntity.setAnswerList(answerList);
                 }
             }

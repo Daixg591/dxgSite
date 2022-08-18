@@ -17,6 +17,7 @@ public class PersonnelAppointQuestion extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    private Long deleteId;
 
     /**
      * 临时得分
@@ -51,6 +52,16 @@ public class PersonnelAppointQuestion extends BaseEntity
 
     /** 删除标识 */
     private String delFlag;
+
+
+
+    public Long getDeleteId() {
+        return deleteId;
+    }
+
+    public void setDeleteId(Long deleteId) {
+        this.deleteId = deleteId;
+    }
 
 
     public void setQuId(Long quId) 

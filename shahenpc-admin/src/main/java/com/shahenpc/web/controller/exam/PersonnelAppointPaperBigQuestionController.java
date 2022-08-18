@@ -109,9 +109,17 @@ public class PersonnelAppointPaperBigQuestionController extends BaseController {
         PersonnelAppointPaperBigQuestion param = new PersonnelAppointPaperBigQuestion();
         param.setExamPaperId(dto.getPaperID());
         List<PersonnelAppointPaperBigQuestion> list = personnelAppointPaperBigQuestionService.selectPersonnelAppointPaperBigQuestionList(param);
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; list.size() > 0 && i < list.size(); i++) {
             personnelAppointPaperBigQuestionService.deletePersonnelAppointPaperBigQuestionByBigQuestionId(list.get(i).getBigQuestionId());
         }
+//        for (int i = 0; dto.getQuList().size() > 0 && i < dto.getQuList().size(); i++) {
+//            PersonnelAppointPaperBigQuestion entity = new PersonnelAppointPaperBigQuestion();
+//            entity.setScore(dto.getQuList().get(i).getScore());
+//            entity.setQuId(dto.getQuList().get(i).getQuId());
+//            entity.setQuestionType(dto.getQuList().get(i).getQuType());
+//            entity.setExamPaperId(dto.getPaperID());
+//            personnelAppointPaperBigQuestionService.insertPersonnelAppointPaperBigQuestion(entity);
+//        }
         return getAjaxResult(dto);
     }
 
@@ -128,26 +136,36 @@ public class PersonnelAppointPaperBigQuestionController extends BaseController {
             return AjaxResult.isEmpty("无试卷信息");
         }
         String tempType = "1";
+        if (dto.getQuList()!=null && dto.getQuList().size()>0 ){
+            // 修改试卷新题入库
+            return getAjaxResultPart(dto);
+        }
         if (paperEntity.getMakePaperType().equals(tempType)) {
             // 随机组卷
             List<PersonnelAppointQuestion> resList = getRandomQuList(dto);
+
             return AjaxResult.success(resList);
         } else {
             // 选题组件
-            if (dto.getQuList() == null || dto.getQuList().size() < 1) {
-                return AjaxResult.isEmpty("无试题信息");
-            }
-            for (int i = 0; i < dto.getQuList().size(); i++) {
-                PersonnelAppointPaperBigQuestion entity = new PersonnelAppointPaperBigQuestion();
-                entity.setQuId(dto.getQuList().get(i).getQuId());
-                entity.setScore(dto.getQuList().get(i).getScore());
-                entity.setExamPaperId(dto.getPaperID());
-                entity.setQuestionType(dto.getQuList().get(i).getQuType());
-                entity.setCreateBy(getUsername());
-                personnelAppointPaperBigQuestionService.insertPersonnelAppointPaperBigQuestion(entity);
-            }
-            return AjaxResult.success();
+            return getAjaxResultPart(dto);
         }
+    }
+
+    @NotNull
+    private AjaxResult getAjaxResultPart(@RequestBody PaperQuestionDto dto) {
+        if (dto.getQuList() == null || dto.getQuList().size() < 1) {
+            return AjaxResult.isEmpty("无试题信息");
+        }
+        for (int i = 0; i < dto.getQuList().size(); i++) {
+            PersonnelAppointPaperBigQuestion entity = new PersonnelAppointPaperBigQuestion();
+            entity.setQuId(dto.getQuList().get(i).getQuId());
+            entity.setScore(dto.getQuList().get(i).getScore());
+            entity.setExamPaperId(dto.getPaperID());
+            entity.setQuestionType(dto.getQuList().get(i).getQuType());
+            entity.setCreateBy(getUsername());
+            personnelAppointPaperBigQuestionService.insertPersonnelAppointPaperBigQuestion(entity);
+        }
+        return AjaxResult.success();
     }
 
 
@@ -160,7 +178,7 @@ public class PersonnelAppointPaperBigQuestionController extends BaseController {
     private List<PersonnelAppointQuestion> getRandomQuList(PaperQuestionDto dto) {
         List<PersonnelAppointQuestion> resList = new ArrayList<>();
         List<RandomQuDto> dtoList = dto.getRandomInfo();
-        for (int i = 0; i < dtoList.size(); i++) {
+        for (int i = 0; dtoList != null && i < dtoList.size(); i++) {
             List<PersonnelAppointQuestion> itemList = quService.selectRandomQuestionList(dtoList.get(i));
             for (int j = 0; j < itemList.size(); j++) {
                 resList.add(itemList.get(j));
