@@ -39,8 +39,9 @@ public class OutlayAlarmController extends BaseController
     {
         return AjaxResult.success(outlayAlarmService.cakeList(year));
     }
+
+
     @ApiOperation("季度四个柱子")
-    @PreAuthorize("@ss.hasPermi('outlay:alarm:list')")
     @GetMapping("/quarter")
     public AjaxResult quarterColumnar(@RequestParam String year)
     {

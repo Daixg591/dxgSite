@@ -31,7 +31,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectPersonnelAppointNoticeVo"/>
         <where>  
             <if test="coverUrl != null  and coverUrl != ''"> and cover_url = #{coverUrl}</if>
-            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="title != null  and title != ''">
+                AND title like concat('%', #{title}, '%')
+             </if>
             <if test="details != null  and details != ''"> and details = #{details}</if>
             <if test="state != null  and state != ''"> and state = #{state}</if>
             <if test="banner != null  and banner != ''"> and banner = #{banner}</if>
