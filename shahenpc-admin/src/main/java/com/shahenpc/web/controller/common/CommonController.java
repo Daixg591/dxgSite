@@ -109,15 +109,12 @@ public class CommonController {
             String fileName = FileUploadUtils.upload(filePath, file);
             // String url = serverConfig.getUrl() + fileName;
             String url = fileName;
-
             AjaxResult ajax = AjaxResult.success();
-
             ajax.put("originalFilename", file.getOriginalFilename());
             ajax.put("url", url);
             ajax.put("now", DateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
             ajax.put("size",file.getSize());
 //            ajax.put("newFileName", FileUtils.getName(fileName));
-
             return ajax;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
