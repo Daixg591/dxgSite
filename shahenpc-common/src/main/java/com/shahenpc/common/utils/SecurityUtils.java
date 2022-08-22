@@ -1,12 +1,10 @@
 package com.shahenpc.common.utils;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.shahenpc.common.constant.HttpStatus;
 import com.shahenpc.common.core.domain.model.LoginUser;
 import com.shahenpc.common.exception.ServiceException;
-import org.yelong.security.sm3.SM3;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.yelong.security.sm3.SM3Utils;
 
 /**

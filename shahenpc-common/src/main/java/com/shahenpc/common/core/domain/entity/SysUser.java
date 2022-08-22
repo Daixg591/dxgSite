@@ -30,6 +30,17 @@ public class SysUser extends BaseEntity {
     private String eduLogList;
 
     /**
+     * 选区
+     */
+    private String chooseArea;
+
+    /**
+     * 党派
+     */
+    private String partyGroupings;
+
+    
+    /**
      * 擅长领域(字典值)
      */
     private String goodArea;
