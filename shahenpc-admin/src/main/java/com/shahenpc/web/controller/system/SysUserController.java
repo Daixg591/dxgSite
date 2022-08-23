@@ -95,6 +95,11 @@ public class SysUserController extends BaseController {
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         List<SysUser> userList = util.importExcel(file.getInputStream());
+        for (int i = 0; i < userList.size(); i++) {
+            if (StringUtils.isEmpty(userList.get(i).getUserName())){
+                userList.get(i).setUserName(userList.get(i).getPhonenumber());
+            }
+        }
         String operName = getUsername();
         String message = userService.importUser(userList, updateSupport, operName);
         return AjaxResult.success(message);
