@@ -96,7 +96,7 @@ public class SysUserController extends BaseController {
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         List<SysUser> userList = util.importExcel(file.getInputStream());
         for (int i = 0; i < userList.size(); i++) {
-            if (StringUtils.isEmpty(userList.get(i).getUserName())){
+            if (StringUtils.isEmpty(userList.get(i).getUserName()) || StringUtils.isNull(userList.get(i).getUserName())){
                 userList.get(i).setUserName(userList.get(i).getPhonenumber());
             }
         }
