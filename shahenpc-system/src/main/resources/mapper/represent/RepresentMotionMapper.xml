@@ -149,9 +149,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     <!--==================================================分割线-->
-    <select id="selectByWorkflowId" resultMap="RepresentMotionResult">
+    <select id="selectByWorkflowId" resultMap="RepresentMotionResult" parameterType="RepresentMotion">
         <include refid="selectRepresentMotionVo"/>
-        where procins_id = #{procinsId}
+        <where>
+            <if test="motionType != null "> and motion_type = #{motionType}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="suggestUserId != null  and suggestUserId != ''"> and suggest_user_id = #{suggestUserId}</if>
+            <if test="suggestUserName != null  and suggestUserName != ''"> and suggest_user_name like concat('%', #{suggestUserName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="sendUserName != null  and sendUserName != ''"> and send_user_name like concat('%', #{sendUserName}, '%')</if>
+            <if test="approvalUserId != null "> and approval_user_id = #{approvalUserId}</if>
+            <if test="procinsId != null  and procinsId != ''"> and procIns_id = #{procinsId}</if>
+            <if test="deployId != null  and deployId != ''"> and deploy_id = #{deployId}</if>
+            <if test="linkName != null  and linkName != ''"> and link_name like concat('%', #{linkName}, '%')</if>
+            <if test="linkStatus != null  and linkStatus != ''"> and link_status = #{linkStatus}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="rate != null "> and rate = #{rate}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+        </where>
     </select>
 
     <select id="getCount" resultType="java.lang.Integer">

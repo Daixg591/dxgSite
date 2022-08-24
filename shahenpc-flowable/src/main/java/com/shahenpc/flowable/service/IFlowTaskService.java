@@ -2,6 +2,7 @@ package com.shahenpc.flowable.service;
 
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.flowable.domain.vo.FlowTaskVo;
+import com.shahenpc.system.domain.represent.RepresentMotion;
 import com.shahenpc.system.domain.represent.dto.MotionLingDto;
 import com.shahenpc.system.domain.represent.dto.MotionPieDto;
 import com.shahenpc.system.domain.represent.dto.MotionRingDto;
@@ -194,7 +195,7 @@ public interface IFlowTaskService {
     AjaxResult getNextFlowNode(FlowTaskVo flowTaskVo);
 
     /**议案 */
-    AjaxResult motionMyProcess(Integer pageNum, Integer pageSize,String processDefinitionName);
+    AjaxResult motionMyProcess(Integer pageNum, Integer pageSize, String processDefinitionName,RepresentMotion representMotion);
 
     AjaxResult motionTodoList(Integer pageNum, Integer pageSize,String type);
 
