@@ -192,11 +192,18 @@ public class RepresentMotionController extends BaseController
         return  AjaxResult.success(flowTaskService.line(vo));
     }
 
-    @ApiOperation("按类别饼图")
+    @ApiOperation("类型饼图")
     @GetMapping("/pie")
     public AjaxResult pie(MotionTaskVo vo){
         vo.setProcessName("建议议案");
-        return AjaxResult.success(flowTaskService.pie(vo));
+        return AjaxResult.success(representMotionService.typePie(vo));
+    }
+
+    @ApiOperation("状态饼图")
+    @GetMapping("/status/pie")
+    public AjaxResult statusPie(MotionTaskVo vo){
+        vo.setProcessName("建议议案");
+        return AjaxResult.success(flowTaskService.motionPie(vo));
     }
 
     @ApiOperation("落实率")

@@ -29,6 +29,7 @@ import com.shahenpc.system.domain.represent.vo.MotionTaskVo;
 import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.mapper.FlowDeployMapper;
 import com.shahenpc.system.service.ISysDictDataService;
+import com.shahenpc.system.service.ISysDictTypeService;
 import com.shahenpc.system.service.ISysRoleService;
 import com.shahenpc.system.service.ISysUserService;
 import com.shahenpc.system.service.message.IMessageDataService;
@@ -84,6 +85,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
     private ISysRoleService sysRoleService;
     @Resource
     private ISysDictDataService dictDataService;
+    @Resource
+    private ISysDictTypeService dictTypeService;
     @Resource
     private ISysDeployFormService sysInstanceFormService;
     @Resource
@@ -2504,14 +2507,57 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 .orderByHistoricActivityInstanceStartTime()
                 .desc().list();
         List<MotionPieDto> dto = new ArrayList<>();
-        StandardCensor censorProcess = new StandardCensor();
-        List<StandardCensor> listuser= standardCensorService.selectStandardCensorList(censorProcess);
-        SysDictData dictParam = new SysDictData();
-        dictParam.setDictType("censor_type");
-        List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
+        List<SysDictData> dictList = dictTypeService.selectDictDataByType("censor_status");
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = listuser.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getFileType().toString()))
+            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictLabel().equals(p.getActivityName()))
+                    .collect(Collectors.toList()).size();
+            MotionPieDto item = new MotionPieDto();
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
+            dto.add(item);
+        }
+        return dto;
+    }
+
+    @Override
+    public List<MotionPieDto> typePie(MotionTaskVo vo) {
+        FlowProcDefDto dto1 =  flowDeployMapper.detail(vo.getProcessName());
+        List<HistoricActivityInstance> receiveTotal1 = historyService.createHistoricActivityInstanceQuery()
+                .processDefinitionId(dto1.getId())
+                .activityName(vo.getTaskName())
+                .orderByHistoricActivityInstanceStartTime()
+                .desc().list();
+        List<MotionPieDto> dto = new ArrayList<>();
+        List<StandardCensor> receiveTotal= new ArrayList<>();
+        for (HistoricActivityInstance item:receiveTotal1){
+            StandardCensor standardCensor = new StandardCensor();
+            standardCensor.setDeployId(item.getId());
+            receiveTotal = standardCensorService.selectStandardCensorList(standardCensor);
+        }
+        List<SysDictData> dictList = dictTypeService.selectDictDataByType("censor_file_type");
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getFileType()))
+                    .collect(Collectors.toList()).size();
+            MotionPieDto item = new MotionPieDto();
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
+            dto.add(item);
+        }
+        return dto;
+    }
+
+    @Override
+    public List<MotionPieDto> motionPie(MotionTaskVo vo) {
+        List<HistoricActivityInstance> receiveTotal = historyService.createHistoricActivityInstanceQuery().activityName(vo.getTaskName())
+                .orderByHistoricActivityInstanceStartTime()
+                .desc().list();
+        List<MotionPieDto> dto = new ArrayList<>();
+        List<SysDictData> dictList = dictTypeService.selectDictDataByType("motion_status");
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictLabel().equals(p.getActivityName()))
                     .collect(Collectors.toList()).size();
             MotionPieDto item = new MotionPieDto();
             item.setName(dictList.get(i).getDictLabel());

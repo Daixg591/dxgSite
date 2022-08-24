@@ -3,6 +3,8 @@ package com.shahenpc.system.service.represent;
 import java.util.List;
 
 import com.shahenpc.system.domain.represent.RepresentMotion;
+import com.shahenpc.system.domain.represent.dto.MotionPieDto;
+import com.shahenpc.system.domain.represent.vo.MotionTaskVo;
 
 /**
  * 工作-建议议案处理Service接口
@@ -62,8 +64,10 @@ public interface IRepresentMotionService
 
     /**
      *
-     * @param procinsId
+     * @param representMotion
      * @return
      */
     public RepresentMotion selectByWorkflowId(RepresentMotion representMotion);
+
+    List<MotionPieDto> typePie(MotionTaskVo vo);
 }

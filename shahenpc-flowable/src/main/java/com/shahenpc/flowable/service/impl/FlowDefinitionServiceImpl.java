@@ -331,10 +331,9 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
             SysUser sysUser = SecurityUtils.getLoginUser().getUser();
             identityService.setAuthenticatedUserId(sysUser.getUserId().toString());
             Map<String, Object> variables = new HashMap<>();
-            variables.put("approval",standardCensor.getApprovalUserId());
+            variables.put("approval",standardCensor.getAcceptUserId());
             variables.put(ProcessConstants.PROCESS_INITIATOR, "");
             variables.put("skip", true);
-            //variables.put(ProcessConstants.FLOWABLE_SKIP_EXPRESSION_ENABLED, true);
             ProcessInstance processInstance = runtimeService.startProcessInstanceById(procDefId,variables);
             // 给第一步申请人节点设置任务执行人和意见 todo:第一个节点不设置为申请人节点有点问题？
             Task task = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId()).singleResult();

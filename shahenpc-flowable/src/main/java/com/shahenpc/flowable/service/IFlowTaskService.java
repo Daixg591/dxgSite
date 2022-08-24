@@ -230,6 +230,9 @@ public interface IFlowTaskService {
     MotionLingDto line(MotionTaskVo vo);
 
     List<MotionPieDto> pie(MotionTaskVo vo);
+    List<MotionPieDto> typePie(MotionTaskVo vo);
+
+    List<MotionPieDto> motionPie(MotionTaskVo vo);
 
     String ring(MotionTaskVo vo);
 

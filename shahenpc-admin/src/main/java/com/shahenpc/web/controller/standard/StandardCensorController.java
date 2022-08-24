@@ -182,9 +182,17 @@ public class StandardCensorController extends BaseController
         return  AjaxResult.success(flowTaskService.line(vo));
     }
 
-    @ApiOperation("按类别饼图")
+    @ApiOperation("类型饼图")
     @GetMapping("/pie")
     public AjaxResult pie(MotionTaskVo vo){
+        vo.setProcessName("审查流程");
+        return AjaxResult.success(standardCensorService.typePie(vo));
+    }
+
+
+    @ApiOperation("状态饼图")
+    @GetMapping("/status/pie")
+    public AjaxResult statusPie(MotionTaskVo vo){
         vo.setProcessName("审查流程");
         return AjaxResult.success(flowTaskService.pie(vo));
     }

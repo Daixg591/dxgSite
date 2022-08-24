@@ -1,13 +1,21 @@
 package com.shahenpc.system.service.standard.impl;
 
+import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.represent.RepresentMotion;
+import com.shahenpc.system.domain.represent.dto.MotionPieDto;
+import com.shahenpc.system.domain.represent.vo.MotionTaskVo;
 import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.mapper.standard.StandardCensorMapper;
+import com.shahenpc.system.service.ISysDictTypeService;
 import com.shahenpc.system.service.standard.IStandardCensorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 审查流程Service业务层处理
@@ -20,6 +28,8 @@ public class StandardCensorServiceImpl implements IStandardCensorService
 {
     @Autowired
     private StandardCensorMapper standardCensorMapper;
+    @Resource
+    private ISysDictTypeService dictTypeService;
     /**
      * 查询审查流程
      * 
@@ -98,6 +108,25 @@ public class StandardCensorServiceImpl implements IStandardCensorService
     public StandardCensor selectByProcessId(String processId) {
 
         return standardCensorMapper.selectByProcessId(processId);
+    }
+
+
+    @Override
+    public List<MotionPieDto> typePie(MotionTaskVo vo) {
+        List<MotionPieDto> dto = new ArrayList<>();
+        List<SysDictData> dictList = dictTypeService.selectDictDataByType("censor_file_type");
+        StandardCensor standardCenso = new StandardCensor();
+        List<StandardCensor> receiveTotal =standardCensorMapper.selectStandardCensorList(standardCenso);
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getFileType().toString()))
+                    .collect(Collectors.toList()).size();
+            MotionPieDto item = new MotionPieDto();
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
+            dto.add(item);
+        }
+        return dto;
     }
 
 

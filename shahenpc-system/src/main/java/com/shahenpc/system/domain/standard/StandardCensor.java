@@ -98,7 +98,7 @@ public class StandardCensor extends BaseEntity
     private Integer status;
 
     /**  */
-    @Excel(name = "")
+    @Excel(name = "发送人")
     private Long approvalUserId;
 
     /** 流程id */
