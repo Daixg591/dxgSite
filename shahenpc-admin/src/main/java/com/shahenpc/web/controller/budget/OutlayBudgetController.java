@@ -131,7 +131,7 @@ public class OutlayBudgetController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody OutlayBudget outlayBudget)
     {
-        outlayBudget.setCreateBy(getUsername());
+        outlayBudget.setCreateBy(getNickName());
         return toAjax(outlayBudgetService.insertOutlayBudget(outlayBudget));
     }
 
@@ -144,6 +144,7 @@ public class OutlayBudgetController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody OutlayBudget outlayBudget)
     {
+        outlayBudget.setCreateBy(getNickName());
         return toAjax(outlayBudgetService.updateOutlayBudget(outlayBudget));
     }
 

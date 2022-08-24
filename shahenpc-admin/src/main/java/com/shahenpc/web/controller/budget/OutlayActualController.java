@@ -135,7 +135,7 @@ public class OutlayActualController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody OutlayActual outlayActual)
     {
-        outlayActual.setCreateBy(getUsername());
+        outlayActual.setCreateBy(getNickName());
         return toAjax(outlayActualService.insertOutlayActual(outlayActual));
     }
 
@@ -148,7 +148,7 @@ public class OutlayActualController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody OutlayActual outlayActual)
     {
-        outlayActual.setCreateBy(getUsername());
+        outlayActual.setCreateBy(getNickName());
         return toAjax(outlayActualService.updateOutlayActual(outlayActual));
     }
 

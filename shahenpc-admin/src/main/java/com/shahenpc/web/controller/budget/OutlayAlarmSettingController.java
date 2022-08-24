@@ -95,6 +95,7 @@ public class OutlayAlarmSettingController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody OutlayAlarmSetting outlayAlarmSetting)
     {
+        outlayAlarmSetting.setCreateBy(getNickName());
         return toAjax(outlayAlarmSettingService.insertOutlayAlarmSetting(outlayAlarmSetting));
     }
 
@@ -107,6 +108,7 @@ public class OutlayAlarmSettingController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody OutlayAlarmSetting outlayAlarmSetting)
     {
+        outlayAlarmSetting.setCreateBy(getNickName());
         return toAjax(outlayAlarmSettingService.updateOutlayAlarmSetting(outlayAlarmSetting));
     }
 
