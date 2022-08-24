@@ -160,16 +160,18 @@ public class WxSysLoginController {
         String defaultPwd = "defaultpwd";
         // 不存在则将客户进新新增注册
         if (exitUser == null) {
+            String wxOpenId=getWxOpenId(dto.getCode());
             userEntity.setPhonenumber(dto.getPhoneNumber());
             userEntity.setPassword(SecurityUtils.encryptPassword(defaultPwd));
             userEntity.setIdentity("3");
             userEntity.setNickName(dto.getNickName());
             userEntity.setAvatar(dto.getAvatarUrl());
             // 微信openId
-            userEntity.setOpenId(getWxOpenId(dto.getCode()));
+            userEntity.setOpenId(wxOpenId);
             userEntity.setStatus("0");
             userEntity.setSex(dto.getGender() + "");
-            userEntity.setUserName(dto.getPhoneNumber());
+            userEntity.setUserName(wxOpenId);
+//            userEntity.setUserName(dto.getPhoneNumber());
             userEntity.setDelFlag("0");
             userService.insertUser(userEntity);
             ajax.put("user", userEntity);
