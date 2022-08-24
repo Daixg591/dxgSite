@@ -96,12 +96,12 @@ public class RepresentMotionServiceImpl implements IRepresentMotionService
 
     /**
      *
-     * @param workflowId
+     * @param procinsId
      * @return
      */
     @Override
-    public RepresentMotion selectByWorkflowId(String procinsId) {
+    public RepresentMotion selectByWorkflowId(RepresentMotion representMotion) {
 
-        return representMotionMapper.selectByWorkflowId(procinsId);
+        return representMotionMapper.selectByWorkflowId(representMotion);
     }
 }

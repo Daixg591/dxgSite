@@ -198,9 +198,9 @@ public class SysUserController extends BaseController {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
         user.setCreateBy(getUsername());
-
         if (user.getPassword() == "" || user.getPassword() == null) {
-            user.setPassword(configService.selectConfigByKey("sys.user.initPassword"));
+            //.selectConfigByKey("sys.user.initPassword");
+            user.setPassword(SecurityUtils.encryptPassword(user.getPhonenumber().substring(user.getPhonenumber().length() -6)));
         } else {
             user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         }

@@ -62,8 +62,8 @@ public interface IRepresentMotionService
 
     /**
      *
-     * @param workflowId
+     * @param procinsId
      * @return
      */
-    public RepresentMotion selectByWorkflowId(String procinsId);
+    public RepresentMotion selectByWorkflowId(RepresentMotion representMotion);
 }

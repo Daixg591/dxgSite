@@ -122,8 +122,9 @@ public class AppRepresentMotionController extends BaseController
     @ApiOperation(value = "我发起的流程列表", response = FlowTaskDto.class)
     @GetMapping(value = "/myProcess")
     public AjaxResult motionMyProcess(@ApiParam(value = "当前页码", required = true) @RequestParam Integer pageNum,
-                                      @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize) {
-        return flowTaskService.motionMyProcess(pageNum, pageSize,"建议议案");
+                                      @ApiParam(value = "每页条数", required = true) @RequestParam Integer pageSize,
+                                      RepresentMotion representMotion) {
+        return flowTaskService.motionMyProcess(pageNum, pageSize,"建议议案",representMotion);
     }
 
     @ApiOperation(value = "流程历史流转记录", response = FlowTaskDto.class)
