@@ -84,6 +84,8 @@ public class RepresentMotion extends BaseEntity
     @Excel(name = "电话")
     private String phone;
 
+    private String taskName;
+
     public void setMotionId(Long motionId) 
     {
         this.motionId = motionId;

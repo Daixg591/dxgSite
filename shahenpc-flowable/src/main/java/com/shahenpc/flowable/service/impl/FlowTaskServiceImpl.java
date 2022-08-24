@@ -559,7 +559,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
             }
-            RepresentMotion motion=representMotionService.selectByWorkflowId(hisIns.getId());
+            RepresentMotion representMotion = new RepresentMotion();
+            representMotion.setProcinsId(hisIns.getId());
+            RepresentMotion motion=representMotionService.selectByWorkflowId(representMotion);
             if(motion != null) {
                 flowTask.setMotionType(motion.getMotionType());
                 flowTask.setSerial(motion.getMotionId());
@@ -590,7 +592,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         page.setTotal(historicProcessInstanceQuery.count());
         List<FlowTaskDto> flowList = new ArrayList<>();
         for (HistoricProcessInstance hisIns : historicProcessInstances) {
-            RepresentMotion motion=representMotionService.selectByWorkflowId(hisIns.getId());
+            RepresentMotion representMotion = new RepresentMotion();
+            representMotion.setProcinsId(hisIns.getId());
+            RepresentMotion motion=representMotionService.selectByWorkflowId(representMotion);
             FlowTaskDto flowTask = new FlowTaskDto();
             flowTask.setCreateTime(hisIns.getStartTime());
             flowTask.setFinishTime(hisIns.getEndTime());
@@ -704,7 +708,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                     flowTask.setFileType(censor.getFileType());
                     flowTask.setFileName(censor.getFileName());
                 }
-            RepresentMotion motion=representMotionService.selectByWorkflowId(item.getProcessInstanceId());
+            RepresentMotion representMotion = new RepresentMotion();
+            representMotion.setProcinsId(item.getProcessInstanceId());
+            RepresentMotion motion=representMotionService.selectByWorkflowId(representMotion);
                 if(motion != null) {
                     flowTask.setMotionType(motion.getMotionType());
                     flowTask.setSerial(motion.getMotionId());
@@ -729,7 +735,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
      * @return
      */
     @Override
-    public AjaxResult motionMyProcess(Integer pageNum, Integer pageSize, String processDefinitionName) {
+    public AjaxResult motionMyProcess(Integer pageNum, Integer pageSize, String processDefinitionName,RepresentMotion representMotion) {
         Page<FlowTaskDto> page = new Page<>();
         Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
         HistoricProcessInstanceQuery historicProcessInstanceQuery = historyService.createHistoricProcessInstanceQuery()
@@ -750,6 +756,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
 //        String taskName = taskQuery.singleResult().getName();
         for (HistoricProcessInstance hisIns : historicProcessInstances) {
             FlowTaskDto flowTask = new FlowTaskDto();
+
             flowTask.setCreateTime(hisIns.getStartTime());
             flowTask.setFinishTime(hisIns.getEndTime());
             flowTask.setProcInsId(hisIns.getId());
@@ -776,7 +783,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             flowTask.setProcDefVersion(pd.getVersion());
             flowTask.setCategory(pd.getCategory());
             flowTask.setProcDefVersion(pd.getVersion());
-            // 当前所处流程 todo: 本地启动放开以下注释
+            // 当前所处流程 .processDefinitionName(representMotion.getTaskName())
             List<Task> taskList = taskService.createTaskQuery().processInstanceId(hisIns.getId()).list();
             if (CollectionUtils.isNotEmpty(taskList)) {
                 flowTask.setTaskId(taskList.get(0).getId());
@@ -785,7 +792,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 List<HistoricTaskInstance> historicTaskInstance = historyService.createHistoricTaskInstanceQuery().processInstanceId(hisIns.getId()).orderByHistoricTaskInstanceEndTime().desc().list();
                 flowTask.setTaskId(historicTaskInstance.get(0).getId());
             }
-            RepresentMotion motion=representMotionService.selectByWorkflowId(hisIns.getId());
+            representMotion.setProcinsId(hisIns.getId());
+            RepresentMotion motion=representMotionService.selectByWorkflowId(representMotion);
             if(motion != null) {
                 flowTask.setMotionId(motion.getMotionId());
                 flowTask.setMotionType(motion.getMotionType());
@@ -797,7 +805,12 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 //motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
             }
-            flowList.add(flowTask);
+            if(flowTask.getTitle() != null){
+                flowList.add(flowTask);
+            }
+            if(representMotion.getTaskName() != null){
+                flowList = flowList.stream().filter( w -> w.getTaskName().equals(representMotion.getTaskName())).collect(Collectors.toList());
+            }
         }
         page.setRecords(flowList);
         return AjaxResult.success(page);
@@ -950,7 +963,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             }
             map.put("flowList", hisFlowList);
             StandardCensor censorData = standardCensorService.selectByProcessId(procInsId);
-            RepresentMotion motion = representMotionService.selectByWorkflowId(procInsId);
+            RepresentMotion representMotion = new RepresentMotion();
+            representMotion.setProcinsId(procInsId);
+            RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(censorData == null){
                 map.put("censorData", motion);
             }else{
@@ -1493,7 +1508,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             flowTask.setStartUserName(startUser.getNickName());
             flowTask.setStartDeptName(startUser.getDept().getDeptName());
             StandardCensor censor=standardCensorService.selectByProcessId(task.getProcessInstanceId());
-            RepresentMotion motion = representMotionService.selectByWorkflowId(task.getProcessInstanceId());
+            RepresentMotion representMotion = new RepresentMotion();
+            representMotion.setProcinsId(task.getProcessInstanceId());
+            RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(censor != null) {
                 flowTask.setSerial(censor.getCensorId());
                 flowTask.setFileType(censor.getFileType());
@@ -1574,7 +1591,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             flowTask.setStartDeptName(startUser.getDept().getDeptName());
             //个性值
             StandardCensor censor=standardCensorService.selectByProcessId(histTask.getProcessInstanceId());
-            RepresentMotion motion = representMotionService.selectByWorkflowId(histTask.getProcessInstanceId());
+            RepresentMotion representMotion = new RepresentMotion();
+            representMotion.setProcinsId(histTask.getProcessInstanceId());
+            RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(censor != null) {
                 flowTask.setSerial(censor.getCensorId());
                 flowTask.setFileType(censor.getFileType());
@@ -1687,7 +1706,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             }
             map.put("flowList", hisFlowList);
             StandardCensor censorData = standardCensorService.selectByProcessId(procInsId);
-            RepresentMotion motion = representMotionService.selectByWorkflowId(procInsId);
+            RepresentMotion representMotion = new RepresentMotion();
+            representMotion.setProcinsId(procInsId);
+            RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(censorData == null){
                 map.put("censorData", motion);
             }else{
@@ -1942,7 +1963,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             flowTask.setStartUserId(startUser.getNickName());
             flowTask.setStartUserName(startUser.getNickName());
             flowTask.setStartDeptName(startUser.getDept().getDeptName());
-            RepresentMotion motion = representMotionService.selectByWorkflowId(task.getProcessInstanceId());
+            RepresentMotion representMotion = new RepresentMotion();
+            representMotion.setProcinsId(task.getProcessInstanceId());
+            RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(motion != null) {
                 flowTask.setSerial(motion.getMotionId());
                 flowTask.setTitle(motion.getTitle());
@@ -2013,7 +2036,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                         flowTask.setDuration(getDate(time));
                     }
                 }
-                RepresentMotion motion = representMotionService.selectByWorkflowId(task.getProcessInstanceId());
+            RepresentMotion representMotion = new RepresentMotion();
+            representMotion.setProcinsId(task.getProcessInstanceId());
+                RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(motion != null) {
                 flowTask.setMotionId(motion.getMotionId());
                 flowTask.setSerial(motion.getMotionId());
@@ -2133,7 +2158,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             }
             map.put("flowList", hisFlowList);
             StandardCensor censorData = standardCensorService.selectByProcessId(procInsId);
-            RepresentMotion motion = representMotionService.selectByWorkflowId(procInsId);
+            RepresentMotion representMotion = new RepresentMotion();
+            representMotion.setProcinsId(procInsId);
+            RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(censorData == null){
                 map.put("censorData", motion);
             }else{
@@ -2417,7 +2444,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             flowTask.setStartUserName(startUser.getNickName());
             flowTask.setStartDeptName(startUser.getDept().getDeptName());
             //个性值
-            RepresentMotion motion = representMotionService.selectByWorkflowId(histTask.getProcessInstanceId());
+            RepresentMotion representMotion = new RepresentMotion();
+            representMotion.setProcinsId(histTask.getProcessInstanceId());
+            RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(motion != null) {
                 flowTask.setSerial(motion.getMotionId());
                 flowTask.setTitle(motion.getTitle());
