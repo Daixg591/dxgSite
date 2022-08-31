@@ -46,6 +46,8 @@
         <result property="edu" column="edu"/>
         <result property="chooseArea" column="choose_area"/>
         <result property="partyGroupings" column="party_groupings"/>
+        <result property="distinction" column="distinction"/>
+        <result property="level" column="level"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
     </resultMap>
@@ -111,6 +113,8 @@
                u.contact_station_id,
                u.choose_area,
                u.party_groupings,
+               u.distinction,
+               u.level,
                d.dept_id,
                d.parent_id,
                d.ancestors,
@@ -137,7 +141,7 @@
         u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date,
         u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,
         u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,u.user_status,
-        u.choose_area,u.party_groupings,
+        u.choose_area,u.party_groupings,u.distinction,u.level,
         (SELECT dict_label	FROM sys_dict_data WHERE dict_type = 'sys_user_nation' AND dict_value =u. nation)AS nationName,
         d.dept_name, d.leader from sys_user u
         left join sys_dept d on u.dept_id = d.dept_id
@@ -287,6 +291,8 @@
         <if test="contactStationId != null">contact_station_id,</if>
         <if test="chooseArea != null">choose_area,</if>
         <if test="partyGroupings != null">party_groupings,</if>
+        <if test="distinction != null">distinction,</if>
+        <if test="level != null">level,</if>
         create_time
         )values(
         <if test="userId != null and userId != ''">#{userId},</if>
@@ -325,6 +331,9 @@
         <if test="contactStationId != null">#{contactStationId},</if>
         <if test="chooseArea != null">#{chooseArea},</if>
         <if test="partyGroupings != null">#{partyGroupings},</if>
+        <if test="distinction != null">#{distinction},</if>
+        <if test="level != null">#{level},</if>
+
         sysdate()
         )
     </insert>
@@ -369,6 +378,9 @@
             <if test="contactStationId != null">contact_station_id = #{contactStationId},</if>
             <if test="chooseArea != null">choose_area = #{chooseArea},</if>
             <if test="partyGroupings != null">party_groupings = #{partyGroupings},</if>
+            <if test="distinction != null">distinction = #{distinction},</if>
+            <if test="level != null">level = #{level},</if>
+
             update_time = sysdate()
         </set>
         where user_id = #{userId}

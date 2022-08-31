@@ -25,6 +25,62 @@ import com.shahenpc.common.xss.Xss;
 public class SysUser extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+
+    public String getDistinction() {
+        return distinction;
+    }
+
+    public void setDistinction(String distinction) {
+        this.distinction = distinction;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public String getNationName() {
+        return nationName;
+    }
+
+    public void setNationName(String nationName) {
+        this.nationName = nationName;
+    }
+
+    public String getChooseArea() {
+        return chooseArea;
+    }
+
+    public void setChooseArea(String chooseArea) {
+        this.chooseArea = chooseArea;
+    }
+
+    public String getPartyGroupings() {
+        return partyGroupings;
+    }
+
+    public void setPartyGroupings(String partyGroupings) {
+        this.partyGroupings = partyGroupings;
+    }
+
+    /**
+     * 代表界别
+     * 工人、农民和其他劳动者，专业技术人员，企事业单位负责人，公务员、解放军
+     */
+//    @Excel(name = "代表界别", readConverterExp = "0=工人、农民和其他劳动者,1=专业技术人员,2=企事业单位负责人,3=公务员,4=解放军")
+    @Excel(name = "代表界别")
+    private String distinction;
+
+    /**
+     * 代表届次
+     * 第十届  第九届..
+     */
+    @Excel(name = "代表届次")
+    private String level;
+
     private String nationName;
 
     private String eduLogList;
@@ -32,14 +88,17 @@ public class SysUser extends BaseEntity {
     /**
      * 选区
      */
+    @Excel(name = "选区")
     private String chooseArea;
 
     /**
      * 党派
      */
+    @Excel(name = "党派",readConverterExp = "1=中国共产党,2=中国国民党革命委员会,3=中国民主同盟,4=中国民主建国会,5=中国民主促进会," +
+            "6=中国农工民主党,7=中国致公党,8=九三学社,9=台湾民主自治同盟,10=无党派人士,11=群众")
     private String partyGroupings;
 
-    
+
     /**
      * 擅长领域(字典值)
      */
@@ -48,6 +107,7 @@ public class SysUser extends BaseEntity {
     /**
      * 所属联络站Id
      */
+    @Excel(name = "所属联络站")
     private Long contactStationId;
 
 
@@ -236,6 +296,10 @@ public class SysUser extends BaseEntity {
     @Excel(name = "最后登录IP", type = Type.EXPORT)
     private String loginIp;
 
+    /**
+     * 学历
+     */
+    @Excel(name = "学历", readConverterExp = "1=研究生,2=大学本科,3=大专,4=高中,5=初中")
     private String edu;
 
     /**
@@ -632,8 +696,8 @@ public class SysUser extends BaseEntity {
                 .append("userStatus", getUserStatus())
                 .append("nowDuty", getNowDuty())
                 .append("edu", getEdu())
-                .append("goodArea", getEdu())
-                .append("contactStationId", getEdu())
+                .append("goodArea", getGoodArea())
+                .append("contactStationId", getContactStationId())
                 .toString();
     }
 
