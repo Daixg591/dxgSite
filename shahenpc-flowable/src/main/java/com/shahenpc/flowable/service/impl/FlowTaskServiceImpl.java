@@ -1,6 +1,7 @@
 package com.shahenpc.flowable.service.impl;
 
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
@@ -20,6 +21,7 @@ import com.shahenpc.flowable.flow.FlowableUtils;
 import com.shahenpc.flowable.service.IFlowTaskService;
 import com.shahenpc.flowable.service.ISysDeployFormService;
 import com.shahenpc.system.domain.FlowProcDefDto;
+import com.shahenpc.system.domain.SysForm;
 import com.shahenpc.system.domain.message.MessageData;
 import com.shahenpc.system.domain.represent.RepresentMotion;
 import com.shahenpc.system.domain.represent.dto.MotionLingDto;
@@ -559,7 +561,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             StandardCensor censor=standardCensorService.selectByProcessId(hisIns.getId());
             if(censor != null) {
                 flowTask.setSerial(censor.getCensorId());
-                flowTask.setFileType(censor.getFileType());
+                flowTask.setFileType(censor.getReportType());
                 flowTask.setFileName(censor.getFileName());
             }
             RepresentMotion representMotion = new RepresentMotion();
@@ -708,7 +710,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             StandardCensor censor=standardCensorService.selectByProcessId(item.getProcessInstanceId());
                 if(censor != null) {
                     flowTask.setSerial(censor.getCensorId());
-                    flowTask.setFileType(censor.getFileType());
+                    flowTask.setFileType(censor.getReportType());
                     flowTask.setFileName(censor.getFileName());
                 }
             RepresentMotion representMotion = new RepresentMotion();
@@ -877,12 +879,15 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             }
             StandardCensor censor=standardCensorService.selectByProcessId(hisIns.getId());
             if(censor != null) {
-                flowTask.setStartUserName(censor.getCreateBy());
-                flowTask.setOrganName(censor.getOrganName());
-                flowTask.setSerial(censor.getCensorId());
-                flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
-
+                flowTask.setAnnouncedTime(censor.getAnnouncedTime());
+                flowTask.setRecordTime(censor.getRecordTime());
+                flowTask.setReportType(censor.getReportType());
+                flowTask.setReportOrgan(censor.getReportOrgan());
+                flowTask.setFileNature(censor.getFileNature());
+                flowTask.setHairdressingTime(censor.getHairdressingTime());
+                flowTask.setReportWen(censor.getReportWen());
+                flowTask.setCensorId(censor.getCensorId());
             }
             flowList.add(flowTask);
         }
@@ -910,7 +915,6 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                     if (StringUtils.isNotBlank(histIns.getAssignee())) {
                         //逗号分割 2,1
                         SysUser sysUser = sysUserService.selectUserById(Long.parseLong(histIns.getAssignee()));
-
 //                        List<SysUser> sysUserList = sysUserService.selectUserByuserIds(histIns.getActivityId());
 //                        String assigneeId = null;
 //                        String assigneeName = null;
@@ -966,24 +970,16 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             }
             map.put("flowList", hisFlowList);
             StandardCensor censorData = standardCensorService.selectByProcessId(procInsId);
-            RepresentMotion representMotion = new RepresentMotion();
-            representMotion.setProcinsId(procInsId);
-            RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
-            if(censorData == null){
-                map.put("censorData", motion);
-            }else{
-                map.put("censorData", censorData);
+            map.put("censorData", censorData);
+//          // 查询当前任务是否完成
+            List<Task> taskList = taskService.createTaskQuery().processInstanceId(procInsId).list();
+            if (CollectionUtils.isNotEmpty(taskList)) {
+                map.put("finished", true);
+            } else {
+                map.put("finished", false);
             }
-
-//            // 查询当前任务是否完成
-//            List<Task> taskList = taskService.createTaskQuery().processInstanceId(procInsId).list();
-//            if (CollectionUtils.isNotEmpty(taskList)) {
-//                map.put("finished", true);
-//            } else {
-//                map.put("finished", false);
-//            }
         }
-        // 第一次申请获取初始化表单
+//         第一次申请获取初始化表单
 //        if (StringUtils.isNotBlank(deployId)) {
 //            SysForm sysForm = sysInstanceFormService.selectSysDeployFormByDeployId(deployId);
 //            if (Objects.isNull(sysForm)) {
@@ -1027,18 +1023,22 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
                     .processInstanceId(task.getProcessInstanceId())
                     .singleResult();
-            SysUser startUser = sysUserService.selectUserById(Long.parseLong(historicProcessInstance.getStartUserId()));
-//            SysUser startUser = sysUserService.selectUserById(Long.parseLong(task.getAssignee()));
-            flowTask.setStartUserId(startUser.getNickName());
+            //SysUser startUser = sysUserService.selectUserById(Long.parseLong(historicProcessInstance.getStartUserId()));
+            SysUser startUser = sysUserService.selectUserById(Long.parseLong(task.getAssignee()));
+            //flowTask.setStartUserId(startUser.getNickName());
             flowTask.setStartUserName(startUser.getNickName());
             flowTask.setStartDeptName(startUser.getDept().getDeptName());
             StandardCensor censor = standardCensorService.selectByProcessId(task.getProcessInstanceId());
             if(censor != null) {
-                flowTask.setStartUserName(censor.getCreateBy());
-                flowTask.setOrganName(censor.getOrganName());
-                flowTask.setSerial(censor.getCensorId());
-                flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
+                flowTask.setAnnouncedTime(censor.getAnnouncedTime());
+                flowTask.setRecordTime(censor.getRecordTime());
+                flowTask.setReportType(censor.getReportType());
+                flowTask.setReportOrgan(censor.getReportOrgan());
+                flowTask.setFileNature(censor.getFileNature());
+                flowTask.setHairdressingTime(censor.getHairdressingTime());
+                flowTask.setReportWen(censor.getReportWen());
+                flowTask.setCensorId(censor.getCensorId());
             }
             flowList.add(flowTask);
         }
@@ -1098,11 +1098,15 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             //个性值
             StandardCensor censor=standardCensorService.selectByProcessId(histTask.getProcessInstanceId());
             if(censor != null) {
-                flowTask.setStartUserName(censor.getCreateBy());
-                flowTask.setOrganName(censor.getOrganName());
-                flowTask.setSerial(censor.getCensorId());
-                flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
+                flowTask.setAnnouncedTime(censor.getAnnouncedTime());
+                flowTask.setRecordTime(censor.getRecordTime());
+                flowTask.setReportType(censor.getReportType());
+                flowTask.setReportOrgan(censor.getReportOrgan());
+                flowTask.setFileNature(censor.getFileNature());
+                flowTask.setHairdressingTime(censor.getHairdressingTime());
+                flowTask.setReportWen(censor.getReportWen());
+                flowTask.setCensorId(censor.getCensorId());
             }
             hisTaskList.add(flowTask);
         }
@@ -1516,7 +1520,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(censor != null) {
                 flowTask.setSerial(censor.getCensorId());
-                flowTask.setFileType(censor.getFileType());
+                flowTask.setFileType(censor.getReportType());
                 flowTask.setFileName(censor.getFileName());
             }
             if(motion != null) {
@@ -1599,7 +1603,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(censor != null) {
                 flowTask.setSerial(censor.getCensorId());
-                flowTask.setFileType(censor.getFileType());
+                flowTask.setFileType(censor.getReportType());
                 flowTask.setFileName(censor.getFileName());
             }
             if(motion != null) {
@@ -2538,7 +2542,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         List<SysDictData> dictList = dictTypeService.selectDictDataByType("censor_file_type");
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getFileType()))
+            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getReportType()))
                     .collect(Collectors.toList()).size();
             MotionPieDto item = new MotionPieDto();
             item.setName(dictList.get(i).getDictLabel());

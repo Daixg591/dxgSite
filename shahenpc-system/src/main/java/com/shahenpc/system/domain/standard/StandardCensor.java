@@ -19,71 +19,76 @@ public class StandardCensor extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /**  */
     private Long censorId;
 
-    /** 文件类型 */
-    @Excel(name = "文件类型")
-    private Integer fileType;
+    /** 报备标题 */
+    @Excel(name = "报备标题")
+    private String reportTitle;
 
-    /** 文件名 */
-    @Excel(name = "文件名")
+    /** 报备类型 */
+    @Excel(name = "报备类型")
+    private Integer reportType;
+
+    /** 文件名字 */
+    @Excel(name = "文件名字")
     private String fileName;
 
-    /** 备案机构 */
-    @Excel(name = "备案机构")
-    private String recordAgencies;
+    /** 文件性质 */
+    @Excel(name = "文件性质")
+    private String fileNature;
 
-    /** 备案编号 */
-    @Excel(name = "备案编号")
-    private String recordSerial;
+    /** 报备文号 */
+    @Excel(name = "报备文号")
+    private String reportWen;
 
-    /** 报备机构 */
-    @Excel(name = "报备机构")
-    private String reportAgencies;
+    /** 报备机关 */
+    @Excel(name = "报备机关")
+    private String reportOrgan;
 
-    /** 报备编号 */
-    @Excel(name = "报备编号")
-    private String reportSerial;
+    /** 通过机关 */
+    @Excel(name = "通过机关")
+    private String passOrgan;
 
-    /** 通过日期 */
+    /** 备案机关 */
+    @Excel(name = "备案机关")
+    private String recordOrgan;
+
+    /** 公布日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "通过日期", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date passDate;
+    @Excel(name = "公布日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date announcedTime;
 
-    /** 通过机构 */
-    @Excel(name = "通过机构")
-    private String passAgencies;
-
-    /** 公告日期 */
+    /** 制发日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "公告日期", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date bulletinDate;
+    @Excel(name = "制发日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date hairdressingTime;
 
-    /** 实施日期 */
+    /** 施行日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "实施日期", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date enforceDate;
+    @Excel(name = "施行日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date administerTime;
+
+    /** 备案日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "备案日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date recordTime;
+
+    /** 联系人 */
+    @Excel(name = "联系人")
+    private String contactName;
+
+    /** 联系电话 */
+    @Excel(name = "联系电话")
+    private String contactPhone;
 
     /** 文件存储地址 */
     @Excel(name = "文件存储地址")
-    private String fileUrl;
+    private String fileList;
 
-    /** 受理审批人id */
-    @Excel(name = "受理审批人id")
-    private Long acceptUserId;
-
-    /** 受理审批人Name */
-    @Excel(name = "受理审批人Name")
-    private String acceptUserName;
-
-    /**  */
-    @Excel(name = "")
-    private Long copyUserId;
-
-    /**  */
-    @Excel(name = "")
-    private String copyUserName;
+    /** 状态 */
+    @Excel(name = "状态")
+    private Integer status;
 
     /** 流程类型 */
     @Excel(name = "流程类型")
@@ -93,12 +98,8 @@ public class StandardCensor extends BaseEntity
     @Excel(name = "流程位置")
     private String censorTache;
 
-    /** 状态 */
-    @Excel(name = "状态")
-    private Integer status;
-
-    /**  */
-    @Excel(name = "发送人")
+    /** 发文机关 */
+    @Excel(name = "发文机关")
     private Long approvalUserId;
 
     /** 流程id */
@@ -112,154 +113,200 @@ public class StandardCensor extends BaseEntity
     /** 发送id */
     @Excel(name = "发送id")
     private Long sendUserId;
-    /**发文机关*/
-    private String organName;
 
+    /** 地点 */
+    @Excel(name = "地点")
     private String address;
 
-    private Integer rate;
+    /**  */
+    @Excel(name = "")
+    private Long rate;
 
-    public void setFileType(Integer fileType)
+    /** 备案报告 */
+    @Excel(name = "备案报告")
+    private String recordReport;
+
+    /** 正式文本 */
+    @Excel(name = "正式文本")
+    private String formalText;
+
+    /** 制定说明 */
+    @Excel(name = "制定说明")
+    private String formulateExplain;
+
+    /** 相关法律法规依据 */
+    @Excel(name = "相关法律法规依据")
+    private String basis;
+
+    /** 其他 */
+    @Excel(name = "其他")
+    private String other;
+
+    /** 失效时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "失效时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date lapseTime;
+
+
+    public void setCensorId(Long censorId)
     {
-        this.fileType = fileType;
+        this.censorId = censorId;
     }
 
-    public Integer getFileType() 
+    public Long getCensorId()
     {
-        return fileType;
+        return censorId;
     }
-    public void setFileName(String fileName) 
+    public void setReportTitle(String reportTitle)
+    {
+        this.reportTitle = reportTitle;
+    }
+
+    public String getReportTitle()
+    {
+        return reportTitle;
+    }
+    public void setReportType(Integer reportType)
+    {
+        this.reportType = reportType;
+    }
+
+    public Integer getReportType()
+    {
+        return reportType;
+    }
+    public void setFileName(String fileName)
     {
         this.fileName = fileName;
     }
 
-    public String getFileName() 
+    public String getFileName()
     {
         return fileName;
     }
-    public void setRecordAgencies(String recordAgencies) 
+    public void setFileNature(String fileNature)
     {
-        this.recordAgencies = recordAgencies;
+        this.fileNature = fileNature;
     }
 
-    public String getRecordAgencies() 
+    public String getFileNature()
     {
-        return recordAgencies;
+        return fileNature;
     }
-    public void setRecordSerial(String recordSerial) 
+    public void setReportWen(String reportWen)
     {
-        this.recordSerial = recordSerial;
-    }
-
-    public String getRecordSerial() 
-    {
-        return recordSerial;
-    }
-    public void setReportAgencies(String reportAgencies) 
-    {
-        this.reportAgencies = reportAgencies;
+        this.reportWen = reportWen;
     }
 
-    public String getReportAgencies() 
+    public String getReportWen()
     {
-        return reportAgencies;
+        return reportWen;
     }
-    public void setReportSerial(String reportSerial) 
+    public void setReportOrgan(String reportOrgan)
     {
-        this.reportSerial = reportSerial;
-    }
-
-    public String getReportSerial() 
-    {
-        return reportSerial;
-    }
-    public void setPassDate(Date passDate) 
-    {
-        this.passDate = passDate;
+        this.reportOrgan = reportOrgan;
     }
 
-    public Date getPassDate() 
+    public String getReportOrgan()
     {
-        return passDate;
+        return reportOrgan;
     }
-    public void setPassAgencies(String passAgencies) 
+    public void setPassOrgan(String passOrgan)
     {
-        this.passAgencies = passAgencies;
-    }
-
-    public String getPassAgencies() 
-    {
-        return passAgencies;
-    }
-    public void setBulletinDate(Date bulletinDate) 
-    {
-        this.bulletinDate = bulletinDate;
+        this.passOrgan = passOrgan;
     }
 
-    public Date getBulletinDate() 
+    public String getPassOrgan()
     {
-        return bulletinDate;
+        return passOrgan;
     }
-    public void setEnforceDate(Date enforceDate) 
+    public void setRecordOrgan(String recordOrgan)
     {
-        this.enforceDate = enforceDate;
-    }
-
-    public Date getEnforceDate() 
-    {
-        return enforceDate;
-    }
-    public void setFileUrl(String fileUrl) 
-    {
-        this.fileUrl = fileUrl;
+        this.recordOrgan = recordOrgan;
     }
 
-    public String getFileUrl() 
+    public String getRecordOrgan()
     {
-        return fileUrl;
+        return recordOrgan;
     }
-    public void setAcceptUserId(Long acceptUserId) 
+    public void setAnnouncedTime(Date announcedTime)
     {
-        this.acceptUserId = acceptUserId;
-    }
-
-    public Long getAcceptUserId() 
-    {
-        return acceptUserId;
-    }
-    public void setAcceptUserName(String acceptUserName) 
-    {
-        this.acceptUserName = acceptUserName;
+        this.announcedTime = announcedTime;
     }
 
-    public String getAcceptUserName() 
+    public Date getAnnouncedTime()
     {
-        return acceptUserName;
+        return announcedTime;
     }
-    public void setCopyUserId(Long copyUserId) 
+    public void setHairdressingTime(Date hairdressingTime)
     {
-        this.copyUserId = copyUserId;
-    }
-
-    public Long getCopyUserId() 
-    {
-        return copyUserId;
-    }
-    public void setCopyUserName(String copyUserName) 
-    {
-        this.copyUserName = copyUserName;
+        this.hairdressingTime = hairdressingTime;
     }
 
-    public String getCopyUserName() 
+    public Date getHairdressingTime()
     {
-        return copyUserName;
+        return hairdressingTime;
     }
-    public void setProcessType(Integer processType) 
+    public void setAdministerTime(Date administerTime)
+    {
+        this.administerTime = administerTime;
+    }
+
+    public Date getAdministerTime()
+    {
+        return administerTime;
+    }
+    public void setRecordTime(Date recordTime)
+    {
+        this.recordTime = recordTime;
+    }
+
+    public Date getRecordTime()
+    {
+        return recordTime;
+    }
+    public void setContactName(String contactName)
+    {
+        this.contactName = contactName;
+    }
+
+    public String getContactName()
+    {
+        return contactName;
+    }
+    public void setContactPhone(String contactPhone)
+    {
+        this.contactPhone = contactPhone;
+    }
+
+    public String getContactPhone()
+    {
+        return contactPhone;
+    }
+    public void setFileList(String fileList)
+    {
+        this.fileList = fileList;
+    }
+
+    public String getFileList()
+    {
+        return fileList;
+    }
+    public void setStatus(Integer status)
+    {
+        this.status = status;
+    }
+
+    public Integer getStatus()
+    {
+        return status;
+    }
+    public void setProcessType(Integer processType)
     {
         this.processType = processType;
     }
 
-    public Integer getProcessType() 
+    public Integer getProcessType()
     {
         return processType;
     }
@@ -268,46 +315,148 @@ public class StandardCensor extends BaseEntity
         this.censorTache = censorTache;
     }
 
-    public String getCensorTache() 
+    public String getCensorTache()
     {
         return censorTache;
     }
-    public void setStatus(Integer status) 
+    public void setApprovalUserId(Long approvalUserId)
     {
-        this.status = status;
+        this.approvalUserId = approvalUserId;
     }
 
-    public Integer getStatus() 
+    public Long getApprovalUserId()
     {
-        return status;
+        return approvalUserId;
+    }
+    public void setProcinsId(String procinsId)
+    {
+        this.procinsId = procinsId;
+    }
+
+    public String getProcinsId()
+    {
+        return procinsId;
+    }
+    public void setDeployId(String deployId)
+    {
+        this.deployId = deployId;
+    }
+
+    public String getDeployId()
+    {
+        return deployId;
+    }
+    public void setSendUserId(Long sendUserId)
+    {
+        this.sendUserId = sendUserId;
+    }
+
+    public Long getSendUserId()
+    {
+        return sendUserId;
+    }
+    public void setAddress(String address)
+    {
+        this.address = address;
+    }
+
+    public String getAddress()
+    {
+        return address;
+    }
+    public void setRate(Long rate)
+    {
+        this.rate = rate;
+    }
+
+    public Long getRate()
+    {
+        return rate;
+    }
+    public void setRecordReport(String recordReport)
+    {
+        this.recordReport = recordReport;
+    }
+
+    public String getRecordReport()
+    {
+        return recordReport;
+    }
+    public void setFormalText(String formalText)
+    {
+        this.formalText = formalText;
+    }
+
+    public String getFormalText()
+    {
+        return formalText;
+    }
+    public void setFormulateExplain(String formulateExplain)
+    {
+        this.formulateExplain = formulateExplain;
+    }
+
+    public String getFormulateExplain()
+    {
+        return formulateExplain;
+    }
+    public void setBasis(String basis)
+    {
+        this.basis = basis;
+    }
+
+    public String getBasis()
+    {
+        return basis;
+    }
+    public void setOther(String other)
+    {
+        this.other = other;
+    }
+
+    public String getOther()
+    {
+        return other;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("fileType", getFileType())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .append("fileName", getFileName())
-            .append("recordAgencies", getRecordAgencies())
-            .append("recordSerial", getRecordSerial())
-            .append("reportAgencies", getReportAgencies())
-            .append("reportSerial", getReportSerial())
-            .append("passDate", getPassDate())
-            .append("passAgencies", getPassAgencies())
-            .append("bulletinDate", getBulletinDate())
-            .append("enforceDate", getEnforceDate())
-            .append("fileUrl", getFileUrl())
-            .append("acceptUserId", getAcceptUserId())
-            .append("acceptUserName", getAcceptUserName())
-            .append("copyUserId", getCopyUserId())
-            .append("copyUserName", getCopyUserName())
-            .append("processType", getProcessType())
-            .append("censorTache", getCensorTache())
-            .append("status", getStatus())
-            .toString();
+                .append("censorId", getCensorId())
+                .append("reportTitle", getReportTitle())
+                .append("reportType", getReportType())
+                .append("fileName", getFileName())
+                .append("fileNature", getFileNature())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .append("remark", getRemark())
+                .append("reportWen", getReportWen())
+                .append("reportOrgan", getReportOrgan())
+                .append("passOrgan", getPassOrgan())
+                .append("recordOrgan", getRecordOrgan())
+                .append("announcedTime", getAnnouncedTime())
+                .append("hairdressingTime", getHairdressingTime())
+                .append("administerTime", getAdministerTime())
+                .append("recordTime", getRecordTime())
+                .append("contactName", getContactName())
+                .append("contactPhone", getContactPhone())
+                .append("fileList", getFileList())
+                .append("status", getStatus())
+                .append("processType", getProcessType())
+                .append("censorTache", getCensorTache())
+                .append("approvalUserId", getApprovalUserId())
+                .append("procinsId", getProcinsId())
+                .append("deployId", getDeployId())
+                .append("sendUserId", getSendUserId())
+                .append("address", getAddress())
+                .append("rate", getRate())
+                .append("recordReport", getRecordReport())
+                .append("formalText", getFormalText())
+                .append("formulateExplain", getFormulateExplain())
+                .append("basis", getBasis())
+                .append("other", getOther())
+                .toString();
     }
 }

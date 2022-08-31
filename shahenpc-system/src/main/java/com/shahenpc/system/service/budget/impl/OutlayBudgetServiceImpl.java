@@ -6,8 +6,10 @@ import com.shahenpc.common.exception.ServiceException;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.StringUtils;
 import com.shahenpc.common.utils.bean.BeanValidators;
+import com.shahenpc.system.domain.budget.OutlayBudgetRecord;
 import com.shahenpc.system.domain.budget.dto.BudgetDto;
 import com.shahenpc.system.domain.budget.dto.CountDto;
+import com.shahenpc.system.mapper.budget.OutlayBudgetRecordMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,8 @@ public class OutlayBudgetServiceImpl implements IOutlayBudgetService
     private OutlayBudgetMapper outlayBudgetMapper;
     @Autowired
     protected Validator validator;
+    @Autowired
+    private OutlayBudgetRecordMapper outlayBudgetRecordMapper;
     private static final Logger log = LoggerFactory.getLogger(OutlayBudgetServiceImpl.class);
     /**
      * 查询预算
@@ -80,6 +84,22 @@ public class OutlayBudgetServiceImpl implements IOutlayBudgetService
     public int updateOutlayBudget(OutlayBudget outlayBudget)
     {
         outlayBudget.setUpdateTime(DateUtils.getNowDate());
+        int update =  outlayBudgetMapper.updateOutlayBudget(outlayBudget);
+        if( update != 0){
+            OutlayBudgetRecord record =  new OutlayBudgetRecord();
+            record.setBudgetId(outlayBudget.getBudgetId());
+            record.setCreateBy(outlayBudget.getCreateBy());
+            record.setCreateTime(DateUtils.getNowDate());
+            record.setBeforeAmount(outlayBudget.getAmount());
+
+            record.setChangeAmount(outlayBudget.getChangeAmount());
+            record.setAfterAmount(outlayBudget.getAmount().add(outlayBudget.getChangeAmount()));
+
+            outlayBudgetRecordMapper.insertOutlayBudgetRecord(record);
+        }
+        if(outlayBudget.getChangeAmount() != null){
+            outlayBudget.setAfterAmount(outlayBudget.getAmount().add(outlayBudget.getChangeAmount()));
+        }
         return outlayBudgetMapper.updateOutlayBudget(outlayBudget);
     }
 
@@ -159,6 +179,15 @@ public class OutlayBudgetServiceImpl implements IOutlayBudgetService
 
     @Override
     public List<OutlayBudget> newList(BudgetDto request) {
+//        List<OutlayBudget> list= outlayBudgetMapper.newList(request);
+//        for (OutlayBudget item:list){
+//            if(item.getChangeAmount() != null){
+//                OutlayBudget bu = new OutlayBudget();
+//                bu.setBudgetId(item.getBudgetId());
+//                bu.setAfterAmount(item.getAmount().subtract(item.getChangeAmount()));
+//                outlayBudgetMapper.updateOutlayBudget(bu);
+//            }
+//        }
         return outlayBudgetMapper.newList(request);
     }
 

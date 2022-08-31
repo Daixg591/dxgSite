@@ -15,7 +15,7 @@ public interface StandardCensorMapper
     /**
      * 查询审查流程
      * 
-     * @param processId 审查流程主键
+     * @param censorIds 审查流程主键
      * @return 审查流程
      */
     public StandardCensor selectStandardCensorByCensorId(Long censorIds);

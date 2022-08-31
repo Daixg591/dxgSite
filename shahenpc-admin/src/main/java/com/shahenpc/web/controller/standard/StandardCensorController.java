@@ -70,13 +70,12 @@ public class StandardCensorController extends BaseController
 
     /**
      * 获取审查流程详细信息
-     */
     @PreAuthorize("@ss.hasPermi('standard:censor:query')")
     @GetMapping(value = "/{processId}")
     public AjaxResult getInfo(@PathVariable("processId") Long processId)
     {
         return AjaxResult.success(standardCensorService.selectStandardCensorByProcessId(processId));
-    }
+    }*/
 
     /**
      * 新增审查流程

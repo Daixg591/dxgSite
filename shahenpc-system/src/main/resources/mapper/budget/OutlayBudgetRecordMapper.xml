@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.budget.OutlayBudgetRecordMapper">
+    
+    <resultMap type="OutlayBudgetRecord" id="OutlayBudgetRecordResult">
+        <result property="recordId"    column="record_id"    />
+        <result property="budgetId"    column="budget_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="changeAmount"    column="change_amount"/>
+        <result property="beforeAmount"    column="before_amount"    />
+        <result property="afterAmount"    column="after_amount"    />
+    </resultMap>
+
+    <sql id="selectOutlayBudgetRecordVo">
+        select record_id, budget_id, remark, create_time, update_by,change_amount, update_time, create_by, before_amount, after_amount from outlay_budget_record
+    </sql>
+
+    <select id="selectOutlayBudgetRecordList" parameterType="OutlayBudgetRecord" resultMap="OutlayBudgetRecordResult">
+        <include refid="selectOutlayBudgetRecordVo"/>
+        <where>
+            <if test="changeAmount != null "> and change_amount = #{changeAmount}</if>
+            <if test="budgetId != null "> and budget_id = #{budgetId}</if>
+            <if test="beforeAmount != null "> and before_amount = #{beforeAmount}</if>
+            <if test="afterAmount != null "> and after_amount = #{afterAmount}</if>
+        </where>
+    </select>
+    
+    <select id="selectOutlayBudgetRecordByRecordId" parameterType="Long" resultMap="OutlayBudgetRecordResult">
+        <include refid="selectOutlayBudgetRecordVo"/>
+        where record_id = #{recordId}
+    </select>
+        
+    <insert id="insertOutlayBudgetRecord" parameterType="OutlayBudgetRecord" useGeneratedKeys="true" keyProperty="recordId">
+        insert into outlay_budget_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="budgetId != null">budget_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="changeAmount != null">change_amount,</if>
+            <if test="beforeAmount != null">before_amount,</if>
+            <if test="afterAmount != null">after_amount,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="budgetId != null">#{budgetId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="changeAmount != null">#{changeAmount},</if>
+            <if test="beforeAmount != null">#{beforeAmount},</if>
+            <if test="afterAmount != null">#{afterAmount},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOutlayBudgetRecord" parameterType="OutlayBudgetRecord">
+        update outlay_budget_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="budgetId != null">budget_id = #{budgetId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="changeAmount != null">change_amount = #{changeAmount},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="beforeAmount != null">before_amount = #{beforeAmount},</if>
+            <if test="afterAmount != null">after_amount = #{afterAmount},</if>
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+    <delete id="deleteOutlayBudgetRecordByRecordId" parameterType="Long">
+        delete from outlay_budget_record where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteOutlayBudgetRecordByRecordIds" parameterType="String">
+        delete from outlay_budget_record where record_id in 
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+</mapper>

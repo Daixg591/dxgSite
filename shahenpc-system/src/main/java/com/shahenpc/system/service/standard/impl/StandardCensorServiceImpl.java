@@ -119,7 +119,7 @@ public class StandardCensorServiceImpl implements IStandardCensorService
         List<StandardCensor> receiveTotal =standardCensorMapper.selectStandardCensorList(standardCenso);
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getFileType().toString()))
+            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getReportType().toString()))
                     .collect(Collectors.toList()).size();
             MotionPieDto item = new MotionPieDto();
             item.setName(dictList.get(i).getDictLabel());

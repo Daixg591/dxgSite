@@ -129,4 +129,19 @@ public class FlowTaskDto implements Serializable {
     @ApiModelProperty("发文机关")
     private String organName;
 
+    private Date announcedTime;
+
+    private Date recordTime;
+
+    private Integer reportType;
+
+    private String reportOrgan;
+
+    private String fileNature;
+
+    private Date hairdressingTime;
+
+    private String reportWen;
+
+    private Long censorId;
 }

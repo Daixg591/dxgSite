@@ -331,7 +331,7 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
             SysUser sysUser = SecurityUtils.getLoginUser().getUser();
             identityService.setAuthenticatedUserId(sysUser.getUserId().toString());
             Map<String, Object> variables = new HashMap<>();
-            variables.put("approval",standardCensor.getAcceptUserId());
+            variables.put("approval",standardCensor.getApprovalUserId());
             variables.put(ProcessConstants.PROCESS_INITIATOR, "");
             variables.put("skip", true);
             ProcessInstance processInstance = runtimeService.startProcessInstanceById(procDefId,variables);
@@ -417,7 +417,7 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
         List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = listuser.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getFileType().toString()))
+            int v = listuser.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getReportType().toString()))
                     .collect(Collectors.toList()).size();
             CakeDto item = new CakeDto();
             item.setName(dictList.get(i).getDictLabel());
