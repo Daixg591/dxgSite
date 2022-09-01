@@ -2,6 +2,8 @@ package com.shahenpc.common.core.domain.model;
 
 import java.util.Collection;
 import java.util.Set;
+
+import com.shahenpc.common.helper.LoginHelper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.alibaba.fastjson2.annotation.JSONField;
@@ -50,7 +52,10 @@ public class LoginUser implements UserDetails
      * 登录地点
      */
     private String loginLocation;
-
+    /**
+     * 用户类型
+     */
+    private String userType;
     /**
      * 浏览器类型
      */
@@ -267,5 +272,11 @@ public class LoginUser implements UserDetails
     public Collection<? extends GrantedAuthority> getAuthorities()
     {
         return null;
+    }
+    /**
+     * 获取登录id
+     */
+    public String getLoginId() {
+        return userType + LoginHelper.JOIN_CODE + userId;
     }
 }

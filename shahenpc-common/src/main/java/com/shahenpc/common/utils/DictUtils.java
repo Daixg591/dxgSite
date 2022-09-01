@@ -47,6 +47,9 @@ public class DictUtils
         return null;
     }
 
+    public static void main(String[] args) {
+        List<SysDictData> list= getDictCache("sys_normal_disable");
+    }
     /**
      * 根据字典类型和字典值获取字典标签
      * 

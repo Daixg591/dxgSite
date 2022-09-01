@@ -272,9 +272,7 @@ public class SensitiveWordUtil {
 
         //是否含有关键字
         boolean result = SensitiveWordUtil.contains(string);
-        System.out.println(result);
         result = SensitiveWordUtil.contains(string, SensitiveWordUtil.MinMatchTYpe);
-        System.out.println(result);
 
         //获取语句中的敏感词
         Set<String> set = SensitiveWordUtil.getSensitiveWord(string);

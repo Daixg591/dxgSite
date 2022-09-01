@@ -1,5 +1,7 @@
 package com.shahenpc.common.core.page;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.shahenpc.common.constant.HttpStatus;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,7 +13,7 @@ import java.util.List;
  * @author ruoyi
  */
 @Data
-public class TableDataInfo implements Serializable
+public class TableDataInfo<T> implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
@@ -84,5 +86,14 @@ public class TableDataInfo implements Serializable
     public void setMsg(String msg)
     {
         this.msg = msg;
+    }
+
+    public static <T> TableDataInfo<T> build(IPage<T> page) {
+        TableDataInfo<T> rspData = new TableDataInfo<>();
+        rspData.setCode(HttpStatus.HTTP_OK);
+        rspData.setMsg("查询成功");
+        rspData.setData(page.getRecords());
+        rspData.setTotal(page.getTotal());
+        return rspData;
     }
 }

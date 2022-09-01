@@ -7,6 +7,7 @@ package com.shahenpc.common.constant;
  */
 public class HttpStatus
 {
+    public static final int HTTP_OK = 200;
     /**
      * 操作成功
      */

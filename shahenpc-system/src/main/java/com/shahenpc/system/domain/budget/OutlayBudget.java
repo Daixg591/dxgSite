@@ -2,7 +2,9 @@ package com.shahenpc.system.domain.budget;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.shahenpc.common.annotation.Excel;
+import com.shahenpc.common.annotation.ExcelDictFormat;
 import com.shahenpc.common.core.domain.BaseEntity;
+import com.shahenpc.common.enums.DeviceType;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -29,7 +31,8 @@ public class OutlayBudget extends BaseEntity
     private Long alarmId;
 
     /** 收支类型 */
-    @Excel(name = "收支类型",readConverterExp = "1=教育资金,2=社会保障,3=基础建设,4=科技支持")
+    //@Excel(name = "收支类型",readConverterExp = "1=教育资金,2=社会保障,3=基础建设,4=科技支持")
+    @Excel(name="收支类型",dictType="budget_type")
     private Integer budgetType;
 
     /** 标题 */

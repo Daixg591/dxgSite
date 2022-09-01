@@ -160,10 +160,9 @@ public class PersonnelAppointNoticeController extends BaseController {
      */
     @ApiOperation("通知统计数据-任免通知")
     @GetMapping(value = "/noticeTJ")
-    public AjaxResult noticeTJ() {
+    public AjaxResult noticeTJ(Integer type) {
         PersonnelAppointNotice param = new PersonnelAppointNotice();
-        param.setType(1);
-
+        param.setType(type);
         List<PersonnelAppointNotice> list = personnelAppointNoticeService.selectPersonnelAppointNoticeList(param);
         Map<String, String> res = new HashMap<>();
         res.put("total", afterTextChanged(list.size() + ""));

@@ -7,6 +7,7 @@ package com.shahenpc.common.constant;
  */
 public class UserConstants
 {
+    public static final Long ADMIN_ID = 1L;
     /**
      * 平台内系统用户的唯一标志
      */

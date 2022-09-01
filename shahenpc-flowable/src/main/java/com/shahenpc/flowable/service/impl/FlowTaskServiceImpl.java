@@ -2022,8 +2022,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
                     .processInstanceId(task.getProcessInstanceId())
                     .singleResult();
-            SysUser startUser = sysUserService.selectUserById(Long.parseLong(historicProcessInstance.getStartUserId()));
-//            SysUser startUser = sysUserService.selectUserById(Long.parseLong(task.getAssignee()));
+//            SysUser startUser = sysUserService.selectUserById(Long.parseLong(historicProcessInstance.getStartUserId()));
+            SysUser startUser = sysUserService.selectUserById(Long.parseLong(task.getAssignee()));
             flowTask.setStartUserId(startUser.getNickName());
             flowTask.setStartUserName(startUser.getNickName());
             flowTask.setStartDeptName(startUser.getDept().getDeptName());
@@ -2605,8 +2605,6 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         MotionRingDto cakedto =new MotionRingDto();
         BigDecimal a = new BigDecimal(stayTotal);
         BigDecimal b = new BigDecimal(count);
-        System.out.println(a);
-        System.out.println(b);
         BigDecimal gd = new BigDecimal(0.00);
         if(!b.equals(BigDecimal.ZERO)){
             gd = a.divide(b,2,BigDecimal.ROUND_CEILING);
