@@ -20,6 +20,11 @@ public class RepresentHomeAccess extends BaseEntity
     /**  */
     private Long accessId;
 
+    /**
+     * 用户id
+     */
+    private Long userId;
+
     /** 标题 */
     @Excel(name = "标题")
     private String title;
@@ -267,6 +272,14 @@ public class RepresentHomeAccess extends BaseEntity
     public Long getBrowseNumber() 
     {
         return browseNumber;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @Override
