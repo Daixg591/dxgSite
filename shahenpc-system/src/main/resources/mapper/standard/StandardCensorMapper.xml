@@ -26,15 +26,16 @@
         <result property="contactName"    column="contact_name"    />
         <result property="contactPhone"    column="contact_phone"    />
         <result property="fileList"    column="file_list"    />
+        <result property="type"    column="type"    />
         <result property="status"    column="status"    />
+        <result property="rate"    column="rate"    />
+        <result property="sendUserId"    column="send_user_id"    />
+        <result property="receiveUserId"    column="receive_user_id"    />
         <result property="processType"    column="process_type"    />
         <result property="censorTache"    column="censor_tache"    />
-        <result property="approvalUserId"    column="approval_user_id"    />
         <result property="procinsId"    column="procIns_id"    />
         <result property="deployId"    column="deploy_id"    />
-        <result property="sendUserId"    column="send_user_id"    />
         <result property="address"    column="address"    />
-        <result property="rate"    column="rate"    />
         <result property="recordReport"    column="record_report"    />
         <result property="formalText"    column="formal_text"    />
         <result property="formulateExplain"    column="formulate_explain"    />
@@ -44,7 +45,7 @@
     </resultMap>
 
     <sql id="selectStandardCensorVo">
-        select censor_id, report_title, report_type, file_name, file_nature, create_by, create_time, update_by, update_time, remark, report_wen, report_organ, pass_organ, record_organ, announced_time, hairdressing_time, administer_time, record_time, contact_name, contact_phone, file_list, status, process_type, censor_tache, approval_user_id, procIns_id, deploy_id, send_user_id, address, rate, record_report, formal_text, formulate_explain, basis, other, lapse_time from standard_censor
+        select censor_id, report_title, report_type, file_name, file_nature, create_by, create_time, update_by, update_time, remark, report_wen, report_organ, pass_organ, record_organ, announced_time, hairdressing_time, administer_time, record_time, contact_name, contact_phone, file_list, type, status, rate, send_user_id, receive_user_id, process_type, censor_tache, procIns_id, deploy_id, address, record_report, formal_text, formulate_explain, basis, other, lapse_time from standard_censor
     </sql>
 
     <select id="selectStandardCensorList" parameterType="StandardCensor" resultMap="StandardCensorResult">
@@ -65,15 +66,16 @@
             <if test="contactName != null  and contactName != ''"> and contact_name like concat('%', #{contactName}, '%')</if>
             <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
             <if test="fileList != null  and fileList != ''"> and file_list = #{fileList}</if>
+            <if test="type != null "> and type = #{type}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="rate != null "> and rate = #{rate}</if>
+            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="receiveUserId != null  and receiveUserId != ''"> and receive_user_id = #{receiveUserId}</if>
             <if test="processType != null "> and process_type = #{processType}</if>
             <if test="censorTache != null  and censorTache != ''"> and censor_tache = #{censorTache}</if>
-            <if test="approvalUserId != null "> and approval_user_id = #{approvalUserId}</if>
             <if test="procinsId != null  and procinsId != ''"> and procIns_id = #{procinsId}</if>
             <if test="deployId != null  and deployId != ''"> and deploy_id = #{deployId}</if>
-            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
-            <if test="rate != null "> and rate = #{rate}</if>
             <if test="recordReport != null  and recordReport != ''"> and record_report = #{recordReport}</if>
             <if test="formalText != null  and formalText != ''"> and formal_text = #{formalText}</if>
             <if test="formulateExplain != null  and formulateExplain != ''"> and formulate_explain = #{formulateExplain}</if>
@@ -111,15 +113,16 @@
             <if test="contactName != null">contact_name,</if>
             <if test="contactPhone != null">contact_phone,</if>
             <if test="fileList != null">file_list,</if>
+            <if test="type != null">type,</if>
             <if test="status != null">status,</if>
+            <if test="rate != null">rate,</if>
+            <if test="sendUserId != null">send_user_id,</if>
+            <if test="receiveUserId != null">receive_user_id,</if>
             <if test="processType != null">process_type,</if>
             <if test="censorTache != null">censor_tache,</if>
-            <if test="approvalUserId != null">approval_user_id,</if>
             <if test="procinsId != null">procIns_id,</if>
             <if test="deployId != null">deploy_id,</if>
-            <if test="sendUserId != null">send_user_id,</if>
             <if test="address != null">address,</if>
-            <if test="rate != null">rate,</if>
             <if test="recordReport != null">record_report,</if>
             <if test="formalText != null">formal_text,</if>
             <if test="formulateExplain != null">formulate_explain,</if>
@@ -148,15 +151,16 @@
             <if test="contactName != null">#{contactName},</if>
             <if test="contactPhone != null">#{contactPhone},</if>
             <if test="fileList != null">#{fileList},</if>
+            <if test="type != null">#{type},</if>
             <if test="status != null">#{status},</if>
+            <if test="rate != null">#{rate},</if>
+            <if test="sendUserId != null">#{sendUserId},</if>
+            <if test="receiveUserId != null">#{receiveUserId},</if>
             <if test="processType != null">#{processType},</if>
             <if test="censorTache != null">#{censorTache},</if>
-            <if test="approvalUserId != null">#{approvalUserId},</if>
             <if test="procinsId != null">#{procinsId},</if>
             <if test="deployId != null">#{deployId},</if>
-            <if test="sendUserId != null">#{sendUserId},</if>
             <if test="address != null">#{address},</if>
-            <if test="rate != null">#{rate},</if>
             <if test="recordReport != null">#{recordReport},</if>
             <if test="formalText != null">#{formalText},</if>
             <if test="formulateExplain != null">#{formulateExplain},</if>
@@ -189,15 +193,16 @@
             <if test="contactName != null">contact_name = #{contactName},</if>
             <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
             <if test="fileList != null">file_list = #{fileList},</if>
+            <if test="type != null">type = #{type},</if>
             <if test="status != null">status = #{status},</if>
+            <if test="rate != null">rate = #{rate},</if>
+            <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
+            <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
             <if test="processType != null">process_type = #{processType},</if>
             <if test="censorTache != null">censor_tache = #{censorTache},</if>
-            <if test="approvalUserId != null">approval_user_id = #{approvalUserId},</if>
             <if test="procinsId != null">procIns_id = #{procinsId},</if>
             <if test="deployId != null">deploy_id = #{deployId},</if>
-            <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
             <if test="address != null">address = #{address},</if>
-            <if test="rate != null">rate = #{rate},</if>
             <if test="recordReport != null">record_report = #{recordReport},</if>
             <if test="formalText != null">formal_text = #{formalText},</if>
             <if test="formulateExplain != null">formulate_explain = #{formulateExplain},</if>
@@ -218,7 +223,7 @@
             #{censorId}
         </foreach>
     </delete>
-    <!--====================分割线-->
+    <!--====================分割线=================================-->
     <select id="selectByProcessId" resultMap="StandardCensorResult">
         <include refid="selectStandardCensorVo"/>
         where procins_id = #{procinsId}

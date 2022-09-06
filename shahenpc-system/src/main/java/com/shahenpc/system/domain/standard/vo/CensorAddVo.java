@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class CensorAddVo extends StandardCensor {
 
-    private String[] receiveUserIds;
+    private String[] approvalUserId;
 
 }

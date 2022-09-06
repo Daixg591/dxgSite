@@ -3,6 +3,9 @@ package com.shahenpc.system.service.standard;
 import java.util.List;
 
 import com.shahenpc.common.core.domain.AjaxResult;
+import com.shahenpc.system.domain.represent.dto.MotionLingDto;
+import com.shahenpc.system.domain.represent.dto.MotionPieDto;
+import com.shahenpc.system.domain.represent.vo.MotionTaskVo;
 import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.domain.standard.dto.CemsorDetailDto;
 import com.shahenpc.system.domain.standard.vo.CensorAddVo;
@@ -85,5 +88,24 @@ public interface IStandardCensorService
     public StandardCensor selectByProcessId(String processId);
 
     public CemsorDetailDto selectByCensorId(Long cemsorId);
+
+    /**
+     * 落实率
+     * @param
+     * @return
+     */
+    String ring();
+    /**
+     * 按类别饼图
+     * @param
+     * @return
+     */
+    List<MotionPieDto> pie();
+    /**
+     * 曲线
+     * @param
+     * @return
+     */
+    MotionLingDto line();
 
 }
