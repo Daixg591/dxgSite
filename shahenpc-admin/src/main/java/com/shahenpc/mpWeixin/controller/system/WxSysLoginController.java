@@ -179,7 +179,10 @@ public class WxSysLoginController {
             ajax.put("user", exitUser);
         }
 
-        LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(dto.getPhoneNumber());
+        String qzOpenId=getWxOpenId(dto.getCode());
+
+//        LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(dto.getPhoneNumber());
+        LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(qzOpenId);
         // 记录登录信息
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(dto.getPhoneNumber(), Constants.LOGIN_SUCCESS,
                 MessageUtils.message("user.login.success")));
