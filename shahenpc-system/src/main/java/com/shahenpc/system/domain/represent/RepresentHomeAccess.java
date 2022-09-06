@@ -103,6 +103,45 @@ public class RepresentHomeAccess extends BaseEntity
     @Excel(name = "虚拟userId")
     private String videoUserId;
 
+    /**
+     * 简称
+     */
+    private String shortName;
+
+    /**
+     * 云视讯账号
+     */
+    private String ysxMobile;
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public String getYsxMobile() {
+        return ysxMobile;
+    }
+
+    public void setYsxMobile(String ysxMobile) {
+        this.ysxMobile = ysxMobile;
+    }
+
+    public String getYsxPwd() {
+        return ysxPwd;
+    }
+
+    public void setYsxPwd(String ysxPwd) {
+        this.ysxPwd = ysxPwd;
+    }
+
+    /**
+     * 云视讯密码
+     */
+    private String ysxPwd;
+
     public void setAccessId(Long accessId) 
     {
         this.accessId = accessId;
