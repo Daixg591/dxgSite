@@ -438,4 +438,10 @@
     <select id="selectByNickName" resultType="String">
         select nick_name from sys_user where FIND_IN_SET(user_id,#{userId})
     </select>
+
+    <!--根据当前id 查出访问之家负责人userid-->
+    <select id="selectByNickNamaAndPhone" resultMap="SysUserResult">
+        <include refid="selectUserVo"/>
+        where u.nick_name = #{nickName} AND u.phonenumber = #{phone}
+    </select>
 </mapper>

@@ -48,7 +48,7 @@ public class AppFeatureDoubleWorkController extends BaseController {
     public AjaxResult add(@RequestBody FeatureDoubleWork featureDoubleWork)
     {
         featureDoubleWork.setCreateBy(getUsername());
-        featureDoubleWork.setSubmitUserId(getUserId());
+        featureDoubleWork.setSendUserId(getUserId());
         return AjaxResult.success(featureDoubleWorkService.newAdd(featureDoubleWork));
     }
 
@@ -65,7 +65,7 @@ public class AppFeatureDoubleWorkController extends BaseController {
         if(featureDoubleWork.getStatus() == 0){
             featureDoubleWork.setStatus(null);
         }
-        featureDoubleWork.setSubmitUserId(getUserId());
+        featureDoubleWork.setSendUserId(getUserId());
         List<DoubleAppListDto> list = featureDoubleWorkService.appList(featureDoubleWork);
         return getDataTable(list);
     }

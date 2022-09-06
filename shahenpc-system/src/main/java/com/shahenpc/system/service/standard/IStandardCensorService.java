@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.system.domain.standard.StandardCensor;
+import com.shahenpc.system.domain.standard.dto.CemsorDetailDto;
+import com.shahenpc.system.domain.standard.vo.CensorAddVo;
+import com.shahenpc.system.domain.standard.vo.CensorUpdateVo;
 
 /**
  * 审查流程Service接口
@@ -30,12 +33,25 @@ public interface IStandardCensorService
     public List<StandardCensor> selectStandardCensorList(StandardCensor standardCensor);
 
     /**
+     * 待办
+     * @param request
+     * @return
+     */
+    public List<StandardCensor> selectByTodoList(StandardCensor request);
+
+    /**
+     * 已办
+     * @param userId
+     * @return
+     */
+    public List<StandardCensor> selectByDoneList(Long userId);
+    /**
      * 新增审查流程
      * 
      * @param standardCensor 审查流程
      * @return 结果
      */
-    public int insertStandardCensor(StandardCensor standardCensor);
+    public AjaxResult insertStandardCensor(CensorAddVo standardCensor);
 
     /**
      * 修改审查流程
@@ -43,7 +59,7 @@ public interface IStandardCensorService
      * @param standardCensor 审查流程
      * @return 结果
      */
-    public int updateStandardCensor(StandardCensor standardCensor);
+    public AjaxResult updateStandardCensor(CensorUpdateVo standardCensor);
 
     /**
      * 批量删除审查流程
@@ -67,5 +83,7 @@ public interface IStandardCensorService
      * @return
      */
     public StandardCensor selectByProcessId(String processId);
+
+    public CemsorDetailDto selectByCensorId(Long cemsorId);
 
 }

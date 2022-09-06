@@ -29,6 +29,7 @@ import com.shahenpc.system.domain.represent.vo.MotionTaskVo;
 import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.mapper.FlowDeployMapper;
 import com.shahenpc.system.service.ISysDictDataService;
+import com.shahenpc.system.service.ISysDictTypeService;
 import com.shahenpc.system.service.ISysRoleService;
 import com.shahenpc.system.service.ISysUserService;
 import com.shahenpc.system.service.message.IMessageDataService;
@@ -556,7 +557,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             StandardCensor censor=standardCensorService.selectByProcessId(hisIns.getId());
             if(censor != null) {
                 flowTask.setSerial(censor.getCensorId());
-                flowTask.setFileType(censor.getFileType());
+//                flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
             }
             RepresentMotion representMotion = new RepresentMotion();
@@ -705,7 +706,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             StandardCensor censor=standardCensorService.selectByProcessId(item.getProcessInstanceId());
                 if(censor != null) {
                     flowTask.setSerial(censor.getCensorId());
-                    flowTask.setFileType(censor.getFileType());
+                    //flowTask.setFileType(censor.getFileType());
                     flowTask.setFileName(censor.getFileName());
                 }
             RepresentMotion representMotion = new RepresentMotion();
@@ -875,9 +876,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             StandardCensor censor=standardCensorService.selectByProcessId(hisIns.getId());
             if(censor != null) {
                 flowTask.setStartUserName(censor.getCreateBy());
-                flowTask.setOrganName(censor.getOrganName());
+                //flowTask.setOrganName(censor.getOrganName());
                 flowTask.setSerial(censor.getCensorId());
-                flowTask.setFileType(censor.getFileType());
+                //flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
 
             }
@@ -1032,9 +1033,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             StandardCensor censor = standardCensorService.selectByProcessId(task.getProcessInstanceId());
             if(censor != null) {
                 flowTask.setStartUserName(censor.getCreateBy());
-                flowTask.setOrganName(censor.getOrganName());
+                //flowTask.setOrganName(censor.getOrganName());
                 flowTask.setSerial(censor.getCensorId());
-                flowTask.setFileType(censor.getFileType());
+                //flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
             }
             flowList.add(flowTask);
@@ -1096,9 +1097,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             StandardCensor censor=standardCensorService.selectByProcessId(histTask.getProcessInstanceId());
             if(censor != null) {
                 flowTask.setStartUserName(censor.getCreateBy());
-                flowTask.setOrganName(censor.getOrganName());
+                //flowTask.setOrganName(censor.getOrganName());
                 flowTask.setSerial(censor.getCensorId());
-                flowTask.setFileType(censor.getFileType());
+               //flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
             }
             hisTaskList.add(flowTask);
@@ -1513,7 +1514,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(censor != null) {
                 flowTask.setSerial(censor.getCensorId());
-                flowTask.setFileType(censor.getFileType());
+                //flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
             }
             if(motion != null) {
@@ -1596,7 +1597,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(censor != null) {
                 flowTask.setSerial(censor.getCensorId());
-                flowTask.setFileType(censor.getFileType());
+                //flowTask.setFileType(censor.getFileType());
                 flowTask.setFileName(censor.getFileName());
             }
             if(motion != null) {
@@ -2497,21 +2498,18 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         Collections.reverse(res.getLabel());
         return res;
     }
-
+    @Resource
+    private ISysDictTypeService dictTypeService;
     @Override
     public List<MotionPieDto> pie(MotionTaskVo vo) {
         List<HistoricActivityInstance> receiveTotal = historyService.createHistoricActivityInstanceQuery().activityName(vo.getTaskName())
                 .orderByHistoricActivityInstanceStartTime()
                 .desc().list();
         List<MotionPieDto> dto = new ArrayList<>();
-        StandardCensor censorProcess = new StandardCensor();
-        List<StandardCensor> listuser= standardCensorService.selectStandardCensorList(censorProcess);
-        SysDictData dictParam = new SysDictData();
-        dictParam.setDictType("censor_type");
-        List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
+        List<SysDictData> dictList = dictTypeService.selectDictDataByType("censor_status");
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = listuser.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getFileType().toString()))
+            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictLabel().equals(p.getActivityName()))
                     .collect(Collectors.toList()).size();
             MotionPieDto item = new MotionPieDto();
             item.setName(dictList.get(i).getDictLabel());

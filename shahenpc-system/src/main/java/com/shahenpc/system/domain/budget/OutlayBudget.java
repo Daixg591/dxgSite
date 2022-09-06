@@ -3,6 +3,7 @@ package com.shahenpc.system.domain.budget;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.shahenpc.common.annotation.Excel;
 import com.shahenpc.common.core.domain.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -15,6 +16,7 @@ import java.util.Date;
  * @author ruoyi
  * @date 2022-07-14
  */
+@Data
 public class OutlayBudget extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -27,7 +29,8 @@ public class OutlayBudget extends BaseEntity
     private Long alarmId;
 
     /** 收支类型 */
-    @Excel(name = "收支类型",readConverterExp = "1=教育资金,2=社会保障,3=基础建设,4=科技支持")
+    //@Excel(name = "收支类型",readConverterExp = "1=教育资金,2=社会保障,3=基础建设,4=科技支持")
+    @Excel(name="收支类型",dictType="budget_type")
     private Integer budgetType;
 
     /** 标题 */
@@ -45,6 +48,14 @@ public class OutlayBudget extends BaseEntity
     /** 金额 */
     @Excel(name = "金额")
     private BigDecimal amount;
+
+    /** 改变金额数 */
+    @Excel(name = "改变金额数")
+    private BigDecimal changeAmount;
+
+    /** 调整金额后 */
+    @Excel(name = "调整金额后")
+    private BigDecimal afterAmount;
 
     /** 状态 */
     //@Excel(name = "状态")
@@ -66,6 +77,7 @@ public class OutlayBudget extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "核实时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date verifyTime;
+
 
     public void setBudgetId(Long budgetId)
     {

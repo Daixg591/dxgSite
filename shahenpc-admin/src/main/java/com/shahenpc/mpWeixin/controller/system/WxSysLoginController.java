@@ -1,7 +1,6 @@
 package com.shahenpc.mpWeixin.controller.system;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.shahenpc.common.constant.Constants;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysUser;
@@ -11,12 +10,10 @@ import com.shahenpc.common.core.redis.RedisCache;
 import com.shahenpc.common.utils.*;
 import com.shahenpc.common.utils.http.HttpUtils;
 import com.shahenpc.common.utils.ip.IpUtils;
-import com.shahenpc.common.utils.sign.Md5Utils;
 import com.shahenpc.framework.manager.AsyncManager;
 import com.shahenpc.framework.manager.factory.AsyncFactory;
 import com.shahenpc.framework.web.service.SysLoginService;
 import com.shahenpc.framework.web.service.TokenService;
-import com.shahenpc.system.domain.BackVo.LawInfo;
 import com.shahenpc.system.domain.dto.XcxLoginDto;
 import com.shahenpc.system.domain.wxsmallprogram.dto.SmProCodeDto;
 import com.shahenpc.system.domain.wxsmallprogram.dto.SmProLinkDto;
@@ -25,19 +22,12 @@ import com.shahenpc.system.domain.wxsmallprogram.dto.WxMassesDto;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxAccessTokenVo;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxAuthVo;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxPhoneVo;
-import com.shahenpc.system.domain.wxsmallprogram.vo.WxQrcodeVo;
 import com.shahenpc.system.service.ISysUserService;
-import com.sun.org.apache.xerces.internal.parsers.DTDParser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import liquibase.pro.packaged.T;
-import okhttp3.*;
 import org.apache.commons.codec.binary.Base64;
-import org.flowable.idm.engine.impl.persistence.entity.UserEntity;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,9 +37,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -145,7 +132,6 @@ public class WxSysLoginController {
 
     /**
      * 群众注册登录微信小程序
-     *
      * @param dto
      * @return
      */
@@ -153,14 +139,59 @@ public class WxSysLoginController {
     @PostMapping("/massesreg")
     public AjaxResult massesRegister(@RequestBody WxMassesDto dto) {
         AjaxResult ajax = AjaxResult.success();
+        String wxOpenId = getWxOpenId(dto.getCode());
+        //判断是否已经存在该用户
+        SysUser exitUser = userService.selectUserByUserName(wxOpenId);
+        SysUser userEntity = new SysUser();
+        String defaultPwd = "123456";
+        // 不存在则将客户进新新增注册
+        if (exitUser == null) {
+
+            userEntity.setPhonenumber(dto.getPhoneNumber());
+            userEntity.setPassword(SecurityUtils.encryptPassword(defaultPwd));
+            userEntity.setIdentity("3");
+            userEntity.setNickName(dto.getNickName());
+            userEntity.setAvatar(dto.getAvatarUrl());
+            // 微信openId
+            userEntity.setOpenId(wxOpenId);
+            userEntity.setStatus("0");
+            userEntity.setSex(dto.getGender() + "");
+            userEntity.setUserName(wxOpenId);
+            userEntity.setDelFlag("0");
+            userService.insertUser(userEntity);
+            ajax.put("user", userEntity);
+        } else {
+            ajax.put("user", exitUser);
+        }
+        LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(wxOpenId);
+        // 记录登录信息
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(dto.getPhoneNumber(), Constants.LOGIN_SUCCESS,
+                MessageUtils.message("user.login.success")));
+        recordLoginInfo(loginUser.getUserId());
+        String token = tokenService.createToken(loginUser);
+        ajax.put(Constants.TOKEN, token);
+        return ajax;
+    }
+
+
+    /**
+     * 群众注册登录微信小程序  ===废弃
+     *
+     * @param dto
+     * @return
+     */
+    @ApiOperation("群众注册登录微信小程序")
+    @PostMapping("/massesreg1")
+    public AjaxResult massesRegister1(@RequestBody WxMassesDto dto) {
+        AjaxResult ajax = AjaxResult.success();
 
         //判断是否已经存在该手机用户
         SysUser exitUser = userService.selectUserByUserPhone(dto.getPhoneNumber(), "3");
         SysUser userEntity = new SysUser();
-        String defaultPwd = "defaultpwd";
+        String defaultPwd = "123456";
         // 不存在则将客户进新新增注册
         if (exitUser == null) {
-            String wxOpenId=getWxOpenId(dto.getCode());
+            String wxOpenId = getWxOpenId(dto.getCode());
             userEntity.setPhonenumber(dto.getPhoneNumber());
             userEntity.setPassword(SecurityUtils.encryptPassword(defaultPwd));
             userEntity.setIdentity("3");
@@ -179,7 +210,7 @@ public class WxSysLoginController {
             ajax.put("user", exitUser);
         }
 
-        String qzOpenId=getWxOpenId(dto.getCode());
+        String qzOpenId = getWxOpenId(dto.getCode());
 
 //        LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(dto.getPhoneNumber());
         LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(qzOpenId);
@@ -214,7 +245,7 @@ public class WxSysLoginController {
         map.put("page", dto.getPage());
         map.put("env_version", dto.getEnv_version());
         byte[] res = HttpUtils.SendPostByQrCode("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + dto.getAccess_token(), map);
-        return ajax.put("data",com.shahenpc.common.utils.sign.Base64.encode(res));
+        return ajax.put("data", com.shahenpc.common.utils.sign.Base64.encode(res));
     }
 
     //endregion

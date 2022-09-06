@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.represent;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-21
  */
+@Data
 public class RepresentHomeAccess extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -69,6 +71,76 @@ public class RepresentHomeAccess extends BaseEntity
     /** 浏览数 */
     @Excel(name = "浏览数")
     private Long browseNumber;
+    /** 图片宽度 */
+    @Excel(name = "图片宽度")
+    private Long mapWidth;
+
+    /** 图片高度 */
+    @Excel(name = "图片高度")
+    private Long mapHeight;
+
+    /** 图片热区 */
+    @Excel(name = "图片热区")
+    private String mapArea;
+
+    /**  */
+    @Excel(name = "")
+    private String location;
+
+    /** 电话 */
+    @Excel(name = "电话")
+    private String phone;
+
+    /** 负责人 */
+    @Excel(name = "负责人")
+    private String leader;
+
+    /** 虚拟号 */
+    @Excel(name = "虚拟号")
+    private String virtualMobile;
+
+    /** 虚拟userId */
+    @Excel(name = "虚拟userId")
+    private String videoUserId;
+
+    /**
+     * 简称
+     */
+    private String shortName;
+
+    /**
+     * 云视讯账号
+     */
+    private String ysxMobile;
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public String getYsxMobile() {
+        return ysxMobile;
+    }
+
+    public void setYsxMobile(String ysxMobile) {
+        this.ysxMobile = ysxMobile;
+    }
+
+    public String getYsxPwd() {
+        return ysxPwd;
+    }
+
+    public void setYsxPwd(String ysxPwd) {
+        this.ysxPwd = ysxPwd;
+    }
+
+    /**
+     * 云视讯密码
+     */
+    private String ysxPwd;
 
     public void setAccessId(Long accessId) 
     {

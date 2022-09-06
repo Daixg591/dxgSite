@@ -147,4 +147,6 @@ public interface SysUserMapper
     public Integer selectByManCount(String identity);
 
     public List<SysUser> appSelectUserList(SysUser user);
+
+    public SysUser selectByNickNamaAndPhone(@Param("nickName")String nickName,@Param("phone")String phone);
 }

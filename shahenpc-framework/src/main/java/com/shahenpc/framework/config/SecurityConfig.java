@@ -111,6 +111,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
                 .antMatchers("/login", "/register", "/captchaImage",
                         "/wx/user/wxlogin","/wx/user/massesreg","/wx/user/getwxphone").anonymous()
+                //投票
+                .antMatchers("/oa/player/list").permitAll()
+                //点击投票
+                .antMatchers("/oa/vote/record").permitAll()
+                // 排名
+                .antMatchers("/represent/ranking/my/ranking").permitAll()
+                //投票白名单
+                .antMatchers("/oa/vote/*").permitAll()
                 .antMatchers("/app/login","/wx/user/wxlogin","/wx/user/massesreg",
                         "/wx/user/getwxphone","/deputy/list","/system/inform/list","/system/inform/*","/represent/overview/overview","/wx/represent/overview/overview").permitAll()
                 // 静态资源，可匿名访问

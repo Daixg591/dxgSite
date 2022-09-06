@@ -69,7 +69,6 @@ public class FeatureDoubleWorkController extends BaseController {
      */
     @ApiOperation("双联工作详情")
     @ApiImplicitParam(name = "opinionId", value = "双联工作Id", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
-//    @PreAuthorize("@ss.hasPermi('feature:work:query')")
     @GetMapping(value = "/{doubleId}")
     public AjaxResult getInfo(@PathVariable("doubleId") Long doubleId) {
         return AjaxResult.success(featureDoubleWorkService.selectFeatureDoubleWorkByDoubleId(doubleId));
@@ -92,20 +91,36 @@ public class FeatureDoubleWorkController extends BaseController {
             @ApiImplicitParam(name = "status", value = "状态", required = true, dataType = "int", paramType = "path", dataTypeClass = Integer.class),
             @ApiImplicitParam(name = "replyTime", value = "回复时间", required = true, dataType = "Date", paramType = "path", dataTypeClass = Date.class)
     })
-//    @PreAuthorize("@ss.hasPermi('feature:work:add')")
     @Log(title = "双联工作", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody FeatureDoubleWork featureDoubleWork) {
         featureDoubleWork.setCreateBy(getNickName());
-        featureDoubleWork.setSubmitUserId(getUserId());
+        featureDoubleWork.setSendUserId(getUserId());
         return featureDoubleWorkService.newAdd(featureDoubleWork);
+    }
+
+    @ApiOperation("待办双联工作列表")
+    @GetMapping("/todo/list")
+    public TableDataInfo todoList(FeatureDoubleWork featureDoubleWork) {
+        startPage();
+        featureDoubleWork.setReceiveUserId(getUserId());
+        List<DoubleListDto> list = featureDoubleWorkService.adminList(featureDoubleWork);
+        return getDataTable(list);
+    }
+
+    @ApiOperation("已办双联工作列表")
+    @GetMapping("/done/list")
+    public TableDataInfo doneList(FeatureDoubleWork featureDoubleWork) {
+        startPage();
+        featureDoubleWork.setSendUserId(getUserId());
+        List<DoubleListDto> list = featureDoubleWorkService.adminList(featureDoubleWork);
+        return getDataTable(list);
     }
 
     /**
      * 修改双联工作
      */
     @ApiOperation("修改双联工作")
-//    @PreAuthorize("@ss.hasPermi('feature:work:edit')")
     @Log(title = "双联工作", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody FeatureDoubleWork featureDoubleWork) {
@@ -126,7 +141,6 @@ public class FeatureDoubleWorkController extends BaseController {
 
     /**
      * 饼图
-     *
      * @return
      */
     @ApiOperation("瓶图展示")
@@ -165,15 +179,5 @@ public class FeatureDoubleWorkController extends BaseController {
     public AjaxResult heatmap() {
         return AjaxResult.success(featureDoubleWorkService.heatmap());
     }
-    /**
-     * 添加流程
-     @ApiOperation("添加")
-     @PreAuthorize("@ss.hasPermi('feature:work:add')")
-     @Log(title = "双联工作", businessType = BusinessType.INSERT)
-     @PostMapping("/new/add") public AjaxResult newAdd(@RequestBody FeatureDoubleWork featureDoubleWork)
-     {
-     featureDoubleWork.setSubmitUserId(getUserId());
-     return toAjax(featureDoubleWorkService.newAdd(featureDoubleWork));
-     } */
 
 }

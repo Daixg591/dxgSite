@@ -27,7 +27,7 @@ public class OutlayAlarmSettingServiceImpl implements IOutlayAlarmSettingService
     private ISysDictDataService dictDataService;
     /**
      * 查询告警设置-规则
-     * 
+     *
      * @param settingId 告警设置-规则主键
      * @return 告警设置-规则
      */
@@ -39,7 +39,7 @@ public class OutlayAlarmSettingServiceImpl implements IOutlayAlarmSettingService
 
     /**
      * 查询告警设置-规则列表
-     * 
+     *
      * @param outlayAlarmSetting 告警设置-规则
      * @return 告警设置-规则
      */
@@ -51,7 +51,7 @@ public class OutlayAlarmSettingServiceImpl implements IOutlayAlarmSettingService
 
     /**
      * 新增告警设置-规则
-     * 
+     *
      * @param outlayAlarmSetting 告警设置-规则
      * @return 结果
      */
@@ -64,7 +64,7 @@ public class OutlayAlarmSettingServiceImpl implements IOutlayAlarmSettingService
 
     /**
      * 修改告警设置-规则
-     * 
+     *
      * @param outlayAlarmSetting 告警设置-规则
      * @return 结果
      */
@@ -77,7 +77,7 @@ public class OutlayAlarmSettingServiceImpl implements IOutlayAlarmSettingService
 
     /**
      * 批量删除告警设置-规则
-     * 
+     *
      * @param settingIds 需要删除的告警设置-规则主键
      * @return 结果
      */
@@ -89,7 +89,7 @@ public class OutlayAlarmSettingServiceImpl implements IOutlayAlarmSettingService
 
     /**
      * 删除告警设置-规则信息
-     * 
+     *
      * @param settingId 告警设置-规则主键
      * @return 结果
      */
