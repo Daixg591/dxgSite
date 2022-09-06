@@ -2,8 +2,11 @@ package com.shahenpc.system.service.standard.impl;
 
 import com.shahenpc.common.constant.Constants;
 import com.shahenpc.common.core.domain.AjaxResult;
+import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.StringUtils;
+import com.shahenpc.system.domain.represent.dto.MotionLingDto;
+import com.shahenpc.system.domain.represent.dto.MotionPieDto;
 import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.domain.standard.StandardCensorRecord;
 import com.shahenpc.system.domain.standard.dto.CemsorDetailDto;
@@ -11,13 +14,17 @@ import com.shahenpc.system.domain.standard.vo.CensorAddVo;
 import com.shahenpc.system.domain.standard.vo.CensorUpdateVo;
 import com.shahenpc.system.mapper.standard.StandardCensorMapper;
 import com.shahenpc.system.mapper.standard.StandardCensorRecordMapper;
+import com.shahenpc.system.service.ISysDictTypeService;
 import com.shahenpc.system.service.standard.IStandardCensorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 审查流程Service业务层处理
@@ -77,10 +84,10 @@ public class StandardCensorServiceImpl implements IStandardCensorService
     public AjaxResult insertStandardCensor(CensorAddVo standardCensor)
     {
         standardCensor.setCreateTime(DateUtils.getNowDate());
-        standardCensor.setReceiveUserId(StringUtils.join(standardCensor.getReceiveUserIds(),","));
+        standardCensor.setReceiveUserId(StringUtils.join(standardCensor.getApprovalUserId(),","));
         int su =  standardCensorMapper.insertStandardCensor(standardCensor);
         if(su > 0){
-            for (String itme:standardCensor.getReceiveUserIds()){
+            for (String itme:standardCensor.getApprovalUserId()){
                 StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
                 //发送人
                 standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
@@ -179,5 +186,33 @@ public class StandardCensorServiceImpl implements IStandardCensorService
         return standardCensorMapper.selectByCensorId(cemsorId);
     }
 
+    @Override
+    public String ring() {
+        return null;
+    }
+    @Resource
+    private ISysDictTypeService dictTypeService;
+    @Override
+    public List<MotionPieDto> pie() {
+        StandardCensor standardCensor = new StandardCensor();
+        List<StandardCensor> receiveTotal =  standardCensorMapper.selectStandardCensorList(standardCensor);
+        List<MotionPieDto> dto = new ArrayList<>();
+        List<SysDictData> dictList = dictTypeService.selectDictDataByType("censor_status");
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictLabel().equals(p.getStatus()))
+                    .collect(Collectors.toList()).size();
+            MotionPieDto item = new MotionPieDto();
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
+            dto.add(item);
+        }
+        return dto;
+    }
+
+    @Override
+    public MotionLingDto line() {
+        return null;
+    }
 
 }

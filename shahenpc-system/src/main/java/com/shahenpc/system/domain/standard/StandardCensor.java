@@ -103,10 +103,6 @@ public class StandardCensor extends BaseEntity
     @Excel(name = "流程位置")
     private String censorTache;
 
-    /** 发文机关 */
-    @Excel(name = "发文机关")
-    private Long approvalUserId;
-
     /** 流程id */
     @Excel(name = "流程id")
     private String procinsId;
@@ -316,15 +312,7 @@ public class StandardCensor extends BaseEntity
     {
         return censorTache;
     }
-    public void setApprovalUserId(Long approvalUserId)
-    {
-        this.approvalUserId = approvalUserId;
-    }
 
-    public Long getApprovalUserId()
-    {
-        return approvalUserId;
-    }
     public void setProcinsId(String procinsId)
     {
         this.procinsId = procinsId;
@@ -443,7 +431,6 @@ public class StandardCensor extends BaseEntity
                 .append("status", getStatus())
                 .append("processType", getProcessType())
                 .append("censorTache", getCensorTache())
-                .append("approvalUserId", getApprovalUserId())
                 .append("procinsId", getProcinsId())
                 .append("deployId", getDeployId())
                 .append("sendUserId", getSendUserId())
