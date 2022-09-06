@@ -10,6 +10,49 @@ import io.jsonwebtoken.Claims;
 public class Constants
 {
     /**
+     * 双联工作 类型 民生类
+     */
+    public static final Integer DOUBLE_TYPE_0 = 0;
+    /**
+     * 双联工作 类型 环保类
+     */
+    public static final Integer DOUBLE_TYPE_1 = 1;
+    /**
+     * 双联工作 类型  投诉举报类
+     */
+    public static final Integer DOUBLE_TYPE_2 = 2;
+    /**
+     * 双联工作 类型 咨询调解类
+     */
+    public static final Integer DOUBLE_TYPE_3 = 3;
+    /**
+     * 双联工作 类型 举报揭发类
+     */
+    public static final Integer DOUBLE_TYPE_4 = 4;
+
+    /**
+     * 双联工作 类型 举报 状态 待收集
+     */
+    public static final Integer DOUBLE_STATUS_0 = 0;
+
+    /**
+     * 双联工作 类型 举报 状态 已收集
+     */
+    public static final Integer DOUBLE_STATUS_1 = 1;
+    /**
+     * 双联工作 类型 举报 状态 已回复
+     */
+    public static final Integer DOUBLE_STATUS_2 = 2;
+    /**
+     * 双联工作 类型 举报 状态 群众已评价
+     */
+    public static final Integer DOUBLE_STATUS_3 = 3;
+    /**
+     * 双联工作 类型 举报 状态 忽略
+     */
+    public static final Integer DOUBLE_STATUS_4 = 4;
+
+    /**
      * 申请人
      */
     public static final Integer CENSOR_TYPE_0 = 0;

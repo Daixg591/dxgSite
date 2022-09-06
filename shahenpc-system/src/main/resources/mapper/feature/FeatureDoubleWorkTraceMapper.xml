@@ -9,20 +9,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="doubleId"    column="double_id"    />
         <result property="sendUserId"    column="send_user_id"    />
         <result property="receiveUserId"    column="receive_user_id"    />
-        <result property="parentTraceId"    column="parent_trace_id"    />
+        <result property="type"    column="type"    />
         <result property="status"    column="status"    />
-        <result property="content"    column="content"    />
+        <result property="picUrls"    column="pic_urls"    />
+        <result property="revert"    column="revert"    />
+        <result property="remark"    column="remark"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
-        <result property="remark"    column="remark"    />
-        <result property="picUrls"    column="pic_urls"    />
-        <result property="isRead"    column="is_read"    />
     </resultMap>
 
     <sql id="selectFeatureDoubleWorkTraceVo">
-        select trace_id, double_id, send_user_id, receive_user_id, parent_trace_id, status, content, create_by, create_time, update_by, update_time, remark, pic_urls, is_read from feature_double_work_trace
+        select trace_id, double_id, send_user_id, receive_user_id, type, status, pic_urls, revert, remark, create_by, create_time, update_by, update_time from feature_double_work_trace
     </sql>
 
     <select id="selectFeatureDoubleWorkTraceList" parameterType="FeatureDoubleWorkTrace" resultMap="FeatureDoubleWorkTraceResult">
@@ -31,11 +30,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="doubleId != null "> and double_id = #{doubleId}</if>
             <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
             <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
-            <if test="parentTraceId != null "> and parent_trace_id = #{parentTraceId}</if>
+            <if test="type != null "> and type = #{type}</if>
             <if test="status != null "> and status = #{status}</if>
-            <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="picUrls != null  and picUrls != ''"> and pic_urls = #{picUrls}</if>
-            <if test="isRead != null "> and is_read = #{isRead}</if>
+            <if test="revert != null  and revert != ''"> and revert = #{revert}</if>
         </where>
     </select>
 
@@ -50,31 +48,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="doubleId != null">double_id,</if>
             <if test="sendUserId != null">send_user_id,</if>
             <if test="receiveUserId != null">receive_user_id,</if>
-            <if test="parentTraceId != null">parent_trace_id,</if>
+            <if test="type != null">type,</if>
             <if test="status != null">status,</if>
-            <if test="content != null">content,</if>
+            <if test="picUrls != null">pic_urls,</if>
+            <if test="revert != null">revert,</if>
+            <if test="remark != null">remark,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-            <if test="remark != null">remark,</if>
-            <if test="picUrls != null">pic_urls,</if>
-            <if test="isRead != null">is_read,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="doubleId != null">#{doubleId},</if>
             <if test="sendUserId != null">#{sendUserId},</if>
             <if test="receiveUserId != null">#{receiveUserId},</if>
-            <if test="parentTraceId != null">#{parentTraceId},</if>
+            <if test="type != null">#{type},</if>
             <if test="status != null">#{status},</if>
-            <if test="content != null">#{content},</if>
+            <if test="picUrls != null">#{picUrls},</if>
+            <if test="revert != null">#{revert},</if>
+            <if test="remark != null">#{remark},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
-            <if test="remark != null">#{remark},</if>
-            <if test="picUrls != null">#{picUrls},</if>
-            <if test="isRead != null">#{isRead},</if>
         </trim>
     </insert>
 
@@ -84,16 +80,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="doubleId != null">double_id = #{doubleId},</if>
             <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
             <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
-            <if test="parentTraceId != null">parent_trace_id = #{parentTraceId},</if>
+            <if test="type != null">type = #{type},</if>
             <if test="status != null">status = #{status},</if>
-            <if test="content != null">content = #{content},</if>
+            <if test="picUrls != null">pic_urls = #{picUrls},</if>
+            <if test="revert != null">revert = #{revert},</if>
+            <if test="remark != null">remark = #{remark},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
-            <if test="remark != null">remark = #{remark},</if>
-            <if test="picUrls != null">pic_urls = #{picUrls},</if>
-            <if test="isRead != null">is_read = #{isRead},</if>
         </trim>
         where trace_id = #{traceId}
     </update>

@@ -608,7 +608,9 @@ public class SysUserServiceImpl implements ISysUserService
         List<SysUser> listuser=userMapper.selectUserList(sysUser);
         List<Integer> age = new ArrayList<>();
         for (SysUser item :listuser){
-            age.add(AgeUtils.bornDate(DateUtils.dateYear(item.getBornDate())));
+            if(item.getBornDate() != null) {
+                age.add(AgeUtils.bornDate(DateUtils.dateYear(item.getBornDate())));
+            }
         }
         int thirty = 0;
         int forty = 0;

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.shahenpc.common.constant.Constants;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.core.domain.entity.SysUser;
@@ -13,10 +14,12 @@ import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.SensitiveWordUtil;
 import com.shahenpc.system.domain.feature.FeatureDoubleWorkTrace;
 import com.shahenpc.system.domain.feature.dto.*;
+import com.shahenpc.system.domain.represent.RepresentHomeAccess;
 import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.mapper.SysUserMapper;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkTraceMapper;
 import com.shahenpc.system.mapper.feature.FeatureSensitiveWordMapper;
+import com.shahenpc.system.mapper.represent.RepresentHomeAccessMapper;
 import com.shahenpc.system.service.ISysDictDataService;
 import com.shahenpc.system.service.ISysDictTypeService;
 import com.shahenpc.system.service.represent.IRepresentWorkLogService;
@@ -130,7 +133,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
             int v = 0;
-            v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getDoubleType().toString()))
+            v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getType().toString()))
                     .collect(Collectors.toList()).size();
             FeatureCakeDto item = new FeatureCakeDto();
             item.setName(dictList.get(i).getDictLabel());
@@ -150,7 +153,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
             int finalI = i;
             int v = 0;
             List<SysDictData> finalDictList = dictList;
-            v = alarBudg.stream().filter(p -> finalDictList.get(finalI).getDictValue().equals(p.getDoubleType().toString()))
+            v = alarBudg.stream().filter(p -> finalDictList.get(finalI).getDictValue().equals(p.getType().toString()))
                     .collect(Collectors.toList()).size();
             FeatureCakeDto item = new FeatureCakeDto();
             item.setName(dictList.get(i).getDictLabel());
@@ -191,7 +194,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         }else if(SensitiveWordUtil.contains(featureDoubleWork.getContent())){
             return AjaxResult.error("提交失败：文本中存在敏感词。");
         }else {
-            SysUser user = sysUserMapper.selectUserById(featureDoubleWork.getSubmitUserId());
+            SysUser user = sysUserMapper.selectUserById(featureDoubleWork.getSendUserId());
             if (user.getUserStatus().equals(1)) {
                 featureDoubleWork.setCreateTime(DateUtils.getNowDate());
                 int a = featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork);
@@ -204,7 +207,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                 representWorkLogService.insertRepresentWorkLog(log);
                 FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
                 featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
-                featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
+                featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSendUserId());
                 featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
                 featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
                 featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
@@ -216,21 +219,35 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
             }
         }
     }
-
+    @Autowired
+    private RepresentHomeAccessMapper representHomeAccessMapper;
     @Override
+    @Transactional
     public AjaxResult newUpdate(FeatureDoubleWork featureDoubleWork) {
             featureDoubleWork.setUpdateTime(DateUtils.getNowDate());
-            int a = featureDoubleWorkMapper.updateFeatureDoubleWork(featureDoubleWork);
-            FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
-            featureDoubleWorkTrace.setContent(featureDoubleWork.getReply());
-            featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
-            featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
-            featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
-            featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
-            featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
-            featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getUpdateBy());
-            featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
-            return AjaxResult.success(a);
+            //查询出所在访问之家
+            SysUser user=sysUserMapper.selectUserById(featureDoubleWork.getSendUserId());
+            //并且查出负责人
+            RepresentHomeAccess access= representHomeAccessMapper.selectRepresentHomeAccessByAccessId(user.getContactStationId());
+            //根据负责人 查出 userid
+            SysUser senUser = sysUserMapper.selectByNickNamaAndPhone(access.getLeader(),access.getPhone());
+            if(featureDoubleWork.getType().equals(Constants.DOUBLE_STATUS_1)){
+                featureDoubleWork.setReceiveUserId(senUser.getUserId());
+            }
+            if(featureDoubleWorkMapper.updateFeatureDoubleWork(featureDoubleWork) >0){
+                FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
+                featureDoubleWorkTrace.setRevert(featureDoubleWork.getContent());
+                featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
+                featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSendUserId());
+                featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
+                featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
+                featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
+                featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getUpdateBy());
+                featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
+                return AjaxResult.success();
+            }else{
+                return AjaxResult.error();
+            }
     }
 
     @Override
@@ -239,10 +256,10 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         int a =  featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork);
         FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
         featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
-        featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSubmitUserId());
+        featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSendUserId());
         featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
         featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
-        featureDoubleWorkTrace.setContent(featureDoubleWork.getContent());
+        featureDoubleWorkTrace.setRevert(featureDoubleWork.getContent());
         featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
         featureDoubleWorkTrace.setPicUrls(featureDoubleWork.getPicUrls());
         featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);

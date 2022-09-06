@@ -95,7 +95,7 @@ public class FeatureDoubleWorkController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody FeatureDoubleWork featureDoubleWork) {
         featureDoubleWork.setCreateBy(getNickName());
-        featureDoubleWork.setSubmitUserId(getUserId());
+        featureDoubleWork.setSendUserId(getUserId());
         return featureDoubleWorkService.newAdd(featureDoubleWork);
     }
 
@@ -112,7 +112,7 @@ public class FeatureDoubleWorkController extends BaseController {
     @GetMapping("/done/list")
     public TableDataInfo doneList(FeatureDoubleWork featureDoubleWork) {
         startPage();
-        featureDoubleWork.setSubmitUserId(getUserId());
+        featureDoubleWork.setSendUserId(getUserId());
         List<DoubleListDto> list = featureDoubleWorkService.adminList(featureDoubleWork);
         return getDataTable(list);
     }

@@ -31,105 +31,20 @@ public class FeatureDoubleWorkTrace extends BaseEntity
     /** 接收id */
     @Excel(name = "接收id")
     private Long receiveUserId;
-    /** 回复那一条id */
-    @Excel(name = "回复那一条id")
-    private Long parentTraceId;
 
-    /** 1.待审核2.处理中 3.办结 4关闭 */
-    @Excel(name = "1.待审核2.处理中 3.办结 4关闭")
-    private Integer status;
+    /** $column.columnComment */
+    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    private Long type;
 
-    /** 回复 */
-    @Excel(name = "回复")
-    private String content;
+    /** 0.待审核1.处理中 2.办结 3关闭 */
+    @Excel(name = "0.待审核1.处理中 2.办结 3关闭")
+    private Long status;
 
     /** 图片存储 */
     @Excel(name = "图片存储")
     private String picUrls;
-    /** 是否已读 */
-    @Excel(name = "是否已读")
-    private Integer isRead;
 
-
-    public void setTraceId(Long traceId)
-    {
-        this.traceId = traceId;
-    }
-
-    public Long getTraceId()
-    {
-        return traceId;
-    }
-    public void setDoubleId(Long doubleId)
-    {
-        this.doubleId = doubleId;
-    }
-
-    public Long getDoubleId()
-    {
-        return doubleId;
-    }
-    public void setSendUserId(Long sendUserId)
-    {
-        this.sendUserId = sendUserId;
-    }
-
-    public Long getSendUserId()
-    {
-        return sendUserId;
-    }
-    public void setReceiveUserId(Long receiveUserId)
-    {
-        this.receiveUserId = receiveUserId;
-    }
-
-    public Long getReceiveUserId()
-    {
-        return receiveUserId;
-    }
-    public void setStatus(Integer status)
-    {
-        this.status = status;
-    }
-
-    public Integer getStatus()
-    {
-        return status;
-    }
-    public void setContent(String content)
-    {
-        this.content = content;
-    }
-
-    public String getContent()
-    {
-        return content;
-    }
-    public void setPicUrls(String picUrls)
-    {
-        this.picUrls = picUrls;
-    }
-
-    public String getPicUrls()
-    {
-        return picUrls;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("traceId", getTraceId())
-                .append("doubleId", getDoubleId())
-                .append("sendUserId", getSendUserId())
-                .append("receiveUserId", getReceiveUserId())
-                .append("status", getStatus())
-                .append("content", getContent())
-                .append("createBy", getCreateBy())
-                .append("createTime", getCreateTime())
-                .append("updateBy", getUpdateBy())
-                .append("updateTime", getUpdateTime())
-                .append("remark", getRemark())
-                .append("picUrls", getPicUrls())
-                .toString();
-    }
+    /** 回复 */
+    @Excel(name = "回复")
+    private String revert;
 }
