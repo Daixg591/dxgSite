@@ -2,6 +2,9 @@ package com.shahenpc.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
+
+import com.shahenpc.system.domain.represent.RepresentHomeAccess;
+import com.shahenpc.system.service.represent.IRepresentHomeAccessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +37,9 @@ public class SysLoginController
     @Autowired
     private SysPermissionService permissionService;
 
+    @Autowired
+    private IRepresentHomeAccessService llzService;
+
     /**
      * 登录方法
      * 
@@ -60,12 +66,15 @@ public class SysLoginController
     public AjaxResult getInfo()
     {
         SysUser user = SecurityUtils.getLoginUser().getUser();
+        RepresentHomeAccess llz=llzService.selectRepresentHomeAccessByAccessId(user.getContactStationId());
         // 角色集合
         Set<String> roles = permissionService.getRolePermission(user);
         // 权限集合
         Set<String> permissions = permissionService.getMenuPermission(user);
         AjaxResult ajax = AjaxResult.success();
+
         ajax.put("user", user);
+        ajax.put("contactStation",llz);
         ajax.put("roles", roles);
         ajax.put("permissions", permissions);
         return ajax;

@@ -211,7 +211,7 @@ public class SysUser extends BaseEntity {
      * 出生年月
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "出生年月", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "出生年月")
     private Date bornDate;
 
     /**
