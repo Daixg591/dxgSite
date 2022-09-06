@@ -24,6 +24,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="createBy"    column="create_by"    />
+        <result property="shortName"    column="short_name"    />
+        <result property="ysxMobile"    column="ysx_mobile"    />
+        <result property="ysxPwd"    column="ysx_pwd"    />
     </resultMap>
 
     <sql id="selectRepresentHomeAccessVo">
@@ -75,6 +78,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="createBy != null">create_by,</if>
+            <if test="shortName != null">short_name,</if>
+            <if test="ysxMobile != null">ysx_mobile,</if>
+            <if test="ysxPwd != null">ysx_pwd,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null">#{title},</if>
@@ -95,6 +101,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="createBy != null">#{createBy},</if>
+            <if test="shortName != null">#{shortName},</if>
+            <if test="ysxMobile != null">#{ysxMobile},</if>
+            <if test="ysxPwd != null">#{ysxPwd},</if>
          </trim>
     </insert>
 
@@ -119,6 +128,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="shortName != null">short_name = #{shortName},</if>
+            <if test="ysxMobile != null">ysx_mobile = #{ysxMobile},</if>
+            <if test="ysxPwd != null">ysx_pwd = #{ysxPwd},</if>
         </trim>
         where access_id = #{accessId}
     </update>
