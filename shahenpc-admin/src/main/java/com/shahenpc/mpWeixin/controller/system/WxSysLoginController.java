@@ -132,7 +132,6 @@ public class WxSysLoginController {
 
     /**
      * 群众注册登录微信小程序
-     *
      * @param dto
      * @return
      */
@@ -140,14 +139,59 @@ public class WxSysLoginController {
     @PostMapping("/massesreg")
     public AjaxResult massesRegister(@RequestBody WxMassesDto dto) {
         AjaxResult ajax = AjaxResult.success();
+        String wxOpenId = getWxOpenId(dto.getCode());
+        //判断是否已经存在该用户
+        SysUser exitUser = userService.selectUserByUserName(wxOpenId);
+        SysUser userEntity = new SysUser();
+        String defaultPwd = "123456";
+        // 不存在则将客户进新新增注册
+        if (exitUser == null) {
+
+            userEntity.setPhonenumber(dto.getPhoneNumber());
+            userEntity.setPassword(SecurityUtils.encryptPassword(defaultPwd));
+            userEntity.setIdentity("3");
+            userEntity.setNickName(dto.getNickName());
+            userEntity.setAvatar(dto.getAvatarUrl());
+            // 微信openId
+            userEntity.setOpenId(wxOpenId);
+            userEntity.setStatus("0");
+            userEntity.setSex(dto.getGender() + "");
+            userEntity.setUserName(wxOpenId);
+            userEntity.setDelFlag("0");
+            userService.insertUser(userEntity);
+            ajax.put("user", userEntity);
+        } else {
+            ajax.put("user", exitUser);
+        }
+        LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(wxOpenId);
+        // 记录登录信息
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(dto.getPhoneNumber(), Constants.LOGIN_SUCCESS,
+                MessageUtils.message("user.login.success")));
+        recordLoginInfo(loginUser.getUserId());
+        String token = tokenService.createToken(loginUser);
+        ajax.put(Constants.TOKEN, token);
+        return ajax;
+    }
+
+
+    /**
+     * 群众注册登录微信小程序  ===废弃
+     *
+     * @param dto
+     * @return
+     */
+    @ApiOperation("群众注册登录微信小程序")
+    @PostMapping("/massesreg1")
+    public AjaxResult massesRegister1(@RequestBody WxMassesDto dto) {
+        AjaxResult ajax = AjaxResult.success();
 
         //判断是否已经存在该手机用户
         SysUser exitUser = userService.selectUserByUserPhone(dto.getPhoneNumber(), "3");
         SysUser userEntity = new SysUser();
-        String defaultPwd = "defaultpwd";
+        String defaultPwd = "123456";
         // 不存在则将客户进新新增注册
         if (exitUser == null) {
-            String wxOpenId=getWxOpenId(dto.getCode());
+            String wxOpenId = getWxOpenId(dto.getCode());
             userEntity.setPhonenumber(dto.getPhoneNumber());
             userEntity.setPassword(SecurityUtils.encryptPassword(defaultPwd));
             userEntity.setIdentity("3");
@@ -166,7 +210,7 @@ public class WxSysLoginController {
             ajax.put("user", exitUser);
         }
 
-        String qzOpenId=getWxOpenId(dto.getCode());
+        String qzOpenId = getWxOpenId(dto.getCode());
 
 //        LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(dto.getPhoneNumber());
         LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(qzOpenId);
@@ -201,7 +245,7 @@ public class WxSysLoginController {
         map.put("page", dto.getPage());
         map.put("env_version", dto.getEnv_version());
         byte[] res = HttpUtils.SendPostByQrCode("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + dto.getAccess_token(), map);
-        return ajax.put("data",com.shahenpc.common.utils.sign.Base64.encode(res));
+        return ajax.put("data", com.shahenpc.common.utils.sign.Base64.encode(res));
     }
 
     //endregion
