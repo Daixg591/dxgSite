@@ -66,4 +66,8 @@ public interface StandardCensorMapper
 
 
     public CemsorDetailDto selectByCensorId(Long cemsorId);
+
+    public List<StandardCensor> selectByTodoList(StandardCensor request);
+
+    public List<StandardCensor> selectByDoneList(Long userId);
 }

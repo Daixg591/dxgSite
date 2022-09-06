@@ -72,14 +72,16 @@ public class OvVoteRecordController extends BaseController
     /**
      * 新增投票记录
      */
-    @PreAuthorize("@ss.hasPermi('vote:record:add')")
     @Log(title = "投票记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody OvVoteRecord ovVoteRecord)
+    public AjaxResult add(@RequestBody List<OvVoteRecord> ovVoteRecord)
     {
-        ovVoteRecord.setUserId(getUserId());
-        ovVoteRecord.setCreateBy(getNickName());
-        return toAjax(ovVoteRecordService.insertOvVoteRecord(ovVoteRecord));
+        for (OvVoteRecord item:ovVoteRecord) {
+            item.setUserId(getUserId());
+            item.setCreateBy(getNickName());
+            return toAjax(ovVoteRecordService.insertOvVoteRecord(item));
+        }
+        return AjaxResult.error();
     }
 
     /**

@@ -33,6 +33,19 @@ public interface IStandardCensorService
     public List<StandardCensor> selectStandardCensorList(StandardCensor standardCensor);
 
     /**
+     * 待办
+     * @param request
+     * @return
+     */
+    public List<StandardCensor> selectByTodoList(StandardCensor request);
+
+    /**
+     * 已办
+     * @param userId
+     * @return
+     */
+    public List<StandardCensor> selectByDoneList(Long userId);
+    /**
      * 新增审查流程
      * 
      * @param standardCensor 审查流程

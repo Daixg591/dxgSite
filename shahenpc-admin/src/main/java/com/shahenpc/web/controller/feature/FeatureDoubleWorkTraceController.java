@@ -43,7 +43,6 @@ public class FeatureDoubleWorkTraceController extends BaseController
      * 查询双连工作 聊天列表
      */
     @ApiOperation("双联工作追踪列表")
-//    @PreAuthorize("@ss.hasPermi('feature:trace:list')")
     @GetMapping("/list")
     public TableDataInfo list(FeatureDoubleWorkTrace featureDoubleWorkTrace)
     {

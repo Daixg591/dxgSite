@@ -231,4 +231,15 @@
         <include refid="selectStandardCensorVo"/>
         where censor_id = #{censorId}
     </select>
+
+    <!--待办列表-->
+    <select id="selectByTodoList" parameterType="StandardCensor" resultMap="StandardCensorResult">
+        SELECT c.censor_id,c.file_nature,c.file_name,c.report_organ,c.create_by,c.create_time,c.`status`,c.type,c.status
+        FROM standard_censor_record r RIGHT JOIN standard_censor c ON c.censor_id = r.censor_id WHERE r.receive_user_id= #{receiveUserId} AND  r.type = #{type} ORDER BY r.create_time DESC
+    </select>
+    <!--已办理-->
+    <select id="selectByDoneList" parameterType="Long" resultMap="StandardCensorResult">
+        SELECT c.censor_id,c.file_nature,c.file_name,c.report_organ,c.create_by,c.create_time,c.`status`,c.type,c.status
+        FROM standard_censor_record r RIGHT JOIN standard_censor c ON c.censor_id = r.censor_id WHERE r.send_user_id= #{sendUserId} AND r.type != 0 ORDER BY r.create_time DESC
+    </select>
 </mapper>

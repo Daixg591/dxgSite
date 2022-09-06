@@ -56,6 +56,16 @@ public class StandardCensorServiceImpl implements IStandardCensorService
         return standardCensorMapper.selectStandardCensorList(standardCensor);
     }
 
+    @Override
+    public List<StandardCensor> selectByTodoList(StandardCensor request) {
+        return standardCensorMapper.selectByTodoList(request);
+    }
+
+    @Override
+    public List<StandardCensor> selectByDoneList(Long userId) {
+        return standardCensorMapper.selectByDoneList(userId);
+    }
+
     /**
      * 新增审查流程
      * 
@@ -94,12 +104,25 @@ public class StandardCensorServiceImpl implements IStandardCensorService
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AjaxResult updateStandardCensor(CensorUpdateVo standardCensor)
     {
         standardCensor.setUpdateTime(DateUtils.getNowDate());
         standardCensor.setReceiveUserId(StringUtils.join(standardCensor.getReceiveUserIds(),","));
         if(standardCensor.getType().equals(Constants.CENSOR_TYPE_0)){
             standardCensor.setType(Constants.CENSOR_TYPE_1);
+        }
+        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_1)){
+            standardCensor.setType(Constants.CENSOR_TYPE_2);
+        }
+        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_2)){
+            standardCensor.setType(Constants.CENSOR_TYPE_3);
+        }
+        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_3)){
+            standardCensor.setType(Constants.CENSOR_TYPE_4);
+        }
+        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_4)){
+            standardCensor.setType(Constants.CENSOR_TYPE_5);
         }
         int su = standardCensorMapper.updateStandardCensor(standardCensor);
         if(su > 0){

@@ -80,6 +80,47 @@ public class StandardCensorController extends BaseController
         return AjaxResult.success(standardCensorService.selectByCensorId(censorId));
     }
 
+
+
+    /**
+     * 我的查流程列表
+     */
+    @PreAuthorize("@ss.hasPermi('standard:censor:list')")
+    @GetMapping("/my/list")
+    public TableDataInfo myList(StandardCensor standardCensor)
+    {
+        startPage();
+        standardCensor.setReceiveUserId(getUserId().toString());
+        List<StandardCensor> list = standardCensorService.selectStandardCensorList(standardCensor);
+        return getDataTable(list);
+    }
+    /**
+     * 待办
+     * @param standardCensor
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('standard:censor:list')")
+    @GetMapping("/todo/list")
+    public TableDataInfo todoList(StandardCensor standardCensor)
+    {
+        startPage();
+        standardCensor.setReceiveUserId(getUserId().toString());
+        List<StandardCensor> list = standardCensorService.selectByTodoList(standardCensor);
+        return getDataTable(list);
+    }
+    /**
+     * 已办查询审查流程列表
+     */
+    @PreAuthorize("@ss.hasPermi('standard:censor:list')")
+    @GetMapping("/done/list")
+    public TableDataInfo doneList()
+    {
+        startPage();
+        List<StandardCensor> list = standardCensorService.selectByDoneList(getUserId());
+        return getDataTable(list);
+    }
+
+
     /**
      * 新增审查流程
      */
