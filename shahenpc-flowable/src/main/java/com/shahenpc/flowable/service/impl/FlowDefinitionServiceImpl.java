@@ -21,6 +21,7 @@ import com.shahenpc.system.domain.represent.RepresentMotionRecord;
 import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.domain.standard.StandardCensorRecord;
+import com.shahenpc.system.domain.standard.vo.CensorAddVo;
 import com.shahenpc.system.mapper.FlowDeployMapper;
 import com.shahenpc.system.service.ISysDeptService;
 import com.shahenpc.system.service.ISysDictDataService;
@@ -320,7 +321,7 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
 
     @Override
     @Transactional
-    public AjaxResult addCensor(StandardCensor standardCensor, String procDefId) {
+    public AjaxResult addCensor(CensorAddVo standardCensor, String procDefId) {
         try {
             ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(procDefId)
                     .latestVersion().singleResult();
@@ -418,7 +419,7 @@ public class FlowDefinitionServiceImpl extends FlowServiceFactory implements IFl
         List<SysDictData> dictList = dictDataService.selectDictDataList(dictParam);
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = listuser.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getFileType().toString()))
+            int v = listuser.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getReportType().toString()))
                     .collect(Collectors.toList()).size();
             CakeDto item = new CakeDto();
             item.setName(dictList.get(i).getDictLabel());

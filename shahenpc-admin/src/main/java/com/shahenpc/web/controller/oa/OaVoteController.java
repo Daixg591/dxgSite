@@ -42,7 +42,6 @@ public class OaVoteController extends BaseController
      * 查询投票窗口列表
      */
     @ApiOperation("列表")
-    @PreAuthorize("@ss.hasPermi('oa:vote:list')")
     @GetMapping("/list")
     public TableDataInfo list(OaVote oaVote)
     {
@@ -69,7 +68,6 @@ public class OaVoteController extends BaseController
      * 获取投票窗口详细信息
      */
     @ApiOperation("详情")
-    @PreAuthorize("@ss.hasPermi('oa:vote:query')")
     @GetMapping(value = "/{voteId}")
     public AjaxResult getInfo(@PathVariable("voteId") Long voteId)
     {

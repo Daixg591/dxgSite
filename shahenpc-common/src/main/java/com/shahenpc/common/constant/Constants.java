@@ -10,6 +10,43 @@ import io.jsonwebtoken.Claims;
 public class Constants
 {
     /**
+     * 申请人
+     */
+    public static final Integer CENSOR_TYPE_0 = 0;
+    /**
+     *接收
+     */
+    public static final Integer CENSOR_TYPE_1 = 1;
+    /**
+     * 受理
+     */
+    public static final Integer CENSOR_TYPE_2 = 2;
+    /**
+     * 分发
+     */
+    public static final Integer CENSOR_TYPE_3 = 3;
+    /**
+     * 审查
+     */
+    public static final Integer CENSOR_TYPE_4 = 4;
+    /**
+     * 反馈
+     */
+    public static final Integer CENSOR_TYPE_5 = 5;
+    /**
+     * 待处理
+     */
+    public static final Integer CENSOR_TYPE_STATUS_0=0;
+    /**
+     * 已通过
+     */
+    public static final Integer CENSOR_TYPE_STATUS_1=1;
+    /**
+     * 未通过
+     */
+    public static final Integer CENSOR_TYPE_STATUS_2=2;
+
+    /**
      * UTF-8 字符集
      */
     public static final String UTF8 = "UTF-8";

@@ -42,7 +42,6 @@ public class OaVotePlayerController extends BaseController
      * 查询投票选手列表
      */
     @ApiOperation("列表")
-    @PreAuthorize("@ss.hasPermi('oa:player:list')")
     @GetMapping("/list")
     public TableDataInfo list(OaVotePlayer oaVotePlayer)
     {
@@ -69,7 +68,6 @@ public class OaVotePlayerController extends BaseController
      * 获取投票选手详细信息
      */
     @ApiOperation("详情")
-    @PreAuthorize("@ss.hasPermi('oa:player:query')")
     @GetMapping(value = "/{playerId}")
     public AjaxResult getInfo(@PathVariable("playerId") Long playerId)
     {

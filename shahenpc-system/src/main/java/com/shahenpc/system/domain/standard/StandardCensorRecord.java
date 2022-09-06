@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.standard;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-27
  */
+@Data
 public class StandardCensorRecord extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -30,10 +32,6 @@ public class StandardCensorRecord extends BaseEntity
     @Excel(name = "模板id")
     private String deployId;
 
-    /**  */
-    @Excel(name = "")
-    private Long status;
-
     /** 发件人 */
     @Excel(name = "发件人")
     private Long sendUserId;
@@ -44,7 +42,16 @@ public class StandardCensorRecord extends BaseEntity
 
     /** 内容 */
     @Excel(name = "内容")
-    private String content;
+    private String revert;
+
+    /** 流程类型 */
+    @Excel(name = "流程类型")
+    private Integer type;
+
+    /** 类型状态 */
+    @Excel(name = "类型状态")
+    private Integer status;
+
 
     public void setRecordId(Long recordId) 
     {
@@ -82,15 +89,7 @@ public class StandardCensorRecord extends BaseEntity
     {
         return deployId;
     }
-    public void setStatus(Long status) 
-    {
-        this.status = status;
-    }
 
-    public Long getStatus() 
-    {
-        return status;
-    }
     public void setSendUserId(Long sendUserId) 
     {
         this.sendUserId = sendUserId;
@@ -109,15 +108,6 @@ public class StandardCensorRecord extends BaseEntity
     {
         return receiveUserId;
     }
-    public void setContent(String content) 
-    {
-        this.content = content;
-    }
-
-    public String getContent() 
-    {
-        return content;
-    }
 
     @Override
     public String toString() {
@@ -133,7 +123,6 @@ public class StandardCensorRecord extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("sendUserId", getSendUserId())
             .append("receiveUserId", getReceiveUserId())
-            .append("content", getContent())
             .toString();
     }
 }

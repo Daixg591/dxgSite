@@ -1,9 +1,6 @@
 package com.shahenpc.system.domain.BackVo;
 
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import lombok.Data;
-
 /**
  * 法律信息返回实体信息
  * @author Hardy

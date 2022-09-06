@@ -1,6 +1,7 @@
 package com.shahenpc.system.mapper.standard;
 
 import com.shahenpc.system.domain.standard.StandardCensor;
+import com.shahenpc.system.domain.standard.dto.CemsorDetailDto;
 
 import java.util.List;
 
@@ -61,7 +62,8 @@ public interface StandardCensorMapper
     public int deleteStandardCensorByCensorIds(Long[] censorIds);
 
 
-
-
     public StandardCensor selectByProcessId(String processId);
+
+
+    public CemsorDetailDto selectByCensorId(Long cemsorId);
 }

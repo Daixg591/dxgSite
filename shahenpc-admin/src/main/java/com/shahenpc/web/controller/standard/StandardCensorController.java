@@ -11,6 +11,8 @@ import com.shahenpc.flowable.service.IFlowTaskService;
 import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.system.domain.represent.RepresentMotion;
 import com.shahenpc.system.domain.represent.vo.MotionTaskVo;
+import com.shahenpc.system.domain.standard.vo.CensorAddVo;
+import com.shahenpc.system.domain.standard.vo.CensorUpdateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -72,22 +74,24 @@ public class StandardCensorController extends BaseController
      * 获取审查流程详细信息
      */
     @PreAuthorize("@ss.hasPermi('standard:censor:query')")
-    @GetMapping(value = "/{processId}")
-    public AjaxResult getInfo(@PathVariable("processId") Long processId)
+    @GetMapping(value = "/detail/{censorId}")
+    public AjaxResult getInfo(@PathVariable("censorId") Long censorId)
     {
-        return AjaxResult.success(standardCensorService.selectStandardCensorByProcessId(processId));
+        return AjaxResult.success(standardCensorService.selectByCensorId(censorId));
     }
 
     /**
      * 新增审查流程
      */
-//    @PreAuthorize("@ss.hasPermi('standard:censor:add')")
-//    @Log(title = "审查流程", businessType = BusinessType.INSERT)
-//    @PostMapping
-//    public AjaxResult add(@RequestBody StandardCensor standardCensor)
-//    {
-//        return toAjax(standardCensorService.insertStandardCensor(standardCensor));
-//    }
+    @PreAuthorize("@ss.hasPermi('standard:censor:add')")
+    @Log(title = "审查流程", businessType = BusinessType.INSERT)
+    @PostMapping("/add")
+    public AjaxResult add(@RequestBody CensorAddVo standardCensor)
+    {
+        standardCensor.setSendUserId(getUserId());
+        standardCensor.setCreateBy(getNickName());
+        return standardCensorService.insertStandardCensor(standardCensor);
+    }
 
     /**
      * 修改审查流程
@@ -95,9 +99,10 @@ public class StandardCensorController extends BaseController
     @PreAuthorize("@ss.hasPermi('standard:censor:edit')")
     @Log(title = "审查流程", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody StandardCensor standardCensor)
+    public AjaxResult edit(@RequestBody CensorUpdateVo standardCensor)
     {
-        return toAjax(standardCensorService.updateStandardCensor(standardCensor));
+        standardCensor.setUpdateBy(getNickName());
+        return standardCensorService.updateStandardCensor(standardCensor);
     }
 
     /**
@@ -119,7 +124,7 @@ public class StandardCensorController extends BaseController
     @ApiOperation(value = "创建审查流程")
     @Log(title = "工作-审查流程", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody StandardCensor standardCensor) {
+    public AjaxResult newAdd(@RequestBody CensorAddVo standardCensor) {
         FlowProcDefDto dto=flowDefinitionService.detail("审查流程");
         standardCensor.setCreateBy(getUsername());
         standardCensor.setSendUserId(getUserId());

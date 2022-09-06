@@ -48,11 +48,12 @@ public class RepresentWorkRankingController extends BaseController
         return getDataTable(list);
     }
 
-    @PreAuthorize("@ss.hasPermi('represent:ranking:list')")
     @GetMapping("/my/ranking")
     public TableDataInfo ranking(RepresentWorkRanking representWorkRanking)
     {
-        representWorkRanking.setUserId(getUserId());
+        if(representWorkRanking.getUserId() == null){
+            representWorkRanking.setUserId(getUserId());
+        }
         List<RepresentWorkRanking> list = representWorkRankingService.selectRepresentWorkRankingList(representWorkRanking);
         return getDataTable(list);
     }

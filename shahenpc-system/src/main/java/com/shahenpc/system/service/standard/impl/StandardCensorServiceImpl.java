@@ -1,12 +1,22 @@
 package com.shahenpc.system.service.standard.impl;
 
+import com.shahenpc.common.constant.Constants;
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.common.utils.StringUtils;
 import com.shahenpc.system.domain.standard.StandardCensor;
+import com.shahenpc.system.domain.standard.StandardCensorRecord;
+import com.shahenpc.system.domain.standard.dto.CemsorDetailDto;
+import com.shahenpc.system.domain.standard.vo.CensorAddVo;
+import com.shahenpc.system.domain.standard.vo.CensorUpdateVo;
 import com.shahenpc.system.mapper.standard.StandardCensorMapper;
+import com.shahenpc.system.mapper.standard.StandardCensorRecordMapper;
 import com.shahenpc.system.service.standard.IStandardCensorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,6 +30,8 @@ public class StandardCensorServiceImpl implements IStandardCensorService
 {
     @Autowired
     private StandardCensorMapper standardCensorMapper;
+    @Autowired
+    private StandardCensorRecordMapper standardCensorRecordMapper;
     /**
      * 查询审查流程
      * 
@@ -51,11 +63,29 @@ public class StandardCensorServiceImpl implements IStandardCensorService
      * @return 结果
      */
     @Override
-    public int insertStandardCensor(StandardCensor standardCensor)
+    @Transactional(rollbackFor = Exception.class)
+    public AjaxResult insertStandardCensor(CensorAddVo standardCensor)
     {
         standardCensor.setCreateTime(DateUtils.getNowDate());
-        return standardCensorMapper.insertStandardCensor(standardCensor);
+        standardCensor.setReceiveUserId(StringUtils.join(standardCensor.getReceiveUserIds(),","));
+        int su =  standardCensorMapper.insertStandardCensor(standardCensor);
+        if(su > 0){
+            for (String itme:standardCensor.getReceiveUserIds()){
+                StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
+                //发送人
+                standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
+                //接收人
+                standardCensorRecord.setReceiveUserId(Long.valueOf(itme));
+                //绑定id
+                standardCensorRecord.setCensorId(standardCensor.getCensorId());
+                standardCensorRecord.setCreateTime(DateUtils.getNowDate());
+                standardCensorRecord.setCreateBy(standardCensor.getCreateBy());
+                return AjaxResult.success(standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord));
+            }
+       }
+        return AjaxResult.error("异常");
     }
+
 
     /**
      * 修改审查流程
@@ -64,10 +94,31 @@ public class StandardCensorServiceImpl implements IStandardCensorService
      * @return 结果
      */
     @Override
-    public int updateStandardCensor(StandardCensor standardCensor)
+    public AjaxResult updateStandardCensor(CensorUpdateVo standardCensor)
     {
         standardCensor.setUpdateTime(DateUtils.getNowDate());
-        return standardCensorMapper.updateStandardCensor(standardCensor);
+        standardCensor.setReceiveUserId(StringUtils.join(standardCensor.getReceiveUserIds(),","));
+        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_0)){
+            standardCensor.setType(Constants.CENSOR_TYPE_1);
+        }
+        int su = standardCensorMapper.updateStandardCensor(standardCensor);
+        if(su > 0){
+            for (String itme:standardCensor.getReceiveUserIds()){
+                StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
+                //发送人
+                standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
+                //接收人
+                standardCensorRecord.setReceiveUserId(Long.valueOf(itme));
+                //绑定id
+                standardCensorRecord.setCensorId(standardCensor.getCensorId());
+
+                standardCensorRecord.setType(standardCensor.getType());
+                standardCensorRecord.setCreateTime(DateUtils.getNowDate());
+                standardCensorRecord.setCreateBy(standardCensor.getCreateBy());
+                return AjaxResult.success(standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord));
+            }
+        }
+        return AjaxResult.error();
     }
 
     /**
@@ -98,6 +149,11 @@ public class StandardCensorServiceImpl implements IStandardCensorService
     public StandardCensor selectByProcessId(String processId) {
 
         return standardCensorMapper.selectByProcessId(processId);
+    }
+
+    @Override
+    public CemsorDetailDto selectByCensorId(Long cemsorId) {
+        return standardCensorMapper.selectByCensorId(cemsorId);
     }
 
 

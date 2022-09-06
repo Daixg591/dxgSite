@@ -6,6 +6,7 @@ import com.shahenpc.flowable.domain.dto.CakeDto;
 import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.system.domain.represent.RepresentMotion;
 import com.shahenpc.system.domain.standard.StandardCensor;
+import com.shahenpc.system.domain.standard.vo.CensorAddVo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,5 +86,5 @@ public interface IFlowDefinitionService {
     /**以下下*/
     AjaxResult addMotion(RepresentMotion representMotion,String procDefId);
 
-    AjaxResult addCensor(StandardCensor standardCensor, String procDefId);
+    AjaxResult addCensor(CensorAddVo standardCensor, String procDefId);
 }

@@ -1,6 +1,5 @@
 package com.shahenpc.system.domain.wxsmallprogram.dto;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 
 /**
