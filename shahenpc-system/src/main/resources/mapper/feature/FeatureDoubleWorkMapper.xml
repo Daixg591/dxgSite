@@ -123,21 +123,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </resultMap>
     <select id="adminList" resultMap="adminList" parameterType="FeatureDoubleWork">
-        select w.double_id, w.double_type, w.title, w.status, w.content, w.pic_urls, w.create_by, w.create_time, w.update_by, w.update_time, w.remark, w.submit_user_id, w.receive_user_id,
+        select w.double_id, w.type, w.title, w.status, w.content, w.pic_urls, w.create_by, w.create_time, w.update_by, w.update_time, w.remark, w.send_user_id, w.receive_user_id,
                w.rate,w.location,
-        w.is_read,u.avatar,u.nick_name AS nickName,u.phonenumber as receivePhone,u2.phonenumber as sendPhone
+        u.avatar,u.nick_name AS nickName,u.phonenumber as receivePhone,u2.phonenumber as sendPhone
         from feature_double_work w
             LEFT JOIN sys_user u ON u.user_id = w.receive_user_id
-            LEFT JOIN sys_user u2 ON u2.user_id = w.submit_user_id
+            LEFT JOIN sys_user u2 ON u2.user_id = w.send_user_id
         <where>
-            <if test="doubleType != null "> and w.double_type = #{doubleType}</if>
+            <if test="type != null">and w.type = #{type},</if>
             <if test="title != null  and title != ''"> and w.title = #{title}</if>
             <if test="status != null "> and w.status = #{status}</if>
             <if test="content != null  and content != ''"> and w.content = #{content}</if>
             <if test="picUrls != null  and picUrls != ''"> and w.pic_urls = #{picUrls}</if>
-            <if test="submitUserId != null "> and w.submit_user_id = #{submitUserId}</if>
+            <if test="sendUserId != null">and w.send_user_id = #{sendUserId},</if>
             <if test="receiveUserId != null "> and w.receive_user_id = #{receiveUserId}</if>
-            <if test="isRead != null "> and w.is_read = #{isRead}</if>
+
             <if test="rate != null">and w.rate = #{rate},</if>
         </where>
     </select>
@@ -154,7 +154,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="eachCount" resultType="com.shahenpc.system.domain.feature.dto.FeatureEachCount">
         SELECT
                 (SELECT COUNT(f.receive_user_id) FROM feature_double_work f)AS participate,
-                (SELECT COUNT(s.submit_user_id) FROM feature_double_work s)AS masses,
+                (SELECT COUNT(s.send_user_id) FROM feature_double_work s)AS masses,
                 (SELECT COUNT(d.double_id) FROM feature_double_work d WHERE d.`status` = 3) AS processed,
                 (SELECT COUNT(g.double_id) FROM feature_double_work g WHERE g.`status`= 2)AS proportion
         FROM feature_double_work LIMIT 1;
@@ -176,22 +176,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </resultMap>
     <select id="appList" parameterType="FeatureDoubleWork" resultMap="appList">
-        select double_id, double_type, title, status, content, pic_urls, create_by, create_time, update_by, update_time, remark, submit_user_id,
-               receive_user_id, is_read,a.rate,a.location,
-        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = a.double_type )AS doubleTypeName,
+        select double_id, type, title, status, content, pic_urls, create_by, create_time, update_by, update_time, remark, send_user_id,
+               receive_user_id,a.rate,a.location,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = a.type )AS doubleTypeName,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_status' AND d.dict_value = a.status )AS doubleStatusName,
-        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = a.submit_user_id)AS sendUserName,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = a.send_user_id)AS sendUserName,
         (SELECT u.nick_name FROM sys_user u WHERE u.user_id = a.receive_user_id)AS receiveUserName
         from feature_double_work a
         <where>
-            <if test="doubleType != null "> and double_type = #{doubleType}</if>
+            <if test="type != null">and a.type = #{type},</if>
             <if test="title != null  and title != ''"> and a.title = #{title}</if>
             <if test="status != null "> and status = #{status}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="picUrls != null  and picUrls != ''"> and pic_urls = #{picUrls}</if>
-            <if test="submitUserId != null "> and submit_user_id = #{submitUserId}</if>
+            <if test="sendUserId != null">and w.send_user_id = #{sendUserId},</if>
             <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
-            <if test="isRead != null "> and is_read = #{isRead}</if>
         </where>
     </select>
 

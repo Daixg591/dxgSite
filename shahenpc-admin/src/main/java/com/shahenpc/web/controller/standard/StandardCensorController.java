@@ -80,8 +80,6 @@ public class StandardCensorController extends BaseController
         return AjaxResult.success(standardCensorService.selectByCensorId(censorId));
     }
 
-
-
     /**
      * 我的查流程列表
      */
