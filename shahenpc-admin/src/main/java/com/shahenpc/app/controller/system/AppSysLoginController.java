@@ -2,12 +2,14 @@ package com.shahenpc.app.controller.system;
 
 import com.shahenpc.common.constant.Constants;
 import com.shahenpc.common.core.domain.AjaxResult;
+import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.core.domain.entity.SysMenu;
 import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.common.core.domain.model.LoginBody;
 import com.shahenpc.common.utils.SecurityUtils;
 import com.shahenpc.framework.web.service.SysLoginService;
 import com.shahenpc.framework.web.service.SysPermissionService;
+import com.shahenpc.system.service.ISysDictDataService;
 import com.shahenpc.system.service.ISysMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +32,9 @@ public class AppSysLoginController {
 
     @Autowired
     private SysPermissionService permissionService;
+
+    @Autowired
+    private ISysDictDataService dataService;
 
     /**
      * 登录方法
@@ -64,6 +69,8 @@ public class AppSysLoginController {
         // 权限集合
         Set<String> permissions = permissionService.getMenuPermission(user);
         AjaxResult ajax = AjaxResult.success();
+
+        user.setNationName(dataService.selectDictLabel("sys_user_nation",user.getNation()));
         ajax.put("user", user);
         ajax.put("roles", roles);
         ajax.put("permissions", permissions);
