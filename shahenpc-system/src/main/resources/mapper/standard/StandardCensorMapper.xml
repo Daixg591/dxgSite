@@ -239,12 +239,32 @@
 
     <!--待办列表-->
     <select id="selectByTodoList" parameterType="StandardCensor" resultMap="StandardCensorResult">
-        SELECT c.censor_id,c.file_nature,c.file_name,c.report_organ,c.create_by,c.create_time,c.`status`,c.type,c.status
-        FROM standard_censor_record r RIGHT JOIN standard_censor c ON c.censor_id = r.censor_id WHERE r.receive_user_id= #{receiveUserId} AND  r.type = #{type} ORDER BY r.create_time DESC
+        SELECT
+            c.censor_id, c.report_title, c.report_type, c.file_name, c.file_nature, c.create_by, c.create_time,
+               c.update_by, c.update_time, c.remark, c.report_wen, c.report_organ, c.pass_organ,
+               c.record_organ, c.announced_time, c.hairdressing_time, c.administer_time, c.record_time,
+               c.contact_name, c.contact_phone, c.file_list, c.type, c.status, c.rate,
+               c.send_user_id, c.receive_user_id, c.process_type, c.censor_tache,c.procIns_id, c.deploy_id,
+               c.address, c.record_report, c.formal_text, c.formulate_explain, c.basis, c.other, c.lapse_time
+        FROM standard_censor_record r RIGHT JOIN standard_censor c ON c.censor_id = r.censor_id
+        WHERE r.receive_user_id= #{receiveUserId} AND r.type = #{type} ORDER BY r.create_time DESC
     </select>
+
     <!--已办理-->
     <select id="selectByDoneList" parameterType="Long" resultMap="StandardCensorResult">
-        SELECT c.censor_id,c.file_nature,c.file_name,c.report_organ,c.create_by,c.create_time,c.`status`,c.type,c.status
+        SELECT  c.censor_id, c.report_title, c.report_type, c.file_name, c.file_nature, c.create_by, c.create_time,
+                c.update_by, c.update_time, c.remark, c.report_wen, c.report_organ, c.pass_organ,
+                c.record_organ, c.announced_time, c.hairdressing_time, c.administer_time, c.record_time,
+                c.contact_name, c.contact_phone, c.file_list, c.type, c.status, c.rate,
+                c.send_user_id, c.receive_user_id, c.process_type, c.censor_tache,c.procIns_id, c.deploy_id,
+                c.address, c.record_report, c.formal_text, c.formulate_explain, c.basis, c.other, c.lapse_time
         FROM standard_censor_record r RIGHT JOIN standard_censor c ON c.censor_id = r.censor_id WHERE r.send_user_id= #{sendUserId} AND r.type != 0 ORDER BY r.create_time DESC
+    </select>
+
+    <!--待处理  已处理    总数-->
+    <select id="selectByTotalAndStay" resultType="com.shahenpc.system.domain.standard.dto.TotalAndStatyDto">
+        SELECT COUNT(c.censor_id)AS total,
+               COUNT(CASE WHEN c.type IN(1,2,3,4) THEN 1 ELSE NULL END) AS stayTotal
+        FROM  standard_censor c
     </select>
 </mapper>

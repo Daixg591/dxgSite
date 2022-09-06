@@ -4,12 +4,15 @@ import com.shahenpc.common.constant.Constants;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.common.utils.SecurityUtils;
 import com.shahenpc.common.utils.StringUtils;
 import com.shahenpc.system.domain.represent.dto.MotionLingDto;
 import com.shahenpc.system.domain.represent.dto.MotionPieDto;
+import com.shahenpc.system.domain.represent.dto.MotionRingDto;
 import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.domain.standard.StandardCensorRecord;
 import com.shahenpc.system.domain.standard.dto.CemsorDetailDto;
+import com.shahenpc.system.domain.standard.dto.TotalAndStatyDto;
 import com.shahenpc.system.domain.standard.vo.CensorAddVo;
 import com.shahenpc.system.domain.standard.vo.CensorUpdateVo;
 import com.shahenpc.system.mapper.standard.StandardCensorMapper;
@@ -21,9 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +41,8 @@ public class StandardCensorServiceImpl implements IStandardCensorService
     private StandardCensorMapper standardCensorMapper;
     @Autowired
     private StandardCensorRecordMapper standardCensorRecordMapper;
+    @Resource
+    private ISysDictTypeService dictTypeService;
     /**
      * 查询审查流程
      * 
@@ -85,10 +89,12 @@ public class StandardCensorServiceImpl implements IStandardCensorService
     {
         standardCensor.setCreateTime(DateUtils.getNowDate());
         standardCensor.setReceiveUserId(StringUtils.join(standardCensor.getApprovalUserId(),","));
+        standardCensor.setType(Constants.CENSOR_TYPE_1);
         int su =  standardCensorMapper.insertStandardCensor(standardCensor);
         if(su > 0){
             for (String itme:standardCensor.getApprovalUserId()){
                 StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
+                standardCensorRecord.setType(Constants.CENSOR_TYPE_1);
                 //发送人
                 standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
                 //接收人
@@ -188,19 +194,31 @@ public class StandardCensorServiceImpl implements IStandardCensorService
 
     @Override
     public String ring() {
-        return null;
+        TotalAndStatyDto dto=standardCensorMapper.selectByTotalAndStay();
+        // 待处理的  已处理的   全部接收的
+        //int count = stayTotal+receiveTotal+doneTotal;
+        MotionRingDto cakedto =new MotionRingDto();
+        BigDecimal a = new BigDecimal(dto.getStayTotal());
+        BigDecimal b = new BigDecimal(dto.getTotal());
+        BigDecimal gd = new BigDecimal(0.00);
+        if(!b.equals(BigDecimal.ZERO)){
+            gd = a.divide(b,2,BigDecimal.ROUND_CEILING);
+        }
+        cakedto.setValue(gd.toString());
+        return cakedto.getValue();
     }
-    @Resource
-    private ISysDictTypeService dictTypeService;
+
+
+
     @Override
     public List<MotionPieDto> pie() {
         StandardCensor standardCensor = new StandardCensor();
         List<StandardCensor> receiveTotal =  standardCensorMapper.selectStandardCensorList(standardCensor);
         List<MotionPieDto> dto = new ArrayList<>();
-        List<SysDictData> dictList = dictTypeService.selectDictDataByType("censor_status");
+        List<SysDictData> dictList = dictTypeService.selectDictDataByType("censor_type");
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictLabel().equals(p.getStatus()))
+            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictLabel().equals(p.getType()))
                     .collect(Collectors.toList()).size();
             MotionPieDto item = new MotionPieDto();
             item.setName(dictList.get(i).getDictLabel());
@@ -212,7 +230,42 @@ public class StandardCensorServiceImpl implements IStandardCensorService
 
     @Override
     public MotionLingDto line() {
-        return null;
+        List<String> monthList = getNearSixMonth();
+        MotionLingDto res = new MotionLingDto();
+        res.setLabel(monthList);
+        List<Integer> yList = new ArrayList<>();
+        StandardCensor cen = new StandardCensor();
+        List<StandardCensor> receiveTotal=standardCensorMapper.selectStandardCensorList(cen);
+        for (int i = 0; i < monthList.size(); i++) {
+            int finalI = i;
+            String cntt = monthList.get(finalI);
+            List<StandardCensor> nearlist1 = receiveTotal.stream().
+                    filter(w -> DateUtils.dateTime(w.getCreateTime()).contains(cntt)).collect(Collectors.toList());
+            yList.add(nearlist1.size());
+        }
+        res.setData(yList);
+        Collections.reverse(res.getData());
+        Collections.reverse(res.getLabel());
+        return res;
     }
-
+    /**
+     * 获取最近六个月份  ["2022-07","2022-06","2022-05"...]
+     *
+     * @return
+     */
+    public List<String> getNearSixMonth() {
+        List<String> resultList = new ArrayList<String>();
+        Calendar cal = Calendar.getInstance();
+        //近六个月
+        //要先+1,才能把本月的算进去
+        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
+        for (int i = 0; i < 6; i++) {
+            //逐次往前推1个月
+            cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
+            resultList.add(String.valueOf(cal.get(Calendar.YEAR))
+                    + "-" + (cal.get(Calendar.MONTH) + 1 < 10 ? "0" +
+                    (cal.get(Calendar.MONTH) + 1) : (cal.get(Calendar.MONTH) + 1)));
+        }
+        return resultList;
+    }
 }

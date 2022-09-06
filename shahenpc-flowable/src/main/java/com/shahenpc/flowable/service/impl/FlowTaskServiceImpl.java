@@ -2553,8 +2553,6 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         MotionRingDto cakedto =new MotionRingDto();
         BigDecimal a = new BigDecimal(stayTotal);
         BigDecimal b = new BigDecimal(count);
-        System.out.println(a);
-        System.out.println(b);
         BigDecimal gd = new BigDecimal(0.00);
         if(!b.equals(BigDecimal.ZERO)){
             gd = a.divide(b,2,BigDecimal.ROUND_CEILING);

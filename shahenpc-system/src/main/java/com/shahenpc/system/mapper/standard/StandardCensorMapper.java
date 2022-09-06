@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper.standard;
 
 import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.domain.standard.dto.CemsorDetailDto;
+import com.shahenpc.system.domain.standard.dto.TotalAndStatyDto;
 
 import java.util.List;
 
@@ -70,4 +71,6 @@ public interface StandardCensorMapper
     public List<StandardCensor> selectByTodoList(StandardCensor request);
 
     public List<StandardCensor> selectByDoneList(Long userId);
+
+    public TotalAndStatyDto selectByTotalAndStay();
 }

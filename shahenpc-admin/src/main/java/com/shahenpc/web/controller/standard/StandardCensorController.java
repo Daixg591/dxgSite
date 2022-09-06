@@ -144,6 +144,25 @@ public class StandardCensorController extends BaseController
         return standardCensorService.updateStandardCensor(standardCensor);
     }
 
+
+    @ApiOperation("按月曲线")
+    @GetMapping("/line")
+    public AjaxResult line(){
+        return  AjaxResult.success(standardCensorService.line());
+    }
+
+    @ApiOperation("按类别饼图")
+    @GetMapping("/pie")
+    public AjaxResult pie(){
+        return AjaxResult.success(standardCensorService.pie());
+    }
+
+    @ApiOperation("落实率")
+    @GetMapping("/ring")
+    public AjaxResult ring(){
+        return AjaxResult.success(standardCensorService.ring());
+    }
+
     /**
      * 删除审查流程
      */
@@ -219,7 +238,7 @@ public class StandardCensorController extends BaseController
         return AjaxResult.success();
     }
 
-    @ApiOperation("按月曲线")
+   /* @ApiOperation("按月曲线")
     @GetMapping("/line")
     public AjaxResult line(MotionTaskVo vo){
         vo.setProcessName("审查流程");
@@ -238,5 +257,5 @@ public class StandardCensorController extends BaseController
     public AjaxResult ring(MotionTaskVo vo){
         vo.setProcessName("审查流程");
         return AjaxResult.success(flowTaskService.ring(vo));
-    }
+    }*/
 }
