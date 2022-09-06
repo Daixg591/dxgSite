@@ -1,6 +1,7 @@
 package com.shahenpc.system.service.standard.impl;
 
 import com.shahenpc.common.constant.Constants;
+import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
@@ -14,7 +15,9 @@ import com.shahenpc.system.domain.standard.StandardCensorRecord;
 import com.shahenpc.system.domain.standard.dto.CemsorDetailDto;
 import com.shahenpc.system.domain.standard.dto.TotalAndStatyDto;
 import com.shahenpc.system.domain.standard.vo.CensorAddVo;
+import com.shahenpc.system.domain.standard.vo.CensorReturnVo;
 import com.shahenpc.system.domain.standard.vo.CensorUpdateVo;
+import com.shahenpc.system.domain.standard.vo.RecordByRecordIdVo;
 import com.shahenpc.system.mapper.standard.StandardCensorMapper;
 import com.shahenpc.system.mapper.standard.StandardCensorRecordMapper;
 import com.shahenpc.system.service.ISysDictTypeService;
@@ -35,7 +38,7 @@ import java.util.stream.Collectors;
  * @date 2022-07-22
  */
 @Service
-public class StandardCensorServiceImpl implements IStandardCensorService 
+public class StandardCensorServiceImpl extends BaseController implements IStandardCensorService
 {
     @Autowired
     private StandardCensorMapper standardCensorMapper;
@@ -121,42 +124,119 @@ public class StandardCensorServiceImpl implements IStandardCensorService
     public AjaxResult updateStandardCensor(CensorUpdateVo standardCensor)
     {
         standardCensor.setUpdateTime(DateUtils.getNowDate());
-        standardCensor.setReceiveUserId(StringUtils.join(standardCensor.getReceiveUserIds(),","));
-        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_0)){
-            standardCensor.setType(Constants.CENSOR_TYPE_1);
-        }
+        standardCensor.setReceiveUserId(StringUtils.join(standardCensor.getApprovalUserId(),","));
+        //修改原来的记录的状态 不修改type
+        StandardCensorRecord updateRecord = new StandardCensorRecord();
+        RecordByRecordIdVo vo = new RecordByRecordIdVo();
+        vo.setCensorId(standardCensor.getCensorId());
+        vo.setType(standardCensor.getType());
+        vo.setReceiveUserId(getUserId());//当前人
+
+        StandardCensorRecord recordId=standardCensorRecordMapper.selectByRecordId(vo);
+        updateRecord.setRecordId(recordId.getRecordId());
+        updateRecord.setRevert(standardCensor.getRevert());
+        updateRecord.setStatus(Constants.CENSOR_TYPE_STATUS_1);
+        updateRecord.setUpdateTime(DateUtils.getNowDate());
+        updateRecord.setUpdateBy(standardCensor.getCreateBy());
+        standardCensorRecordMapper.updateStandardCensorRecord(updateRecord);
+        //
         if(standardCensor.getType().equals(Constants.CENSOR_TYPE_1)){
             standardCensor.setType(Constants.CENSOR_TYPE_2);
-        }
-        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_2)){
+        }else if(standardCensor.getType().equals(Constants.CENSOR_TYPE_2)){
             standardCensor.setType(Constants.CENSOR_TYPE_3);
-        }
-        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_3)){
+        }else if(standardCensor.getType().equals(Constants.CENSOR_TYPE_3)){
             standardCensor.setType(Constants.CENSOR_TYPE_4);
-        }
-        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_4)){
+        }else{
             standardCensor.setType(Constants.CENSOR_TYPE_5);
+        }
+        // 先判断  是否是分发
+        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_4)){
+            List<StandardCensorRecord> distribute= standardCensorRecordMapper.selectByDistribute(standardCensor.getCensorId());
+            int dist = distribute.stream().filter(p -> p.getStatus().equals(Constants.CENSOR_TYPE_STATUS_0)).collect(Collectors.toList()).size();
+            if(dist == 0){
+                standardCensor.setReceiveUserId(standardCensor.getSendUserId().toString());
+                int su = standardCensorMapper.updateStandardCensor(standardCensor);
+                if(su > 0) {
+                    StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
+                        //发送人
+                        standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
+                        //接收人
+                        standardCensorRecord.setReceiveUserId(Long.parseLong(standardCensor.getReceiveUserId()));
+                        //绑定id
+                        standardCensorRecord.setCensorId(standardCensor.getCensorId());
+                        //回复
+                        standardCensorRecord.setType(standardCensor.getType());
+                        standardCensorRecord.setCreateTime(DateUtils.getNowDate());
+                        standardCensorRecord.setCreateBy(standardCensor.getCreateBy());
+                        standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord);
+                    return AjaxResult.success();
+                }
+            }else{
+               /* StandardCensorRecord updateRecord1 = new StandardCensorRecord();
+                updateRecord1.setRecordId(standardCensor.getRecordId());
+                updateRecord1.setRevert(standardCensor.getRevert());
+                updateRecord1.setStatus(Constants.CENSOR_TYPE_STATUS_1);
+                updateRecord1.setUpdateTime(DateUtils.getNowDate());
+                updateRecord1.setUpdateBy(standardCensor.getCreateBy());
+                standardCensorRecordMapper.updateStandardCensorRecord(updateRecord);*/
+                return AjaxResult.success();
+            }
         }
         int su = standardCensorMapper.updateStandardCensor(standardCensor);
         if(su > 0){
-            for (String itme:standardCensor.getReceiveUserIds()){
-                StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
+            StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
+            for (String itme:standardCensor.getApprovalUserId()){
                 //发送人
                 standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
                 //接收人
                 standardCensorRecord.setReceiveUserId(Long.valueOf(itme));
                 //绑定id
                 standardCensorRecord.setCensorId(standardCensor.getCensorId());
-
+                //回复
                 standardCensorRecord.setType(standardCensor.getType());
                 standardCensorRecord.setCreateTime(DateUtils.getNowDate());
                 standardCensorRecord.setCreateBy(standardCensor.getCreateBy());
-                return AjaxResult.success(standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord));
+                standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord);
             }
+            return AjaxResult.success();
         }
         return AjaxResult.error();
     }
 
+
+
+    @Override
+    public AjaxResult censorReturn(CensorReturnVo vo) {
+        StandardCensor standardCensor = new StandardCensor();
+        vo.setUpdateTime(DateUtils.getNowDate());
+        if(vo.getType().equals(Constants.CENSOR_TYPE_5)){
+            vo.setType(Constants.CENSOR_TYPE_4);
+        }else if(vo.getType().equals(Constants.CENSOR_TYPE_4)){
+            vo.setType(Constants.CENSOR_TYPE_3);
+        }else if(vo.getType().equals(Constants.CENSOR_TYPE_3)){
+            vo.setType(Constants.CENSOR_TYPE_2);
+        }else if(vo.getType().equals(Constants.CENSOR_TYPE_2)){
+            vo.setType(Constants.CENSOR_TYPE_1);
+        }
+        StandardCensorRecord sup = standardCensorRecordMapper.selectBySuperior(vo.getCensorId());
+        vo.setReceiveUserId(sup.getReceiveUserId().toString());
+        if(standardCensorMapper.updateStandardCensor(vo) <=0){
+            StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
+            //发送人
+            standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
+            //接收人
+            standardCensorRecord.setReceiveUserId(sup.getReceiveUserId());
+            //绑定id
+            standardCensorRecord.setCensorId(standardCensor.getCensorId());
+            //回复
+            standardCensorRecord.setType(standardCensor.getType());
+            standardCensorRecord.setCreateTime(DateUtils.getNowDate());
+            standardCensorRecord.setCreateBy(standardCensor.getCreateBy());
+            standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord);
+            return AjaxResult.success();
+        }
+        return AjaxResult.error();
+    }
     /**
      * 批量删除审查流程
      * 
@@ -191,6 +271,8 @@ public class StandardCensorServiceImpl implements IStandardCensorService
     public CemsorDetailDto selectByCensorId(Long cemsorId) {
         return standardCensorMapper.selectByCensorId(cemsorId);
     }
+
+
 
     @Override
     public String ring() {

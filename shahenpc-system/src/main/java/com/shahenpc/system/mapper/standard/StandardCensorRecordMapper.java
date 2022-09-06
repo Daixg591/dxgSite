@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper.standard;
 
 import java.util.List;
 import com.shahenpc.system.domain.standard.StandardCensorRecord;
+import com.shahenpc.system.domain.standard.vo.RecordByRecordIdVo;
 
 /**
  * 审查记录统计Mapper接口
@@ -58,4 +59,10 @@ public interface StandardCensorRecordMapper
      * @return 结果
      */
     public int deleteStandardCensorRecordByRecordIds(Long[] recordIds);
+
+    public StandardCensorRecord selectBySuperior(Long censorId);
+
+    public List<StandardCensorRecord> selectByDistribute(Long censorId);
+
+    public StandardCensorRecord selectByRecordId(RecordByRecordIdVo vo);
 }

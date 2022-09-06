@@ -66,10 +66,10 @@
                leader,
                virtual_mobile,
                video_user_id,
-               ysxMobile,
-               ysxPwd,
-               userId,
-               shortName
+               ysx_mobile,
+               ysx_pwd,
+               user_id,
+               short_name
         from represent_home_access
     </sql>
 

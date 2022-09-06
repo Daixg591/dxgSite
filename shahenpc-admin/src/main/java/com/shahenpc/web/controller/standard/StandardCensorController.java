@@ -12,6 +12,7 @@ import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.system.domain.represent.RepresentMotion;
 import com.shahenpc.system.domain.represent.vo.MotionTaskVo;
 import com.shahenpc.system.domain.standard.vo.CensorAddVo;
+import com.shahenpc.system.domain.standard.vo.CensorReturnVo;
 import com.shahenpc.system.domain.standard.vo.CensorUpdateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -88,7 +89,7 @@ public class StandardCensorController extends BaseController
     public TableDataInfo myList(StandardCensor standardCensor)
     {
         startPage();
-        standardCensor.setReceiveUserId(getUserId().toString());
+        standardCensor.setSendUserId(getUserId());
         List<StandardCensor> list = standardCensorService.selectStandardCensorList(standardCensor);
         return getDataTable(list);
     }
@@ -144,6 +145,11 @@ public class StandardCensorController extends BaseController
         return standardCensorService.updateStandardCensor(standardCensor);
     }
 
+    @ApiOperation(value = "退回任务")
+    @PostMapping(value = "/return")
+    public AjaxResult Return(@RequestBody CensorReturnVo vo) {
+        return standardCensorService.censorReturn(vo);
+    }
 
     @ApiOperation("按月曲线")
     @GetMapping("/line")
@@ -231,12 +237,12 @@ public class StandardCensorController extends BaseController
         return AjaxResult.success();
     }
 
-    @ApiOperation(value = "退回任务")
-    @PostMapping(value = "/return")
-    public AjaxResult taskReturn(@RequestBody FlowTaskVo flowTaskVo) {
-        flowTaskService.censorTaskReturn(flowTaskVo);
-        return AjaxResult.success();
-    }
+//    @ApiOperation(value = "退回任务")
+//    @PostMapping(value = "/return")
+//    public AjaxResult taskReturn(@RequestBody FlowTaskVo flowTaskVo) {
+//        flowTaskService.censorTaskReturn(flowTaskVo);
+//        return AjaxResult.success();
+//    }
 
    /* @ApiOperation("按月曲线")
     @GetMapping("/line")

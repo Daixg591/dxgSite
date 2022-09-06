@@ -16,10 +16,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="sendUserId"    column="send_user_id"    />
         <result property="receiveUserId"    column="receive_user_id"    />
+        <result property="updateTime"    column="update_time"    />
     </resultMap>
 
     <sql id="selectStandardCensorRecordVo">
-        select record_id, censor_id, type, status, revert, remark, create_by, create_time, update_by, send_user_id, receive_user_id from standard_censor_record
+        select record_id, censor_id, type, status, revert, remark, create_by, create_time, update_by, send_user_id, receive_user_id, update_time from standard_censor_record
     </sql>
 
     <select id="selectStandardCensorRecordList" parameterType="StandardCensorRecord" resultMap="StandardCensorRecordResult">
@@ -53,6 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="sendUserId != null">send_user_id,</if>
             <if test="receiveUserId != null">receive_user_id,</if>
+            <if test="updateTime != null">update_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="recordId != null">#{recordId},</if>
@@ -66,6 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="sendUserId != null">#{sendUserId},</if>
             <if test="receiveUserId != null">#{receiveUserId},</if>
+            <if test="updateTime != null">#{updateTime},</if>
         </trim>
     </insert>
 
@@ -82,6 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
             <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
         where record_id = #{recordId}
     </update>
@@ -98,10 +102,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
     <!--=-==============================================自定义-->
     <!-- 流程详情-->
-    <select id="selectByCensorId" resultMap="StandardCensorRecordResult" parameterType="Long">
-        <include refid="selectStandardCensorRecordVo"/>
-        where censor_id = #{censorId}
+    <resultMap id="censorList" type="com.shahenpc.system.domain.standard.dto.RecordListDto" extends="StandardCensorRecordResult">
+
+    </resultMap>
+    <select id="selectByCensorId" resultMap="censorList" parameterType="Long">
+        select r.record_id, r.censor_id, r.type, r.status, r.revert, r.remark, r.create_by, r.create_time, r.update_by, r.send_user_id, r.receive_user_id, r.update_time,
+               (SELECT u.nick_name FROM sys_user u WHERE u.user_id = r.receive_user_id)AS receiveName
+        from standard_censor_record r
+        where r.censor_id = #{censorId} ORDER BY r.create_time DESC
     </select>
-
-
+    <select id="selectBySuperior" parameterType="Long" resultMap="StandardCensorRecordResult">
+        <include refid="selectStandardCensorRecordVo"/> standard_censor_record r
+        WHERE censor_id = #{censorId} ORDER BY create_time DESC LIMIT 1,1
+    </select>
+    <!--查询 分发 有几条-->
+    <select id="selectByDistribute" resultMap="StandardCensorRecordResult" parameterType="Long">
+        <include refid="selectStandardCensorRecordVo"/>
+         WHERE censor_id = #{censorId} AND type= 3
+    </select>
+    <!--查询记录id-->
+    <select id="selectByRecordId" parameterType="com.shahenpc.system.domain.standard.vo.RecordByRecordIdVo" resultMap="StandardCensorRecordResult">
+        <include refid="selectStandardCensorRecordVo"/>
+         WHERE censor_id=#{censorId} AND type =#{type} AND receive_user_id = #{receiveUserId}
+    </select>
 </mapper>
