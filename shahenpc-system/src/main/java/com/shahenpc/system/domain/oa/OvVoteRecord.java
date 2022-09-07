@@ -35,7 +35,16 @@ public class OvVoteRecord extends BaseEntity
     @Excel(name = "微信唯一身份标识")
     private String openId;
 
-    public void setRecordId(Long recordId) 
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public void setRecordId(Long recordId)
     {
         this.recordId = recordId;
     }

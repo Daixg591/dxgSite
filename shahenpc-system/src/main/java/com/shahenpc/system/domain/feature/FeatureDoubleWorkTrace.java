@@ -34,7 +34,7 @@ public class FeatureDoubleWorkTrace extends BaseEntity
 
     /** $column.columnComment */
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Long type;
+    private Integer type;
 
     /** 0.待审核1.处理中 2.办结 3关闭 */
     @Excel(name = "0.待审核1.处理中 2.办结 3关闭")
