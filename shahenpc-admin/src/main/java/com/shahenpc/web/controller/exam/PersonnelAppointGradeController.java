@@ -2,6 +2,9 @@ package com.shahenpc.web.controller.exam;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +30,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
  * @author ruoyi
  * @date 2022-07-27
  */
+@Api(tags = "考试_成绩管理")
 @RestController
 @RequestMapping("/exam/grade")
 public class PersonnelAppointGradeController extends BaseController
@@ -37,7 +41,8 @@ public class PersonnelAppointGradeController extends BaseController
     /**
      * 查询人事任免_法律知识考虑_成绩管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:grade:list')")
+    @ApiOperation("考试_成绩列表")
+//    @PreAuthorize("@ss.hasPermi('system:grade:list')")
     @GetMapping("/list")
     public TableDataInfo list(PersonnelAppointGrade personnelAppointGrade)
     {
@@ -49,7 +54,8 @@ public class PersonnelAppointGradeController extends BaseController
     /**
      * 导出人事任免_法律知识考虑_成绩管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:grade:export')")
+//    @PreAuthorize("@ss.hasPermi('system:grade:export')")
+    @ApiOperation("考试_成绩导出")
     @Log(title = "人事任免_法律知识考虑_成绩管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, PersonnelAppointGrade personnelAppointGrade)
@@ -62,17 +68,28 @@ public class PersonnelAppointGradeController extends BaseController
     /**
      * 获取人事任免_法律知识考虑_成绩管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:grade:query')")
+//    @PreAuthorize("@ss.hasPermi('system:grade:query')")
+    @ApiOperation("考试_成绩详情")
     @GetMapping(value = "/{gradeId}")
     public AjaxResult getInfo(@PathVariable("gradeId") Long gradeId)
     {
         return AjaxResult.success(personnelAppointGradeService.selectPersonnelAppointGradeByGradeId(gradeId));
     }
 
+
+    @ApiOperation("根据任免Id获取考试详情")
+    @GetMapping(value = "/getInfoByRegId/{registerId}")
+    public AjaxResult getInfoByRegId(@PathVariable("registerId") Long registerId)
+    {
+        return AjaxResult.success(personnelAppointGradeService.selectGradeByRegId(registerId));
+    }
+
+
     /**
      * 新增人事任免_法律知识考虑_成绩管理
      */
-    @PreAuthorize("@ss.hasPermi('system:grade:add')")
+//    @PreAuthorize("@ss.hasPermi('system:grade:add')")
+    @ApiOperation("考试_成绩添加")
     @Log(title = "人事任免_法律知识考虑_成绩管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PersonnelAppointGrade personnelAppointGrade)
@@ -83,7 +100,8 @@ public class PersonnelAppointGradeController extends BaseController
     /**
      * 修改人事任免_法律知识考虑_成绩管理
      */
-    @PreAuthorize("@ss.hasPermi('system:grade:edit')")
+    @ApiOperation("考试_成绩修改")
+//    @PreAuthorize("@ss.hasPermi('system:grade:edit')")
     @Log(title = "人事任免_法律知识考虑_成绩管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody PersonnelAppointGrade personnelAppointGrade)
@@ -94,7 +112,8 @@ public class PersonnelAppointGradeController extends BaseController
     /**
      * 删除人事任免_法律知识考虑_成绩管理
      */
-    @PreAuthorize("@ss.hasPermi('system:grade:remove')")
+//    @PreAuthorize("@ss.hasPermi('system:grade:remove')")
+    @ApiOperation("考试_成绩删除")
     @Log(title = "人事任免_法律知识考虑_成绩管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{gradeIds}")
     public AjaxResult remove(@PathVariable Long[] gradeIds)

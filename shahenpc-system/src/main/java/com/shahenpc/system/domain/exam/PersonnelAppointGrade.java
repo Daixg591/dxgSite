@@ -20,6 +20,11 @@ public class PersonnelAppointGrade extends BaseEntity {
     private Long regExamId;
 
     /**
+     * 任免记录id
+     */
+    private Long registerId;
+
+    /**
      * 成绩id
      */
     private Long gradeId;
@@ -45,6 +50,14 @@ public class PersonnelAppointGrade extends BaseEntity {
      * 删除标识
      */
     private String delFlag;
+
+    public Long getRegisterId() {
+        return registerId;
+    }
+
+    public void setRegisterId(Long registerId) {
+        this.registerId = registerId;
+    }
 
     public void setGradeId(Long gradeId) {
         this.gradeId = gradeId;
