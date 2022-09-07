@@ -16,6 +16,7 @@
         <result property="delFlag" column="del_flag"/>
         <result property="score" column="score"/>
         <result property="regExamId" column="reg_exam_id"/>
+        <result property="registerId" column="register_id"/>
     </resultMap>
 
     <sql id="selectPersonnelAppointGradeVo">
@@ -29,7 +30,8 @@
                update_by,
                update_time,
                del_flag,
-               reg_exam_id
+               reg_exam_id,
+               register_id
         from personnel_appoint_grade
     </sql>
 
@@ -61,6 +63,7 @@
             <if test="delFlag != null">del_flag,</if>
             <if test="score != null">score,</if>
             <if test="regExamId != null">reg_exam_id,</if>
+            <if test="registerId != null">register_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
@@ -73,6 +76,7 @@
             <if test="delFlag != null">#{delFlag},</if>
             <if test="score != null">#{score},</if>
             <if test="regExamId != null">#{regExamId},</if>
+            <if test="registerId != null">#{registerId},</if>
         </trim>
     </insert>
 
@@ -89,6 +93,7 @@
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="score != null">score = #{score},</if>
             <if test="regExamId != null">reg_exam_id = #{regExamId},</if>
+            <if test="registerId != null">register_id = #{registerId},</if>
         </trim>
         where grade_id = #{gradeId}
     </update>
