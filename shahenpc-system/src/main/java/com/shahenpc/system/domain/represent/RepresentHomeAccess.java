@@ -21,6 +21,11 @@ public class RepresentHomeAccess extends BaseEntity
     private Long accessId;
 
     /**
+     * 联络站等级
+     */
+    private Integer level;
+
+    /**
      * 选区地址
      */
     private String area;

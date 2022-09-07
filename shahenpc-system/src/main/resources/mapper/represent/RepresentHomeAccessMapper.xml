@@ -37,6 +37,7 @@
         <result property="ysxPwd" column="ysx_pwd"/>
         <result property="userId" column="user_id"/>
         <result property="area" column="area"/>
+        <result property="level" column="level"/>
     </resultMap>
 
     <sql id="selectRepresentHomeAccessVo">
@@ -71,7 +72,8 @@
                ysx_pwd,
                user_id,
                short_name,
-               area
+               area,
+               level
         from represent_home_access
     </sql>
 
@@ -103,6 +105,7 @@
             <if test="virtualMobile != null  and virtualMobile != ''">and virtual_mobile = #{virtualMobile}</if>
             <if test="videoUserId != null  and videoUserId != ''">and video_user_id = #{videoUserId}</if>
             <if test="area != null  and area != ''">and area = #{area}</if>
+            <if test="level != null ">and level = #{level}</if>
         </where>
     </select>
 
@@ -147,6 +150,7 @@
             <if test="ysxPwd != null">ysx_pwd,</if>
             <if test="userId != null">user_id,</if>
             <if test="area != null">area,</if>
+            <if test="level != null">level,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null">#{title},</if>
@@ -180,6 +184,7 @@
             <if test="ysxPwd != null">#{ysxPwd},</if>
             <if test="userId != null">#{user_id},</if>
             <if test="area != null">#{area},</if>
+            <if test="level != null">#{level},</if>
         </trim>
     </insert>
 
@@ -217,6 +222,7 @@
             <if test="ysxPwd != null">ysx_pwd = #{ysxPwd},</if>
             <if test="userId != null">user_id = #{userId},</if>
             <if test="area != null">area = #{area},</if>
+            <if test="level != null">level = #{level},</if>
         </trim>
         where access_id = #{accessId}
     </update>
