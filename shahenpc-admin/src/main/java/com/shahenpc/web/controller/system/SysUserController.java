@@ -151,8 +151,7 @@ public class SysUserController extends BaseController {
             resInfo.setPersonInfo(sysUser.getResume());
             resInfo.setAvatar(sysUser.getAvatar());
             resInfo.setGoodAreaName(dictDataService.selectDictLabel("double_type", sysUser.getGoodArea()));
-            if (StringUtils.isNotEmpty(sysUser.getContactStationId().toString())
-                    && StringUtils.isNotEmpty(sysUser.getContactStationId().toString())) {
+            if (sysUser.getContactStationId()!=null ) {
                 RepresentHomeAccess homeAccess = homeAccessService.selectRepresentHomeAccessByAccessId(sysUser.getContactStationId());
                 resInfo.setStationName(homeAccess.getTitle());
             }
