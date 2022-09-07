@@ -6,6 +6,7 @@ import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.feature.dto.*;
 import com.shahenpc.system.domain.feature.vo.DoubleReturnVo;
+import com.shahenpc.system.domain.feature.vo.FeatureDoubleWorkUpdateVo;
 
 /**
  * 双联工作Service接口
@@ -58,6 +59,8 @@ public interface IFeatureDoubleWorkService
     public List<FeatureDoubleWork> todoList(FeatureDoubleWork request);
 
     public List<FeatureDoubleWork> doneList(FeatureDoubleWork request);
+
+    public DoubleDetatilDto adminDateil(Long doubleId);
     /**
      * 删除双联工作信息
      * 
@@ -78,7 +81,7 @@ public interface IFeatureDoubleWorkService
 
     public AjaxResult newAdd(FeatureDoubleWork featureDoubleWork);
 
-    public AjaxResult newUpdate(FeatureDoubleWork featureDoubleWork);
+    public AjaxResult newUpdate(FeatureDoubleWorkUpdateVo featureDoubleWork);
 
     public AjaxResult doubleReturn(DoubleReturnVo vo);
 

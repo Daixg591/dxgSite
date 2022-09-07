@@ -7,6 +7,7 @@ import com.shahenpc.common.core.page.TableDataInfo;
 import com.shahenpc.common.enums.BusinessType;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.feature.dto.DoubleAppListDto;
+import com.shahenpc.system.domain.feature.vo.FeatureDoubleWorkUpdateVo;
 import com.shahenpc.system.service.feature.IFeatureDoubleWorkService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -107,7 +108,7 @@ public class AppFeatureDoubleWorkController extends BaseController {
     @ApiOperation("修改双联工作")
     @Log(title = "双联工作", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody FeatureDoubleWork featureDoubleWork)
+    public AjaxResult edit(@RequestBody FeatureDoubleWorkUpdateVo featureDoubleWork)
     {
         return AjaxResult.success(featureDoubleWorkService.newUpdate(featureDoubleWork));
     }

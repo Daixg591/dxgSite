@@ -60,8 +60,12 @@ public interface FeatureDoubleWorkMapper
      * 已办
      */
     public List<FeatureDoubleWork> selectByDoneList(FeatureDoubleWork request);
-
-
+    /**
+     * 详情
+     * @param doubleId
+     * @return
+     */
+    public DoubleDetatilDto adminDateil(Long doubleId);
     /**
      * 批量删除双联工作
      * 

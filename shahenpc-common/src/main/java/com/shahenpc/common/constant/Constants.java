@@ -9,6 +9,19 @@ import io.jsonwebtoken.Claims;
  */
 public class Constants
 {
+    public static final Integer DOUBLE_PROCESS_TYPE_0=0;
+    /**
+     * 群众发送 到  人大代表 代表1
+     */
+    public static final Integer DOUBLE_PROCESS_TYPE_1=1;
+    /**
+     * 代表发送到 联络站 代表2
+     */
+    public static final Integer DOUBLE_PROCESS_TYPE_2=2;
+    /**
+     * 联络站 发送 到 总联络站 负责人 3
+     */
+    public static final Integer DOUBLE_PROCESS_TYPE_3=3;
     /**
      * 双联工作 类型 民生类
      */

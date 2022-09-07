@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.shahenpc.system.domain.feature.dto.DoubleListDto;
 import com.shahenpc.system.domain.feature.vo.DoubleReturnVo;
+import com.shahenpc.system.domain.feature.vo.FeatureDoubleWorkUpdateVo;
 import com.shahenpc.system.domain.standard.vo.CensorReturnVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -73,7 +74,7 @@ public class FeatureDoubleWorkController extends BaseController {
     @ApiImplicitParam(name = "opinionId", value = "双联工作Id", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
     @GetMapping(value = "/{doubleId}")
     public AjaxResult getInfo(@PathVariable("doubleId") Long doubleId) {
-        return AjaxResult.success(featureDoubleWorkService.selectFeatureDoubleWorkByDoubleId(doubleId));
+        return AjaxResult.success(featureDoubleWorkService.adminDateil(doubleId));
     }
 
     /**
@@ -114,6 +115,7 @@ public class FeatureDoubleWorkController extends BaseController {
     @GetMapping("/done/list")
     public TableDataInfo doneList(FeatureDoubleWork featureDoubleWork) {
         startPage();
+        featureDoubleWork.setSendUserId(getUserId());
         List<FeatureDoubleWork> list = featureDoubleWorkService.doneList(featureDoubleWork);
         return getDataTable(list);
     }
@@ -124,7 +126,7 @@ public class FeatureDoubleWorkController extends BaseController {
     @ApiOperation("修改双联工作")
     @Log(title = "双联工作", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody FeatureDoubleWork featureDoubleWork) {
+    public AjaxResult edit(@RequestBody FeatureDoubleWorkUpdateVo featureDoubleWork) {
         featureDoubleWork.setUpdateBy(getNickName());
         return featureDoubleWorkService.newUpdate(featureDoubleWork);
     }

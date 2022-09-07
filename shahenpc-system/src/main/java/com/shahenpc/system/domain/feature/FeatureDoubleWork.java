@@ -17,7 +17,8 @@ public class FeatureDoubleWork extends BaseEntity
 {
     /**  */
     private Long doubleId;
-
+    /**流程类型 1代表 2.联络站负责人3.联络站总负责人*/
+    private Integer processType;
     /** 意见类型 */
     @Excel(name = "意见类型")
     private Long type;
@@ -28,7 +29,7 @@ public class FeatureDoubleWork extends BaseEntity
 
     /** 状态 */
     @Excel(name = "状态")
-    private Long status;
+    private Integer status;
 
     /** 图片存储 */
     @Excel(name = "图片存储")
@@ -48,7 +49,7 @@ public class FeatureDoubleWork extends BaseEntity
 
     /** 评价 */
     @Excel(name = "评价")
-    private Long rate;
+    private Integer rate;
 
     /** 通讯地点 */
     @Excel(name = "通讯地点")
@@ -57,4 +58,5 @@ public class FeatureDoubleWork extends BaseEntity
     /** 经纬度逗号分割 */
     @Excel(name = "经纬度逗号分割")
     private String location;
+
 }
