@@ -13,7 +13,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @date 2022-09-05
  */
 @Data
-public class OvVoteRecord extends BaseEntity
+public class OaVoteRecord extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 

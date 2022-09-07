@@ -3,12 +3,7 @@ package com.shahenpc.web.controller.oa;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.alibaba.fastjson2.JSON;
-import com.shahenpc.common.utils.StringUtils;
-import com.shahenpc.common.utils.http.HttpUtils;
 import com.shahenpc.system.domain.oa.vo.VoteRecordVo;
-import com.shahenpc.system.domain.wxsmallprogram.dto.WxAuthDto;
-import com.shahenpc.system.domain.wxsmallprogram.vo.WxAuthVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +18,8 @@ import com.shahenpc.common.annotation.Log;
 import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.enums.BusinessType;
-import com.shahenpc.system.domain.oa.OvVoteRecord;
-import com.shahenpc.system.service.oa.IOvVoteRecordService;
+import com.shahenpc.system.domain.oa.OaVoteRecord;
+import com.shahenpc.system.service.oa.IOaVoteRecordService;
 import com.shahenpc.common.utils.poi.ExcelUtil;
 import com.shahenpc.common.core.page.TableDataInfo;
 
@@ -39,17 +34,17 @@ import com.shahenpc.common.core.page.TableDataInfo;
 public class OvVoteRecordController extends BaseController
 {
     @Autowired
-    private IOvVoteRecordService ovVoteRecordService;
+    private IOaVoteRecordService ovVoteRecordService;
 
     /**
      * 查询投票记录列表
      */
     @PreAuthorize("@ss.hasPermi('vote:record:list')")
     @GetMapping("/list")
-    public TableDataInfo list(OvVoteRecord ovVoteRecord)
+    public TableDataInfo list(OaVoteRecord ovVoteRecord)
     {
         startPage();
-        List<OvVoteRecord> list = ovVoteRecordService.selectOvVoteRecordList(ovVoteRecord);
+        List<OaVoteRecord> list = ovVoteRecordService.selectOvVoteRecordList(ovVoteRecord);
         return getDataTable(list);
     }
 
@@ -59,10 +54,10 @@ public class OvVoteRecordController extends BaseController
     @PreAuthorize("@ss.hasPermi('vote:record:export')")
     @Log(title = "投票记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, OvVoteRecord ovVoteRecord)
+    public void export(HttpServletResponse response, OaVoteRecord ovVoteRecord)
     {
-        List<OvVoteRecord> list = ovVoteRecordService.selectOvVoteRecordList(ovVoteRecord);
-        ExcelUtil<OvVoteRecord> util = new ExcelUtil<OvVoteRecord>(OvVoteRecord.class);
+        List<OaVoteRecord> list = ovVoteRecordService.selectOvVoteRecordList(ovVoteRecord);
+        ExcelUtil<OaVoteRecord> util = new ExcelUtil<OaVoteRecord>(OaVoteRecord.class);
         util.exportExcel(response, list, "投票记录数据");
     }
 
@@ -83,7 +78,7 @@ public class OvVoteRecordController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody VoteRecordVo requst)
     {
-        return toAjax(ovVoteRecordService.insertPlayerIds(requst));
+        return ovVoteRecordService.insertPlayerIds(requst);
     }
 
 
@@ -95,7 +90,7 @@ public class OvVoteRecordController extends BaseController
     @PreAuthorize("@ss.hasPermi('vote:record:edit')")
     @Log(title = "投票记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody OvVoteRecord ovVoteRecord)
+    public AjaxResult edit(@RequestBody OaVoteRecord ovVoteRecord)
     {
         return toAjax(ovVoteRecordService.updateOvVoteRecord(ovVoteRecord));
     }
