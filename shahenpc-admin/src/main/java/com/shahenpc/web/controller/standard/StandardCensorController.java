@@ -18,6 +18,7 @@ import com.shahenpc.system.domain.standard.vo.CensorUpdateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.models.auth.In;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -178,8 +179,8 @@ public class StandardCensorController extends BaseController
 
     @ApiOperation("落实率")
     @GetMapping("/ring")
-    public AjaxResult ring(){
-        return AjaxResult.success(standardCensorService.ring());
+    public AjaxResult ring(Integer taskName){
+        return AjaxResult.success(standardCensorService.ring(taskName));
     }
 
     /**

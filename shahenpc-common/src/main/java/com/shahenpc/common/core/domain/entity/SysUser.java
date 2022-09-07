@@ -73,7 +73,10 @@ public class SysUser extends BaseEntity {
 //    @Excel(name = "代表界别", readConverterExp = "0=工人、农民和其他劳动者,1=专业技术人员,2=企事业单位负责人,3=公务员,4=解放军")
     @Excel(name = "代表界别")
     private String distinction;
-
+    /**
+     * 驿站
+     */
+    private Long stationId;
     /**
      * 代表届次
      * 第十届  第九届..

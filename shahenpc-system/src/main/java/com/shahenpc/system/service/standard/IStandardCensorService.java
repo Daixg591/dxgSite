@@ -99,7 +99,7 @@ public interface IStandardCensorService
      * @param
      * @return
      */
-    String ring();
+    String ring(Integer taskName);
     /**
      * 按类别饼图
      * @param

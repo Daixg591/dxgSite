@@ -289,12 +289,15 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
 
 
     @Override
-    public String ring() {
+    public String ring(Integer taskName) {
+        StandardCensor cen = new StandardCensor();
+        cen.setType(taskName);
+        int StayTotal=standardCensorMapper.selectStandardCensorList(cen).size();
         TotalAndStatyDto dto=standardCensorMapper.selectByTotalAndStay();
         // 待处理的  已处理的   全部接收的
         //int count = stayTotal+receiveTotal+doneTotal;
         MotionRingDto cakedto =new MotionRingDto();
-        BigDecimal a = new BigDecimal(dto.getStayTotal());
+        BigDecimal a = new BigDecimal(StayTotal);
         BigDecimal b = new BigDecimal(dto.getTotal());
         BigDecimal gd = new BigDecimal(0.00);
         if(!b.equals(BigDecimal.ZERO)){
@@ -308,13 +311,13 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
 
     @Override
     public List<MotionPieDto> pie() {
-        StandardCensor standardCensor = new StandardCensor();
-        List<StandardCensor> receiveTotal =  standardCensorMapper.selectStandardCensorList(standardCensor);
+        List<StandardCensor> receiveTotal =  standardCensorMapper.selectStandardCensorList(null);
         List<MotionPieDto> dto = new ArrayList<>();
         List<SysDictData> dictList = dictTypeService.selectDictDataByType("censor_type");
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictLabel().equals(p.getType()))
+            int v = 0;
+            v = receiveTotal.stream().filter(p -> p.getType().toString().equals(dictList.get(finalI).getDictValue()))
                     .collect(Collectors.toList()).size();
             MotionPieDto item = new MotionPieDto();
             item.setName(dictList.get(i).getDictLabel());
