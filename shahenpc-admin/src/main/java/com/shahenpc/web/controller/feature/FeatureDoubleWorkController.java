@@ -51,6 +51,7 @@ public class FeatureDoubleWorkController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(FeatureDoubleWork featureDoubleWork) {
         startPage();
+        featureDoubleWork.setSendUserId(getUserId());
         List<DoubleListDto> list = featureDoubleWorkService.adminList(featureDoubleWork);
         return getDataTable(list);
     }

@@ -84,6 +84,7 @@ public class OutlayBudgetServiceImpl implements IOutlayBudgetService
     public int updateOutlayBudget(OutlayBudget outlayBudget)
     {
         outlayBudget.setUpdateTime(DateUtils.getNowDate());
+        BigDecimal af = null;
         int update =  outlayBudgetMapper.updateOutlayBudget(outlayBudget);
         if( update != 0){
             //最新一条
@@ -106,13 +107,14 @@ public class OutlayBudgetServiceImpl implements IOutlayBudgetService
                 }else{
                     record.setAfterAmount(outlayBudget.getAmount().add(outlayBudget.getChangeAmount()));
                 }
-
             }
+            af = record.getAfterAmount();
             outlayBudgetRecordMapper.insertOutlayBudgetRecord(record);
         }
-        if(outlayBudget.getChangeAmount() != null){
-            outlayBudget.setAfterAmount(outlayBudget.getAmount().add(outlayBudget.getChangeAmount()));
-        }
+        outlayBudget.setAfterAmount(af);
+//        if(outlayBudget.getChangeAmount() != null){
+//            outlayBudget.setAfterAmount(outlayBudget.getAmount().add(outlayBudget.getChangeAmount()));
+//        }
         return outlayBudgetMapper.updateOutlayBudget(outlayBudget);
     }
 
