@@ -91,14 +91,29 @@ public class PersonnelAppointNoticeController extends BaseController {
     public AjaxResult getInfo(@PathVariable("noticeId") Long noticeId) {
         PersonnelAppointNotice entity = personnelAppointNoticeService.selectPersonnelAppointNoticeByNoticeId(noticeId);
         SysUser userEntity = userService.selectUserByUserName(entity.getCreateBy());
+
         if (userEntity != null) {
             entity.setNickName(userEntity.getNickName());
         } else {
             entity.setNickName("--");
         }
-
+        setReadCnt(entity);
         return AjaxResult.success(entity);
     }
+
+
+    /**
+     * 每次展开详情，新增阅读次数
+     * @param entity
+     */
+    private void setReadCnt(PersonnelAppointNotice entity) {
+        if (entity.getReadCnt() == null) {
+            entity.setReadCnt(0);
+        }
+        entity.setReadCnt(entity.getReadCnt() + 1);
+        personnelAppointNoticeService.updatePersonnelAppointNotice(entity);
+    }
+
 
     /**
      * 新增人事任免_任免通知
@@ -160,9 +175,9 @@ public class PersonnelAppointNoticeController extends BaseController {
      */
     @ApiOperation("通知统计数据-任免通知")
     @GetMapping(value = "/noticeTJ")
-    public AjaxResult noticeTJ() {
+    public AjaxResult noticeTJ(Integer type) {
         PersonnelAppointNotice param = new PersonnelAppointNotice();
-        param.setType(1);
+        param.setType(type);
 
         List<PersonnelAppointNotice> list = personnelAppointNoticeService.selectPersonnelAppointNoticeList(param);
         Map<String, String> res = new HashMap<>();
