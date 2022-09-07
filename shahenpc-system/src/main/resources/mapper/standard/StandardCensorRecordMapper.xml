@@ -111,9 +111,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from standard_censor_record r
         where r.censor_id = #{censorId} ORDER BY r.create_time DESC
     </select>
-    <select id="selectBySuperior" parameterType="Long" resultMap="StandardCensorRecordResult">
-        <include refid="selectStandardCensorRecordVo"/> standard_censor_record r
-        WHERE censor_id = #{censorId} ORDER BY create_time DESC LIMIT 1,1
+    <select id="selectBySuperior" resultMap="StandardCensorRecordResult">
+        <include refid="selectStandardCensorRecordVo"/>
+        WHERE censor_id = #{censorId} AND `type` = #{type} ORDER BY create_time DESC limit 0,1;
     </select>
     <!--查询 分发 有几条-->
     <select id="selectByDistribute" resultMap="StandardCensorRecordResult" parameterType="Long">

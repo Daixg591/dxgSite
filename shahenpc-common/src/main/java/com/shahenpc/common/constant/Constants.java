@@ -88,7 +88,10 @@ public class Constants
      * 未通过
      */
     public static final Integer CENSOR_TYPE_STATUS_2=2;
-
+    /**
+     * 已退回
+     */
+    public static final Integer CENSOR_TYPE_STATUS_3=3;
     /**
      * UTF-8 字符集
      */
