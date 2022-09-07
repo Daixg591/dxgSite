@@ -3,17 +3,20 @@ package com.shahenpc.system.service.oa.impl;
 import java.util.List;
 
 import com.alibaba.fastjson2.JSON;
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.StringUtils;
 import com.shahenpc.common.utils.http.HttpUtils;
+import com.shahenpc.system.domain.oa.OaVotePlayer;
 import com.shahenpc.system.domain.oa.vo.VoteRecordVo;
 import com.shahenpc.system.domain.wxsmallprogram.dto.WxAuthDto;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxAuthVo;
+import com.shahenpc.system.mapper.oa.OaVotePlayerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.shahenpc.system.mapper.oa.OvVoteRecordMapper;
-import com.shahenpc.system.domain.oa.OvVoteRecord;
-import com.shahenpc.system.service.oa.IOvVoteRecordService;
+import com.shahenpc.system.mapper.oa.OaVoteRecordMapper;
+import com.shahenpc.system.domain.oa.OaVoteRecord;
+import com.shahenpc.system.service.oa.IOaVoteRecordService;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -23,11 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2022-09-05
  */
 @Service
-public class OvVoteRecordServiceImpl implements IOvVoteRecordService 
+public class OaVoteRecordServiceImpl implements IOaVoteRecordService
 {
     @Autowired
-    private OvVoteRecordMapper ovVoteRecordMapper;
-
+    private OaVoteRecordMapper ovVoteRecordMapper;
+    @Autowired
+    private OaVotePlayerMapper oaVotePlayerMapper;
     /**
      * 查询投票记录
      * 
@@ -35,7 +39,7 @@ public class OvVoteRecordServiceImpl implements IOvVoteRecordService
      * @return 投票记录
      */
     @Override
-    public OvVoteRecord selectOvVoteRecordByRecordId(Long recordId)
+    public OaVoteRecord selectOvVoteRecordByRecordId(Long recordId)
     {
         return ovVoteRecordMapper.selectOvVoteRecordByRecordId(recordId);
     }
@@ -47,7 +51,7 @@ public class OvVoteRecordServiceImpl implements IOvVoteRecordService
      * @return 投票记录
      */
     @Override
-    public List<OvVoteRecord> selectOvVoteRecordList(OvVoteRecord ovVoteRecord)
+    public List<OaVoteRecord> selectOvVoteRecordList(OaVoteRecord ovVoteRecord)
     {
         return ovVoteRecordMapper.selectOvVoteRecordList(ovVoteRecord);
     }
@@ -59,26 +63,34 @@ public class OvVoteRecordServiceImpl implements IOvVoteRecordService
      * @return 结果
      */
     @Override
-    public int insertOvVoteRecord(OvVoteRecord ovVoteRecord)
+    public int insertOvVoteRecord(OaVoteRecord ovVoteRecord)
     {
         ovVoteRecord.setCreateTime(DateUtils.getNowDate());
         return ovVoteRecordMapper.insertOvVoteRecord(ovVoteRecord);
     }
 
     @Override
-    @Transactional
-    public int insertPlayerIds(VoteRecordVo requst) {
-        OvVoteRecord ovVoteRecord = new OvVoteRecord();
-        int suss= 0;
+    @Transactional(rollbackFor = Exception.class)
+    public AjaxResult insertPlayerIds(VoteRecordVo requst) {
+        OaVoteRecord ovVoteRecord = new OaVoteRecord();
         for(Long item:requst.getPlayerIds()){
             ovVoteRecord.setCreateTime(DateUtils.getNowDate());
             ovVoteRecord.setUserId(requst.getUserId());
             ovVoteRecord.setVoteId(requst.getVoteId());
             ovVoteRecord.setPlayerId(item);
             ovVoteRecord.setOpenId(getWxOpenId(requst.getCode()));
-            suss = ovVoteRecordMapper.insertOvVoteRecord(ovVoteRecord);
+            List<OaVoteRecord> list = ovVoteRecordMapper.selectOvVoteRecordList(ovVoteRecord);
+            if(list.size() == 0){
+                ovVoteRecordMapper.insertOvVoteRecord(ovVoteRecord);
+                //修改
+                OaVotePlayer pla= oaVotePlayerMapper.selectOaVotePlayerByPlayerId(item);
+                pla.setTotal(pla.getTotal()+1);
+               return AjaxResult.success(oaVotePlayerMapper.updateOaVotePlayer(pla));
+            }else{
+               return AjaxResult.error("您已投票，不可重复投票。");
+            }
         }
-        return suss;
+        return AjaxResult.error("请选择投票人员！");
     }
 
     private String getWxOpenId(String code) {
@@ -110,7 +122,7 @@ public class OvVoteRecordServiceImpl implements IOvVoteRecordService
      * @return 结果
      */
     @Override
-    public int updateOvVoteRecord(OvVoteRecord ovVoteRecord)
+    public int updateOvVoteRecord(OaVoteRecord ovVoteRecord)
     {
         ovVoteRecord.setUpdateTime(DateUtils.getNowDate());
         return ovVoteRecordMapper.updateOvVoteRecord(ovVoteRecord);

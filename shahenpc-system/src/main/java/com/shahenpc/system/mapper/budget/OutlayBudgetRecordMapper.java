@@ -57,4 +57,10 @@ public interface OutlayBudgetRecordMapper {
      * @return 结果
      */
     public int deleteOutlayBudgetRecordByRecordIds(Long[] recordIds);
+
+    /**
+     * 最新一条
+     * @return
+     */
+    public OutlayBudgetRecord selectByLatest();
 }

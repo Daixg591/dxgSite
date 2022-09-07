@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.shahenpc.system.mapper.oa.OvVoteRecordMapper">
-    <resultMap type="OvVoteRecord" id="OvVoteRecordResult">
+<mapper namespace="com.shahenpc.system.mapper.oa.OaVoteRecordMapper">
+    <resultMap type="OaVoteRecord" id="OvVoteRecordResult">
         <result property="recordId"    column="record_id"    />
         <result property="userId"    column="user_id"    />
         <result property="voteId"    column="vote_id"    />
@@ -17,10 +17,10 @@
     </resultMap>
 
     <sql id="selectOvVoteRecordVo">
-        select record_id, user_id, vote_id, player_id, open_id, remark, create_time, update_by, update_time, create_by from ov_vote_record
+        select record_id, user_id, vote_id, player_id, open_id, remark, create_time, update_by, update_time, create_by from oa_vote_record
     </sql>
 
-    <select id="selectOvVoteRecordList" parameterType="OvVoteRecord" resultMap="OvVoteRecordResult">
+    <select id="selectOvVoteRecordList" parameterType="OaVoteRecord" resultMap="OvVoteRecordResult">
         <include refid="selectOvVoteRecordVo"/>
         <where>
             <if test="userId != null "> and user_id = #{userId}</if>
@@ -35,8 +35,8 @@
         where record_id = #{recordId}
     </select>
 
-    <insert id="insertOvVoteRecord" parameterType="OvVoteRecord" useGeneratedKeys="true" keyProperty="recordId">
-        insert into ov_vote_record
+    <insert id="insertOvVoteRecord" parameterType="OaVoteRecord" useGeneratedKeys="true" keyProperty="recordId">
+        insert into oa_vote_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
             <if test="voteId != null">vote_id,</if>
@@ -61,8 +61,8 @@
         </trim>
     </insert>
 
-    <update id="updateOvVoteRecord" parameterType="OvVoteRecord">
-        update ov_vote_record
+    <update id="updateOvVoteRecord" parameterType="OaVoteRecord">
+        update oa_vote_record
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
             <if test="voteId != null">vote_id = #{voteId},</if>
@@ -78,11 +78,11 @@
     </update>
 
     <delete id="deleteOvVoteRecordByRecordId" parameterType="Long">
-        delete from ov_vote_record where record_id = #{recordId}
+        delete from oa_vote_record where record_id = #{recordId}
     </delete>
 
     <delete id="deleteOvVoteRecordByRecordIds" parameterType="String">
-        delete from ov_vote_record where record_id in
+        delete from oa_vote_record where record_id in
         <foreach item="recordId" collection="array" open="(" separator="," close=")">
             #{recordId}
         </foreach>

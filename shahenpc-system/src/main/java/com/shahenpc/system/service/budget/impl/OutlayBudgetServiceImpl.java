@@ -1,5 +1,6 @@
 package com.shahenpc.system.service.budget.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.shahenpc.common.exception.ServiceException;
@@ -70,7 +71,6 @@ public class OutlayBudgetServiceImpl implements IOutlayBudgetService
     public int insertOutlayBudget(OutlayBudget outlayBudget)
     {
         outlayBudget.setCreateTime(DateUtils.getNowDate());
-
         return outlayBudgetMapper.insertOutlayBudget(outlayBudget);
     }
 
@@ -86,15 +86,19 @@ public class OutlayBudgetServiceImpl implements IOutlayBudgetService
         outlayBudget.setUpdateTime(DateUtils.getNowDate());
         int update =  outlayBudgetMapper.updateOutlayBudget(outlayBudget);
         if( update != 0){
+            //最新一条
+            OutlayBudgetRecord recorddd=outlayBudgetRecordMapper.selectByLatest();
             OutlayBudgetRecord record =  new OutlayBudgetRecord();
             record.setBudgetId(outlayBudget.getBudgetId());
             record.setCreateBy(outlayBudget.getCreateBy());
             record.setCreateTime(DateUtils.getNowDate());
             record.setBeforeAmount(outlayBudget.getAmount());
-
             record.setChangeAmount(outlayBudget.getChangeAmount());
-            record.setAfterAmount(outlayBudget.getAmount().add(outlayBudget.getChangeAmount()));
-
+            if(outlayBudget.getIsSub()){
+                record.setAfterAmount(outlayBudget.getChangeAmount().subtract(recorddd.getAfterAmount()));
+            }else{
+                record.setAfterAmount(outlayBudget.getChangeAmount().add(recorddd.getAfterAmount()));
+            }
             outlayBudgetRecordMapper.insertOutlayBudgetRecord(record);
         }
         if(outlayBudget.getChangeAmount() != null){

@@ -31,6 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="total != null "> and total = #{total}</if>
         </where>
+        ORDER BY total DESC
     </select>
     
     <select id="selectOaVotePlayerByPlayerId" parameterType="Long" resultMap="OaVotePlayerResult">

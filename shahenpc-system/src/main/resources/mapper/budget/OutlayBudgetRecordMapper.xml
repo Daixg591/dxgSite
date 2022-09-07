@@ -29,6 +29,7 @@
             <if test="beforeAmount != null "> and before_amount = #{beforeAmount}</if>
             <if test="afterAmount != null "> and after_amount = #{afterAmount}</if>
         </where>
+        ORDER BY create_time DESC
     </select>
 
     <select id="selectOutlayBudgetRecordByRecordId" parameterType="Long" resultMap="OutlayBudgetRecordResult">
@@ -88,4 +89,10 @@
             #{recordId}
         </foreach>
     </delete>
+
+    <!--==================================分割线-->
+    <select id="selectByLatest" resultMap="OutlayBudgetRecordResult">
+        <include refid="selectOutlayBudgetRecordVo"/>
+        ORDER BY create_time DESC limit 0,1;
+    </select>
 </mapper>
