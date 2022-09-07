@@ -62,5 +62,5 @@ public interface OutlayBudgetRecordMapper {
      * 最新一条
      * @return
      */
-    public OutlayBudgetRecord selectByLatest();
+    public OutlayBudgetRecord selectByLatest(Long budgetId);
 }

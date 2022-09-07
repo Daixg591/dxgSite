@@ -87,17 +87,26 @@ public class OutlayBudgetServiceImpl implements IOutlayBudgetService
         int update =  outlayBudgetMapper.updateOutlayBudget(outlayBudget);
         if( update != 0){
             //最新一条
-            OutlayBudgetRecord recorddd=outlayBudgetRecordMapper.selectByLatest();
+            OutlayBudgetRecord recorddd=outlayBudgetRecordMapper.selectByLatest(outlayBudget.getBudgetId());
             OutlayBudgetRecord record =  new OutlayBudgetRecord();
             record.setBudgetId(outlayBudget.getBudgetId());
             record.setCreateBy(outlayBudget.getCreateBy());
             record.setCreateTime(DateUtils.getNowDate());
             record.setBeforeAmount(outlayBudget.getAmount());
             record.setChangeAmount(outlayBudget.getChangeAmount());
-            if(outlayBudget.getIsSub()){
-                record.setAfterAmount(outlayBudget.getChangeAmount().subtract(recorddd.getAfterAmount()));
+            if(recorddd != null){
+                if(outlayBudget.getIsSub()){
+                    record.setAfterAmount(recorddd.getAfterAmount().subtract(outlayBudget.getChangeAmount()));
+                }else{
+                    record.setAfterAmount(outlayBudget.getChangeAmount().add(recorddd.getAfterAmount()));
+                }
             }else{
-                record.setAfterAmount(outlayBudget.getChangeAmount().add(recorddd.getAfterAmount()));
+                if(outlayBudget.getIsSub()){
+                    record.setAfterAmount(outlayBudget.getAmount().subtract(outlayBudget.getChangeAmount()));
+                }else{
+                    record.setAfterAmount(outlayBudget.getAmount().add(outlayBudget.getChangeAmount()));
+                }
+
             }
             outlayBudgetRecordMapper.insertOutlayBudgetRecord(record);
         }

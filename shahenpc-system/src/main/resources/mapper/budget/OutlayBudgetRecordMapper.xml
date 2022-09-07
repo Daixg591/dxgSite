@@ -93,6 +93,7 @@
     <!--==================================分割线-->
     <select id="selectByLatest" resultMap="OutlayBudgetRecordResult">
         <include refid="selectOutlayBudgetRecordVo"/>
+        WHERE budget_id = #{budgetId}
         ORDER BY create_time DESC limit 0,1;
     </select>
 </mapper>
