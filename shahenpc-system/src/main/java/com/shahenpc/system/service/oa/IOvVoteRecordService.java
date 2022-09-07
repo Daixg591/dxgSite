@@ -2,6 +2,7 @@ package com.shahenpc.system.service.oa;
 
 import java.util.List;
 import com.shahenpc.system.domain.oa.OvVoteRecord;
+import com.shahenpc.system.domain.oa.vo.VoteRecordVo;
 
 /**
  * 投票记录Service接口
@@ -35,6 +36,11 @@ public interface IOvVoteRecordService
      */
     public int insertOvVoteRecord(OvVoteRecord ovVoteRecord);
 
+    /**
+     * 投票记录
+     * @return
+     */
+    public int insertPlayerIds(VoteRecordVo requst);
     /**
      * 修改投票记录
      * 
