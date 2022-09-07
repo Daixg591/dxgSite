@@ -223,6 +223,7 @@
     <select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
         <include refid="selectUserVo"/>
         where u.user_name = #{userName}
+        LIMIT 1
     </select>
 
     <select id="selectUserByUserPhone" parameterType="String" resultMap="SysUserResult">

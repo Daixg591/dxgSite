@@ -36,6 +36,7 @@
         <result property="ysxMobile" column="ysx_mobile"/>
         <result property="ysxPwd" column="ysx_pwd"/>
         <result property="userId" column="user_id"/>
+        <result property="area" column="area"/>
     </resultMap>
 
     <sql id="selectRepresentHomeAccessVo">
@@ -69,7 +70,8 @@
                ysx_mobile,
                ysx_pwd,
                user_id,
-               short_name
+               short_name,
+               area
         from represent_home_access
     </sql>
 
@@ -100,6 +102,7 @@
             <if test="leader != null  and leader != ''">and leader = #{leader}</if>
             <if test="virtualMobile != null  and virtualMobile != ''">and virtual_mobile = #{virtualMobile}</if>
             <if test="videoUserId != null  and videoUserId != ''">and video_user_id = #{videoUserId}</if>
+            <if test="area != null  and area != ''">and area = #{area}</if>
         </where>
     </select>
 
@@ -143,6 +146,7 @@
             <if test="ysxMobile != null">ysx_mobile,</if>
             <if test="ysxPwd != null">ysx_pwd,</if>
             <if test="userId != null">user_id,</if>
+            <if test="area != null">area,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null">#{title},</if>
@@ -175,6 +179,7 @@
             <if test="ysxMobile != null">#{ysxMobile},</if>
             <if test="ysxPwd != null">#{ysxPwd},</if>
             <if test="userId != null">#{user_id},</if>
+            <if test="area != null">#{area},</if>
         </trim>
     </insert>
 
@@ -211,6 +216,7 @@
             <if test="ysxMobile != null">ysx_mobile = #{ysxMobile},</if>
             <if test="ysxPwd != null">ysx_pwd = #{ysxPwd},</if>
             <if test="userId != null">user_id = #{userId},</if>
+            <if test="area != null">area = #{area},</if>
         </trim>
         where access_id = #{accessId}
     </update>
