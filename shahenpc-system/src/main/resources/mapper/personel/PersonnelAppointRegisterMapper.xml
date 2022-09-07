@@ -94,6 +94,7 @@
                r.allow_tips_cnt,
                r.refuse_tips_cnt,
                r.waiver_tips_cnt,
+               r.vote_time,
                u.user_id,
                u.nick_name,
                u.sex,
