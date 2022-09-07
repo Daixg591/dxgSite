@@ -76,6 +76,15 @@ public class PersonnelAppointGradeController extends BaseController
         return AjaxResult.success(personnelAppointGradeService.selectPersonnelAppointGradeByGradeId(gradeId));
     }
 
+
+    @ApiOperation("根据任免Id获取考试详情")
+    @GetMapping(value = "/getInfoByRegId/{registerId}")
+    public AjaxResult getInfoByRegId(@PathVariable("registerId") Long registerId)
+    {
+        return AjaxResult.success(personnelAppointGradeService.selectGradeByRegId(registerId));
+    }
+
+
     /**
      * 新增人事任免_法律知识考虑_成绩管理
      */

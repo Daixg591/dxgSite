@@ -49,6 +49,12 @@
         where grade_id = #{gradeId}
     </select>
 
+    <select id="selectGradeByRegId" parameterType="Long" resultMap="PersonnelAppointGradeResult">
+        <include refid="selectPersonnelAppointGradeVo"/>
+        where register_id = #{registerId}
+        limt 1
+    </select>
+
     <insert id="insertPersonnelAppointGrade" parameterType="PersonnelAppointGrade" useGeneratedKeys="true"
             keyProperty="gradeId">
         insert into personnel_appoint_grade

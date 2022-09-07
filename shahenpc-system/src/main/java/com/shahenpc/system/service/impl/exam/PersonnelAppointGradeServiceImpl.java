@@ -32,6 +32,11 @@ public class PersonnelAppointGradeServiceImpl implements IPersonnelAppointGradeS
         return personnelAppointGradeMapper.selectPersonnelAppointGradeByGradeId(gradeId);
     }
 
+    @Override
+    public PersonnelAppointGrade selectGradeByRegId(Long registerId){
+        return personnelAppointGradeMapper.selectGradeByRegId(registerId);
+    }
+
     /**
      * 查询人事任免_法律知识考虑_成绩管理列表
      * 
