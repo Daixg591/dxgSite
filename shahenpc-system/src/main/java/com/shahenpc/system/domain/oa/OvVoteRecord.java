@@ -30,6 +30,17 @@ public class OvVoteRecord extends BaseEntity
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private Long playerId;
 
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    private String openId;
+
     public void setRecordId(Long recordId) 
     {
         this.recordId = recordId;

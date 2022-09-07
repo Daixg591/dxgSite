@@ -1,6 +1,7 @@
 package com.shahenpc.web.controller.system;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
@@ -192,7 +193,7 @@ public class SysUserController extends BaseController {
 //            item.setStationName("暂无信息");
             res.add(item);
         }
-
+        Collections.shuffle(res);
         return AjaxResult.success(res);
     }
 

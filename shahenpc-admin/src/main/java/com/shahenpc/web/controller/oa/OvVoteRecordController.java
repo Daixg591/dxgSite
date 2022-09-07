@@ -2,6 +2,12 @@ package com.shahenpc.web.controller.oa;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson2.JSON;
+import com.shahenpc.common.utils.StringUtils;
+import com.shahenpc.common.utils.http.HttpUtils;
+import com.shahenpc.system.domain.wxsmallprogram.dto.WxAuthDto;
+import com.shahenpc.system.domain.wxsmallprogram.vo.WxAuthVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,15 +80,40 @@ public class OvVoteRecordController extends BaseController
      */
     @Log(title = "投票记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody List<OvVoteRecord> ovVoteRecord)
+    public AjaxResult add(@RequestBody List<OvVoteRecord> ovVoteRecord,@RequestBody String code)
     {
         for (OvVoteRecord item:ovVoteRecord) {
             item.setUserId(getUserId());
             item.setCreateBy(getNickName());
+            item.setOpenId(getWxOpenId(code));
             return toAjax(ovVoteRecordService.insertOvVoteRecord(item));
         }
         return AjaxResult.error();
     }
+
+    private String getWxOpenId(String code) {
+        WxAuthDto dto = new WxAuthDto();
+        dto.setJs_code(code);
+        dto.setGrant_type("authorization_code");
+        String param = getParamStr(dto);
+        String res = HttpUtils.sendGet("https://api.weixin.qq.com/sns/jscode2session", param);
+        WxAuthVo authVo = JSON.parseObject(JSON.parse(res).toString(), WxAuthVo.class);
+        if (authVo != null) {
+            return authVo.getOpenid();
+        } else {
+            return "";
+        }
+    }
+
+    public String getParamStr(WxAuthDto dto) {
+        String resParam = "appid=" + dto.getAppid() + "&secret=" + dto.getSecret()
+                + "&grant_type=" + dto.getGrant_type();
+        if (!StringUtils.isEmpty(dto.getJs_code())) {
+            resParam += "&js_code=" + dto.getJs_code();
+        }
+        return resParam;
+    }
+
 
     /**
      * 修改投票记录
