@@ -181,8 +181,15 @@ public class SysUserController extends BaseController {
             item.setPersonInfo(list.get(i).getResume());
             item.setAvatar(list.get(i).getAvatar());
             item.setGoodAreaName(dictDataService.selectDictLabel("double_type", list.get(i).getGoodArea()));
-            // todo-ht 联络站信息获取
-            item.setStationName("暂无信息");
+
+            if (list.get(i).getContactStationId()!=null ) {
+                RepresentHomeAccess homeAccess = homeAccessService.selectRepresentHomeAccessByAccessId(list.get(i).getContactStationId());
+                item.setStationName(homeAccess.getTitle());
+            }
+            else {
+                item.setStationName("暂无信息");
+            }
+//            item.setStationName("暂无信息");
             res.add(item);
         }
 

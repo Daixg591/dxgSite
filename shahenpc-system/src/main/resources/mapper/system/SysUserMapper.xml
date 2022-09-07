@@ -48,6 +48,7 @@
         <result property="partyGroupings" column="party_groupings"/>
         <result property="distinction" column="distinction"/>
         <result property="level" column="level"/>
+        <result property="contactStationId" column="contact_station_id"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
     </resultMap>
@@ -180,8 +181,8 @@
             AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(#{deptId},
             ancestors) ))
         </if>
-        <if test="stationId != null and stationId != ''">
-            AND u.contact_station_id = #{stationId}
+        <if test="contactStationId != null and contactStationId != ''">
+            AND u.contact_station_id = #{contactStationId}
         </if>
         <!-- 数据范围过滤 -->
         ${params.dataScope}
