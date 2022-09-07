@@ -247,7 +247,7 @@
                c.send_user_id, c.receive_user_id, c.process_type, c.censor_tache,c.procIns_id, c.deploy_id,
                c.address, c.record_report, c.formal_text, c.formulate_explain, c.basis, c.other, c.lapse_time
         FROM standard_censor_record r RIGHT JOIN standard_censor c ON c.censor_id = r.censor_id
-        WHERE r.receive_user_id= #{receiveUserId} AND r.type = #{type} ORDER BY r.create_time DESC
+        WHERE r.receive_user_id= #{receiveUserId} AND c.type = #{type} GROUP BY c.censor_id ORDER BY r.create_time DESC
     </select>
 
     <!--已办理-->
@@ -258,7 +258,8 @@
                 c.contact_name, c.contact_phone, c.file_list, c.type, c.status, c.rate,
                 c.send_user_id, c.receive_user_id, c.process_type, c.censor_tache,c.procIns_id, c.deploy_id,
                 c.address, c.record_report, c.formal_text, c.formulate_explain, c.basis, c.other, c.lapse_time
-        FROM standard_censor_record r RIGHT JOIN standard_censor c ON c.censor_id = r.censor_id WHERE r.send_user_id= #{sendUserId} AND r.type != 0 ORDER BY r.create_time DESC
+        FROM standard_censor_record r RIGHT JOIN standard_censor c ON c.censor_id = r.censor_id
+        WHERE r.send_user_id= #{sendUserId} AND r.type != 0 ORDER BY r.create_time DESC
     </select>
 
     <!--待处理  已处理    总数-->

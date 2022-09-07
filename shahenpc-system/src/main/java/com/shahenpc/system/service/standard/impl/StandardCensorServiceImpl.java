@@ -14,10 +14,7 @@ import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.domain.standard.StandardCensorRecord;
 import com.shahenpc.system.domain.standard.dto.CemsorDetailDto;
 import com.shahenpc.system.domain.standard.dto.TotalAndStatyDto;
-import com.shahenpc.system.domain.standard.vo.CensorAddVo;
-import com.shahenpc.system.domain.standard.vo.CensorReturnVo;
-import com.shahenpc.system.domain.standard.vo.CensorUpdateVo;
-import com.shahenpc.system.domain.standard.vo.RecordByRecordIdVo;
+import com.shahenpc.system.domain.standard.vo.*;
 import com.shahenpc.system.mapper.standard.StandardCensorMapper;
 import com.shahenpc.system.mapper.standard.StandardCensorRecordMapper;
 import com.shahenpc.system.service.ISysDictTypeService;
@@ -131,7 +128,6 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
         vo.setCensorId(standardCensor.getCensorId());
         vo.setType(standardCensor.getType());
         vo.setReceiveUserId(getUserId());//当前人
-
         StandardCensorRecord recordId=standardCensorRecordMapper.selectByRecordId(vo);
         updateRecord.setRecordId(recordId.getRecordId());
         updateRecord.setRevert(standardCensor.getRevert());
@@ -208,35 +204,53 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
     @Override
     public AjaxResult censorReturn(CensorReturnVo vo) {
         StandardCensor standardCensor = new StandardCensor();
-        vo.setUpdateTime(DateUtils.getNowDate());
-        if(vo.getType().equals(Constants.CENSOR_TYPE_5)){
-            vo.setType(Constants.CENSOR_TYPE_4);
-        }else if(vo.getType().equals(Constants.CENSOR_TYPE_4)){
-            vo.setType(Constants.CENSOR_TYPE_3);
-        }else if(vo.getType().equals(Constants.CENSOR_TYPE_3)){
-            vo.setType(Constants.CENSOR_TYPE_2);
+        standardCensor.setUpdateTime(DateUtils.getNowDate());
+        if(vo.getType().equals(Constants.CENSOR_TYPE_3)){
+            standardCensor.setType(Constants.CENSOR_TYPE_2);
         }else if(vo.getType().equals(Constants.CENSOR_TYPE_2)){
-            vo.setType(Constants.CENSOR_TYPE_1);
+            standardCensor.setType(Constants.CENSOR_TYPE_1);
         }
-        StandardCensorRecord sup = standardCensorRecordMapper.selectBySuperior(vo.getCensorId());
-        vo.setReceiveUserId(sup.getReceiveUserId().toString());
-        if(standardCensorMapper.updateStandardCensor(vo) <=0){
-            StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
-            //发送人
-            standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
-            //接收人
-            standardCensorRecord.setReceiveUserId(sup.getReceiveUserId());
-            //绑定id
-            standardCensorRecord.setCensorId(standardCensor.getCensorId());
-            //回复
-            standardCensorRecord.setType(standardCensor.getType());
-            standardCensorRecord.setCreateTime(DateUtils.getNowDate());
-            standardCensorRecord.setCreateBy(standardCensor.getCreateBy());
-            standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord);
-            return AjaxResult.success();
+        StandardCensorRecord sup = standardCensorRecordMapper.selectBySuperior(vo.getCensorId(),standardCensor.getType());
+        //修改当前状态
+        StandardCensorRecord update =standardCensorRecordMapper.selectBySuperior(vo.getCensorId(),vo.getType());
+        update.setStatus(Constants.CENSOR_TYPE_STATUS_3);
+        update.setRevert(vo.getRevert());
+        if(standardCensorRecordMapper.updateStandardCensorRecord(update) < 0){
+            AjaxResult.error();
+        }
+        if(sup != null){
+            standardCensor.setReceiveUserId(sup.getReceiveUserId().toString());
+            standardCensor.setCensorId(vo.getCensorId());
+            if(standardCensorMapper.updateStandardCensor(standardCensor) > 0){
+                StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
+                //发送人
+                standardCensorRecord.setSendUserId(vo.getUserId());
+                //接收人
+                standardCensorRecord.setReceiveUserId(sup.getReceiveUserId());
+                //绑定id
+                standardCensorRecord.setCensorId(vo.getCensorId());
+                //回复
+                standardCensorRecord.setType(standardCensor.getType());
+                standardCensorRecord.setCreateTime(DateUtils.getNowDate());
+                standardCensorRecord.setCreateBy(vo.getCreateBy());
+                standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord);
+                return AjaxResult.success();
+            }
         }
         return AjaxResult.error();
     }
+
+    @Override
+    public AjaxResult CensorPass(CensorPassVo vo) {
+        StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
+        standardCensorRecord.setRecordId(vo.getRecordId());
+        standardCensorRecord.setStatus(Constants.CENSOR_TYPE_STATUS_1);
+        standardCensorRecord.setUpdateBy(vo.getUpdateBy());
+        standardCensorRecord.setUpdateTime(DateUtils.getNowDate());
+        standardCensorRecordMapper.updateStandardCensorRecord(standardCensorRecord);
+        return AjaxResult.success();
+    }
+
     /**
      * 批量删除审查流程
      * 
@@ -275,12 +289,15 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
 
 
     @Override
-    public String ring() {
+    public String ring(Integer taskName) {
+        StandardCensor cen = new StandardCensor();
+        cen.setType(taskName);
+        int StayTotal=standardCensorMapper.selectStandardCensorList(cen).size();
         TotalAndStatyDto dto=standardCensorMapper.selectByTotalAndStay();
         // 待处理的  已处理的   全部接收的
         //int count = stayTotal+receiveTotal+doneTotal;
         MotionRingDto cakedto =new MotionRingDto();
-        BigDecimal a = new BigDecimal(dto.getStayTotal());
+        BigDecimal a = new BigDecimal(StayTotal);
         BigDecimal b = new BigDecimal(dto.getTotal());
         BigDecimal gd = new BigDecimal(0.00);
         if(!b.equals(BigDecimal.ZERO)){
@@ -294,13 +311,13 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
 
     @Override
     public List<MotionPieDto> pie() {
-        StandardCensor standardCensor = new StandardCensor();
-        List<StandardCensor> receiveTotal =  standardCensorMapper.selectStandardCensorList(standardCensor);
+        List<StandardCensor> receiveTotal =  standardCensorMapper.selectStandardCensorList(null);
         List<MotionPieDto> dto = new ArrayList<>();
         List<SysDictData> dictList = dictTypeService.selectDictDataByType("censor_type");
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictLabel().equals(p.getType()))
+            int v = 0;
+            v = receiveTotal.stream().filter(p -> p.getType().toString().equals(dictList.get(finalI).getDictValue()))
                     .collect(Collectors.toList()).size();
             MotionPieDto item = new MotionPieDto();
             item.setName(dictList.get(i).getDictLabel());

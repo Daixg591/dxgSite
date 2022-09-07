@@ -5,6 +5,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.shahenpc.system.domain.feature.dto.DoubleListDto;
+import com.shahenpc.system.domain.feature.vo.DoubleReturnVo;
+import com.shahenpc.system.domain.feature.vo.FeatureDoubleWorkUpdateVo;
+import com.shahenpc.system.domain.standard.vo.CensorReturnVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -71,7 +74,7 @@ public class FeatureDoubleWorkController extends BaseController {
     @ApiImplicitParam(name = "opinionId", value = "双联工作Id", required = true, dataType = "Long", paramType = "path", dataTypeClass = Long.class)
     @GetMapping(value = "/{doubleId}")
     public AjaxResult getInfo(@PathVariable("doubleId") Long doubleId) {
-        return AjaxResult.success(featureDoubleWorkService.selectFeatureDoubleWorkByDoubleId(doubleId));
+        return AjaxResult.success(featureDoubleWorkService.adminDateil(doubleId));
     }
 
     /**
@@ -104,7 +107,7 @@ public class FeatureDoubleWorkController extends BaseController {
     public TableDataInfo todoList(FeatureDoubleWork featureDoubleWork) {
         startPage();
         featureDoubleWork.setReceiveUserId(getUserId());
-        List<DoubleListDto> list = featureDoubleWorkService.adminList(featureDoubleWork);
+        List<FeatureDoubleWork> list = featureDoubleWorkService.todoList(featureDoubleWork);
         return getDataTable(list);
     }
 
@@ -113,7 +116,7 @@ public class FeatureDoubleWorkController extends BaseController {
     public TableDataInfo doneList(FeatureDoubleWork featureDoubleWork) {
         startPage();
         featureDoubleWork.setSendUserId(getUserId());
-        List<DoubleListDto> list = featureDoubleWorkService.adminList(featureDoubleWork);
+        List<FeatureDoubleWork> list = featureDoubleWorkService.doneList(featureDoubleWork);
         return getDataTable(list);
     }
 
@@ -123,9 +126,17 @@ public class FeatureDoubleWorkController extends BaseController {
     @ApiOperation("修改双联工作")
     @Log(title = "双联工作", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody FeatureDoubleWork featureDoubleWork) {
+    public AjaxResult edit(@RequestBody FeatureDoubleWorkUpdateVo featureDoubleWork) {
         featureDoubleWork.setUpdateBy(getNickName());
         return featureDoubleWorkService.newUpdate(featureDoubleWork);
+    }
+
+    @ApiOperation(value = "退回任务")
+    @PostMapping(value = "/return")
+    public AjaxResult Return(@RequestBody DoubleReturnVo vo) {
+        vo.setCreateBy(getNickName());
+        vo.setUserId(getUserId());
+        return featureDoubleWorkService.doubleReturn(vo);
     }
 
     /**

@@ -12,11 +12,13 @@ import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.system.domain.represent.RepresentMotion;
 import com.shahenpc.system.domain.represent.vo.MotionTaskVo;
 import com.shahenpc.system.domain.standard.vo.CensorAddVo;
+import com.shahenpc.system.domain.standard.vo.CensorPassVo;
 import com.shahenpc.system.domain.standard.vo.CensorReturnVo;
 import com.shahenpc.system.domain.standard.vo.CensorUpdateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.models.auth.In;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -148,7 +150,19 @@ public class StandardCensorController extends BaseController
     @ApiOperation(value = "退回任务")
     @PostMapping(value = "/return")
     public AjaxResult Return(@RequestBody CensorReturnVo vo) {
+        vo.setCreateBy(getNickName());
+        vo.setUserId(getUserId());
         return standardCensorService.censorReturn(vo);
+    }
+
+
+
+    @ApiOperation(value = "通过接口")
+    @PostMapping(value = "/pass")
+    public AjaxResult pass(@RequestBody CensorPassVo vo) {
+        vo.setUpdateBy(getNickName());
+        vo.setUserId(getUserId());
+        return standardCensorService.CensorPass(vo);
     }
 
     @ApiOperation("按月曲线")
@@ -165,8 +179,8 @@ public class StandardCensorController extends BaseController
 
     @ApiOperation("落实率")
     @GetMapping("/ring")
-    public AjaxResult ring(){
-        return AjaxResult.success(standardCensorService.ring());
+    public AjaxResult ring(Integer taskName){
+        return AjaxResult.success(standardCensorService.ring(taskName));
     }
 
     /**
@@ -179,6 +193,7 @@ public class StandardCensorController extends BaseController
     {
         return toAjax(standardCensorService.deleteStandardCensorByProcessIds(processIds));
     }
+
 
     /**
      *  审查流程 以下

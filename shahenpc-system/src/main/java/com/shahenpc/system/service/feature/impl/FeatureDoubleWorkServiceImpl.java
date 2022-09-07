@@ -1,34 +1,36 @@
 package com.shahenpc.system.service.feature.impl;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.shahenpc.common.constant.Constants;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.SensitiveWordUtil;
+import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.feature.FeatureDoubleWorkTrace;
 import com.shahenpc.system.domain.feature.dto.*;
+import com.shahenpc.system.domain.feature.vo.DoubleReturnVo;
+import com.shahenpc.system.domain.feature.vo.FeatureDoubleWorkUpdateVo;
 import com.shahenpc.system.domain.represent.RepresentHomeAccess;
 import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.mapper.SysUserMapper;
+import com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkTraceMapper;
 import com.shahenpc.system.mapper.feature.FeatureSensitiveWordMapper;
 import com.shahenpc.system.mapper.represent.RepresentHomeAccessMapper;
 import com.shahenpc.system.service.ISysDictDataService;
 import com.shahenpc.system.service.ISysDictTypeService;
+import com.shahenpc.system.service.feature.IFeatureDoubleWorkService;
 import com.shahenpc.system.service.represent.IRepresentWorkLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper;
-import com.shahenpc.system.domain.feature.FeatureDoubleWork;
-import com.shahenpc.system.service.feature.IFeatureDoubleWorkService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 双联工作Service业务层处理
@@ -49,6 +51,12 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     private SysUserMapper sysUserMapper;
     @Autowired
     private ISysDictTypeService sysDictTypeService;
+    @Autowired
+    private RepresentHomeAccessMapper representHomeAccessMapper;
+    @Autowired
+    private IRepresentWorkLogService representWorkLogService;
+    @Autowired
+    private FeatureSensitiveWordMapper featureSensitiveWordMapper;
     /**
      * 查询双联工作
      * 
@@ -109,6 +117,23 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     public int deleteFeatureDoubleWorkByDoubleIds(Long[] doubleIds)
     {
         return featureDoubleWorkMapper.deleteFeatureDoubleWorkByDoubleIds(doubleIds);
+    }
+
+    @Override
+    public List<FeatureDoubleWork> todoList(FeatureDoubleWork request) {
+
+        return featureDoubleWorkMapper.selectByTodoList(request);
+    }
+
+    @Override
+    public List<FeatureDoubleWork> doneList(FeatureDoubleWork request) {
+
+        return featureDoubleWorkMapper.selectByDoneList(request);
+    }
+
+    @Override
+    public DoubleDetatilDto adminDateil(Long doubleId) {
+        return featureDoubleWorkMapper.adminDateil(doubleId);
     }
 
     /**
@@ -178,10 +203,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         return featureDoubleWorkMapper.selectByMonth();
     }
 
-    @Autowired
-    private IRepresentWorkLogService representWorkLogService;
-    @Autowired
-    private FeatureSensitiveWordMapper featureSensitiveWordMapper;
+
 
     @Override
     @Transactional
@@ -219,35 +241,64 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
             }
         }
     }
-    @Autowired
-    private RepresentHomeAccessMapper representHomeAccessMapper;
+
     @Override
     @Transactional
-    public AjaxResult newUpdate(FeatureDoubleWork featureDoubleWork) {
-            featureDoubleWork.setUpdateTime(DateUtils.getNowDate());
-            //查询出所在访问之家
-            SysUser user=sysUserMapper.selectUserById(featureDoubleWork.getSendUserId());
-            //并且查出负责人
-            RepresentHomeAccess access= representHomeAccessMapper.selectRepresentHomeAccessByAccessId(user.getContactStationId());
-            //根据负责人 查出 userid
-            SysUser senUser = sysUserMapper.selectByNickNamaAndPhone(access.getLeader(),access.getPhone());
-            if(featureDoubleWork.getType().equals(Constants.DOUBLE_STATUS_1)){
-                featureDoubleWork.setReceiveUserId(senUser.getUserId());
-            }
-            if(featureDoubleWorkMapper.updateFeatureDoubleWork(featureDoubleWork) >0){
-                FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
-                featureDoubleWorkTrace.setRevert(featureDoubleWork.getContent());
-                featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
-                featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSendUserId());
-                featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
-                featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
-                featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
-                featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getUpdateBy());
-                featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
-                return AjaxResult.success();
+    public AjaxResult newUpdate(FeatureDoubleWorkUpdateVo featureDoubleWork) {
+            if(featureDoubleWork.getStatus().equals(Constants.DOUBLE_STATUS_1)){
+                featureDoubleWork.setUpdateTime(DateUtils.getNowDate());
+                if(Constants.DOUBLE_PROCESS_TYPE_1.equals(featureDoubleWork.getProcessType())){
+                    //查询代表  属于那个联络站
+                    SysUser user=sysUserMapper.selectUserById(featureDoubleWork.getReceiveUserId());
+                    RepresentHomeAccess access= representHomeAccessMapper.selectRepresentHomeAccessByAccessId(user.getContactStationId());
+                    featureDoubleWork.setReceiveUserId(access.getUserId());
+                    featureDoubleWork.setProcessType(Constants.DOUBLE_PROCESS_TYPE_2);
+                }else if(Constants.DOUBLE_PROCESS_TYPE_2.equals(featureDoubleWork.getProcessType())){
+                    RepresentHomeAccess access=representHomeAccessMapper.selectByLevel(0);
+                    featureDoubleWork.setReceiveUserId(access.getUserId());
+                    featureDoubleWork.setProcessType(Constants.DOUBLE_PROCESS_TYPE_3);
+                }
+                if(featureDoubleWorkMapper.updateFeatureDoubleWork(featureDoubleWork) >0){
+                    FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
+                    featureDoubleWorkTrace.setRevert(featureDoubleWork.getContent());
+                    featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
+                    featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSendUserId());
+                    featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
+                    featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
+                    featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
+                    featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getUpdateBy());
+                    featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
+                    return AjaxResult.success();
+                }else{
+                    return AjaxResult.error();
+                }
             }else{
-                return AjaxResult.error();
+                FeatureDoubleWork Work = new FeatureDoubleWork();
+                Work.setDoubleId(featureDoubleWork.getDoubleId());
+                Work.setStatus(featureDoubleWork.getStatus());
+                featureDoubleWorkMapper.updateFeatureDoubleWork(Work);
+                //查询当前记录
+                FeatureDoubleWorkTrace trace = new FeatureDoubleWorkTrace();
+                trace.setDoubleId(featureDoubleWork.getDoubleId());
+                trace.setType(featureDoubleWork.getType());
+                trace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
+                FeatureDoubleWorkTrace tr= featureDoubleWorkTraceMapper.selectByCurrent(trace);
+                tr.setStatus(featureDoubleWork.getStatus());
+                featureDoubleWorkTraceMapper.updateFeatureDoubleWorkTrace(tr);
+                return AjaxResult.success();
             }
+    }
+
+    /**
+     * 回退
+     * @param vo
+     * @return
+     */
+    @Override
+    public AjaxResult doubleReturn(DoubleReturnVo vo) {
+
+
+        return null;
     }
 
     @Override

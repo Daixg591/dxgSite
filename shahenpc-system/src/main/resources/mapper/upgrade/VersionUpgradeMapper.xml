@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.upgrade.VersionUpgradeMapper">
+    
+    <resultMap type="VersionUpgrade" id="VersionUpgradeResult">
+        <result property="id"    column="id"    />
+        <result property="appId"    column="app_id"    />
+        <result property="versionId"    column="version_id"    />
+        <result property="versionMini"    column="version_mini"    />
+        <result property="versionCode"    column="version_code"    />
+        <result property="type"    column="type"    />
+        <result property="apkUrl"    column="apk_url"    />
+        <result property="upgradePoint"    column="upgrade_point"    />
+        <result property="status"    column="status"    />
+        <result property="appType"    column="app_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectVersionUpgradeVo">
+        select id, app_id, version_id, version_mini, version_code, type, apk_url, upgrade_point, status, app_type, create_time, update_time from version_upgrade
+    </sql>
+
+    <select id="selectVersionUpgradeList" parameterType="VersionUpgrade" resultMap="VersionUpgradeResult">
+        <include refid="selectVersionUpgradeVo"/>
+        <where>  
+            <if test="appId != null "> and app_id = #{appId}</if>
+            <if test="versionId != null "> and version_id = #{versionId}</if>
+            <if test="versionMini != null  and versionMini != ''"> and version_mini = #{versionMini}</if>
+            <if test="versionCode != null  and versionCode != ''"> and version_code = #{versionCode}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="apkUrl != null  and apkUrl != ''"> and apk_url = #{apkUrl}</if>
+            <if test="upgradePoint != null  and upgradePoint != ''"> and upgrade_point = #{upgradePoint}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="appType != null "> and app_type = #{appType}</if>
+        </where>
+    </select>
+    
+    <select id="selectVersionUpgradeById" parameterType="Long" resultMap="VersionUpgradeResult">
+        <include refid="selectVersionUpgradeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVersionUpgrade" parameterType="VersionUpgrade" useGeneratedKeys="true" keyProperty="id">
+        insert into version_upgrade
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="appId != null">app_id,</if>
+            <if test="versionId != null">version_id,</if>
+            <if test="versionMini != null">version_mini,</if>
+            <if test="versionCode != null">version_code,</if>
+            <if test="type != null">type,</if>
+            <if test="apkUrl != null">apk_url,</if>
+            <if test="upgradePoint != null">upgrade_point,</if>
+            <if test="status != null">status,</if>
+            <if test="appType != null">app_type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="appId != null">#{appId},</if>
+            <if test="versionId != null">#{versionId},</if>
+            <if test="versionMini != null">#{versionMini},</if>
+            <if test="versionCode != null">#{versionCode},</if>
+            <if test="type != null">#{type},</if>
+            <if test="apkUrl != null">#{apkUrl},</if>
+            <if test="upgradePoint != null">#{upgradePoint},</if>
+            <if test="status != null">#{status},</if>
+            <if test="appType != null">#{appType},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVersionUpgrade" parameterType="VersionUpgrade">
+        update version_upgrade
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="versionId != null">version_id = #{versionId},</if>
+            <if test="versionMini != null">version_mini = #{versionMini},</if>
+            <if test="versionCode != null">version_code = #{versionCode},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="apkUrl != null">apk_url = #{apkUrl},</if>
+            <if test="upgradePoint != null">upgrade_point = #{upgradePoint},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="appType != null">app_type = #{appType},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVersionUpgradeById" parameterType="Long">
+        delete from version_upgrade where id = #{id}
+    </delete>
+
+    <delete id="deleteVersionUpgradeByIds" parameterType="String">
+        delete from version_upgrade where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--================================分割想-->
+    <select id="getAppType" resultMap="VersionUpgradeResult" parameterType="java.lang.Integer">
+        <include refid="selectVersionUpgradeVo"/> where app_type = #{appType} ORDER BY create_time DESC LIMIT 1;
+    </select>
+</mapper>

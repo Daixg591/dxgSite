@@ -65,4 +65,6 @@ public interface RepresentHomeAccessMapper
     public int selectVisitsCount();
 
     public List<RepresentHomeAccess> rankingList();
+
+    public RepresentHomeAccess selectByLevel(Integer level);
 }

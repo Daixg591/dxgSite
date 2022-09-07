@@ -61,4 +61,6 @@ public interface FeatureDoubleWorkTraceMapper
     public int deleteFeatureDoubleWorkTraceByTraceIds(Long[] traceIds);
 
     public List<TraceListDto> adminList(FeatureDoubleWorkTrace featureDoubleWorkTrace);
+
+    public FeatureDoubleWorkTrace selectByCurrent(FeatureDoubleWorkTrace trace);
 }

@@ -249,4 +249,9 @@
         <include refid="selectRepresentHomeAccessVo"/>
         ORDER BY browse_number DESC LIMIT 3;
     </select>
+
+    <select id="selectByLevel" parameterType="Long" resultMap="RepresentHomeAccessResult">
+        <include refid="selectRepresentHomeAccessVo"/>
+        where `level` = 0
+    </select>
 </mapper>
