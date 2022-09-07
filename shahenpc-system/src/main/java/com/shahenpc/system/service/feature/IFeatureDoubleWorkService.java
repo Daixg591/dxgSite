@@ -5,6 +5,7 @@ import java.util.List;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.feature.dto.*;
+import com.shahenpc.system.domain.feature.vo.DoubleReturnVo;
 
 /**
  * 双联工作Service接口
@@ -54,6 +55,9 @@ public interface IFeatureDoubleWorkService
      */
     public int deleteFeatureDoubleWorkByDoubleIds(Long[] doubleIds);
 
+    public List<FeatureDoubleWork> todoList(FeatureDoubleWork request);
+
+    public List<FeatureDoubleWork> doneList(FeatureDoubleWork request);
     /**
      * 删除双联工作信息
      * 
@@ -75,6 +79,8 @@ public interface IFeatureDoubleWorkService
     public AjaxResult newAdd(FeatureDoubleWork featureDoubleWork);
 
     public AjaxResult newUpdate(FeatureDoubleWork featureDoubleWork);
+
+    public AjaxResult doubleReturn(DoubleReturnVo vo);
 
     //public FeatureDoubleWork  newDetail(Long doubleId);
 

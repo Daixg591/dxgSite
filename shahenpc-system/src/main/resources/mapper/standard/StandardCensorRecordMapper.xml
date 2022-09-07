@@ -113,7 +113,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <select id="selectBySuperior" resultMap="StandardCensorRecordResult">
         <include refid="selectStandardCensorRecordVo"/>
-        WHERE censor_id = #{censorId} AND `type` = #{type} ORDER BY create_time DESC limit 0,1;
+        WHERE censor_id = #{censorId} AND `type` = #{type} AND status != 3 ORDER BY create_time DESC
     </select>
     <!--查询 分发 有几条-->
     <select id="selectByDistribute" resultMap="StandardCensorRecordResult" parameterType="Long">
@@ -123,6 +123,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!--查询记录id-->
     <select id="selectByRecordId" parameterType="com.shahenpc.system.domain.standard.vo.RecordByRecordIdVo" resultMap="StandardCensorRecordResult">
         <include refid="selectStandardCensorRecordVo"/>
-         WHERE censor_id=#{censorId} AND type =#{type} AND receive_user_id = #{receiveUserId}
+         WHERE censor_id=#{censorId} AND type =#{type} AND receive_user_id = #{receiveUserId} AND status != 1
     </select>
 </mapper>

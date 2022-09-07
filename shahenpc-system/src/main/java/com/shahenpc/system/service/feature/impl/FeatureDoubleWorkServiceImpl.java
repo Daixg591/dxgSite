@@ -14,6 +14,7 @@ import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.SensitiveWordUtil;
 import com.shahenpc.system.domain.feature.FeatureDoubleWorkTrace;
 import com.shahenpc.system.domain.feature.dto.*;
+import com.shahenpc.system.domain.feature.vo.DoubleReturnVo;
 import com.shahenpc.system.domain.represent.RepresentHomeAccess;
 import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.mapper.SysUserMapper;
@@ -109,6 +110,18 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     public int deleteFeatureDoubleWorkByDoubleIds(Long[] doubleIds)
     {
         return featureDoubleWorkMapper.deleteFeatureDoubleWorkByDoubleIds(doubleIds);
+    }
+
+    @Override
+    public List<FeatureDoubleWork> todoList(FeatureDoubleWork request) {
+
+        return featureDoubleWorkMapper.selectByTodoList(request);
+    }
+
+    @Override
+    public List<FeatureDoubleWork> doneList(FeatureDoubleWork request) {
+
+        return featureDoubleWorkMapper.selectByDoneList(request);
     }
 
     /**
@@ -248,6 +261,18 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
             }else{
                 return AjaxResult.error();
             }
+    }
+
+    /**
+     * 回退
+     * @param vo
+     * @return
+     */
+    @Override
+    public AjaxResult doubleReturn(DoubleReturnVo vo) {
+
+
+        return null;
     }
 
     @Override

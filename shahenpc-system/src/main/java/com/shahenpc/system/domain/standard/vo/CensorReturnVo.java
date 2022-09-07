@@ -16,5 +16,6 @@ public class CensorReturnVo extends BaseEntity{
 
     private Long userId;
 
+    private String revert;
 
 }

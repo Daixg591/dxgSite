@@ -214,6 +214,7 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
         //修改当前状态
         StandardCensorRecord update =standardCensorRecordMapper.selectBySuperior(vo.getCensorId(),vo.getType());
         update.setStatus(Constants.CENSOR_TYPE_STATUS_3);
+        update.setRevert(vo.getRevert());
         if(standardCensorRecordMapper.updateStandardCensorRecord(update) < 0){
             AjaxResult.error();
         }
