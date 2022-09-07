@@ -48,7 +48,7 @@ public class FeatureDoubleWork extends BaseEntity
 
     /** 意见类型 */
     @Excel(name = "意见类型")
-    private Long type;
+    private Integer type;
 
     /**  */
     @Excel(name = "")

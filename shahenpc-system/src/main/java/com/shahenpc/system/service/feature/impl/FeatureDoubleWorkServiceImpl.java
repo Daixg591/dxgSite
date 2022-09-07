@@ -218,6 +218,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         }else {
             SysUser user = sysUserMapper.selectUserById(featureDoubleWork.getSendUserId());
             if (user.getUserStatus().equals(1)) {
+                featureDoubleWork.setProcessType(Constants.DOUBLE_PROCESS_TYPE_1);
                 featureDoubleWork.setCreateTime(DateUtils.getNowDate());
                 int a = featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork);
                 //添加日志
@@ -228,6 +229,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                 log.setRemark("双联工作！");
                 representWorkLogService.insertRepresentWorkLog(log);
                 FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
+                featureDoubleWorkTrace.setProcessType(Constants.DOUBLE_PROCESS_TYPE_1);
                 featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
                 featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSendUserId());
                 featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());

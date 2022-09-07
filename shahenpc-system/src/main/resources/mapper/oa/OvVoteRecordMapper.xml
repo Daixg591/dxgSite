@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.OvVoteRecordMapper">
+
+    <resultMap type="OvVoteRecord" id="OvVoteRecordResult">
+        <result property="recordId"    column="record_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="voteId"    column="vote_id"    />
+        <result property="playerId"    column="player_id"    />
+        <result property="openId"    column="open_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+    </resultMap>
+
+    <sql id="selectOvVoteRecordVo">
+        select record_id, user_id, vote_id, player_id, open_id, remark, create_time, update_by, update_time, create_by from ov_vote_record
+    </sql>
+
+    <select id="selectOvVoteRecordList" parameterType="OvVoteRecord" resultMap="OvVoteRecordResult">
+        <include refid="selectOvVoteRecordVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="voteId != null "> and vote_id = #{voteId}</if>
+            <if test="playerId != null "> and player_id = #{playerId}</if>
+            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
+        </where>
+    </select>
+
+    <select id="selectOvVoteRecordByRecordId" parameterType="Long" resultMap="OvVoteRecordResult">
+        <include refid="selectOvVoteRecordVo"/>
+        where record_id = #{recordId}
+    </select>
+
+    <insert id="insertOvVoteRecord" parameterType="OvVoteRecord" useGeneratedKeys="true" keyProperty="recordId">
+        insert into ov_vote_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="voteId != null">vote_id,</if>
+            <if test="playerId != null">player_id,</if>
+            <if test="openId != null">open_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="voteId != null">#{voteId},</if>
+            <if test="playerId != null">#{playerId},</if>
+            <if test="openId != null">#{openId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOvVoteRecord" parameterType="OvVoteRecord">
+        update ov_vote_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="voteId != null">vote_id = #{voteId},</if>
+            <if test="playerId != null">player_id = #{playerId},</if>
+            <if test="openId != null">open_id = #{openId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+    <delete id="deleteOvVoteRecordByRecordId" parameterType="Long">
+        delete from ov_vote_record where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteOvVoteRecordByRecordIds" parameterType="String">
+        delete from ov_vote_record where record_id in
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+</mapper>
