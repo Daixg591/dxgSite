@@ -17,8 +17,35 @@ public class FeatureDoubleWork extends BaseEntity
 {
     /**  */
     private Long doubleId;
+
     /**流程类型 1代表 2.联络站负责人3.联络站总负责人*/
     private Integer processType;
+
+    /**
+     * 姓名
+     */
+    private String nickName;
+
+    /**
+     * 手机号码
+     */
+    private String phonenumber;
+
+    /**
+     * 身份证号
+     */
+    private String idCard;
+
+    /**
+     * 家庭地址
+     */
+    private String homeAddress;
+
+    /**
+     * 联络站Id
+     */
+    private Long stationId;
+
     /** 意见类型 */
     @Excel(name = "意见类型")
     private Long type;

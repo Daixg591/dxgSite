@@ -22,10 +22,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="address"    column="address"    />
         <result property="location"    column="location"    />
         <result property="processType"    column="process_type"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="phonenumber"    column="phonenumber"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="homeAddress"    column="home_address"    />
+        <result property="stationId"    column="station_id"    />
     </resultMap>
 
     <sql id="selectFeatureDoubleWorkVo">
-        select double_id, type, title, status, pic_urls, content, create_by, create_time, update_by, update_time, remark, receive_user_id, send_user_id, rate, address, location, process_type from feature_double_work
+        select double_id, type, title, status, pic_urls, content, create_by, create_time, update_by,
+               update_time, remark, receive_user_id, send_user_id, rate, address, location,
+               nick_name,phonenumber,id_card,home_address,station_id
+        from feature_double_work
     </sql>
 
     <select id="selectFeatureDoubleWorkList" parameterType="FeatureDoubleWork" resultMap="FeatureDoubleWorkResult">
@@ -69,6 +77,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="address != null">address,</if>
             <if test="location != null">location,</if>
             <if test="processType != null">process_type,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="phonenumber != null">phonenumber,</if>
+            <if test="idCard != null">id_card,</if>
+            <if test="homeAddress != null">home_address,</if>
+            <if test="stationId != null">station_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="type != null">#{type},</if>
@@ -87,6 +100,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="address != null">#{address},</if>
             <if test="location != null">#{location},</if>
             <if test="processType != null">#{processType},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="phonenumber != null">#{phonenumber},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="homeAddress != null">#{homeAddress},</if>
+            <if test="stationId != null">#{stationId},</if>
         </trim>
     </insert>
 
@@ -109,6 +127,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="address != null">address = #{address},</if>
             <if test="location != null">location = #{location},</if>
             <if test="processType != null">process_type = #{processType},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="phonenumber != null">phonenumber = #{phonenumber},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="homeAddress != null">home_address = #{homeAddress},</if>
+            <if test="stationId != null">station_id = #{stationId},</if>
         </trim>
         where double_id = #{doubleId}
     </update>
