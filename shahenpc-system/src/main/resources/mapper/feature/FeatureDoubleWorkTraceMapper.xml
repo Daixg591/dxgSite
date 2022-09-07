@@ -131,14 +131,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </resultMap>
     <select id="selectByDoubleId" resultMap="appList" parameterType="Long">
-        select trace_id, double_id, send_user_id, receive_user_id, type, status, pic_urls, revert, remark, create_by, create_time, update_by, update_time, process_type,
-        (select u.nick_name from  sys_user u where u.user_id = t.receive_user_id)as receiveName
+        select trace_id, double_id, send_user_id, receive_user_id, type, status,
+               pic_urls, revert, remark, create_by, create_time, update_by, update_time, process_type,
+               process_type,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = t.process_type)as processTypeName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = t.status)as statusName,
+        (select u.nick_name FROM  sys_user u where u.user_id = t.receive_user_id)as receiveName
         from feature_double_work_trace t
         where double_id = #{doubleId}
     </select>
 
     <select id="selectByCurrent" resultMap="FeatureDoubleWorkTraceResult">
         <include refid="selectFeatureDoubleWorkTraceVo"/>
-        where double_id = #{doubleId} and `type`= #{type} and receive_user_id = #{receiveUserId}
+        where double_id = #{doubleId} and `process_type`= #{processType} and receive_user_id = #{receiveUserId}
     </select>
 </mapper>

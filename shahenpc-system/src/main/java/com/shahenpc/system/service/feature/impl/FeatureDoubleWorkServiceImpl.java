@@ -248,32 +248,47 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     @Transactional
     public AjaxResult newUpdate(FeatureDoubleWorkUpdateVo featureDoubleWork) {
             if(featureDoubleWork.getStatus().equals(Constants.DOUBLE_STATUS_1)){
-                featureDoubleWork.setUpdateTime(DateUtils.getNowDate());
+                FeatureDoubleWorkUpdateVo Work = new FeatureDoubleWorkUpdateVo();
+                Work.setUpdateTime(DateUtils.getNowDate());
                 if(Constants.DOUBLE_PROCESS_TYPE_1.equals(featureDoubleWork.getProcessType())){
                     //查询代表  属于那个联络站
                     SysUser user=sysUserMapper.selectUserById(featureDoubleWork.getReceiveUserId());
                     RepresentHomeAccess access= representHomeAccessMapper.selectRepresentHomeAccessByAccessId(user.getContactStationId());
-                    featureDoubleWork.setReceiveUserId(access.getUserId());
-                    featureDoubleWork.setProcessType(Constants.DOUBLE_PROCESS_TYPE_2);
+                    Work.setReceiveUserId(access.getUserId());
+                    Work.setProcessType(Constants.DOUBLE_PROCESS_TYPE_2);
                 }else if(Constants.DOUBLE_PROCESS_TYPE_2.equals(featureDoubleWork.getProcessType())){
                     RepresentHomeAccess access=representHomeAccessMapper.selectByLevel(0);
-                    featureDoubleWork.setReceiveUserId(access.getUserId());
-                    featureDoubleWork.setProcessType(Constants.DOUBLE_PROCESS_TYPE_3);
+                    Work.setReceiveUserId(access.getUserId());
+                    Work.setProcessType(Constants.DOUBLE_PROCESS_TYPE_3);
                 }
-                if(featureDoubleWorkMapper.updateFeatureDoubleWork(featureDoubleWork) >0){
-                    FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
-                    featureDoubleWorkTrace.setRevert(featureDoubleWork.getContent());
-                    featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
-                    featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSendUserId());
-                    featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
-                    featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
-                    featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
-                    featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getUpdateBy());
-                    featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
+                //修改原来记录
+                FeatureDoubleWorkTrace Trace = new FeatureDoubleWorkTrace();
+                Trace.setDoubleId(featureDoubleWork.getDoubleId());
+                Trace.setProcessType(featureDoubleWork.getProcessType());
+                Trace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
+                FeatureDoubleWorkTrace tracelist=  featureDoubleWorkTraceMapper.selectByCurrent(Trace);
+                if(tracelist != null){
+                    tracelist.setStatus(Constants.DOUBLE_STATUS_1);
+                    tracelist.setRevert(featureDoubleWork.getRevert());
+                    featureDoubleWorkTraceMapper.updateFeatureDoubleWorkTrace(tracelist);
+                }
+                Work.setDoubleId(featureDoubleWork.getDoubleId());
+                //Work.setStatus(Constants.DOUBLE_STATUS_1);
+                if(featureDoubleWorkMapper.updateFeatureDoubleWork(Work) > 0){
+                    if(!tracelist.getProcessType().equals(Constants.DOUBLE_PROCESS_TYPE_3)){
+                        FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
+                        //然后增加
+                        featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getReceiveUserId());
+                        featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
+                        featureDoubleWorkTrace.setReceiveUserId(Work.getReceiveUserId());
+                        featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
+                        featureDoubleWorkTrace.setProcessType(Work.getProcessType());
+                        featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getUpdateBy());
+                        featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
+                    }
                     return AjaxResult.success();
-                }else{
-                    return AjaxResult.error();
                 }
+                return AjaxResult.error();
             }else{
                 FeatureDoubleWork Work = new FeatureDoubleWork();
                 Work.setDoubleId(featureDoubleWork.getDoubleId());
@@ -282,7 +297,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                 //查询当前记录
                 FeatureDoubleWorkTrace trace = new FeatureDoubleWorkTrace();
                 trace.setDoubleId(featureDoubleWork.getDoubleId());
-                trace.setType(featureDoubleWork.getType());
+                trace.setProcessType(featureDoubleWork.getProcessType());
                 trace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
                 FeatureDoubleWorkTrace tr= featureDoubleWorkTraceMapper.selectByCurrent(trace);
                 tr.setStatus(featureDoubleWork.getStatus());

@@ -9,4 +9,7 @@ import java.util.List;
 public class DoubleDetatilDto extends FeatureDoubleWork {
 
     private List<TraceDouBleDto> trace;
+    private String doubleTypeName;
+    private String processTypeName;
+    private String statusName;
 }

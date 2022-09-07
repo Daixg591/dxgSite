@@ -311,18 +311,21 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
 
     @Override
     public List<MotionPieDto> pie() {
-        List<StandardCensor> receiveTotal =  standardCensorMapper.selectStandardCensorList(null);
+        StandardCensor standardCensor = new StandardCensor();
+        List<StandardCensor> receiveTotal =  standardCensorMapper.selectStandardCensorList(standardCensor);
         List<MotionPieDto> dto = new ArrayList<>();
         List<SysDictData> dictList = dictTypeService.selectDictDataByType("censor_type");
-        for (int i = 0; i < dictList.size(); i++) {
-            int finalI = i;
-            int v = 0;
-            v = receiveTotal.stream().filter(p -> p.getType().toString().equals(dictList.get(finalI).getDictValue()))
-                    .collect(Collectors.toList()).size();
-            MotionPieDto item = new MotionPieDto();
-            item.setName(dictList.get(i).getDictLabel());
-            item.setValue(v);
-            dto.add(item);
+        if (receiveTotal.size() != 0) {
+                for (int i = 0; i < dictList.size(); i++) {
+                    int finalI = i;
+                    int v = 0;
+                    v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getType().toString()))
+                            .collect(Collectors.toList()).size();
+                    MotionPieDto item = new MotionPieDto();
+                    item.setName(dictList.get(i).getDictLabel());
+                    item.setValue(v);
+                    dto.add(item);
+                }
         }
         return dto;
     }

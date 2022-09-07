@@ -32,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectFeatureDoubleWorkVo">
         select double_id, type, title, status, pic_urls, content, create_by, create_time, update_by,
                update_time, remark, receive_user_id, send_user_id, rate, address, location,
-               nick_name,phonenumber,id_card,home_address,station_id
+               nick_name,phonenumber,id_card,home_address,station_id,process_type
         from feature_double_work
     </sql>
 
@@ -152,7 +152,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <association property="trace" column="double_id" select="com.shahenpc.system.mapper.feature.FeatureDoubleWorkTraceMapper.selectByDoubleId"></association>
     </resultMap>
     <select id="adminDateil" resultMap="detail">
-        <include refid="selectFeatureDoubleWorkVo"/>
+        select w.double_id, w.type, w.title, w.status, w.pic_urls, w.content, w.create_by, w.create_time, w.update_by,
+               w.update_time, w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,
+               w.nick_name,w.phonenumber,w.id_card,w.home_address,w.station_id,w.process_type,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = w.process_type)as processTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = w.status)as statusName
+        from feature_double_work w
         where double_id = #{doubleId}
     </select>
     <!--待办-->
@@ -162,17 +168,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectByTodoList" parameterType="FeatureDoubleWork" resultMap="appLists">
         SELECT w.double_id, w.type, w.title, w.`status`, w.pic_urls, w.content, w.create_by, w.create_time, w.update_by, w.update_time,
                w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,
-               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = t.process_type)as processTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = t.status)as statusName
         FROM feature_double_work_trace t
         RIGHT JOIN feature_double_work w ON w.double_id = t.double_id
-        WHERE t.receive_user_id= #{receiveUserId}
+        WHERE t.receive_user_id= #{receiveUserId} AND t.`status` = 0
         GROUP BY w.double_id ORDER BY w.create_time DESC
     </select>
     <!--已办-->
     <select id="selectByDoneList" parameterType="FeatureDoubleWork" resultMap="appLists">
         SELECT  w.double_id,w.type, w.title, w.`status`, w.pic_urls, w.content, w.create_by, w.create_time, w.update_by, w.update_time,
-                w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,
-                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName
+                w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,r.`status`,
+                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName,
+                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = w.process_type)as processTypeName,
+                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = w.status)as statusName
         FROM feature_double_work_trace r RIGHT JOIN feature_double_work w ON w.double_id = r.double_id
         WHERE r.send_user_id= #{sendUserId} ORDER BY w.create_time DESC
     </select>

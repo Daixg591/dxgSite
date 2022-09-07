@@ -63,4 +63,5 @@ public interface FeatureDoubleWorkTraceMapper
     public List<TraceListDto> adminList(FeatureDoubleWorkTrace featureDoubleWorkTrace);
 
     public FeatureDoubleWorkTrace selectByCurrent(FeatureDoubleWorkTrace trace);
+
 }

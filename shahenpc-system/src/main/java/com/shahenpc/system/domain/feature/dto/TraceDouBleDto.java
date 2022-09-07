@@ -6,4 +6,6 @@ import lombok.Data;
 @Data
 public class TraceDouBleDto extends FeatureDoubleWorkTrace {
     private String receiveName;
+    private String processTypeName;
+    private String statusName;
 }
