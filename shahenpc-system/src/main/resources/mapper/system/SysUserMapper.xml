@@ -156,9 +156,21 @@
         <if test="goodArea != null and userId != ''">
             AND u.good_area = #{goodArea}
         </if>
+        <if test="sex != null and userId != ''">
+            AND u.sex = #{sex}
+        </if>
         <if test="nickName != null and nickName != ''">
             AND u.nick_name like concat('%', #{nickName}, '%')
         </if>
+
+        <if test="partyGroupings != null and partyGroupings != ''">
+            AND u.party_groupings = #{partyGroupings}
+        </if>
+
+        <if test="nation != null and nation != ''">
+            AND u.nation = #{nation}
+        </if>
+
         <if test="userName != null and userName != ''">
             AND u.user_name like concat('%', #{userName}, '%')
         </if>
