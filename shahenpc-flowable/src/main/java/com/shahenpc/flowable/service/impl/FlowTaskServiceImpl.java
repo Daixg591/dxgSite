@@ -1547,14 +1547,14 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         Page<FlowTaskDto> page = new Page<>();
         Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
         //先查 流程id
-        ProcessDefinition pd1 = repositoryService.createProcessDefinitionQuery()
+        List<ProcessDefinition> pd1 = repositoryService.createProcessDefinitionQuery()
                 .processDefinitionName(taskName)
-                .singleResult();
+                .list();
         //流程id 查询最终的
         HistoricTaskInstanceQuery taskInstanceQuery = historyService.createHistoricTaskInstanceQuery()
                 .includeProcessVariables()
                 .finished()
-                .processDefinitionId(pd1.getId())
+                .processDefinitionId(pd1.get(0).getId())
                 .taskAssignee(userId.toString())
                 .orderByHistoricTaskInstanceEndTime()
                 .desc();
@@ -2401,14 +2401,14 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         Page<FlowTaskDto> page = new Page<>();
         Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
         //先查 流程id
-        ProcessDefinition pd1 = repositoryService.createProcessDefinitionQuery()
+        List<ProcessDefinition> pd1 = repositoryService.createProcessDefinitionQuery()
                 .processDefinitionName(taskName)
-                .singleResult();
+                .list();
         //流程id 查询最终的
         HistoricTaskInstanceQuery taskInstanceQuery = historyService.createHistoricTaskInstanceQuery()
                 .includeProcessVariables()
                 .finished()
-                .processDefinitionId(pd1.getId())
+                .processDefinitionId(pd1.get(0).getId())
                 .taskAssignee(userId.toString())
                 .orderByHistoricTaskInstanceEndTime()
                 .desc();

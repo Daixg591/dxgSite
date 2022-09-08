@@ -105,7 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap id="censorList" type="com.shahenpc.system.domain.standard.dto.RecordListDto" extends="StandardCensorRecordResult">
 
     </resultMap>
-    <select id="selectByCensorId" resultMap="censorList" parameterType="Long">
+    <select id="selectByCensorId"  parameterType="Long" resultMap="censorList">
         select r.record_id, r.censor_id, r.type, r.status, r.revert, r.remark, r.create_by, r.create_time, r.update_by, r.send_user_id, r.receive_user_id, r.update_time,
                (SELECT u.nick_name FROM sys_user u WHERE u.user_id = r.receive_user_id)AS receiveName
         from standard_censor_record r

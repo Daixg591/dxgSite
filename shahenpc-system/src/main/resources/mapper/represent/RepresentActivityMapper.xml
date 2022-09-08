@@ -139,23 +139,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
         from represent_activity a
         <where>
-            <if test="activityType != null "> and activity_type = #{activityType}</if>
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="startTime != null "> and start_time = #{startTime}</if>
-            <if test="endTime != null "> and end_time = #{endTime}</if>
-            <if test="address != null  and address != ''"> and address = #{address}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="participateConut != null "> and participate_conut = #{participateConut}</if>
-            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="activityType != null "> and a.activity_type = #{activityType}</if>
+            <if test="title != null  and title != ''"> and a.title = #{title}</if>
+            <if test="startTime != null "> and a.start_time = #{startTime}</if>
+            <if test="endTime != null "> and a.end_time = #{endTime}</if>
+            <if test="address != null  and address != ''"> and a.address = #{address}</if>
+            <if test="status != null "> and a.status = #{status}</if>
+            <if test="participateConut != null "> and a.participate_conut = #{participateConut}</if>
+            <if test="content != null  and content != ''"> and a.content = #{content}</if>
         </where>
         ORDER BY start_time DESC
     </select>
-
+    <!--详情-->
     <select id="appDetail" resultMap="activityList" parameterType="Long">
-        select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content,
+        select a.activity_id, a.activity_type, a.remark, a.create_time, a.update_by, a.update_time, a.create_by, a.title, a.start_time, a.end_time, a.address, a.status, a.participate_conut,
+               a.content,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type )AS activityTypeName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
-        from represent_activity a where activity_id = #{activityId}
+        from represent_activity a where a.activity_id = #{activityId}
     </select>
 
     <select id="getCount" resultType="java.lang.Integer">

@@ -85,6 +85,7 @@ public class RepresentActivityRecordController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody RepresentActivityRecord representActivityRecord)
     {
+        representActivityRecord.setCreateBy(getNickName());
         return toAjax(representActivityRecordService.insertRepresentActivityRecord(representActivityRecord));
     }
 
@@ -97,6 +98,7 @@ public class RepresentActivityRecordController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody RepresentActivityRecord representActivityRecord)
     {
+        representActivityRecord.setUpdateBy(getNickName());
         return toAjax(representActivityRecordService.updateRepresentActivityRecord(representActivityRecord));
     }
 

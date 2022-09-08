@@ -168,6 +168,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectByTodoList" parameterType="FeatureDoubleWork" resultMap="appLists">
         SELECT w.double_id, w.type, w.title, w.`status`, w.pic_urls, w.content, w.create_by, w.create_time, w.update_by, w.update_time,
                w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,
+               w.phonenumber,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = t.process_type)as processTypeName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = t.status)as statusName

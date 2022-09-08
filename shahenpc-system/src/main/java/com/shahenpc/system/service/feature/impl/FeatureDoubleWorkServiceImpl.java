@@ -301,6 +301,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                 trace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
                 FeatureDoubleWorkTrace tr= featureDoubleWorkTraceMapper.selectByCurrent(trace);
                 tr.setStatus(featureDoubleWork.getStatus());
+                tr.setSendUserId(featureDoubleWork.getReceiveUserId());
                 featureDoubleWorkTraceMapper.updateFeatureDoubleWorkTrace(tr);
                 return AjaxResult.success();
             }
