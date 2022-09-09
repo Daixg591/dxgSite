@@ -7,4 +7,6 @@ import lombok.Data;
 public class DiscoverTrackDetailListDto extends RepresentDiscoverTrack {
     private String sendUserName;
     private String receiveUserName;
+    private String processTypeName;
+    private String discoverStatusName;
 }

@@ -6,15 +6,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.shahenpc.common.constant.Constants;
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysDictData;
+import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.feature.dto.FeatureCakeDto;
 import com.shahenpc.system.domain.feature.dto.FeatureLineDto;
 import com.shahenpc.system.domain.represent.RepresentDiscoverTrack;
+import com.shahenpc.system.domain.represent.RepresentHomeAccess;
 import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.domain.represent.dto.*;
+import com.shahenpc.system.domain.represent.vo.DiscoverUpdateVo;
+import com.shahenpc.system.mapper.SysUserMapper;
 import com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper;
+import com.shahenpc.system.mapper.represent.RepresentHomeAccessMapper;
 import com.shahenpc.system.service.ISysDictDataService;
 import com.shahenpc.system.service.ISysDictTypeService;
 import com.shahenpc.system.service.represent.IRepresentWorkLogService;
@@ -23,6 +31,7 @@ import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.represent.RepresentDiscoverMapper;
 import com.shahenpc.system.domain.represent.RepresentDiscover;
 import com.shahenpc.system.service.represent.IRepresentDiscoverService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 代-代发现Service业务层处理
@@ -39,9 +48,14 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     private ISysDictDataService dictDataService;
     @Autowired
     private RepresentDiscoverTrackMapper representDiscoverTrackMapper;
+    @Autowired
+    private IRepresentWorkLogService representWorkLogService;
+    @Autowired
+    private SysUserMapper sysUserMapper;
+    @Autowired
+    private RepresentHomeAccessMapper representHomeAccessMapper;
     /**
      * 查询代-代发现
-     * 
      * @param discoverId 代-代发现主键
      * @return 代-代发现
      */
@@ -63,34 +77,48 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
         return representDiscoverMapper.selectRepresentDiscoverList(representDiscover);
     }
 
+
     /**
      * 新增代-代发现
      * 
      * @param representDiscover 代-代发现
      * @return 结果
      */
-    @Autowired
-    private IRepresentWorkLogService representWorkLogService;
     @Override
-    public int insertRepresentDiscover(RepresentDiscover representDiscover)
+    @Transactional
+    public AjaxResult insertRepresentDiscover(RepresentDiscover representDiscover)
     {
         representDiscover.setCreateTime(DateUtils.getNowDate());
-        int disc =  representDiscoverMapper.insertRepresentDiscover(representDiscover);
-        RepresentWorkLog log = new RepresentWorkLog();
-        log.setEventType(4);
-        log.setEventId(representDiscover.getDiscoverId());
-        log.setUserId(representDiscover.getSendUserId());
-        log.setRemark("代表发现！");
-        representWorkLogService.insertRepresentWorkLog(log);
-
-        RepresentDiscoverTrack track = new RepresentDiscoverTrack();
-        track.setSendUserId(representDiscover.getSendUserId());
-        track.setReceiveUserId(representDiscover.getReceiveUserId());
-        track.setCreateTime(DateUtils.getNowDate());
-        track.setDiscoverId(representDiscover.getDiscoverId());
-        track.setStatus(representDiscover.getStatus());
-        representDiscoverTrackMapper.insertRepresentDiscoverTrack(track);
-        return disc;
+        SysUser user=sysUserMapper.selectUserById(representDiscover.getSendUserId());
+        //representHomeAccessMapper.selectByUserId(representDiscover.getSendUserId());
+        RepresentHomeAccess access= representHomeAccessMapper.selectRepresentHomeAccessByAccessId(user.getContactStationId());
+        if(access.getUserId() != null){
+            representDiscover.setReceiveUserId(access.getUserId());
+        }else{
+            return AjaxResult.error("联络站未添加负责人");
+        }
+        if(representDiscoverMapper.insertRepresentDiscover(representDiscover) > 0){
+            System.out.println("11111111111");
+            RepresentWorkLog log = new RepresentWorkLog();
+            log.setEventType(4);
+            log.setEventId(representDiscover.getDiscoverId());
+            log.setUserId(representDiscover.getSendUserId());
+            log.setRemark("代表发现！");
+            if(representWorkLogService.insertRepresentWorkLog(log) < 0){
+                return AjaxResult.error("添加代表发现日志失败！");
+            }
+            RepresentDiscoverTrack track = new RepresentDiscoverTrack();
+            track.setSendUserId(representDiscover.getSendUserId());
+            track.setReceiveUserId(representDiscover.getReceiveUserId());
+            track.setCreateTime(DateUtils.getNowDate());
+            track.setDiscoverId(representDiscover.getDiscoverId());
+            track.setStatus(representDiscover.getStatus());
+           if(representDiscoverTrackMapper.insertRepresentDiscoverTrack(track)<0){
+               return AjaxResult.error("添加代表发现记录失败！");
+           }
+           return AjaxResult.success();
+        }
+        return AjaxResult.error();
     }
 
     /**
@@ -100,18 +128,62 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
      * @return 结果
      */
     @Override
-    public int updateRepresentDiscover(RepresentDiscover representDiscover)
+    public AjaxResult updateRepresentDiscover(DiscoverUpdateVo representDiscover)
     {
-        representDiscover.setUpdateTime(DateUtils.getNowDate());
-        int disc =  representDiscoverMapper.updateRepresentDiscover(representDiscover);
-        RepresentDiscoverTrack track = new RepresentDiscoverTrack();
-        track.setSendUserId(representDiscover.getSendUserId());
-        track.setReceiveUserId(representDiscover.getReceiveUserId());
-        track.setCreateTime(DateUtils.getNowDate());
-        track.setDiscoverId(representDiscover.getDiscoverId());
-        track.setStatus(representDiscover.getStatus());
-        representDiscoverTrackMapper.insertRepresentDiscoverTrack(track);
-        return disc;
+        if(representDiscover.getStatus().equals(Constants.DISCOVER_STATUS_2)){
+            //流程类型转换
+            RepresentHomeAccess access = new RepresentHomeAccess();
+            if(representDiscover.getProcessType().equals(Constants.DISCOVER_PROCESS_TYPE_1)){
+                representDiscover.setProcessType(Constants.DISCOVER_PROCESS_TYPE_2);
+                //获取总站userId
+                access=representHomeAccessMapper.selectByLevel(0);
+                if(access.getUserId() != null){
+                    return AjaxResult.error("总驿站，未添加负责人！");
+                }
+            }
+            representDiscover.setUpdateTime(DateUtils.getNowDate());
+            //转交， 这一条还是待处理  记录上是已转交
+            representDiscover.setStatus(Constants.DISCOVER_STATUS_1);
+            representDiscover.setReceiveUserId(access.getUserId());
+            if(representDiscoverMapper.updateRepresentDiscover(representDiscover) <= 0 ){
+                return AjaxResult.error("记录修改失败！");
+            }
+            RepresentDiscoverTrack track = new RepresentDiscoverTrack();
+            //转交
+            track.setCreateBy(representDiscover.getUpdateBy());
+            track.setStatus(Constants.DISCOVER_STATUS_1);
+            track.setSendUserId(representDiscover.getUserId());
+            track.setProcessType(representDiscover.getProcessType());
+            track.setReceiveUserId(representDiscover.getReceiveUserId());
+            track.setRevert(representDiscover.getRevert());
+            track.setCreateTime(DateUtils.getNowDate());
+            track.setDiscoverId(representDiscover.getDiscoverId());
+            if(representDiscoverTrackMapper.insertRepresentDiscoverTrack(track) <= 0){
+                return AjaxResult.error("记录添加失败！");
+            }
+            return AjaxResult.success();
+        }else{
+            RepresentDiscover dis = new RepresentDiscover();
+            dis.setStatus(representDiscover.getStatus());
+            dis.setDiscoverId(representDiscover.getDiscoverId());
+            //办结流程。。发起流程修改状态   记录表新增一条 谁办结
+            if(representDiscoverMapper.updateRepresentDiscover(representDiscover) <= 0 ){
+                return AjaxResult.error("记录修改失败！");
+            }
+            RepresentDiscoverTrack track = new RepresentDiscoverTrack();
+            track.setSendUserId(representDiscover.getSendUserId());
+            track.setDiscoverId(representDiscover.getDiscoverId());
+            track.setReceiveUserId(representDiscover.getReceiveUserId());
+            track.setRevert(representDiscover.getRevert());
+            track.setStatus(representDiscover.getStatus());
+            track.setProcessType(representDiscover.getProcessType());
+            track.setCreateBy(representDiscover.getUpdateBy());
+            track.setCreateTime(DateUtils.getNowDate());
+            if(representDiscoverTrackMapper.insertRepresentDiscoverTrack(track) <= 0){
+                return AjaxResult.error("记录添加失败！");
+            }
+            return AjaxResult.success();
+        }
     }
 
     /**
@@ -123,7 +195,10 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     @Override
     public int deleteRepresentDiscoverByDiscoverIds(Long[] discoverIds)
     {
-        return representDiscoverMapper.deleteRepresentDiscoverByDiscoverIds(discoverIds);
+        if(representDiscoverMapper.deleteRepresentDiscoverByDiscoverIds(discoverIds) > 0){
+            return representDiscoverTrackMapper.deleteRepresentDiscoverTrackByTrackIds(discoverIds);
+        }
+        return 0;
     }
 
     /**
@@ -136,6 +211,11 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     public int deleteRepresentDiscoverByDiscoverId(Long discoverId)
     {
         return representDiscoverMapper.deleteRepresentDiscoverByDiscoverId(discoverId);
+    }
+
+    @Override
+    public List<DiscoverAppListDto> doneList(Long sendUserId) {
+        return representDiscoverMapper.doneList(sendUserId);
     }
 
     @Override

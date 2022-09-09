@@ -9,6 +9,35 @@ import io.jsonwebtoken.Claims;
  */
 public class Constants
 {
+    /**
+     * 代表发现类型
+     */
+    public static final Integer DISCOVER_PROCESS_TYPE_2=2;
+    /**
+     * 代表发现类型
+     */
+    public static final Integer DISCOVER_PROCESS_TYPE_1=1;
+    /**
+     * 代表发现类型
+     */
+    public static final Integer DISCOVER_PROCESS_TYPE_0=0;
+    /**
+     * 代表发现状态 处理中
+     */
+    public static final Integer DISCOVER_STATUS_0=0;
+    /**
+     * 代表发现状态
+     */
+    public static final Integer DISCOVER_STATUS_1=1;
+    /**
+     * 代表发现状态
+     */
+    public static final Integer DISCOVER_STATUS_2=2;
+    /**
+     *
+     */
+    public static final Integer DISCOVER_STATUS_3=3;
+
     public static final Integer DOUBLE_PROCESS_TYPE_0=0;
     /**
      * 群众发送 到  人大代表 代表1

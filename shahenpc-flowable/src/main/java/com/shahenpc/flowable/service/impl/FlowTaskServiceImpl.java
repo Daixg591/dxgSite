@@ -784,6 +784,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             flowTask.setProcDefVersion(pd.getVersion());
             flowTask.setCategory(pd.getCategory());
             flowTask.setProcDefVersion(pd.getVersion());
+
             // 当前所处流程 .processDefinitionName(representMotion.getTaskName())
             List<Task> taskList = taskService.createTaskQuery().processInstanceId(hisIns.getId()).list();
             if (CollectionUtils.isNotEmpty(taskList)) {
@@ -796,6 +797,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             representMotion.setProcinsId(hisIns.getId());
             RepresentMotion motion=representMotionService.selectByWorkflowId(representMotion);
             if(motion != null) {
+                flowTask.setCategoryType(motion.getCategoryType());
                 flowTask.setMotionId(motion.getMotionId());
                 flowTask.setMotionType(motion.getMotionType());
                 flowTask.setSerial(motion.getMotionId());
@@ -2041,6 +2043,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             representMotion.setProcinsId(task.getProcessInstanceId());
                 RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(motion != null) {
+                flowTask.setCategoryType(motion.getCategoryType());
                 flowTask.setMotionId(motion.getMotionId());
                 flowTask.setSerial(motion.getMotionId());
                 flowTask.setTitle(motion.getTitle());

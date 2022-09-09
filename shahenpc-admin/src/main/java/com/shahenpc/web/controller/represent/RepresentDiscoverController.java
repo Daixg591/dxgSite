@@ -3,7 +3,9 @@ package com.shahenpc.web.controller.represent;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.system.domain.represent.dto.DiscoverAppListDto;
 import com.shahenpc.system.domain.represent.dto.DiscoverListDto;
+import com.shahenpc.system.domain.represent.vo.DiscoverUpdateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +44,6 @@ public class RepresentDiscoverController extends BaseController
     /**
      * 查询代-代发现列表
      */
-    @PreAuthorize("@ss.hasPermi('represent:discover:list')")
     @GetMapping("/list")
     public TableDataInfo list(RepresentDiscover representDiscover)
     {
@@ -51,10 +52,29 @@ public class RepresentDiscoverController extends BaseController
         return getDataTable(list);
     }
 
+    @ApiOperation("待办列表")
+    @GetMapping("/todo/list")
+    public TableDataInfo todoList(RepresentDiscover representDiscover)
+    {
+        representDiscover.setReceiveUserId(getUserId());
+        startPage();
+        List<DiscoverListDto> list = representDiscoverService.adminList(representDiscover);
+        return getDataTable(list);
+    }
+
+    @ApiOperation("已办列表")
+    @GetMapping("/done/list")
+    public TableDataInfo doneList(RepresentDiscover representDiscover)
+    {
+        representDiscover.setReceiveUserId(getUserId());
+        startPage();
+        List<DiscoverListDto> list = representDiscoverService.adminList(representDiscover);
+        return getDataTable(list);
+    }
+
     /**
      * 导出代-代发现列表
      */
-    @PreAuthorize("@ss.hasPermi('represent:discover:export')")
     @Log(title = "代-代发现", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, RepresentDiscover representDiscover)
@@ -67,7 +87,6 @@ public class RepresentDiscoverController extends BaseController
     /**
      * 获取代-代发现详细信息
      */
-    @PreAuthorize("@ss.hasPermi('represent:discover:query')")
     @GetMapping(value = "/{discoverId}")
     public AjaxResult getInfo(@PathVariable("discoverId") Long discoverId)
     {
@@ -76,31 +95,29 @@ public class RepresentDiscoverController extends BaseController
     /**
      * 新增代-代发现
      */
-    @PreAuthorize("@ss.hasPermi('represent:discover:add')")
     @Log(title = "代-代发现", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody RepresentDiscover representDiscover)
     {
         representDiscover.setSendUserId(getUserId());
         representDiscover.setUpdateBy(getUsername());
-        return toAjax(representDiscoverService.insertRepresentDiscover(representDiscover));
+        return representDiscoverService.insertRepresentDiscover(representDiscover);
     }
 
     /**
      * 修改代-代发现
      */
-    @PreAuthorize("@ss.hasPermi('represent:discover:edit')")
     @Log(title = "代-代发现", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody RepresentDiscover representDiscover)
+    public AjaxResult edit(@RequestBody DiscoverUpdateVo representDiscover)
     {
-        return toAjax(representDiscoverService.updateRepresentDiscover(representDiscover));
+        representDiscover.setUpdateBy(getNickName());
+        return representDiscoverService.updateRepresentDiscover(representDiscover);
     }
 
     /**
      * 删除代-代发现
      */
-    @PreAuthorize("@ss.hasPermi('represent:discover:remove')")
     @Log(title = "代-代发现", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{discoverIds}")
     public AjaxResult remove(@PathVariable Long[] discoverIds)

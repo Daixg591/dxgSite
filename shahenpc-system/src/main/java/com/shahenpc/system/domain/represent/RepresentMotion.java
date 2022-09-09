@@ -20,6 +20,11 @@ public class RepresentMotion extends BaseEntity
     /**  */
     private Long motionId;
 
+    /** 1议案  2.建议 */
+    @Excel(name = "1议案  2.建议")
+    private Integer categoryType;
+
+
     /** 议案类型 */
     @Excel(name = "议案类型")
     private Integer motionType;

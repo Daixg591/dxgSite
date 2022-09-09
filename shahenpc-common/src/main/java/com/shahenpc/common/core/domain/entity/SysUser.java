@@ -243,12 +243,10 @@ public class SysUser extends BaseEntity {
             "40=普米族,41=鄂温克族,42=怒族,43=京族,44=基诺族,45=德昂族,46=保安族,47=俄罗斯族," +
             "48=裕固族,49=乌孜别克族,50=门巴族,51=鄂伦春族,52=独龙族,53=塔塔尔族,54=赫哲族,55=珞巴族")
     private String nation;
-
-
     /**
      * 用户状态
      */
-    private int userStatus;
+    private String userStatus;
 
     /**
      * 入党时间
@@ -496,14 +494,6 @@ public class SysUser extends BaseEntity {
         return idCard;
     }
 
-    public void setUserStatus(Integer userStatus) {
-        this.userStatus = userStatus;
-    }
-
-    public Integer getUserStatus() {
-        return userStatus;
-    }
-
     public void setIdentity(String identity) {
         this.identity = identity;
     }
@@ -700,7 +690,6 @@ public class SysUser extends BaseEntity {
                 .append("updateTime", getUpdateTime())
                 .append("remark", getRemark())
                 .append("dept", getDept())
-                .append("userStatus", getUserStatus())
                 .append("nowDuty", getNowDuty())
                 .append("edu", getEdu())
                 .append("goodArea", getGoodArea())

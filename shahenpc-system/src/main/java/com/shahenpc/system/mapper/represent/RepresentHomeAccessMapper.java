@@ -67,4 +67,6 @@ public interface RepresentHomeAccessMapper
     public List<RepresentHomeAccess> rankingList();
 
     public RepresentHomeAccess selectByLevel(Integer level);
+
+    public RepresentHomeAccess selectByUserId(Long userId);
 }

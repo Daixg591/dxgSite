@@ -150,7 +150,7 @@
         <if test="userId != null and userId != 0">
             AND u.user_id = #{userId}
         </if>
-        <if test="userStatus != null">
+        <if test="userStatus != null and userStatus != ''">
             AND u.user_status = #{userStatus}
         </if>
         <if test="contactStationId != null">

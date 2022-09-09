@@ -1,8 +1,11 @@
 package com.shahenpc.system.service.represent;
 
 import java.util.List;
+
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.system.domain.represent.RepresentDiscover;
 import com.shahenpc.system.domain.represent.dto.*;
+import com.shahenpc.system.domain.represent.vo.DiscoverUpdateVo;
 
 /**
  * 代-代发现Service接口
@@ -34,7 +37,7 @@ public interface IRepresentDiscoverService
      * @param representDiscover 代-代发现
      * @return 结果
      */
-    public int insertRepresentDiscover(RepresentDiscover representDiscover);
+    public AjaxResult insertRepresentDiscover(RepresentDiscover representDiscover);
 
     /**
      * 修改代-代发现
@@ -42,7 +45,7 @@ public interface IRepresentDiscoverService
      * @param representDiscover 代-代发现
      * @return 结果
      */
-    public int updateRepresentDiscover(RepresentDiscover representDiscover);
+    public AjaxResult updateRepresentDiscover(DiscoverUpdateVo representDiscover);
 
     /**
      * 批量删除代-代发现
@@ -59,8 +62,11 @@ public interface IRepresentDiscoverService
      * @return 结果
      */
     public int deleteRepresentDiscoverByDiscoverId(Long discoverId);
+
+    public List<DiscoverAppListDto> doneList(Long sendUserId);
     /***/
     public List<DiscoverAppListDto> appList(RepresentDiscover representDiscover);
+
     public DiscoverAppDetailDto appDetail(Long discoverId);
     /** 列表*/
     public List<DiscoverListDto> adminList(RepresentDiscover representDiscover);

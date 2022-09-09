@@ -58,4 +58,6 @@ public interface RepresentDiscoverTrackMapper
      * @return 结果
      */
     public int deleteRepresentDiscoverTrackByTrackIds(Long[] trackIds);
+
+    public int deleteRepresentDiscoverTrackByDiscoverIds(Long[] discoverIds);
 }

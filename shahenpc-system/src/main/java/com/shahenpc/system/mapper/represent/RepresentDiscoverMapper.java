@@ -62,6 +62,9 @@ public interface RepresentDiscoverMapper
 
     public List<DiscoverAppListDto> appList(RepresentDiscover representDiscover);
 
+
+    public List<DiscoverAppListDto> doneList(Long sendUserId);
+
     public DiscoverAppDetailDto appDetail(Long discoverId);
 
     public DiscoverDetailDto detail(Long discoverId);
@@ -79,4 +82,5 @@ public interface RepresentDiscoverMapper
     public Integer selectByTotal();
 
     public List<String> selectByLocation();
+
 }

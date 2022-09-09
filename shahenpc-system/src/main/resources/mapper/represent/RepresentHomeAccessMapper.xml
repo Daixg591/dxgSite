@@ -254,4 +254,8 @@
         <include refid="selectRepresentHomeAccessVo"/>
         where `level` = 0
     </select>
+
+    <select id="selectByUserId" parameterType="Long" resultMap="RepresentHomeAccessResult">
+
+    </select>
 </mapper>
