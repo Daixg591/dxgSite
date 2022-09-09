@@ -2500,13 +2500,14 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
     }
     @Resource
     private ISysDictTypeService dictTypeService;
+    //
     @Override
     public List<MotionPieDto> pie(MotionTaskVo vo) {
         List<HistoricActivityInstance> receiveTotal = historyService.createHistoricActivityInstanceQuery().activityName(vo.getTaskName())
                 .orderByHistoricActivityInstanceStartTime()
                 .desc().list();
         List<MotionPieDto> dto = new ArrayList<>();
-        List<SysDictData> dictList = dictTypeService.selectDictDataByType("censor_status");
+        List<SysDictData> dictList = dictTypeService.selectDictDataByType("motion_type");
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
             int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictLabel().equals(p.getActivityName()))

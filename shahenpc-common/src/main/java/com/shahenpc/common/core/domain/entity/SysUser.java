@@ -248,7 +248,7 @@ public class SysUser extends BaseEntity {
     /**
      * 用户状态
      */
-    private Integer userStatus;
+    private int userStatus;
 
     /**
      * 入党时间
