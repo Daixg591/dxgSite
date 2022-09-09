@@ -173,7 +173,7 @@ public class SysUserController extends BaseController {
     public AjaxResult getUserList(SysUser user) {
         startPage();
         user.setIdentity("1");
-        List<SysUser> list = userService.selectUserList(user);
+        List<SysUser> list = userService.selectRandUserList(user);
         List<WxUserInfoVo> res = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             WxUserInfoVo item = new WxUserInfoVo();
