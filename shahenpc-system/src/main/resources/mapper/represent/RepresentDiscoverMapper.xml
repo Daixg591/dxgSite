@@ -140,15 +140,15 @@
     </select>
 
     <resultMap id="adminDetail" type="com.shahenpc.system.domain.represent.dto.DiscoverDetailDto" extends="RepresentDiscoverResult">
-            <association property="track" column="discover_id" select="com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper.selectByDiscoverId"></association>
+        <association property="track" column="discover_id" select="com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper.selectByDiscoverId"></association>
     </resultMap>
     <select id="detail" parameterType="Long" resultMap="adminDetail">
         select
             discover_id, title, content,pic_urls, discover_type, remark, create_time, update_by, update_time, create_by, address, location, reply, rate, send_user_id, receive_user_id, status, process_type,
-               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = di.process_type)as processTypeName,
-               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = di.status)as statusName,
-               (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
-               (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName
+            (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = di.process_type)as processTypeName,
+            (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = di.status)as statusName,
+            (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
+            (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName
         from represent_discover di where di.discover_id = #{discoverId}
     </select>
 
@@ -157,9 +157,9 @@
     </resultMap>
     <select id="adminList" parameterType="RepresentDiscover" resultMap="adminList">
         select d.discover_id,
-               d.title, d.content,d.pic_urls, d.discover_type, d.remark,
-               d.create_time, d.update_by, d.update_time, d.create_by, d.address, d.location,
-               d.status, d.reply, d.rate, d.send_user_id,d.receive_user_id,
+        d.title, d.content,d.pic_urls, d.discover_type, d.remark,
+        d.create_time, d.update_by, d.update_time, d.create_by, d.address, d.location,
+        d.status, d.reply, d.rate, d.send_user_id,d.receive_user_id,
         (SELECT d.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='discover_status' AND d1.dict_value = d.status)AS processTypeName,
         (SELECT d.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='process_type' AND d1.dict_value = d.process_type)AS processTypeName,
         (SELECT d.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='discover_type' AND d1.dict_value = d.discover_type)AS discoverTypeName,

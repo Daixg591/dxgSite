@@ -143,7 +143,8 @@
         u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,
         u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,u.user_status,
         u.choose_area,u.party_groupings,u.distinction,u.level,
-        (SELECT dict_label	FROM sys_dict_data WHERE dict_type = 'sys_user_nation' AND dict_value =u. nation)AS nationName,
+        (SELECT dict_label FROM sys_dict_data WHERE dict_type = 'sys_user_nation' AND dict_value =u. nation)AS
+        nationName,
         d.dept_name, d.leader from sys_user u
         left join sys_dept d on u.dept_id = d.dept_id
         where u.del_flag = '0'
@@ -180,6 +181,9 @@
         <if test="identity != null and identity != ''">
             AND u.identity = #{identity}
         </if>
+        <if test="identity =='2'">
+            AND u.identity = 1 or u.identity=2
+        </if>
         <if test="status != null and status != ''">
             AND u.status = #{status}
         </if>
@@ -199,6 +203,75 @@
         <if test="contactStationId != null and contactStationId != ''">
             AND u.contact_station_id = #{contactStationId}
         </if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+    <select id="selectRandUserList" parameterType="SysUser" resultMap="SysUserResult">
+        select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status,
+        u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
+        u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date,
+        u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,
+        u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,u.user_status,
+        u.choose_area,u.party_groupings,u.distinction,u.level,
+        (SELECT dict_label FROM sys_dict_data WHERE dict_type = 'sys_user_nation' AND dict_value =u. nation)AS
+        nationName,
+        d.dept_name, d.leader from sys_user u
+        left join sys_dept d on u.dept_id = d.dept_id
+        where u.del_flag = '0'
+        <if test="userId != null and userId != 0">
+            AND u.user_id = #{userId}
+        </if>
+        <if test="contactStationId != null">
+            AND u.contact_station_id = #{contactStationId}
+        </if>
+        <if test="goodArea != null and userId != ''">
+            AND u.good_area = #{goodArea}
+        </if>
+        <if test="sex != null and userId != ''">
+            AND u.sex = #{sex}
+        </if>
+        <if test="nickName != null and nickName != ''">
+            AND u.nick_name like concat('%', #{nickName}, '%')
+        </if>
+
+        <if test="partyGroupings != null and partyGroupings != ''">
+            AND u.party_groupings = #{partyGroupings}
+        </if>
+
+        <if test="nation != null and nation != ''">
+            AND u.nation = #{nation}
+        </if>
+
+        <if test="userName != null and userName != ''">
+            AND u.user_name like concat('%', #{userName}, '%')
+        </if>
+        <if test="identity != null and identity != ''">
+            AND u.identity = #{identity}
+        </if>
+        <if test="identity =='2'">
+            AND u.identity = 1 or u.identity=2
+        </if>
+        <if test="status != null and status != ''">
+            AND u.status = #{status}
+        </if>
+        <if test="phonenumber != null and phonenumber != ''">
+            AND u.phonenumber like concat('%', #{phonenumber}, '%')
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+        </if>
+        <if test="deptId != null and deptId != 0">
+            AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(#{deptId},
+            ancestors) ))
+        </if>
+        <if test="contactStationId != null and contactStationId != ''">
+            AND u.contact_station_id = #{contactStationId}
+        </if>
+        order by rand()
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
@@ -437,26 +510,66 @@
         </foreach>
     </delete>
 
-	<!--===================================分割线-->
-	<select id="selectUserByuserIds" resultMap="SysUserResult">
-		<include refid="selectUserVo"/>
-		where u.user_id in(#{userIds})
-	</select>
-	<select id="selectByWomanCount" resultType="java.lang.Integer" parameterType="java.lang.String">
-		SELECT COUNT(u.user_id) FROM sys_user u WHERE u.sex = 0 AND u.identity =  #{identity}
-	</select>
-	<select id="selectByManCount" resultType="java.lang.Integer" parameterType="java.lang.String">
-		SELECT COUNT(u.user_id) FROM sys_user u WHERE u.sex = 1 AND u.identity = #{identity}
-	</select>
+    <!--===================================分割线-->
+    <select id="selectUserByuserIds" resultMap="SysUserResult">
+        <include refid="selectUserVo"/>
+        where u.user_id in(#{userIds})
+    </select>
+    <select id="selectByWomanCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(u.user_id)
+        FROM sys_user u
+        WHERE u.sex = 0
+          AND u.identity = #{identity}
+    </select>
+    <select id="selectByManCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(u.user_id)
+        FROM sys_user u
+        WHERE u.sex = 1
+          AND u.identity = #{identity}
+    </select>
 
-	<select id="appSelectUserList" parameterType="SysUser" resultMap="SysUserResult">
-		select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
-		u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date, u.job_date, u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.choose_area,u.party_groupings
-	   from sys_user u WHERE u.identity = #{identity}
-	</select>
+    <select id="appSelectUserList" parameterType="SysUser" resultMap="SysUserResult">
+        select u.user_id,
+               u.dept_id,
+               u.nick_name,
+               u.user_name,
+               u.email,
+               u.avatar,
+               u.phonenumber,
+               u.sex,
+               u.status,
+               u.del_flag,
+               u.login_ip,
+               u.login_date,
+               u.create_by,
+               u.create_time,
+               u.remark,
+               u.id_card,
+               u.identity,
+               u.open_id,
+               u.born_date,
+               u.native_place,
+               u.born_place,
+               u.nation,
+               u.party_date,
+               u.job_date,
+               u.health_state,
+               u.duty,
+               u.expert,
+               u.resume,
+               u.file_ids,
+               u.now_duty,
+               u.edu,
+               u.choose_area,
+               u.party_groupings
+        from sys_user u
+        WHERE u.identity = #{identity}
+    </select>
 
     <select id="selectByNickName" resultType="String">
-        select nick_name from sys_user where FIND_IN_SET(user_id,#{userId})
+        select nick_name
+        from sys_user
+        where FIND_IN_SET(user_id, #{userId})
     </select>
 
     <!--根据当前id 查出访问之家负责人userid-->
