@@ -193,7 +193,7 @@ public class SysUserController extends BaseController {
 //            item.setStationName("暂无信息");
             res.add(item);
         }
-        Collections.shuffle(res);
+//        Collections.shuffle(res);
         return AjaxResult.success(res);
     }
 
