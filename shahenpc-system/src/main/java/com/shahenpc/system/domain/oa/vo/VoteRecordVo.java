@@ -8,7 +8,7 @@ import lombok.Data;
  * @author Admin
  */
 @Data
-public class VoteRecordVo extends BaseEntity {
+public class VoteRecordVo{
 
     private Long voteId;
 
