@@ -9,6 +9,8 @@ import com.shahenpc.system.domain.represent.vo.MotionTaskVo;
 import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.domain.standard.dto.CemsorDetailDto;
 import com.shahenpc.system.domain.standard.vo.CensorAddVo;
+import com.shahenpc.system.domain.standard.vo.CensorPassVo;
+import com.shahenpc.system.domain.standard.vo.CensorReturnVo;
 import com.shahenpc.system.domain.standard.vo.CensorUpdateVo;
 
 /**
@@ -89,12 +91,15 @@ public interface IStandardCensorService
 
     public CemsorDetailDto selectByCensorId(Long cemsorId);
 
+    public AjaxResult censorReturn(CensorReturnVo vo);
+
+    public AjaxResult CensorPass(CensorPassVo vo);
     /**
      * 落实率
      * @param
      * @return
      */
-    String ring();
+    String ring(Integer taskName);
     /**
      * 按类别饼图
      * @param

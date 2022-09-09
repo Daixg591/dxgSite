@@ -48,6 +48,7 @@
         <result property="partyGroupings" column="party_groupings"/>
         <result property="distinction" column="distinction"/>
         <result property="level" column="level"/>
+        <result property="contactStationId" column="contact_station_id"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
     </resultMap>
@@ -155,9 +156,21 @@
         <if test="goodArea != null and userId != ''">
             AND u.good_area = #{goodArea}
         </if>
+        <if test="sex != null and userId != ''">
+            AND u.sex = #{sex}
+        </if>
         <if test="nickName != null and nickName != ''">
             AND u.nick_name like concat('%', #{nickName}, '%')
         </if>
+
+        <if test="partyGroupings != null and partyGroupings != ''">
+            AND u.party_groupings = #{partyGroupings}
+        </if>
+
+        <if test="nation != null and nation != ''">
+            AND u.nation = #{nation}
+        </if>
+
         <if test="userName != null and userName != ''">
             AND u.user_name like concat('%', #{userName}, '%')
         </if>
@@ -179,6 +192,9 @@
         <if test="deptId != null and deptId != 0">
             AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(#{deptId},
             ancestors) ))
+        </if>
+        <if test="contactStationId != null and contactStationId != ''">
+            AND u.contact_station_id = #{contactStationId}
         </if>
         <!-- 数据范围过滤 -->
         ${params.dataScope}
@@ -223,6 +239,7 @@
     <select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
         <include refid="selectUserVo"/>
         where u.user_name = #{userName}
+        LIMIT 1
     </select>
 
     <select id="selectUserByUserPhone" parameterType="String" resultMap="SysUserResult">

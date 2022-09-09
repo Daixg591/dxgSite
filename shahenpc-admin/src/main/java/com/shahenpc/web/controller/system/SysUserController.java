@@ -1,12 +1,15 @@
 package com.shahenpc.web.controller.system;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.system.domain.represent.RepresentHomeAccess;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo;
 import com.shahenpc.system.service.*;
+import com.shahenpc.system.service.represent.IRepresentHomeAccessService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
@@ -58,6 +61,9 @@ public class SysUserController extends BaseController {
     @Autowired
     private ISysDictDataService dictDataService;
 
+    @Autowired
+    private IRepresentHomeAccessService homeAccessService;
+
     /**
      * 获取用户列表
      */
@@ -78,8 +84,6 @@ public class SysUserController extends BaseController {
     }
 
 
-
-
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:user:export')")
     @PostMapping("/export")
@@ -96,7 +100,7 @@ public class SysUserController extends BaseController {
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         List<SysUser> userList = util.importExcel(file.getInputStream());
         for (int i = 0; i < userList.size(); i++) {
-            if (StringUtils.isEmpty(userList.get(i).getUserName()) || StringUtils.isNull(userList.get(i).getUserName())){
+            if (StringUtils.isEmpty(userList.get(i).getUserName()) || StringUtils.isNull(userList.get(i).getUserName())) {
                 userList.get(i).setUserName(userList.get(i).getPhonenumber());
             }
         }
@@ -140,6 +144,7 @@ public class SysUserController extends BaseController {
     @GetMapping(value = "/getWxUser/{userId}")
     public AjaxResult getUser(@PathVariable(value = "userId", required = false) Long userId) {
         WxUserInfoVo resInfo = new WxUserInfoVo();
+
         if (StringUtils.isNotNull(userId)) {
             SysUser sysUser = userService.selectUserById(userId);
             resInfo.setUserId(sysUser.getUserId());
@@ -147,8 +152,13 @@ public class SysUserController extends BaseController {
             resInfo.setPersonInfo(sysUser.getResume());
             resInfo.setAvatar(sysUser.getAvatar());
             resInfo.setGoodAreaName(dictDataService.selectDictLabel("double_type", sysUser.getGoodArea()));
-            // todo-ht 联络站信息获取
-            resInfo.setStationName("暂无信息");
+            if (sysUser.getContactStationId()!=null ) {
+                RepresentHomeAccess homeAccess = homeAccessService.selectRepresentHomeAccessByAccessId(sysUser.getContactStationId());
+                resInfo.setStationName(homeAccess.getTitle());
+            }
+            else {
+                resInfo.setStationName("暂无信息");
+            }
         }
         return AjaxResult.success(resInfo);
     }
@@ -172,11 +182,18 @@ public class SysUserController extends BaseController {
             item.setPersonInfo(list.get(i).getResume());
             item.setAvatar(list.get(i).getAvatar());
             item.setGoodAreaName(dictDataService.selectDictLabel("double_type", list.get(i).getGoodArea()));
-            // todo-ht 联络站信息获取
-            item.setStationName("暂无信息");
+
+            if (list.get(i).getContactStationId()!=null ) {
+                RepresentHomeAccess homeAccess = homeAccessService.selectRepresentHomeAccessByAccessId(list.get(i).getContactStationId());
+                item.setStationName(homeAccess.getTitle());
+            }
+            else {
+                item.setStationName("暂无信息");
+            }
+//            item.setStationName("暂无信息");
             res.add(item);
         }
-
+        Collections.shuffle(res);
         return AjaxResult.success(res);
     }
 
@@ -200,7 +217,7 @@ public class SysUserController extends BaseController {
         user.setCreateBy(getUsername());
         if (user.getPassword() == "" || user.getPassword() == null) {
             //.selectConfigByKey("sys.user.initPassword");
-            user.setPassword(SecurityUtils.encryptPassword(user.getPhonenumber().substring(user.getPhonenumber().length() -6)));
+            user.setPassword(SecurityUtils.encryptPassword(user.getPhonenumber().substring(user.getPhonenumber().length() - 6)));
         } else {
             user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         }

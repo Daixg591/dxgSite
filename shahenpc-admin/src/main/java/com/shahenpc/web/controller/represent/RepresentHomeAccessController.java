@@ -26,15 +26,14 @@ import com.shahenpc.common.core.page.TableDataInfo;
 
 /**
  * 代之家访问Controller
- * 
+ *
  * @author ruoyi
  * @date 2022-07-21
  */
 @Api(tags = "代表之家访问")
 @RestController
 @RequestMapping("/represent/access")
-public class RepresentHomeAccessController extends BaseController
-{
+public class RepresentHomeAccessController extends BaseController {
     @Autowired
     private IRepresentHomeAccessService representHomeAccessService;
 
@@ -44,8 +43,7 @@ public class RepresentHomeAccessController extends BaseController
     @ApiOperation("列表")
     //@PreAuthorize("@ss.hasPermi('represent:access:list')")
     @GetMapping("/list")
-    public TableDataInfo list(RepresentHomeAccess representHomeAccess)
-    {
+    public TableDataInfo list(RepresentHomeAccess representHomeAccess) {
         startPage();
         List<RepresentHomeAccess> list = representHomeAccessService.selectRepresentHomeAccessList(representHomeAccess);
         return getDataTable(list);
@@ -58,8 +56,7 @@ public class RepresentHomeAccessController extends BaseController
     @PreAuthorize("@ss.hasPermi('represent:access:export')")
     @Log(title = "代之家访问", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, RepresentHomeAccess representHomeAccess)
-    {
+    public void export(HttpServletResponse response, RepresentHomeAccess representHomeAccess) {
         List<RepresentHomeAccess> list = representHomeAccessService.selectRepresentHomeAccessList(representHomeAccess);
         ExcelUtil<RepresentHomeAccess> util = new ExcelUtil<RepresentHomeAccess>(RepresentHomeAccess.class);
         util.exportExcel(response, list, "代之家访问数据");
@@ -71,9 +68,14 @@ public class RepresentHomeAccessController extends BaseController
     @ApiOperation("详情")
     //@PreAuthorize("@ss.hasPermi('represent:access:query')")
     @GetMapping(value = "/{accessId}")
-    public AjaxResult getInfo(@PathVariable("accessId") Long accessId)
-    {
-        return AjaxResult.success(representHomeAccessService.selectRepresentHomeAccessByAccessId(accessId));
+    public AjaxResult getInfo(@PathVariable("accessId") Long accessId) {
+        RepresentHomeAccess entity = representHomeAccessService.selectRepresentHomeAccessByAccessId(accessId);
+        if (entity.getBrowseNumber() == null) {
+            entity.setBrowseNumber(0L);
+        }
+        entity.setBrowseNumber(entity.getBrowseNumber() + 1);
+        representHomeAccessService.updateRepresentHomeAccess(entity);
+        return AjaxResult.success(entity);
     }
 
     /**
@@ -83,8 +85,7 @@ public class RepresentHomeAccessController extends BaseController
     @PreAuthorize("@ss.hasPermi('represent:access:add')")
     @Log(title = "代之家访问", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody RepresentHomeAccess representHomeAccess)
-    {
+    public AjaxResult add(@RequestBody RepresentHomeAccess representHomeAccess) {
         return toAjax(representHomeAccessService.insertRepresentHomeAccess(representHomeAccess));
     }
 
@@ -95,8 +96,7 @@ public class RepresentHomeAccessController extends BaseController
     @PreAuthorize("@ss.hasPermi('represent:access:edit')")
     @Log(title = "代之家访问", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody RepresentHomeAccess representHomeAccess)
-    {
+    public AjaxResult edit(@RequestBody RepresentHomeAccess representHomeAccess) {
         return toAjax(representHomeAccessService.updateRepresentHomeAccess(representHomeAccess));
     }
 
@@ -106,23 +106,20 @@ public class RepresentHomeAccessController extends BaseController
     @ApiOperation("删除")
     @PreAuthorize("@ss.hasPermi('represent:access:remove')")
     @Log(title = "代之家访问", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{accessIds}")
-    public AjaxResult remove(@PathVariable Long[] accessIds)
-    {
+    @DeleteMapping("/{accessIds}")
+    public AjaxResult remove(@PathVariable Long[] accessIds) {
         return toAjax(representHomeAccessService.deleteRepresentHomeAccessByAccessIds(accessIds));
     }
 
     @ApiOperation("访问总次数")
     @GetMapping("/visits/count")
-    public AjaxResult visitsTotal()
-    {
+    public AjaxResult visitsTotal() {
         return AjaxResult.success(representHomeAccessService.selectVisitsCount());
     }
 
     @ApiOperation("前三名排行")
     @GetMapping("/ranking/list")
-    public TableDataInfo rankingList()
-    {
+    public TableDataInfo rankingList() {
         List<RepresentHomeAccess> list = representHomeAccessService.rankingList();
         return getDataTable(list);
     }

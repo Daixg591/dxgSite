@@ -12,10 +12,13 @@ import com.shahenpc.system.domain.FlowProcDefDto;
 import com.shahenpc.system.domain.represent.RepresentMotion;
 import com.shahenpc.system.domain.represent.vo.MotionTaskVo;
 import com.shahenpc.system.domain.standard.vo.CensorAddVo;
+import com.shahenpc.system.domain.standard.vo.CensorPassVo;
+import com.shahenpc.system.domain.standard.vo.CensorReturnVo;
 import com.shahenpc.system.domain.standard.vo.CensorUpdateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.models.auth.In;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -88,7 +91,7 @@ public class StandardCensorController extends BaseController
     public TableDataInfo myList(StandardCensor standardCensor)
     {
         startPage();
-        standardCensor.setReceiveUserId(getUserId().toString());
+        standardCensor.setSendUserId(getUserId());
         List<StandardCensor> list = standardCensorService.selectStandardCensorList(standardCensor);
         return getDataTable(list);
     }
@@ -144,6 +147,42 @@ public class StandardCensorController extends BaseController
         return standardCensorService.updateStandardCensor(standardCensor);
     }
 
+    @ApiOperation(value = "退回任务")
+    @PostMapping(value = "/return")
+    public AjaxResult Return(@RequestBody CensorReturnVo vo) {
+        vo.setCreateBy(getNickName());
+        vo.setUserId(getUserId());
+        return standardCensorService.censorReturn(vo);
+    }
+
+
+
+    @ApiOperation(value = "通过接口")
+    @PostMapping(value = "/pass")
+    public AjaxResult pass(@RequestBody CensorPassVo vo) {
+        vo.setUpdateBy(getNickName());
+        vo.setUserId(getUserId());
+        return standardCensorService.CensorPass(vo);
+    }
+
+    @ApiOperation("按月曲线")
+    @GetMapping("/line")
+    public AjaxResult line(){
+        return  AjaxResult.success(standardCensorService.line());
+    }
+
+    @ApiOperation("按类别饼图")
+    @GetMapping("/pie")
+    public AjaxResult pie(){
+        return AjaxResult.success(standardCensorService.pie());
+    }
+
+    @ApiOperation("落实率")
+    @GetMapping("/ring")
+    public AjaxResult ring(Integer taskName){
+        return AjaxResult.success(standardCensorService.ring(taskName));
+    }
+
     /**
      * 删除审查流程
      */
@@ -154,6 +193,7 @@ public class StandardCensorController extends BaseController
     {
         return toAjax(standardCensorService.deleteStandardCensorByProcessIds(processIds));
     }
+
 
     /**
      *  审查流程 以下
@@ -212,14 +252,14 @@ public class StandardCensorController extends BaseController
         return AjaxResult.success();
     }
 
-    @ApiOperation(value = "退回任务")
-    @PostMapping(value = "/return")
-    public AjaxResult taskReturn(@RequestBody FlowTaskVo flowTaskVo) {
-        flowTaskService.censorTaskReturn(flowTaskVo);
-        return AjaxResult.success();
-    }
+//    @ApiOperation(value = "退回任务")
+//    @PostMapping(value = "/return")
+//    public AjaxResult taskReturn(@RequestBody FlowTaskVo flowTaskVo) {
+//        flowTaskService.censorTaskReturn(flowTaskVo);
+//        return AjaxResult.success();
+//    }
 
-    @ApiOperation("按月曲线")
+   /* @ApiOperation("按月曲线")
     @GetMapping("/line")
     public AjaxResult line(MotionTaskVo vo){
         vo.setProcessName("审查流程");
@@ -238,5 +278,5 @@ public class StandardCensorController extends BaseController
     public AjaxResult ring(MotionTaskVo vo){
         vo.setProcessName("审查流程");
         return AjaxResult.success(flowTaskService.ring(vo));
-    }
+    }*/
 }

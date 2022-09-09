@@ -9,5 +9,5 @@ import java.util.List;
 @Data
 public class CemsorDetailDto extends StandardCensor {
 
-    private List<StandardCensorRecord> record;
+    private List<RecordListDto> record;
 }

@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.oa;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,7 +12,8 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-09-05
  */
-public class OvVoteRecord extends BaseEntity
+@Data
+public class OaVoteRecord extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -29,8 +31,20 @@ public class OvVoteRecord extends BaseEntity
     /** $column.columnComment */
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private Long playerId;
+    /** 微信唯一身份标识 */
+    @Excel(name = "微信唯一身份标识")
+    private String openId;
 
-    public void setRecordId(Long recordId) 
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public void setRecordId(Long recordId)
     {
         this.recordId = recordId;
     }

@@ -1,7 +1,7 @@
 package com.shahenpc.system.mapper.oa;
 
 import java.util.List;
-import com.shahenpc.system.domain.oa.OvVoteRecord;
+import com.shahenpc.system.domain.oa.OaVoteRecord;
 
 /**
  * 投票记录Mapper接口
@@ -9,7 +9,7 @@ import com.shahenpc.system.domain.oa.OvVoteRecord;
  * @author ruoyi
  * @date 2022-09-05
  */
-public interface OvVoteRecordMapper 
+public interface OaVoteRecordMapper
 {
     /**
      * 查询投票记录
@@ -17,7 +17,7 @@ public interface OvVoteRecordMapper
      * @param recordId 投票记录主键
      * @return 投票记录
      */
-    public OvVoteRecord selectOvVoteRecordByRecordId(Long recordId);
+    public OaVoteRecord selectOvVoteRecordByRecordId(Long recordId);
 
     /**
      * 查询投票记录列表
@@ -25,7 +25,7 @@ public interface OvVoteRecordMapper
      * @param ovVoteRecord 投票记录
      * @return 投票记录集合
      */
-    public List<OvVoteRecord> selectOvVoteRecordList(OvVoteRecord ovVoteRecord);
+    public List<OaVoteRecord> selectOvVoteRecordList(OaVoteRecord ovVoteRecord);
 
     /**
      * 新增投票记录
@@ -33,7 +33,7 @@ public interface OvVoteRecordMapper
      * @param ovVoteRecord 投票记录
      * @return 结果
      */
-    public int insertOvVoteRecord(OvVoteRecord ovVoteRecord);
+    public int insertOvVoteRecord(OaVoteRecord ovVoteRecord);
 
     /**
      * 修改投票记录
@@ -41,7 +41,7 @@ public interface OvVoteRecordMapper
      * @param ovVoteRecord 投票记录
      * @return 结果
      */
-    public int updateOvVoteRecord(OvVoteRecord ovVoteRecord);
+    public int updateOvVoteRecord(OaVoteRecord ovVoteRecord);
 
     /**
      * 删除投票记录

@@ -27,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="workType != null "> and work_type = #{workType}</if>
         </where>
+        order by create_time desc
     </select>
     
     <select id="selectFeatureWorkEventByEventId" parameterType="Long" resultMap="FeatureWorkEventResult">

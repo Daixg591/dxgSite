@@ -19,6 +19,9 @@ public interface IPersonnelAppointGradeService
      */
     public PersonnelAppointGrade selectPersonnelAppointGradeByGradeId(Long gradeId);
 
+
+    public PersonnelAppointGrade selectGradeByRegId(Long registerId);
+
     /**
      * 查询人事任免_法律知识考虑_成绩管理列表
      * 

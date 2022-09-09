@@ -225,7 +225,6 @@ public class WxSysLoginController {
     //endregion
 
     //region  // 获取投票小程序码==> 待测试
-    // todo-ht 获取投票小程序码==>发布后方可进行测试
 
     /**
      * 获取投票小程序码
@@ -251,7 +250,6 @@ public class WxSysLoginController {
     //endregion
 
     //region // 获取投票小程序链接==> 待测试
-    // todo-ht  获取投票小程序链接==>发布后方可进行测试
 
     /**
      * 获取投票小程序链接

@@ -1,5 +1,6 @@
 package com.shahenpc.system.service.budget.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.shahenpc.common.exception.ServiceException;
@@ -70,7 +71,6 @@ public class OutlayBudgetServiceImpl implements IOutlayBudgetService
     public int insertOutlayBudget(OutlayBudget outlayBudget)
     {
         outlayBudget.setCreateTime(DateUtils.getNowDate());
-
         return outlayBudgetMapper.insertOutlayBudget(outlayBudget);
     }
 
@@ -84,22 +84,37 @@ public class OutlayBudgetServiceImpl implements IOutlayBudgetService
     public int updateOutlayBudget(OutlayBudget outlayBudget)
     {
         outlayBudget.setUpdateTime(DateUtils.getNowDate());
+        BigDecimal af = null;
         int update =  outlayBudgetMapper.updateOutlayBudget(outlayBudget);
         if( update != 0){
+            //最新一条
+            OutlayBudgetRecord recorddd=outlayBudgetRecordMapper.selectByLatest(outlayBudget.getBudgetId());
             OutlayBudgetRecord record =  new OutlayBudgetRecord();
             record.setBudgetId(outlayBudget.getBudgetId());
             record.setCreateBy(outlayBudget.getCreateBy());
             record.setCreateTime(DateUtils.getNowDate());
             record.setBeforeAmount(outlayBudget.getAmount());
-
             record.setChangeAmount(outlayBudget.getChangeAmount());
-            record.setAfterAmount(outlayBudget.getAmount().add(outlayBudget.getChangeAmount()));
-
+            if(recorddd != null){
+                if(outlayBudget.getIsSub()){
+                    record.setAfterAmount(recorddd.getAfterAmount().subtract(outlayBudget.getChangeAmount()));
+                }else{
+                    record.setAfterAmount(outlayBudget.getChangeAmount().add(recorddd.getAfterAmount()));
+                }
+            }else{
+                if(outlayBudget.getIsSub()){
+                    record.setAfterAmount(outlayBudget.getAmount().subtract(outlayBudget.getChangeAmount()));
+                }else{
+                    record.setAfterAmount(outlayBudget.getAmount().add(outlayBudget.getChangeAmount()));
+                }
+            }
+            af = record.getAfterAmount();
             outlayBudgetRecordMapper.insertOutlayBudgetRecord(record);
         }
-        if(outlayBudget.getChangeAmount() != null){
-            outlayBudget.setAfterAmount(outlayBudget.getAmount().add(outlayBudget.getChangeAmount()));
-        }
+        outlayBudget.setAfterAmount(af);
+//        if(outlayBudget.getChangeAmount() != null){
+//            outlayBudget.setAfterAmount(outlayBudget.getAmount().add(outlayBudget.getChangeAmount()));
+//        }
         return outlayBudgetMapper.updateOutlayBudget(outlayBudget);
     }
 

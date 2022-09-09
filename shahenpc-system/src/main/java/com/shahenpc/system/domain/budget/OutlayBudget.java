@@ -20,7 +20,7 @@ import java.util.Date;
 public class OutlayBudget extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
-
+    private Boolean isSub =false;
     /** 预算id */
     private Long budgetId;
 

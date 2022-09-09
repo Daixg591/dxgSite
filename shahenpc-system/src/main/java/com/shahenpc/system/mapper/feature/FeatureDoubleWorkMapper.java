@@ -53,6 +53,20 @@ public interface FeatureDoubleWorkMapper
     public int deleteFeatureDoubleWorkByDoubleId(Long doubleId);
 
     /**
+     * 待办
+     */
+    public List<FeatureDoubleWork> selectByTodoList(FeatureDoubleWork request);
+    /**
+     * 已办
+     */
+    public List<FeatureDoubleWork> selectByDoneList(FeatureDoubleWork request);
+    /**
+     * 详情
+     * @param doubleId
+     * @return
+     */
+    public DoubleDetatilDto adminDateil(Long doubleId);
+    /**
      * 批量删除双联工作
      * 
      * @param doubleIds 需要删除的数据主键集合

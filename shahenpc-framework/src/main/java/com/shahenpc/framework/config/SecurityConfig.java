@@ -115,6 +115,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/oa/player/list").permitAll()
                 //点击投票
                 .antMatchers("/oa/vote/record").permitAll()
+                //安卓升级
+                .antMatchers("/system/upgrade/liset").permitAll()
                 // 排名
                 .antMatchers("/represent/ranking/my/ranking").permitAll()
                 //投票白名单

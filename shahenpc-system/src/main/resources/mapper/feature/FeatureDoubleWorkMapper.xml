@@ -21,10 +21,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="rate"    column="rate"    />
         <result property="address"    column="address"    />
         <result property="location"    column="location"    />
+        <result property="processType"    column="process_type"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="phonenumber"    column="phonenumber"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="homeAddress"    column="home_address"    />
+        <result property="stationId"    column="station_id"    />
     </resultMap>
 
     <sql id="selectFeatureDoubleWorkVo">
-        select double_id, type, title, status, pic_urls, content, create_by, create_time, update_by, update_time, remark, receive_user_id, send_user_id, rate, address, location from feature_double_work
+        select double_id, type, title, status, pic_urls, content, create_by, create_time, update_by,
+               update_time, remark, receive_user_id, send_user_id, rate, address, location,
+               nick_name,phonenumber,id_card,home_address,station_id,process_type
+        from feature_double_work
     </sql>
 
     <select id="selectFeatureDoubleWorkList" parameterType="FeatureDoubleWork" resultMap="FeatureDoubleWorkResult">
@@ -40,6 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="rate != null "> and rate = #{rate}</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
             <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="processType != null "> and process_type = #{processType}</if>
         </where>
     </select>
 
@@ -66,6 +76,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="rate != null">rate,</if>
             <if test="address != null">address,</if>
             <if test="location != null">location,</if>
+            <if test="processType != null">process_type,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="phonenumber != null">phonenumber,</if>
+            <if test="idCard != null">id_card,</if>
+            <if test="homeAddress != null">home_address,</if>
+            <if test="stationId != null">station_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="type != null">#{type},</if>
@@ -83,6 +99,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="rate != null">#{rate},</if>
             <if test="address != null">#{address},</if>
             <if test="location != null">#{location},</if>
+            <if test="processType != null">#{processType},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="phonenumber != null">#{phonenumber},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="homeAddress != null">#{homeAddress},</if>
+            <if test="stationId != null">#{stationId},</if>
         </trim>
     </insert>
 
@@ -104,6 +126,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="rate != null">rate = #{rate},</if>
             <if test="address != null">address = #{address},</if>
             <if test="location != null">location = #{location},</if>
+            <if test="processType != null">process_type = #{processType},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="phonenumber != null">phonenumber = #{phonenumber},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="homeAddress != null">home_address = #{homeAddress},</if>
+            <if test="stationId != null">station_id = #{stationId},</if>
         </trim>
         where double_id = #{doubleId}
     </update>
@@ -119,26 +147,69 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     <!--======================================分割线-->
+    <!--详情-->
+    <resultMap id="detail" type="com.shahenpc.system.domain.feature.dto.DoubleDetatilDto" extends="FeatureDoubleWorkResult">
+        <association property="trace" column="double_id" select="com.shahenpc.system.mapper.feature.FeatureDoubleWorkTraceMapper.selectByDoubleId"></association>
+    </resultMap>
+    <select id="adminDateil" resultMap="detail">
+        select w.double_id, w.type, w.title, w.status, w.pic_urls, w.content, w.create_by, w.create_time, w.update_by,
+               w.update_time, w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,
+               w.nick_name,w.phonenumber,w.id_card,w.home_address,w.station_id,w.process_type,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = w.process_type)as processTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = w.status)as statusName
+        from feature_double_work w
+        where double_id = #{doubleId}
+    </select>
+    <!--待办-->
+    <resultMap id="appLists" type="com.shahenpc.system.domain.feature.dto.TodoListDto" extends="FeatureDoubleWorkResult">
+
+    </resultMap>
+    <select id="selectByTodoList" parameterType="FeatureDoubleWork" resultMap="appLists">
+        SELECT w.double_id, w.type, w.title, w.`status`, w.pic_urls, w.content, w.create_by, w.create_time, w.update_by, w.update_time,
+               w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,
+               w.phonenumber,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = t.process_type)as processTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = t.status)as statusName
+        FROM feature_double_work_trace t
+        RIGHT JOIN feature_double_work w ON w.double_id = t.double_id
+        WHERE t.receive_user_id= #{receiveUserId} AND t.`status` = 0
+        GROUP BY w.double_id ORDER BY w.create_time DESC
+    </select>
+    <!--已办-->
+    <select id="selectByDoneList" parameterType="FeatureDoubleWork" resultMap="appLists">
+        SELECT  w.double_id,w.type, w.title, w.`status`, w.pic_urls, w.content, w.create_by, w.create_time, w.update_by, w.update_time,
+                w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,r.`status`,
+                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName,
+                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = w.process_type)as processTypeName,
+                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = w.status)as statusName
+        FROM feature_double_work_trace r RIGHT JOIN feature_double_work w ON w.double_id = r.double_id
+        WHERE r.send_user_id= #{sendUserId} ORDER BY w.create_time DESC
+    </select>
+
+
     <resultMap id="adminList" type="com.shahenpc.system.domain.feature.dto.DoubleListDto" extends="FeatureDoubleWorkResult">
 
     </resultMap>
-    <select id="adminList" resultMap="adminList" parameterType="FeatureDoubleWork">
-        select w.double_id, w.type, w.title, w.status, w.content, w.pic_urls, w.create_by, w.create_time, w.update_by, w.update_time, w.remark, w.send_user_id, w.receive_user_id,
-               w.rate,w.location,
-        u.avatar,u.nick_name AS nickName,u.phonenumber as receivePhone,u2.phonenumber as sendPhone
+    <select id="adminList" parameterType="FeatureDoubleWork" resultMap="adminList">
+        select w.double_id, w.type, w.title, w.status, w.content, w.pic_urls, w.create_by, w.create_time,
+               w.update_by, w.update_time, w.remark, w.send_user_id, w.receive_user_id,
+               w.rate,w.location,w.process_type,
+                u.avatar,u.nick_name AS nickName,u.phonenumber as receivePhone,u2.phonenumber as sendPhone,
+                (SELECT u.nick_name FROM sys_user u WHERE u.user_id = w.receive_user_id)AS receiveName
         from feature_double_work w
             LEFT JOIN sys_user u ON u.user_id = w.receive_user_id
             LEFT JOIN sys_user u2 ON u2.user_id = w.send_user_id
         <where>
-            <if test="type != null">and w.type = #{type},</if>
+            <if test="type != null and type != ''">and w.type = #{type},</if>
             <if test="title != null  and title != ''"> and w.title = #{title}</if>
-            <if test="status != null "> and w.status = #{status}</if>
+            <if test="status != null and status != ''"> and w.status = #{status}</if>
             <if test="content != null  and content != ''"> and w.content = #{content}</if>
             <if test="picUrls != null  and picUrls != ''"> and w.pic_urls = #{picUrls}</if>
-            <if test="sendUserId != null">and w.send_user_id = #{sendUserId},</if>
-            <if test="receiveUserId != null "> and w.receive_user_id = #{receiveUserId}</if>
-
-            <if test="rate != null">and w.rate = #{rate},</if>
+            <if test="sendUserId != null and sendUserId != ''">and w.send_user_id = #{sendUserId}</if>
+            <if test="receiveUserId != null and receiveUserId != ''"> and w.receive_user_id = #{receiveUserId}</if>
+            <if test="rate != null and rate != ''">and w.rate = #{rate}</if>
         </where>
     </select>
 

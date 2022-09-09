@@ -99,6 +99,7 @@ public class RepresentActivityController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody ActivityAddDto representActivity)
     {
+        representActivity.setUpdateBy(getNickName());
         return toAjax(representActivityService.newUpdate(representActivity));
     }
 
@@ -128,6 +129,7 @@ public class RepresentActivityController extends BaseController
     public AjaxResult add(@RequestBody ActivityAddDto representActivity)
     {
         representActivity.setSendUserId(getUserId());
+        representActivity.setCreateBy(getNickName());
         return toAjax(representActivityService.newAdd(representActivity));
     }
 

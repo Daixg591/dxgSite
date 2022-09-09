@@ -21,6 +21,16 @@ public class RepresentHomeAccess extends BaseEntity
     private Long accessId;
 
     /**
+     * 联络站等级
+     */
+    private Integer level;
+
+    /**
+     * 选区地址
+     */
+    private String area;
+
+    /**
      * 用户id
      */
     private Long userId;
@@ -179,7 +189,15 @@ public class RepresentHomeAccess extends BaseEntity
         this.provinceName = provinceName;
     }
 
-    public String getProvinceName() 
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getProvinceName()
     {
         return provinceName;
     }

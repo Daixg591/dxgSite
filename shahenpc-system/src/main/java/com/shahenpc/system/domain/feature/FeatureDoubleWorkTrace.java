@@ -34,11 +34,11 @@ public class FeatureDoubleWorkTrace extends BaseEntity
 
     /** $column.columnComment */
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Long type;
+    private Integer type;
 
     /** 0.待审核1.处理中 2.办结 3关闭 */
     @Excel(name = "0.待审核1.处理中 2.办结 3关闭")
-    private Long status;
+    private Integer status;
 
     /** 图片存储 */
     @Excel(name = "图片存储")
@@ -47,4 +47,9 @@ public class FeatureDoubleWorkTrace extends BaseEntity
     /** 回复 */
     @Excel(name = "回复")
     private String revert;
+
+    /** 流程类型 */
+    @Excel(name = "流程类型")
+    private Integer processType;
+
 }

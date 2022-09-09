@@ -18,10 +18,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="processType"    column="process_type"    />
     </resultMap>
 
     <sql id="selectFeatureDoubleWorkTraceVo">
-        select trace_id, double_id, send_user_id, receive_user_id, type, status, pic_urls, revert, remark, create_by, create_time, update_by, update_time from feature_double_work_trace
+        select trace_id, double_id, send_user_id, receive_user_id, type, status, pic_urls, revert, remark, create_by, create_time, update_by, update_time, process_type from feature_double_work_trace
     </sql>
 
     <select id="selectFeatureDoubleWorkTraceList" parameterType="FeatureDoubleWorkTrace" resultMap="FeatureDoubleWorkTraceResult">
@@ -34,6 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null "> and status = #{status}</if>
             <if test="picUrls != null  and picUrls != ''"> and pic_urls = #{picUrls}</if>
             <if test="revert != null  and revert != ''"> and revert = #{revert}</if>
+            <if test="processType != null "> and process_type = #{processType}</if>
         </where>
     </select>
 
@@ -57,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="processType != null">process_type,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="doubleId != null">#{doubleId},</if>
@@ -71,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="processType != null">#{processType},</if>
         </trim>
     </insert>
 
@@ -89,6 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="processType != null">process_type = #{processType},</if>
         </trim>
         where trace_id = #{traceId}
     </update>
@@ -120,5 +125,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="revert != null and revert != ''">and revert = #{revert},</if>
             <if test="picUrls != null  and picUrls != ''"> and pic_urls = #{picUrls}</if>
         </where>
+    </select>
+    <!--根据 -->
+    <resultMap id="appList" type="com.shahenpc.system.domain.feature.dto.TraceDouBleDto" extends="FeatureDoubleWorkTraceResult">
+
+    </resultMap>
+    <select id="selectByDoubleId" resultMap="appList" parameterType="Long">
+        select trace_id, double_id, send_user_id, receive_user_id, type, status,
+               pic_urls, revert, remark, create_by, create_time, update_by, update_time, process_type,
+               process_type,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = t.process_type)as processTypeName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = t.status)as statusName,
+        (select u.nick_name FROM  sys_user u where u.user_id = t.receive_user_id)as receiveName
+        from feature_double_work_trace t
+        where double_id = #{doubleId}
+    </select>
+
+    <select id="selectByCurrent" resultMap="FeatureDoubleWorkTraceResult">
+        <include refid="selectFeatureDoubleWorkTraceVo"/>
+        where double_id = #{doubleId} and `process_type`= #{processType} and receive_user_id = #{receiveUserId}
     </select>
 </mapper>
