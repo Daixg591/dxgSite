@@ -170,7 +170,7 @@ public class SysUserController extends BaseController {
      * @return
      */
     @GetMapping(value = "/getWxUser/list")
-    public AjaxResult getUserList(SysUser user) {
+    public TableDataInfo getUserList(SysUser user) {
         startPage();
         user.setIdentity("1");
         List<SysUser> list = userService.selectRandUserList(user);
@@ -193,8 +193,8 @@ public class SysUserController extends BaseController {
 //            item.setStationName("暂无信息");
             res.add(item);
         }
-//        Collections.shuffle(res);
-        return AjaxResult.success(res);
+        return getDataTable(res);
+//        return AjaxResult.success(res);
     }
 
 
