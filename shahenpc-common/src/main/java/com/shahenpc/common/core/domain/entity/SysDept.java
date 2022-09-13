@@ -22,6 +22,16 @@ public class SysDept extends BaseEntity
     /** 部门ID */
     private Long deptId;
 
+    /**
+     * 负责人id
+     */
+    private Long leaderId;
+
+    /**
+     * 部门标识
+     */
+    private String identity;
+
     /** 父部门ID */
     private Long parentId;
 
@@ -54,6 +64,22 @@ public class SysDept extends BaseEntity
     
     /** 子部门 */
     private List<SysDept> children = new ArrayList<SysDept>();
+
+    public Long getLeaderId() {
+        return leaderId;
+    }
+
+    public void setLeaderId(Long leaderId) {
+        this.leaderId = leaderId;
+    }
+
+    public String getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
 
     public Long getDeptId()
     {
