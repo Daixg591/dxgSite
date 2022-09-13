@@ -88,7 +88,7 @@ public class OutlayActualServiceImpl implements IOutlayActualService
                 return AjaxResult.error("超出预算金额");
             }*/
                 int success =  outlayActualMapper.insertOutlayActual(outlayActual);
-                if((budget.getAmount().subtract(outlayActual.getAmount())).divide(budget.getAmount()).multiply(new BigDecimal(100)).compareTo(budget.getBeyondRatio()) == 1 ) {
+                if((outlayActual.getAmount().subtract(budget.getAmount())).divide(budget.getAmount()).multiply(new BigDecimal(100)).compareTo(budget.getBeyondRatio()) == 1 ) {
                         OutlayAlarm alarm = new OutlayAlarm();
                         //实际id
                         alarm.setActualId(outlayActual.getActualId());
