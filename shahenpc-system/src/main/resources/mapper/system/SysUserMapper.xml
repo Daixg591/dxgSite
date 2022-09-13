@@ -577,4 +577,72 @@
         <include refid="selectUserVo"/>
         where u.nick_name = #{nickName} AND u.phonenumber = #{phone}
     </select>
+
+
+    <select id="selectXcxList" resultType="com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo" parameterType="SysUser">
+        select u.user_id as userId,  u.nick_name as nickName,u.good_area,
+        (SELECT dict_label FROM sys_dict_data WHERE dict_type = 'double_type' AND dict_value =u.good_area)AS goodAreaName,
+        a.title AS stationName,
+        u.resume AS personInfo,
+        u.avatar
+        from sys_user u
+        LEFT JOIN represent_home_access a ON a.access_id = u.contact_station_id
+        left join sys_dept d on u.dept_id = d.dept_id where u.del_flag = '0'
+        where u.del_flag = '0'
+        <if test="userId != null and userId != 0">
+            AND u.user_id = #{userId}
+        </if>
+        <if test="contactStationId != null">
+            AND u.contact_station_id = #{contactStationId}
+        </if>
+        <if test="goodArea != null and userId != ''">
+            AND u.good_area = #{goodArea}
+        </if>
+        <if test="sex != null and userId != ''">
+            AND u.sex = #{sex}
+        </if>
+        <if test="nickName != null and nickName != ''">
+            AND u.nick_name like concat('%', #{nickName}, '%')
+        </if>
+
+        <if test="partyGroupings != null and partyGroupings != ''">
+            AND u.party_groupings = #{partyGroupings}
+        </if>
+
+        <if test="nation != null and nation != ''">
+            AND u.nation = #{nation}
+        </if>
+
+        <if test="userName != null and userName != ''">
+            AND u.user_name like concat('%', #{userName}, '%')
+        </if>
+        <if test="identity != null and identity != ''">
+            AND u.identity = #{identity}
+        </if>
+        <if test="identity =='2'">
+            AND u.identity = 1 or u.identity=2
+        </if>
+        <if test="status != null and status != ''">
+            AND u.status = #{status}
+        </if>
+        <if test="phonenumber != null and phonenumber != ''">
+            AND u.phonenumber like concat('%', #{phonenumber}, '%')
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+        </if>
+        <if test="deptId != null and deptId != 0">
+            AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(#{deptId},
+            ancestors) ))
+        </if>
+        <if test="contactStationId != null and contactStationId != ''">
+            AND u.contact_station_id = #{contactStationId}
+        </if>
+        order by rand()
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
 </mapper>

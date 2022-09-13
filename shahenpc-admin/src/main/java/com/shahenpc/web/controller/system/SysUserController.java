@@ -171,7 +171,9 @@ public class SysUserController extends BaseController {
      */
     @GetMapping(value = "/getWxUser/list")
     public TableDataInfo getUserList(SysUser user) {
-        user.setIdentity("1");
+        startPage();
+        List<WxUserInfoVo> list= userService.selectXcxList(user);
+        /*user.setIdentity("1");
         List<SysUser> list = userService.selectRandUserList(user);
         List<WxUserInfoVo> res = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
@@ -189,11 +191,10 @@ public class SysUserController extends BaseController {
                 item.setStationName("暂无信息");
             }
 //            item.setStationName("暂无信息");
+
             res.add(item);
-        }
-        startPage();
-        return getDataTable(res);
-//        return AjaxResult.success(res);
+        }*/
+        return getDataTable(list);
     }
 
 

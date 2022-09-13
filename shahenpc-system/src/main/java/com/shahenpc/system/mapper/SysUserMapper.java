@@ -1,6 +1,8 @@
 package com.shahenpc.system.mapper;
 
 import java.util.List;
+
+import com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo;
 import org.apache.ibatis.annotations.Param;
 import com.shahenpc.common.core.domain.entity.SysUser;
 
@@ -22,6 +24,8 @@ public interface SysUserMapper
 
     public List<SysUser> selectRandUserList(SysUser sysUser);
 
+
+    public List<WxUserInfoVo> selectXcxList(SysUser sysUser);
 
     /**
      * 根据条件分页查询已配用户角色列表
