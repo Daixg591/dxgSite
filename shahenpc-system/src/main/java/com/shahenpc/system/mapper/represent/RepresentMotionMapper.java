@@ -60,6 +60,8 @@ public interface RepresentMotionMapper
      */
     public int deleteRepresentMotionByMotionIds(Long[] motionIds);
 
+    public List<RepresentMotion> selectByMotionIds(Long[] motionIds);
+
     /**
      *
      * @param representMotion

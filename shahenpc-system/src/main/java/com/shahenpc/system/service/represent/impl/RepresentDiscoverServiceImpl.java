@@ -45,8 +45,6 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     @Autowired
     private RepresentDiscoverMapper representDiscoverMapper;
     @Autowired
-    private ISysDictDataService dictDataService;
-    @Autowired
     private RepresentDiscoverTrackMapper representDiscoverTrackMapper;
     @Autowired
     private IRepresentWorkLogService representWorkLogService;
@@ -54,6 +52,8 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     private SysUserMapper sysUserMapper;
     @Autowired
     private RepresentHomeAccessMapper representHomeAccessMapper;
+
+
     /**
      * 查询代-代发现
      * @param discoverId 代-代发现主键
@@ -90,7 +90,6 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     {
         representDiscover.setCreateTime(DateUtils.getNowDate());
         SysUser user=sysUserMapper.selectUserById(representDiscover.getSendUserId());
-        //representHomeAccessMapper.selectByUserId(representDiscover.getSendUserId());
         RepresentHomeAccess access= representHomeAccessMapper.selectRepresentHomeAccessByAccessId(user.getContactStationId());
         if(access.getUserId() != null){
             representDiscover.setReceiveUserId(access.getUserId());
@@ -98,7 +97,6 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
             return AjaxResult.error("联络站未添加负责人");
         }
         if(representDiscoverMapper.insertRepresentDiscover(representDiscover) > 0){
-            System.out.println("11111111111");
             RepresentWorkLog log = new RepresentWorkLog();
             log.setEventType(4);
             log.setEventId(representDiscover.getDiscoverId());
@@ -140,6 +138,10 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
                 if(access.getUserId() != null){
                     return AjaxResult.error("总驿站，未添加负责人！");
                 }
+            }else if(representDiscover.getProcessType().equals(Constants.DISCOVER_PROCESS_TYPE_2)){
+                representDiscover.setProcessType(Constants.DISCOVER_PROCESS_TYPE_3);
+                //移交给第三方 部门
+                //需要测试
             }
             representDiscover.setUpdateTime(DateUtils.getNowDate());
             //转交， 这一条还是待处理  记录上是已转交
@@ -196,7 +198,7 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     public int deleteRepresentDiscoverByDiscoverIds(Long[] discoverIds)
     {
         if(representDiscoverMapper.deleteRepresentDiscoverByDiscoverIds(discoverIds) > 0){
-            return representDiscoverTrackMapper.deleteRepresentDiscoverTrackByTrackIds(discoverIds);
+            return representDiscoverTrackMapper.deleteRepresentDiscoverTrackByDiscoverIds(discoverIds);
         }
         return 0;
     }
@@ -334,7 +336,7 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     public List<DiscoverPieDto> funnel() {
         List<DiscoverPieDto> dtoList = new ArrayList<>();
         List<RepresentDiscoverTrack> alarBudg=representDiscoverTrackMapper.selectRepresentDiscoverTrackList(null);
-        List<SysDictData> dictList=sysDictTypeService.selectDictDataByType("discover_status");
+        List<SysDictData> dictList=sysDictTypeService.selectDictDataByType("discover_process_type");
         dictList =  dictList.stream().filter(w -> !w.getDictValue().equals("5")).collect(Collectors.toList());
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;

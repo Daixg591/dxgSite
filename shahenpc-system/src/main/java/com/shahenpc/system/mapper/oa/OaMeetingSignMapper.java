@@ -4,6 +4,7 @@ import java.util.List;
 import com.shahenpc.system.domain.oa.OaMeetingSign;
 import com.shahenpc.system.domain.oa.dto.MeetingAppDetailDto;
 import com.shahenpc.system.domain.oa.dto.SignListDto;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 会议签到记录Mapper接口
@@ -66,6 +67,8 @@ public interface OaMeetingSignMapper
     public OaMeetingSign selectByMeetingIdAndUserId(OaMeetingSign oaMeetingSign);
 
     public int deleteOaMeetingSignByMeetingId(Long meetingId);
+
+    public OaMeetingSign selectByMeetingIdAndUserIds(@Param("meetingId") Long meetingId,@Param("userId") Long userId);
 
 
 }

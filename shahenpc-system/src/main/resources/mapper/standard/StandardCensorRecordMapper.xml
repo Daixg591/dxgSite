@@ -101,6 +101,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     <!--=-==============================================自定义-->
+    <select id="deleteStandardCensorRecordByCensorIds" parameterType="String">
+        delete from standard_censor_record where censor_id in
+        <foreach item="censorId" collection="array" open="(" separator="," close=")">
+            #{censorId}
+        </foreach>
+    </select>
+
     <!-- 流程详情-->
     <resultMap id="censorList" type="com.shahenpc.system.domain.standard.dto.RecordListDto" extends="StandardCensorRecordResult">
 

@@ -102,4 +102,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select user_id from oa_meeting_personnel
         where meeting_id = #{meetingId}
     </select>
+
+    <select id="selectByMeetingIdAndUserId" resultMap="OaMeetingPersonnelResult">
+        <include refid="selectOaMeetingPersonnelVo"/>
+        <where>
+            <if test="meetingId != null "> and meeting_id = #{meetingId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
 </mapper>

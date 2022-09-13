@@ -1,6 +1,8 @@
 package com.shahenpc.system.service.personel;
 
 import java.util.List;
+
+import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.system.domain.personel.PersonnelAppointRegister;
 import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
 
@@ -27,6 +29,16 @@ public interface IPersonnelAppointRegisterService
      * @return 人事任免_任免记录集合
      */
     public List<PersonnelAppointRegister> selectPersonnelAppointRegisterList(PersonnelQueryDto personnelAppointRegister);
+
+    /**
+     * 导入用户数据
+     *
+     * @param userList 用户数据列表
+     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
+     * @param operName 操作用户
+     * @return 结果
+     */
+    public String importUser(List<PersonnelAppointRegister> userList, Boolean isUpdateSupport, String operName);
 
     /**
      * 新增人事任免_任免记录

@@ -2,11 +2,14 @@ package com.shahenpc.system.service.represent.impl;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.mapper.represent.RepresentMotionRecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.represent.RepresentMotionMapper;
 import com.shahenpc.system.domain.represent.RepresentMotion;
 import com.shahenpc.system.service.represent.IRepresentMotionService;
+
+import javax.annotation.Resource;
 
 /**
  * 工作-建议议案处理Service业务层处理
@@ -70,6 +73,8 @@ public class RepresentMotionServiceImpl implements IRepresentMotionService
         return representMotionMapper.updateRepresentMotion(representMotion);
     }
 
+    @Autowired
+    private RepresentMotionRecordMapper representMotionRecordMapper;
     /**
      * 批量删除工作-建议议案处理
      * 
@@ -79,7 +84,10 @@ public class RepresentMotionServiceImpl implements IRepresentMotionService
     @Override
     public int deleteRepresentMotionByMotionIds(Long[] motionIds)
     {
-        return representMotionMapper.deleteRepresentMotionByMotionIds(motionIds);
+        if(representMotionMapper.deleteRepresentMotionByMotionIds(motionIds)>0){
+            return representMotionRecordMapper.deleteRepresentMotionRecordByMotionIds(motionIds);
+        }
+        return 0;
     }
 
     /**
@@ -96,7 +104,7 @@ public class RepresentMotionServiceImpl implements IRepresentMotionService
 
     /**
      *
-     * @param procinsId
+     * @param
      * @return
      */
     @Override

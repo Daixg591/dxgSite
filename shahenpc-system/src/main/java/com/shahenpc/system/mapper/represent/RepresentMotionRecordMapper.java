@@ -58,4 +58,6 @@ public interface RepresentMotionRecordMapper
      * @return 结果
      */
     public int deleteRepresentMotionRecordByRecordIds(Long[] recordIds);
+
+    public int deleteRepresentMotionRecordByMotionIds(Long[] motionIds);
 }

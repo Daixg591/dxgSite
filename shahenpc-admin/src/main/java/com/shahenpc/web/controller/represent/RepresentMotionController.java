@@ -87,6 +87,8 @@ public class RepresentMotionController extends BaseController
 
     /**
      * 修改工作-建议议案处理
+     * @param representMotion
+     * @return
      */
     @PreAuthorize("@ss.hasPermi('represent:motion:edit')")
     @Log(title = "工作-建议议案处理", businessType = BusinessType.UPDATE)
@@ -104,7 +106,7 @@ public class RepresentMotionController extends BaseController
 	@DeleteMapping("/{motionIds}")
     public AjaxResult remove(@PathVariable Long[] motionIds)
     {
-        return toAjax(representMotionService.deleteRepresentMotionByMotionIds(motionIds));
+        return toAjax(flowTaskService.deleteRepresentMotionByMotionIds(motionIds));
     }
 
 

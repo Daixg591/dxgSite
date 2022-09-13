@@ -28,10 +28,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="rate"    column="rate"    />
         <result property="phone"    column="phone"    />
         <result property="categoryType"    column="category_type"    />
+        <result property="representName"    column="represent_name"    />
+        <result property="representTeam"    column="represent_team"    />
+        <result property="representCount"    column="represent_count"    />
+        <result property="representCard"    column="represent_card"    />
+        <result property="postalCode"    column="postal_code"    />
+        <result property="opinion"    column="opinion"    />
+        <result property="opinionType"    column="opinion_type"    />
+        <result property="isXingcheng"    column="is_xingcheng"    />
+        <result property="survey"    column="survey"    />
+        <result property="yearly"    column="yearly"    />
+        <result property="isGoutong"    column="is_goutong"    />
     </resultMap>
 
     <sql id="selectRepresentMotionVo">
-        select motion_id, motion_type, title, content, suggest_user_id, suggest_user_name, status, remark, create_by, create_time, update_by, update_time, send_user_id, send_user_name, approval_user_id, procIns_id, deploy_id, link_name, link_status, address, rate, phone, category_type from represent_motion
+        select motion_id, motion_type, title, content, suggest_user_id, suggest_user_name, status, remark, create_by, create_time, update_by, update_time, send_user_id, send_user_name, approval_user_id, procIns_id, deploy_id, link_name, link_status, address, rate, phone, category_type, represent_name, represent_team, represent_count, represent_card, postal_code, opinion, opinion_type, is_xingcheng, survey, yearly, is_goutong from represent_motion
     </sql>
 
     <select id="selectRepresentMotionList" parameterType="RepresentMotion" resultMap="RepresentMotionResult">
@@ -54,6 +65,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="rate != null "> and rate = #{rate}</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
             <if test="categoryType != null "> and category_type = #{categoryType}</if>
+            <if test="representName != null  and representName != ''"> and represent_name like concat('%', #{representName}, '%')</if>
+            <if test="representTeam != null  and representTeam != ''"> and represent_team = #{representTeam}</if>
+            <if test="representCount != null  and representCount != ''"> and represent_count = #{representCount}</if>
+            <if test="representCard != null  and representCard != ''"> and represent_card = #{representCard}</if>
+            <if test="postalCode != null  and postalCode != ''"> and postal_code = #{postalCode}</if>
+            <if test="opinion != null  and opinion != ''"> and opinion = #{opinion}</if>
+            <if test="opinionType != null "> and opinion_type = #{opinionType}</if>
+            <if test="isXingcheng != null "> and is_xingcheng = #{isXingcheng}</if>
+            <if test="survey != null "> and survey = #{survey}</if>
+            <if test="yearly != null "> and yearly = #{yearly}</if>
+            <if test="isGoutong != null "> and is_goutong = #{isGoutong}</if>
         </where>
     </select>
 
@@ -87,6 +109,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="rate != null">rate,</if>
             <if test="phone != null">phone,</if>
             <if test="categoryType != null">category_type,</if>
+            <if test="representName != null">represent_name,</if>
+            <if test="representTeam != null">represent_team,</if>
+            <if test="representCount != null">represent_count,</if>
+            <if test="representCard != null">represent_card,</if>
+            <if test="postalCode != null">postal_code,</if>
+            <if test="opinion != null">opinion,</if>
+            <if test="opinionType != null">opinion_type,</if>
+            <if test="isXingcheng != null">is_xingcheng,</if>
+            <if test="survey != null">survey,</if>
+            <if test="yearly != null">yearly,</if>
+            <if test="isGoutong != null">is_goutong,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="motionType != null">#{motionType},</if>
@@ -111,6 +144,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="rate != null">#{rate},</if>
             <if test="phone != null">#{phone},</if>
             <if test="categoryType != null">#{categoryType},</if>
+            <if test="representName != null">#{representName},</if>
+            <if test="representTeam != null">#{representTeam},</if>
+            <if test="representCount != null">#{representCount},</if>
+            <if test="representCard != null">#{representCard},</if>
+            <if test="postalCode != null">#{postalCode},</if>
+            <if test="opinion != null">#{opinion},</if>
+            <if test="opinionType != null">#{opinionType},</if>
+            <if test="isXingcheng != null">#{isXingcheng},</if>
+            <if test="survey != null">#{survey},</if>
+            <if test="yearly != null">#{yearly},</if>
+            <if test="isGoutong != null">#{isGoutong},</if>
         </trim>
     </insert>
 
@@ -139,6 +183,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="rate != null">rate = #{rate},</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="categoryType != null">category_type = #{categoryType},</if>
+            <if test="representName != null">represent_name = #{representName},</if>
+            <if test="representTeam != null">represent_team = #{representTeam},</if>
+            <if test="representCount != null">represent_count = #{representCount},</if>
+            <if test="representCard != null">represent_card = #{representCard},</if>
+            <if test="postalCode != null">postal_code = #{postalCode},</if>
+            <if test="opinion != null">opinion = #{opinion},</if>
+            <if test="opinionType != null">opinion_type = #{opinionType},</if>
+            <if test="isXingcheng != null">is_xingcheng = #{isXingcheng},</if>
+            <if test="survey != null">survey = #{survey},</if>
+            <if test="yearly != null">yearly = #{yearly},</if>
+            <if test="isGoutong != null">is_goutong = #{isGoutong},</if>
         </trim>
         where motion_id = #{motionId}
     </update>
@@ -154,6 +209,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     <!--==================================================分割线-->
+    <select id="selectByMotionIds" parameterType="String" resultMap="RepresentMotionResult">
+        <include refid="selectRepresentMotionVo"/> where motion_id in
+        <foreach item="motionId" collection="array" open="(" separator="," close=")">
+            #{motionId}
+        </foreach>
+    </select>
+
     <select id="selectByWorkflowId" resultMap="RepresentMotionResult" parameterType="RepresentMotion">
         <include refid="selectRepresentMotionVo"/>
         <where>

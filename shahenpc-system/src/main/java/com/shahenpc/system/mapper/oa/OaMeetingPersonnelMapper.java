@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper.oa;
 
 import java.util.List;
 import com.shahenpc.system.domain.oa.OaMeetingPersonnel;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 会议人员Mapper接口
@@ -61,4 +62,6 @@ public interface OaMeetingPersonnelMapper
     public int deleteOaMeetingPersonnelByPersonnelIds(Long[] personnelIds);
 
     public List<Long> selectByMeetingId(Long meetingId);
+
+    public OaMeetingPersonnel selectByMeetingIdAndUserId(@Param("meetingId") Long meetingId, @Param("userId") Long userId);
 }

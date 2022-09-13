@@ -9,6 +9,7 @@ import io.jsonwebtoken.Claims;
  */
 public class Constants
 {
+    public static final Integer DISCOVER_PROCESS_TYPE_3=3;
     /**
      * 代表发现类型
      */
@@ -51,6 +52,7 @@ public class Constants
      * 联络站 发送 到 总联络站 负责人 3
      */
     public static final Integer DOUBLE_PROCESS_TYPE_3=3;
+    public static final Integer DOUBLE_PROCESS_TYPE_4 = 4;
     /**
      * 双联工作 类型 民生类
      */

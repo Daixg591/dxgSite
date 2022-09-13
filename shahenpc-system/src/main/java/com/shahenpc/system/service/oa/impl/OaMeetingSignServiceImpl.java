@@ -1,6 +1,8 @@
 package com.shahenpc.system.service.oa.impl;
 
 import java.util.List;
+
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.system.domain.oa.OaMeetingPersonnel;
 import com.shahenpc.system.mapper.oa.OaMeetingPersonnelMapper;
@@ -98,18 +100,22 @@ public class OaMeetingSignServiceImpl implements IOaMeetingSignService
     }
 
     @Override
-    public int sign(Long meeting, Long userId) {
-        OaMeetingPersonnel per = new OaMeetingPersonnel();
-        per.setMeetingId(meeting);
-        per.setUserId(userId);
-        if(oaMeetingPersonnelMapper.selectOaMeetingPersonnelList(per).size() != 0){
-            OaMeetingSign sign = new OaMeetingSign();
-            sign.setUserId(userId);
-            sign.setPersonnelId(oaMeetingPersonnelMapper.selectOaMeetingPersonnelList(per).get(0).getPersonnelId());
-            sign.setMeetingId(meeting);
-            sign.setCreateTime(DateUtils.getNowDate());
-            return oaMeetingSignMapper.insertOaMeetingSign(sign);
+    public AjaxResult sign(Long meeting, Long userId) {
+        OaMeetingSign signSvan = oaMeetingSignMapper.selectByMeetingIdAndUserIds(meeting,userId);
+        if(signSvan != null){
+            OaMeetingPersonnel personnel=oaMeetingPersonnelMapper.selectByMeetingIdAndUserId(meeting,userId);
+            if(personnel != null){
+                OaMeetingSign sign = new OaMeetingSign();
+                sign.setUserId(userId);
+                sign.setPersonnelId(personnel.getPersonnelId());
+                sign.setMeetingId(meeting);
+                sign.setCreateTime(DateUtils.getNowDate());
+                return AjaxResult.success(oaMeetingSignMapper.insertOaMeetingSign(sign));
+            }else{
+                return AjaxResult.error("会议没有邀请您，请勿操作！");
+            }
+        }else {
+           return AjaxResult.error("您已签到，请勿重复操作！");
         }
-        return 0;
     }
 }

@@ -131,4 +131,18 @@ public class FlowTaskDto implements Serializable {
     @ApiModelProperty("发文机关")
     private String organName;
 
+
+
+    private String representName;
+    private String representTeam;
+    private String representCount;
+    private String representCard;
+    private String postalCode;
+    private String opinion;
+    private String opinionType;
+    private String isXingcheng;
+    private String survey;
+    private String yearly;
+    private String isGoutong;
+
 }
