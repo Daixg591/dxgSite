@@ -171,7 +171,6 @@ public class SysUserController extends BaseController {
      */
     @GetMapping(value = "/getWxUser/list")
     public TableDataInfo getUserList(SysUser user) {
-        startPage();
         user.setIdentity("1");
         List<SysUser> list = userService.selectRandUserList(user);
         List<WxUserInfoVo> res = new ArrayList<>();
@@ -182,7 +181,6 @@ public class SysUserController extends BaseController {
             item.setPersonInfo(list.get(i).getResume());
             item.setAvatar(list.get(i).getAvatar());
             item.setGoodAreaName(dictDataService.selectDictLabel("double_type", list.get(i).getGoodArea()));
-
             if (list.get(i).getContactStationId()!=null ) {
                 RepresentHomeAccess homeAccess = homeAccessService.selectRepresentHomeAccessByAccessId(list.get(i).getContactStationId());
                 item.setStationName(homeAccess.getTitle());
@@ -193,6 +191,7 @@ public class SysUserController extends BaseController {
 //            item.setStationName("暂无信息");
             res.add(item);
         }
+        startPage();
         return getDataTable(res);
 //        return AjaxResult.success(res);
     }

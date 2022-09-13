@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.personel.PersonnelAppointNoticeMapper">
-    
+
     <resultMap type="PersonnelAppointNotice" id="PersonnelAppointNoticeResult">
         <result property="noticeId"    column="notice_id"    />
         <result property="coverUrl"    column="cover_url"    />
@@ -17,38 +17,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="type"    column="type"    />
+        <result property="columnType"    column="column_type"    />
         <result property="readCnt"    column="read_cnt"    />
         <result property="shareCnt"    column="share_cnt"    />
         <result property="banner"    column="banner"    />
+        <result property="fileUrl"    column="file_url"    />
     </resultMap>
 
     <sql id="selectPersonnelAppointNoticeVo">
-        select notice_id, cover_url, title, details, state, remark, create_by, create_time, update_by, update_time, del_flag,type,read_cnt,share_cnt,banner
-        from personnel_appoint_notice
+        select notice_id, cover_url, title, details, state, remark, create_by, create_time, update_by, update_time, del_flag, type, column_type, read_cnt, share_cnt, banner, file_url from personnel_appoint_notice
     </sql>
 
     <select id="selectPersonnelAppointNoticeList" parameterType="PersonnelAppointNotice" resultMap="PersonnelAppointNoticeResult">
         <include refid="selectPersonnelAppointNoticeVo"/>
-        <where>  
+        <where>
             <if test="coverUrl != null  and coverUrl != ''"> and cover_url = #{coverUrl}</if>
-            <if test="title != null  and title != ''">
-                AND title like concat('%', #{title}, '%')
-             </if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="details != null  and details != ''"> and details = #{details}</if>
             <if test="state != null  and state != ''"> and state = #{state}</if>
-            <if test="banner != null  and banner != ''"> and banner = #{banner}</if>
-             <if test="type != null and type != ''">
-                 and type = #{type}
-             </if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="columnType != null "> and column_type = #{columnType}</if>
+            <if test="readCnt != null "> and read_cnt = #{readCnt}</if>
+            <if test="shareCnt != null "> and share_cnt = #{shareCnt}</if>
+            <if test="banner != null "> and banner = #{banner}</if>
+            <if test="fileUrl != null  and fileUrl != ''"> and file_url = #{fileUrl}</if>
         </where>
-        order by create_time desc
     </select>
-    
+
     <select id="selectPersonnelAppointNoticeByNoticeId" parameterType="Long" resultMap="PersonnelAppointNoticeResult">
         <include refid="selectPersonnelAppointNoticeVo"/>
         where notice_id = #{noticeId}
     </select>
-        
+
     <insert id="insertPersonnelAppointNotice" parameterType="PersonnelAppointNotice" useGeneratedKeys="true" keyProperty="noticeId">
         insert into personnel_appoint_notice
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -63,10 +63,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="type != null">type,</if>
+            <if test="columnType != null">column_type,</if>
             <if test="readCnt != null">read_cnt,</if>
             <if test="shareCnt != null">share_cnt,</if>
             <if test="banner != null">banner,</if>
-         </trim>
+            <if test="fileUrl != null">file_url,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="coverUrl != null">#{coverUrl},</if>
             <if test="title != null">#{title},</if>
@@ -79,10 +81,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="type != null">#{type},</if>
+            <if test="columnType != null">#{columnType},</if>
             <if test="readCnt != null">#{readCnt},</if>
             <if test="shareCnt != null">#{shareCnt},</if>
             <if test="banner != null">#{banner},</if>
-         </trim>
+            <if test="fileUrl != null">#{fileUrl},</if>
+        </trim>
     </insert>
 
     <update id="updatePersonnelAppointNotice" parameterType="PersonnelAppointNotice">
@@ -99,9 +103,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="type != null">type = #{type},</if>
+            <if test="columnType != null">column_type = #{columnType},</if>
             <if test="readCnt != null">read_cnt = #{readCnt},</if>
             <if test="shareCnt != null">share_cnt = #{shareCnt},</if>
             <if test="banner != null">banner = #{banner},</if>
+            <if test="fileUrl != null">file_url = #{fileUrl},</if>
         </trim>
         where notice_id = #{noticeId}
     </update>
@@ -111,9 +117,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deletePersonnelAppointNoticeByNoticeIds" parameterType="String">
-        delete from personnel_appoint_notice where notice_id in 
+        delete from personnel_appoint_notice where notice_id in
         <foreach item="noticeId" collection="array" open="(" separator="," close=")">
             #{noticeId}
         </foreach>
     </delete>
+    <!--==============================自定义=========-->
 </mapper>

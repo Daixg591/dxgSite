@@ -68,9 +68,18 @@ public class PersonnelAppointNotice extends BaseEntity {
 
     private Integer banner;
     /**
+     * 根据左侧菜单绑定
+     */
+    private Integer columnType;
+    /**
      * 删除标识
      */
     private String delFlag;
+
+    /** 存储文件路径 */
+    @Excel(name = "存储文件路径")
+    private String fileUrl;
+
 
     public void setNoticeId(Long noticeId) {
         this.noticeId = noticeId;
