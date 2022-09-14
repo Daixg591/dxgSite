@@ -145,4 +145,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectFeatureDoubleWorkTraceVo"/>
         where double_id = #{doubleId} and `process_type`= #{processType} and receive_user_id = #{receiveUserId}
     </select>
+
+    <select id="selectBySendUserId" resultMap="FeatureDoubleWorkTraceResult">
+        <include refid="selectFeatureDoubleWorkTraceVo"/>
+        WHERE receive_user_id = #{receiveUserId} AND double_id = #{doubleId} AND `status` != 4
+    </select>
 </mapper>

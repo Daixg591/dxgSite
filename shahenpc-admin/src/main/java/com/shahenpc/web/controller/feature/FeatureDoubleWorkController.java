@@ -5,8 +5,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.shahenpc.system.domain.feature.dto.DoubleListDto;
+import com.shahenpc.system.domain.feature.vo.DoubleFallbackVo;
 import com.shahenpc.system.domain.feature.vo.DoubleReturnVo;
 import com.shahenpc.system.domain.feature.vo.FeatureDoubleWorkUpdateVo;
+import com.shahenpc.system.domain.represent.vo.DiscoverFallbackVo;
 import com.shahenpc.system.domain.standard.vo.CensorReturnVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -129,6 +131,7 @@ public class FeatureDoubleWorkController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody FeatureDoubleWorkUpdateVo featureDoubleWork) {
         featureDoubleWork.setUpdateBy(getNickName());
+        featureDoubleWork.setUserId(getUserId());
         return featureDoubleWorkService.newUpdate(featureDoubleWork);
     }
 
@@ -149,6 +152,18 @@ public class FeatureDoubleWorkController extends BaseController {
     @DeleteMapping("/{doubleIds}")
     public AjaxResult remove(@PathVariable Long[] doubleIds) {
         return toAjax(featureDoubleWorkService.deleteFeatureDoubleWorkByDoubleIds(doubleIds));
+    }
+
+    /**
+     * 退回
+     * @param fallbackVo
+     * @return
+     */
+    @PostMapping("/fallback")
+    public AjaxResult fallback(@RequestBody DoubleFallbackVo fallbackVo)
+    {
+        fallbackVo.setUpdateBy(getNickName());
+        return featureDoubleWorkService.fallback(fallbackVo);
     }
 
     /**

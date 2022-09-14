@@ -5,8 +5,10 @@ import java.util.List;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.feature.dto.*;
+import com.shahenpc.system.domain.feature.vo.DoubleFallbackVo;
 import com.shahenpc.system.domain.feature.vo.DoubleReturnVo;
 import com.shahenpc.system.domain.feature.vo.FeatureDoubleWorkUpdateVo;
+import com.shahenpc.system.domain.represent.vo.DiscoverFallbackVo;
 
 /**
  * 双联工作Service接口
@@ -55,6 +57,8 @@ public interface IFeatureDoubleWorkService
      * @return 结果
      */
     public int deleteFeatureDoubleWorkByDoubleIds(Long[] doubleIds);
+
+    public AjaxResult fallback(DoubleFallbackVo fallbackVo);
 
     public List<FeatureDoubleWork> todoList(FeatureDoubleWork request);
 

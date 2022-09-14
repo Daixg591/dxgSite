@@ -130,6 +130,7 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     @Transactional
     public AjaxResult updateRepresentDiscover(DiscoverUpdateVo representDiscover)
     {
+
         if(representDiscover.getStatus().equals(Constants.DISCOVER_STATUS_2)){
             //流程类型转换
             if(representDiscover.getProcessType().equals(Constants.DISCOVER_PROCESS_TYPE_1)){

@@ -35,7 +35,7 @@ public class Constants
      */
     public static final Integer DISCOVER_STATUS_2=2;
     /**
-     *
+     *  办结
      */
     public static final Integer DISCOVER_STATUS_3=3;
     /**

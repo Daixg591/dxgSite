@@ -3,6 +3,8 @@ package com.shahenpc.system.mapper.feature;
 import java.util.List;
 import com.shahenpc.system.domain.feature.FeatureDoubleWorkTrace;
 import com.shahenpc.system.domain.feature.dto.TraceListDto;
+import com.shahenpc.system.domain.represent.RepresentDiscoverTrack;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 双连工作 聊天Mapper接口
@@ -63,5 +65,10 @@ public interface FeatureDoubleWorkTraceMapper
     public List<TraceListDto> adminList(FeatureDoubleWorkTrace featureDoubleWorkTrace);
 
     public FeatureDoubleWorkTrace selectByCurrent(FeatureDoubleWorkTrace trace);
+
+
+
+
+    public FeatureDoubleWorkTrace selectBySendUserId(@Param("receiveUserId") Long receiveUserId, @Param("doubleId") Long doubleId);
 
 }
