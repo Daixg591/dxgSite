@@ -257,7 +257,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                     Work.setReceiveUserId(access.getUserId());
                     Work.setProcessType(Constants.DOUBLE_PROCESS_TYPE_2);
                 }else if(Constants.DOUBLE_PROCESS_TYPE_2.equals(featureDoubleWork.getProcessType())){
-                    RepresentHomeAccess access=representHomeAccessMapper.selectByLevel(0);
+                    RepresentHomeAccess access=representHomeAccessMapper.selectByLevel();
                     Work.setReceiveUserId(access.getUserId());
                     Work.setProcessType(Constants.DOUBLE_PROCESS_TYPE_3);
                 }else if(Constants.DOUBLE_PROCESS_TYPE_3.equals(featureDoubleWork.getProcessType())){

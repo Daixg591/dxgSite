@@ -130,14 +130,14 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     {
         if(representDiscover.getStatus().equals(Constants.DISCOVER_STATUS_2)){
             //流程类型转换
-            RepresentHomeAccess access = new RepresentHomeAccess();
             if(representDiscover.getProcessType().equals(Constants.DISCOVER_PROCESS_TYPE_1)){
                 representDiscover.setProcessType(Constants.DISCOVER_PROCESS_TYPE_2);
                 //获取总站userId
-                access=representHomeAccessMapper.selectByLevel(0);
+                RepresentHomeAccess access=representHomeAccessMapper.selectByLevel();
                 if(access.getUserId() != null){
                     return AjaxResult.error("总驿站，未添加负责人！");
                 }
+                representDiscover.setReceiveUserId(access.getUserId());
             }else if(representDiscover.getProcessType().equals(Constants.DISCOVER_PROCESS_TYPE_2)){
                 representDiscover.setProcessType(Constants.DISCOVER_PROCESS_TYPE_3);
                 //移交给第三方 部门
@@ -146,14 +146,13 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
             representDiscover.setUpdateTime(DateUtils.getNowDate());
             //转交， 这一条还是待处理  记录上是已转交
             representDiscover.setStatus(Constants.DISCOVER_STATUS_1);
-            representDiscover.setReceiveUserId(access.getUserId());
             if(representDiscoverMapper.updateRepresentDiscover(representDiscover) <= 0 ){
                 return AjaxResult.error("记录修改失败！");
             }
             RepresentDiscoverTrack track = new RepresentDiscoverTrack();
             //转交
             track.setCreateBy(representDiscover.getUpdateBy());
-            track.setStatus(Constants.DISCOVER_STATUS_1);
+            track.setStatus(Constants.DISCOVER_STATUS_2);
             track.setSendUserId(representDiscover.getUserId());
             track.setProcessType(representDiscover.getProcessType());
             track.setReceiveUserId(representDiscover.getReceiveUserId());

@@ -143,8 +143,10 @@
         <association property="track" column="discover_id" select="com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper.selectByDiscoverId"></association>
     </resultMap>
     <select id="detail" parameterType="Long" resultMap="adminDetail">
+
         select
-            discover_id, title, content,pic_urls, discover_type, remark, create_time, update_by, update_time, create_by, address, location, reply, rate, send_user_id, receive_user_id, status, process_type,
+            discover_id, title, content,pic_urls, discover_type, remark, create_time, update_by, update_time, create_by, address, location, reply, rate, send_user_id, receive_user_id,
+            status, process_type,
             (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = di.process_type)as processTypeName,
             (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = di.status)as statusName,
             (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
@@ -160,9 +162,9 @@
         d.title, d.content,d.pic_urls, d.discover_type, d.remark,
         d.create_time, d.update_by, d.update_time, d.create_by, d.address, d.location,
         d.status, d.reply, d.rate, d.send_user_id,d.receive_user_id,
-        (SELECT d.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='discover_status' AND d1.dict_value = d.status)AS processTypeName,
-        (SELECT d.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='process_type' AND d1.dict_value = d.process_type)AS processTypeName,
-        (SELECT d.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='discover_type' AND d1.dict_value = d.discover_type)AS discoverTypeName,
+        (SELECT d1.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='discover_status' AND d1.dict_value = d.status)AS processTypeName,
+        (SELECT d1.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='process_type' AND d1.dict_value = d.process_type)AS processTypeName,
+        (SELECT d1.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='discover_type' AND d1.dict_value = d.discover_type)AS discoverTypeName,
         (SELECT u.nick_name FROM sys_user u WHERE u.user_id = d.send_user_id)AS sendUserName,
         (SELECT u.nick_name FROM sys_user u WHERE u.user_id = d.receive_user_id)AS receiveUserName
         from represent_discover d
@@ -203,13 +205,15 @@
             <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
             <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
         </where>
+        ORDER BY a.create_time DESC
     </select>
 
     <resultMap id="appDetail" type="com.shahenpc.system.domain.represent.dto.DiscoverAppDetailDto" extends="RepresentDiscoverResult">
         <association property="track" column="discover_id" select="com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper.selectByDiscoverId"></association>
     </resultMap>
     <select id="appDetail" parameterType="Long" resultMap="appDetail">
-        select discover_id, title, content,pic_urls, discover_type, remark, create_time, update_by, update_time, create_by, address, location, status, reply, rate, send_user_id, receive_user_id,
+        select discover_id, title, content,pic_urls, discover_type, remark, create_time, update_by, update_time, create_by, address, location,
+               status, reply, rate, send_user_id, receive_user_id,process_type,
                (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
                (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_type' AND d.dict_value = a.discover_type)AS discoverTypeName,
