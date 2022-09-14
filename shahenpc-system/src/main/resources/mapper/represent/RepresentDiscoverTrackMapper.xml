@@ -130,4 +130,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where t.discover_id = #{discoverId}
         ORDER BY t.create_time DESC
     </select>
+
+
+    <select id="selectBySendUserId" resultMap="RepresentDiscoverTrackResult">
+        <include refid="selectRepresentDiscoverTrackVo"/>
+        WHERE receive_user_id = #{receiveUserId} AND discover_id = #{discoverId} AND `status` != 4
+    </select>
 </mapper>

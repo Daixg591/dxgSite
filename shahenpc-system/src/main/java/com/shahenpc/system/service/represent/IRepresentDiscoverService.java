@@ -5,6 +5,7 @@ import java.util.List;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.system.domain.represent.RepresentDiscover;
 import com.shahenpc.system.domain.represent.dto.*;
+import com.shahenpc.system.domain.represent.vo.DiscoverFallbackVo;
 import com.shahenpc.system.domain.represent.vo.DiscoverUpdateVo;
 
 /**
@@ -63,7 +64,19 @@ public interface IRepresentDiscoverService
      */
     public int deleteRepresentDiscoverByDiscoverId(Long discoverId);
 
+    /**
+     * 已办
+     * @param sendUserId
+     * @return
+     */
     public List<DiscoverAppListDto> doneList(Long sendUserId);
+
+    /**
+     * 待办
+     * @param representDiscover
+     * @return
+     */
+    public List<DiscoverAppListDto> todoList(RepresentDiscover representDiscover);
     /***/
     public List<DiscoverAppListDto> appList(RepresentDiscover representDiscover);
 
@@ -86,4 +99,7 @@ public interface IRepresentDiscoverService
     public List<DiscoverPieDto> funnel();
 
     public List<String> heatmap();
+
+
+    public AjaxResult fallback(DiscoverFallbackVo fallbackVo);
 }

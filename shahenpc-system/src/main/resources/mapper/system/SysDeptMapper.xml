@@ -48,6 +48,9 @@
         <if test="deptId != null and deptId != 0">
             AND dept_id = #{deptId}
         </if>
+        <if test="identity != null and identity != 0">
+            AND `identity` = #{identity}
+        </if>
         <if test="parentId != null and parentId != 0">
             AND parent_id = #{parentId}
         </if>
@@ -189,4 +192,11 @@
         where dept_id = #{deptId}
     </delete>
 
+    <!--查询第三方部门 以及 人员-->
+    <resultMap id="sanfangList" type="com.shahenpc.system.domain.dto.DeptByUser" extends="SysDeptResult">
+        <association property="user" column="dept_id" select="com.shahenpc.system.mapper.SysUserMapper.selectByDeptId"></association>
+    </resultMap>
+    <select id="selectByUser" resultMap="sanfangList">
+        <include refid="selectDeptVo"/> WHERE `identity` = 2
+    </select>
 </mapper> 

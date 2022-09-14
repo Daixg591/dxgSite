@@ -19,6 +19,7 @@ import com.shahenpc.system.domain.represent.RepresentDiscoverTrack;
 import com.shahenpc.system.domain.represent.RepresentHomeAccess;
 import com.shahenpc.system.domain.represent.RepresentWorkLog;
 import com.shahenpc.system.domain.represent.dto.*;
+import com.shahenpc.system.domain.represent.vo.DiscoverFallbackVo;
 import com.shahenpc.system.domain.represent.vo.DiscoverUpdateVo;
 import com.shahenpc.system.mapper.SysUserMapper;
 import com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper;
@@ -126,6 +127,7 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
      * @return 结果
      */
     @Override
+    @Transactional
     public AjaxResult updateRepresentDiscover(DiscoverUpdateVo representDiscover)
     {
         if(representDiscover.getStatus().equals(Constants.DISCOVER_STATUS_2)){
@@ -149,16 +151,28 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
             if(representDiscoverMapper.updateRepresentDiscover(representDiscover) <= 0 ){
                 return AjaxResult.error("记录修改失败！");
             }
+            //查原来的 记录的id
+            RepresentDiscoverTrack trcl=representDiscoverTrackMapper.selectBySendUserId(representDiscover.getUserId(),representDiscover.getDiscoverId());
+            if(trcl == null){
+                return AjaxResult.error("流程记录，修改原来状态");
+            }
+            RepresentDiscoverTrack representDiscoverTrack = new RepresentDiscoverTrack();
+            representDiscoverTrack.setStatus(Constants.DISCOVER_STATUS_2);
+            representDiscoverTrack.setTrackId(trcl.getTrackId());
+            if(representDiscoverTrackMapper.updateRepresentDiscoverTrack(representDiscoverTrack)<=0){
+                return AjaxResult.error("流程记录，修改原来状态");
+            }
             RepresentDiscoverTrack track = new RepresentDiscoverTrack();
             //转交
             track.setCreateBy(representDiscover.getUpdateBy());
-            track.setStatus(Constants.DISCOVER_STATUS_2);
+            track.setStatus(Constants.DISCOVER_STATUS_1);
             track.setSendUserId(representDiscover.getUserId());
             track.setProcessType(representDiscover.getProcessType());
             track.setReceiveUserId(representDiscover.getReceiveUserId());
             track.setRevert(representDiscover.getRevert());
             track.setCreateTime(DateUtils.getNowDate());
             track.setDiscoverId(representDiscover.getDiscoverId());
+            track.setPicUrls(representDiscover.getTrackPicUrls());
             if(representDiscoverTrackMapper.insertRepresentDiscoverTrack(track) <= 0){
                 return AjaxResult.error("记录添加失败！");
             }
@@ -172,14 +186,16 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
                 return AjaxResult.error("记录修改失败！");
             }
             RepresentDiscoverTrack track = new RepresentDiscoverTrack();
-            track.setSendUserId(representDiscover.getSendUserId());
+            track.setSendUserId(representDiscover.getReceiveUserId());
             track.setDiscoverId(representDiscover.getDiscoverId());
+            track.setStatus(Constants.DISCOVER_STATUS_3);
             track.setReceiveUserId(representDiscover.getReceiveUserId());
             track.setRevert(representDiscover.getRevert());
             track.setStatus(representDiscover.getStatus());
             track.setProcessType(representDiscover.getProcessType());
             track.setCreateBy(representDiscover.getUpdateBy());
             track.setCreateTime(DateUtils.getNowDate());
+            track.setPicUrls(representDiscover.getTrackPicUrls());
             if(representDiscoverTrackMapper.insertRepresentDiscoverTrack(track) <= 0){
                 return AjaxResult.error("记录添加失败！");
             }
@@ -217,6 +233,11 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     @Override
     public List<DiscoverAppListDto> doneList(Long sendUserId) {
         return representDiscoverMapper.doneList(sendUserId);
+    }
+
+    @Override
+    public List<DiscoverAppListDto> todoList(RepresentDiscover representDiscover) {
+        return representDiscoverMapper.todoList(representDiscover);
     }
 
     @Override
@@ -373,5 +394,45 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     @Override
     public List<String> heatmap() {
         return representDiscoverMapper.selectByLocation();
+    }
+
+    /**
+     * 退回接口  只能回退一次
+     * @param fallbackVo
+     * @return
+     */
+    @Override
+    public AjaxResult fallback(DiscoverFallbackVo fallbackVo) {
+        if(fallbackVo.getProcessType().equals(Constants.DISCOVER_PROCESS_TYPE_1)){
+            return AjaxResult.error("您不能直接回退！");
+        }
+        if(fallbackVo.getProcessType().equals(Constants.DISCOVER_PROCESS_TYPE_3)){
+            fallbackVo.setProcessType(Constants.DISCOVER_PROCESS_TYPE_2);
+        }else if(fallbackVo.getProcessType().equals(Constants.DISCOVER_PROCESS_TYPE_2)){
+            fallbackVo.setProcessType(Constants.DISCOVER_PROCESS_TYPE_1);
+        }
+        RepresentDiscoverTrack track=  representDiscoverTrackMapper.selectBySendUserId(fallbackVo.getReceiveUserId(),fallbackVo.getDiscoverId());
+        if(track == null){
+            return AjaxResult.error("上一条记录不存在！");
+        }
+        fallbackVo.setReceiveUserId(track.getSendUserId());
+        fallbackVo.setUpdateTime(DateUtils.getNowDate());
+        if(representDiscoverMapper.updateRepresentDiscover(fallbackVo) <= 0){
+            return AjaxResult.error("退回接口，修改状态错误！");
+        }
+        RepresentDiscoverTrack ttrck = new RepresentDiscoverTrack();
+        ttrck.setDiscoverId(fallbackVo.getDiscoverId());
+        ttrck.setRevert(fallbackVo.getRevert());
+        ttrck.setSendUserId(fallbackVo.getReceiveUserId());
+        ttrck.setReceiveUserId(track.getSendUserId());
+        ttrck.setStatus(Constants.DISCOVER_STATUS_4);
+        ttrck.setCreateTime(DateUtils.getNowDate());
+        ttrck.setCreateBy(fallbackVo.getUpdateBy());
+        ttrck.setProcessType(fallbackVo.getProcessType());
+        ttrck.setPicUrls(fallbackVo.getTrackPicUrls());
+        if(representDiscoverTrackMapper.insertRepresentDiscoverTrack(ttrck) <=0){
+            return AjaxResult.error("创建记录失败！");
+        }
+        return AjaxResult.success();
     }
 }

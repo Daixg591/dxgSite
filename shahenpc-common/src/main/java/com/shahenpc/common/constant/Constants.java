@@ -38,6 +38,10 @@ public class Constants
      *
      */
     public static final Integer DISCOVER_STATUS_3=3;
+    /**
+     * 已退回
+     */
+    public static final Integer DISCOVER_STATUS_4=4;
 
     public static final Integer DOUBLE_PROCESS_TYPE_0=0;
     /**

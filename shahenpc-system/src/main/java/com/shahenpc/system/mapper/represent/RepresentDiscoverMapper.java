@@ -62,8 +62,19 @@ public interface RepresentDiscoverMapper
 
     public List<DiscoverAppListDto> appList(RepresentDiscover representDiscover);
 
-
+    /**
+     * 已办
+     * @param sendUserId
+     * @return
+     */
     public List<DiscoverAppListDto> doneList(Long sendUserId);
+
+    /**
+     * 待办
+     * @param representDiscover
+     * @return
+     */
+    public List<DiscoverAppListDto> todoList(RepresentDiscover representDiscover);
 
     public DiscoverAppDetailDto appDetail(Long discoverId);
 

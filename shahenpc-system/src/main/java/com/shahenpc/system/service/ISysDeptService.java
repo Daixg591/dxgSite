@@ -3,6 +3,7 @@ package com.shahenpc.system.service;
 import java.util.List;
 import com.shahenpc.common.core.domain.TreeSelect;
 import com.shahenpc.common.core.domain.entity.SysDept;
+import com.shahenpc.system.domain.dto.DeptByUser;
 
 /**
  * 部门管理 服务层
@@ -113,4 +114,10 @@ public interface ISysDeptService
      * @return 结果
      */
     public int deleteDeptById(Long deptId);
+
+    /**
+     *
+     * @return
+     */
+    public List<DeptByUser> selectByUser();
 }

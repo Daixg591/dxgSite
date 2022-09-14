@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.shahenpc.system.domain.represent.dto.DiscoverAppListDto;
 import com.shahenpc.system.domain.represent.dto.DiscoverListDto;
+import com.shahenpc.system.domain.represent.vo.DiscoverFallbackVo;
 import com.shahenpc.system.domain.represent.vo.DiscoverUpdateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,6 +53,17 @@ public class RepresentDiscoverController extends BaseController
         return getDataTable(list);
     }
 
+    /**
+     * 退回
+     * @param fallbackVo
+     * @return
+     */
+    @PostMapping("/fallback")
+    public AjaxResult fallback(@RequestBody DiscoverFallbackVo fallbackVo)
+    {
+        fallbackVo.setUpdateBy(getNickName());
+       return representDiscoverService.fallback(fallbackVo);
+    }
     @ApiOperation("待办列表")
     @GetMapping("/todo/list")
     public TableDataInfo todoList(RepresentDiscover representDiscover)
@@ -112,6 +124,7 @@ public class RepresentDiscoverController extends BaseController
     public AjaxResult edit(@RequestBody DiscoverUpdateVo representDiscover)
     {
         representDiscover.setUpdateBy(getNickName());
+        representDiscover.setUserId(getUserId());
         return representDiscoverService.updateRepresentDiscover(representDiscover);
     }
 

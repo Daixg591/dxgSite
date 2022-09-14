@@ -88,6 +88,11 @@ public class SysDeptController extends BaseController
         return AjaxResult.success(deptService.buildDeptTreeSelect(depts));
     }
 
+    @GetMapping("/dept/user")
+    public AjaxResult deptUser()
+    {
+        return AjaxResult.success(deptService.selectByUser());
+    }
     /**
      * 加载对应角色部门列表树
      */

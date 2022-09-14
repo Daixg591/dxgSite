@@ -644,4 +644,9 @@
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
+
+<!--select user_id as userId,nick_name as nickName-->
+    <select id="selectByDeptId" resultMap="SysUserResult" parameterType="Long">
+        <include refid="selectUserVo"/> where u.dept_id = #{deptId}
+    </select>
 </mapper>

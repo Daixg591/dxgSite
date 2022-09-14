@@ -56,13 +56,14 @@ public class AppRepresentDiscoverController extends BaseController
         List<DiscoverAppListDto> list = representDiscoverService.appList(representDiscover);
         return getDataTable(list);
     }
+
     @ApiOperation("待办列表")
     @GetMapping("/todo/list")
     public TableDataInfo todoList(RepresentDiscover representDiscover)
     {
         representDiscover.setReceiveUserId(getUserId());
         startPage();
-        List<DiscoverAppListDto> list = representDiscoverService.appList(representDiscover);
+        List<DiscoverAppListDto> list = representDiscoverService.todoList(representDiscover);
         return getDataTable(list);
     }
 
