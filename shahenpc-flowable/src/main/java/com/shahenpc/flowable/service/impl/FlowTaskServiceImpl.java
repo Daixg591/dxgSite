@@ -2046,6 +2046,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
                 motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
                 flowTask.setMotionType(motion.getMotionType());
+                flowTask.setCategoryType(motion.getCategoryType());
                 flowTask.setRepresentName(motion.getRepresentName());
                 flowTask.setRepresentTeam(motion.getRepresentTeam());
                 flowTask.setRepresentCount(motion.getRepresentCount());

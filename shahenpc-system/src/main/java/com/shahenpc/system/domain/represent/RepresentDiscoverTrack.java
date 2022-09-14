@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.represent;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-09-09
  */
+@Data
 public class RepresentDiscoverTrack extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -41,6 +43,10 @@ public class RepresentDiscoverTrack extends BaseEntity
     /** 流程类型 */
     @Excel(name = "流程类型")
     private Integer processType;
+
+    /** 多个照片 */
+    @Excel(name = "多个照片")
+    private String picUrls;
 
     public void setTrackId(Long trackId) 
     {

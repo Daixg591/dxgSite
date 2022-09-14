@@ -17,10 +17,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="revert"    column="revert"    />
         <result property="status"    column="status"    />
         <result property="processType"    column="process_type"    />
+        <result property="picUrls"    column="pic_urls"    />
     </resultMap>
 
     <sql id="selectRepresentDiscoverTrackVo">
-        select track_id, discover_id, send_user_id, receive_user_id, remark, create_time, update_by, update_time, create_by, revert, status, process_type from represent_discover_track
+        select track_id, discover_id, send_user_id, receive_user_id, remark, create_time, update_by, update_time, create_by, revert, status, process_type, pic_urls from represent_discover_track
     </sql>
 
     <select id="selectRepresentDiscoverTrackList" parameterType="RepresentDiscoverTrack" resultMap="RepresentDiscoverTrackResult">
@@ -32,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="revert != null  and revert != ''"> and revert = #{revert}</if>
             <if test="status != null "> and status = #{status}</if>
             <if test="processType != null "> and process_type = #{processType}</if>
+            <if test="picUrls != null  and picUrls != ''"> and pic_urls = #{picUrls}</if>
         </where>
     </select>
 
@@ -54,6 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="revert != null">revert,</if>
             <if test="status != null">status,</if>
             <if test="processType != null">process_type,</if>
+            <if test="picUrls != null">pic_urls,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="discoverId != null">#{discoverId},</if>
@@ -67,6 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="revert != null">#{revert},</if>
             <if test="status != null">#{status},</if>
             <if test="processType != null">#{processType},</if>
+            <if test="picUrls != null">#{picUrls},</if>
         </trim>
     </insert>
 
@@ -84,6 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="revert != null">revert = #{revert},</if>
             <if test="status != null">status = #{status},</if>
             <if test="processType != null">process_type = #{processType},</if>
+            <if test="picUrls != null">pic_urls = #{picUrls},</if>
         </trim>
         where track_id = #{trackId}
     </update>
@@ -99,7 +104,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
-
     <!--=======================================================分割线-->
     <delete id="deleteRepresentDiscoverTrackByDiscoverIds" parameterType="String">
         delete from represent_discover_track where discover_id in
@@ -114,9 +118,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     <select id="selectByDiscoverId" parameterType="Long" resultMap="detail">
         select track_id, discover_id, send_user_id, receive_user_id, revert, status, remark,
-               process_type,create_time, update_by, update_time, create_by,
+               process_type,create_time, update_by, update_time, create_by,pic_urls,
         (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
         (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName,
+               (SELECT a.title FROM represent_home_access a WHERE a.access_id = (SELECT u.contact_station_id FROM sys_user u WHERE u.user_id = t.send_user_id ))AS sendAccessName,
+               (SELECT a.title FROM represent_home_access a WHERE a.access_id = (SELECT u.contact_station_id FROM sys_user u WHERE u.user_id = t.receive_user_id))AS receiveAccessName,
+               (SELECT de.dept_name FROM sys_dept de WHERE de.dept_id = (SELECT u.dept_id FROM sys_user u WHERE u.user_id = t.receive_user_id)) AS receiceDeptName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_process_type' AND d.dict_value = t.process_type)AS processTypeName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_status' AND d.dict_value = t.status )AS discoverStatusName
         from represent_discover_track t

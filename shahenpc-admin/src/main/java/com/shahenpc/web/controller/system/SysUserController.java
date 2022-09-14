@@ -171,6 +171,7 @@ public class SysUserController extends BaseController {
      */
     @GetMapping(value = "/getWxUser/list")
     public TableDataInfo getUserList(SysUser user) {
+        user.setIdentity("1");
         startPage();
         List<WxUserInfoVo> list= userService.selectXcxList(user);
         /*user.setIdentity("1");
