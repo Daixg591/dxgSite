@@ -256,7 +256,7 @@
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_type' AND d.dict_value = d.discover_type)AS discoverTypeName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_status' AND d.dict_value = d.status )AS discoverStatusName
         FROM represent_discover d LEFT JOIN  represent_discover_track t ON d.discover_id = t.discover_id
-        WHERE t.send_user_id = #{sendUserId}
+        WHERE t.send_user_id = #{sendUserId} and (d.`status` != 1 or d.process_type != 1)
         GROUP BY d.discover_id ORDER BY d.create_time DESC
     </select>
     <!--AND t.process_type != 1-->

@@ -353,6 +353,9 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                 trace.setProcessType(featureDoubleWork.getProcessType());
                 trace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
                 FeatureDoubleWorkTrace tr= featureDoubleWorkTraceMapper.selectByCurrent(trace);
+                if(tr == null){
+                    return AjaxResult.error("没有当前记录！");
+                }
                 tr.setStatus(featureDoubleWork.getStatus());
                 tr.setSendUserId(featureDoubleWork.getReceiveUserId());
                 if(featureDoubleWorkTraceMapper.updateFeatureDoubleWorkTrace(tr) <= 0){
