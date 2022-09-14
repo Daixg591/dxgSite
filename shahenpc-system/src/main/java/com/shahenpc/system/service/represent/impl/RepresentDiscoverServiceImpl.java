@@ -134,7 +134,7 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
                 representDiscover.setProcessType(Constants.DISCOVER_PROCESS_TYPE_2);
                 //获取总站userId
                 RepresentHomeAccess access=representHomeAccessMapper.selectByLevel();
-                if(access.getUserId() != null){
+                if(access.getUserId() == null){
                     return AjaxResult.error("总驿站，未添加负责人！");
                 }
                 representDiscover.setReceiveUserId(access.getUserId());

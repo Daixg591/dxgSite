@@ -588,7 +588,6 @@
         from sys_user u
         LEFT JOIN represent_home_access a ON a.access_id = u.contact_station_id
         left join sys_dept d on u.dept_id = d.dept_id where u.del_flag = '0'
-        where u.del_flag = '0'
         <if test="userId != null and userId != 0">
             AND u.user_id = #{userId}
         </if>

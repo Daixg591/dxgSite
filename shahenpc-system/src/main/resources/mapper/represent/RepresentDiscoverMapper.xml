@@ -180,6 +180,7 @@
             <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
             <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
         </where>
+        ORDER BY d.create_time DESC
     </select>
 
     <resultMap id="appList" type="com.shahenpc.system.domain.represent.dto.DiscoverAppListDto" extends="RepresentDiscoverResult">
@@ -255,5 +256,6 @@
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_status' AND d.dict_value = d.status )AS discoverStatusName
         FROM represent_discover d LEFT JOIN  represent_discover_track t ON d.discover_id = t.discover_id
         WHERE t.send_user_id = #{sendUserId} AND t.process_type != 1
+        ORDER BY d.create_time DESC
     </select>
 </mapper>
