@@ -255,29 +255,32 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
             return AjaxResult.error("提交失败：文本中存在敏感词。");
         }else {
             SysUser user = sysUserMapper.selectUserById(featureDoubleWork.getSendUserId());
-            if (user.getUserStatus().equals(1)) {
-                featureDoubleWork.setProcessType(Constants.DOUBLE_PROCESS_TYPE_1);
+            if (user.getUserStatus().equals("1")) {
                 featureDoubleWork.setCreateTime(DateUtils.getNowDate());
-                int a = featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork);
+                if(featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork) <= 0){
+                    return AjaxResult.error("增加双联工作失败！");
+                }
+                FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
+                featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
+                featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSendUserId());
+                featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
+                featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
+                featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getCreateBy());
+                if(featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace)<=0){
+                    AjaxResult.error("双联工作记录添加失败！");
+                }
                 //添加日志
                 RepresentWorkLog log = new RepresentWorkLog();
                 log.setEventType(3);
                 log.setEventId(featureDoubleWork.getDoubleId());
                 log.setUserId(featureDoubleWork.getReceiveUserId());
                 log.setRemark("双联工作！");
-                representWorkLogService.insertRepresentWorkLog(log);
-                FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
-                featureDoubleWorkTrace.setProcessType(Constants.DOUBLE_PROCESS_TYPE_1);
-                featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
-                featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSendUserId());
-                featureDoubleWorkTrace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
-                featureDoubleWorkTrace.setStatus(featureDoubleWork.getStatus());
-                featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
-                featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getCreateBy());
-                featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
+                if(representWorkLogService.insertRepresentWorkLog(log) <= 0){
+                    return AjaxResult.error("添加双联工作日志失败！");
+                }
                 return AjaxResult.success(featureDoubleWork.getDoubleId());
             } else {
-                return AjaxResult.error("您已被屏蔽！");
+                return AjaxResult.error("系统维护！");
             }
         }
     }
@@ -285,11 +288,11 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     @Override
     @Transactional
     public AjaxResult newUpdate(FeatureDoubleWorkUpdateVo featureDoubleWork) {
+                //状态 转交  办结传 2
             if(featureDoubleWork.getStatus().equals(Constants.DOUBLE_STATUS_1)){
                 FeatureDoubleWorkUpdateVo Work = new FeatureDoubleWorkUpdateVo();
                 Work.setUpdateTime(DateUtils.getNowDate());
                 if(Constants.DOUBLE_PROCESS_TYPE_1.equals(featureDoubleWork.getProcessType())){
-                    //查询代表  属于那个联络站
                     SysUser user=sysUserMapper.selectUserById(featureDoubleWork.getReceiveUserId());
                     RepresentHomeAccess access= representHomeAccessMapper.selectRepresentHomeAccessByAccessId(user.getContactStationId());
                     Work.setReceiveUserId(access.getUserId());
@@ -302,69 +305,51 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                     Work.setProcessType(Constants.DOUBLE_PROCESS_TYPE_4);
                     //这个需要选人传入 setReceiveUserId(1)
                 }
-                //修改原来记录
-                FeatureDoubleWorkTrace Trace = new FeatureDoubleWorkTrace();
-                Trace.setDoubleId(featureDoubleWork.getDoubleId());
-                Trace.setProcessType(featureDoubleWork.getProcessType());
-                Trace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
-                FeatureDoubleWorkTrace tracelist=  featureDoubleWorkTraceMapper.selectByCurrent(Trace);
-                if(tracelist != null){
-                    tracelist.setStatus(Constants.DOUBLE_STATUS_1);
-                    tracelist.setRevert(featureDoubleWork.getRevert());
-                    featureDoubleWorkTraceMapper.updateFeatureDoubleWorkTrace(tracelist);
-                }
                 Work.setDoubleId(featureDoubleWork.getDoubleId());
-                if(featureDoubleWorkMapper.updateFeatureDoubleWork(Work) > 0){
-                    if(!tracelist.getProcessType().equals(Constants.DOUBLE_PROCESS_TYPE_3)){
-                        //查原来的 记录的id
-                        FeatureDoubleWorkTrace trcl=featureDoubleWorkTraceMapper.selectBySendUserId(featureDoubleWork.getUserId(),featureDoubleWork.getDoubleId());
-                        if(trcl == null){
-                            return AjaxResult.error("流程记录，修改原来状态");
+                if(featureDoubleWorkMapper.updateFeatureDoubleWork(Work) <= 0){
+                    return AjaxResult.error("修改接收人失败！");
+                }
+                        //修改原来记录
+                        FeatureDoubleWorkTrace tracelist=  featureDoubleWorkTraceMapper.selectBySendUserId(featureDoubleWork.getReceiveUserId(),featureDoubleWork.getDoubleId());
+                        if(tracelist == null){
+                            return AjaxResult.error("没有以前的记录！");
                         }
-                        FeatureDoubleWorkTrace representDiscoverTrack = new FeatureDoubleWorkTrace();
-                        representDiscoverTrack.setStatus(Constants.DISCOVER_STATUS_2);
-                        representDiscoverTrack.setTraceId(trcl.getTraceId());
-                        if(featureDoubleWorkTraceMapper.updateFeatureDoubleWorkTrace(representDiscoverTrack)<=0){
-                            return AjaxResult.error("流程记录，修改原来状态");
+                        tracelist.setStatus(Constants.DOUBLE_STATUS_2);
+                        if(featureDoubleWorkTraceMapper.updateFeatureDoubleWorkTrace(tracelist) <= 0){
+                            return AjaxResult.error("修改原来的记录报错！");
                         }
                         FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
                         //然后增加
                         featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getUserId());
-                        featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
                         featureDoubleWorkTrace.setReceiveUserId(Work.getReceiveUserId());
-                        featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
+                        featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
+                        featureDoubleWorkTrace.setRevert(featureDoubleWork.getRevert());
                         featureDoubleWorkTrace.setProcessType(Work.getProcessType());
+                        featureDoubleWorkTrace.setPicUrls(featureDoubleWork.getTrackPicUrls());
+                        featureDoubleWorkTrace.setCreateTime(DateUtils.getNowDate());
                         featureDoubleWorkTrace.setCreateBy(featureDoubleWork.getUpdateBy());
                         featureDoubleWorkTraceMapper.insertFeatureDoubleWorkTrace(featureDoubleWorkTrace);
-                    }
                     return AjaxResult.success();
-                }
-                return AjaxResult.error();
             }else{
                 FeatureDoubleWork Work = new FeatureDoubleWork();
                 Work.setDoubleId(featureDoubleWork.getDoubleId());
-                Work.setStatus(featureDoubleWork.getStatus());
+                Work.setStatus(Constants.DOUBLE_STATUS_2);
                 if(featureDoubleWorkMapper.updateFeatureDoubleWork(Work) <= 0){
                     return AjaxResult.error("记录修改失败！");
                 }
                 //查询当前记录
-                FeatureDoubleWorkTrace trace = new FeatureDoubleWorkTrace();
-                trace.setDoubleId(featureDoubleWork.getDoubleId());
-                trace.setProcessType(featureDoubleWork.getProcessType());
-                trace.setReceiveUserId(featureDoubleWork.getReceiveUserId());
-                FeatureDoubleWorkTrace tr= featureDoubleWorkTraceMapper.selectByCurrent(trace);
+                FeatureDoubleWorkTrace tr= featureDoubleWorkTraceMapper.selectBySendUserId(featureDoubleWork.getReceiveUserId(),featureDoubleWork.getDoubleId());
                 if(tr == null){
                     return AjaxResult.error("没有当前记录！");
                 }
-                tr.setStatus(featureDoubleWork.getStatus());
-                tr.setSendUserId(featureDoubleWork.getReceiveUserId());
+                tr.setStatus(Constants.DOUBLE_STATUS_2);
                 if(featureDoubleWorkTraceMapper.updateFeatureDoubleWorkTrace(tr) <= 0){
                     return AjaxResult.error("记录修改失败！");
                 }
                 FeatureDoubleWorkTrace track = new FeatureDoubleWorkTrace();
                 track.setSendUserId(featureDoubleWork.getReceiveUserId());
                 track.setDoubleId(featureDoubleWork.getDoubleId());
-                track.setStatus(Constants.DISCOVER_STATUS_3);
+                track.setStatus(Constants.DOUBLE_STATUS_2);
                 track.setReceiveUserId(featureDoubleWork.getReceiveUserId());
                 track.setRevert(featureDoubleWork.getRevert());
                 track.setStatus(featureDoubleWork.getStatus());

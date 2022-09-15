@@ -36,7 +36,6 @@ public class AppRepresentWorkLogController extends BaseController{
     /**
      * 查询代履职日志列表
      */
-    @PreAuthorize("@ss.hasPermi('system:log:list')")
     @GetMapping("/list")
     public TableDataInfo list(RepresentWorkLog representWorkLog)
     {

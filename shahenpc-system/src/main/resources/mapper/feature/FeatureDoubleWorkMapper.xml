@@ -170,12 +170,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,
                w.phonenumber,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName,
-               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = t.process_type)as processTypeName,
-               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = t.status)as statusName
-        FROM feature_double_work_trace t
-        RIGHT JOIN feature_double_work w ON w.double_id = t.double_id
-        WHERE t.receive_user_id= #{receiveUserId} AND t.`status` = 0
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = w.process_type)as processTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_status' AND d.dict_value = w.`status`)as statusName,
+               (select u.nick_name FROM  sys_user u where u.user_id = w.receive_user_id)as receiveName,
+               (select u.phonenumber FROM  sys_user u where u.user_id = w.receive_user_id)as receivePhone,
+               (select u.nick_name FROM  sys_user u where u.user_id = w.send_user_id)as sendName,
+               (select u.phonenumber FROM  sys_user u where u.user_id =w.send_user_id)as sendPhone
+        FROM feature_double_work w
+        WHERE w.receive_user_id= #{receiveUserId} AND w.`status` != 2
         GROUP BY w.double_id ORDER BY w.create_time DESC
+
     </select>
     <!--已办-->
     <select id="selectByDoneList" parameterType="FeatureDoubleWork" resultMap="appLists">
@@ -185,7 +189,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = w.process_type)as processTypeName,
                 (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = w.status)as statusName
         FROM feature_double_work_trace r RIGHT JOIN feature_double_work w ON w.double_id = r.double_id
-        WHERE r.send_user_id= #{sendUserId} ORDER BY w.create_time DESC
+        WHERE r.send_user_id= #{sendUserId}
+        ORDER BY r.create_time DESC
     </select>
 
 
@@ -194,13 +199,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     <select id="adminList" parameterType="FeatureDoubleWork" resultMap="adminList">
         select w.double_id, w.type, w.title, w.status, w.content, w.pic_urls, w.create_by, w.create_time,
-               w.update_by, w.update_time, w.remark, w.send_user_id, w.receive_user_id,
-               w.rate,w.location,w.process_type,
-                u.avatar,u.nick_name AS nickName,u.phonenumber as receivePhone,u2.phonenumber as sendPhone,
-                (SELECT u.nick_name FROM sys_user u WHERE u.user_id = w.receive_user_id)AS receiveName
+        w.update_by, w.update_time, w.remark, w.send_user_id, w.receive_user_id,
+        w.rate,w.location,w.process_type,w.nick_name,w.phonenumber,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = w.receive_user_id)AS receiveName,
+        (SELECT u.phonenumber FROM sys_user u WHERE u.user_id = w.receive_user_id)AS receivePhone,
+        (SELECT u.avatar FROM sys_user u WHERE u.user_id = w.receive_user_id)AS avatar,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = w.send_user_id)AS sendName,
+        (SELECT u.phonenumber FROM sys_user u WHERE u.user_id = w.send_user_id)AS sendPhone
         from feature_double_work w
-            LEFT JOIN sys_user u ON u.user_id = w.receive_user_id
-            LEFT JOIN sys_user u2 ON u2.user_id = w.send_user_id
         <where>
             <if test="type != null and type != ''">and w.type = #{type},</if>
             <if test="title != null  and title != ''"> and w.title = #{title}</if>

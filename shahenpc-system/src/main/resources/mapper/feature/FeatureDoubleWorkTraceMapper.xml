@@ -134,11 +134,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select trace_id, double_id, send_user_id, receive_user_id, type, status,
                pic_urls, revert, remark, create_by, create_time, update_by, update_time, process_type,
                process_type,
-        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = t.process_type)as processTypeName,
-        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = t.status)as statusName,
-        (select u.nick_name FROM  sys_user u where u.user_id = t.receive_user_id)as receiveName
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = t.process_type)as processTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = t.status)as statusName,
+               (SELECT d1.dept_name FROM sys_dept d1 WHERE d1.dept_id = (SELECT u1.dept_id FROM sys_user u1 WHERE u1.user_id = t.receive_user_id)) AS receiceDeptName,
+               (select u.nick_name FROM  sys_user u where u.user_id = t.receive_user_id)as receiveName,
+               (select u.phonenumber FROM  sys_user u where u.user_id = t.receive_user_id)as receivePhone,
+               (select u.nick_name FROM  sys_user u where u.user_id = t.send_user_id)as sendName,
+               (select u.phonenumber FROM  sys_user u where u.user_id = t.send_user_id)as sendPhone
         from feature_double_work_trace t
         where double_id = #{doubleId}
+        ORDER BY t.create_time DESC
     </select>
 
     <select id="selectByCurrent" resultMap="FeatureDoubleWorkTraceResult">
