@@ -310,6 +310,23 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
     }
 
     @Override
+    public List<DiscoverPieDto> statusPie() {
+        List<DiscoverPieDto> dtoList = new ArrayList<>();
+        List<RepresentDiscover> alarBudg=representDiscoverMapper.selectRepresentDiscoverList(null);
+        List<SysDictData> dictList = sysDictTypeService.selectDictDataByType("discover_status");
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            int v = alarBudg.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getDiscoverType().toString()))
+                    .collect(Collectors.toList()).size();
+            DiscoverPieDto item = new DiscoverPieDto();
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
+            dtoList.add(item);
+        }
+        return dtoList;
+    }
+
+    @Override
     public List<DiscoverPieDto> pie() {
         List<DiscoverPieDto> dtoList = new ArrayList<>();
         List<RepresentDiscover> alarBudg=representDiscoverMapper.selectRepresentDiscoverList(null);

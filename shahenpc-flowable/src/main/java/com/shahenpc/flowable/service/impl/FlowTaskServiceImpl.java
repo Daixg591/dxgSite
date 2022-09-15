@@ -781,6 +781,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 .orderByProcessInstanceStartTime()
                 .desc();
         List<HistoricProcessInstance> historicProcessInstances = historicProcessInstanceQuery.listPage(pageSize * (pageNum - 1), pageSize);
+
+        //List<RepresentMotion> list=representMotionService.selectRepresentMotionList(null);
         //自定义
         page.setTotal(historicProcessInstanceQuery.count());
         List<FlowTaskDto> flowList = new ArrayList<>();
@@ -854,8 +856,6 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 //List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
                 //motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
-            }
-            if(flowTask.getTitle() != null){
                 flowList.add(flowTask);
             }
             if(representMotion.getTaskName() != null){
@@ -2059,8 +2059,9 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setYearly(motion.getYearly());
                 flowTask.setIsGoutong(motion.getIsGoutong());
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
+                flowList.add(flowTask);
+
             }
-            flowList.add(flowTask);
         }
         //flowList.stream().filter(w -> w.getDeployId().equals(type)).collect(Collectors.toList());
         page.setRecords(flowList);
@@ -2145,8 +2146,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setIsGoutong(motion.getIsGoutong());
                 flowTask.setMotionType(motion.getMotionType());
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
+                flowList.add(flowTask);
             }
-            flowList.add(flowTask);
         }
         //flowList.stream().filter(w -> w.getDeployId().equals(type)).collect(Collectors.toList());
         page.setRecords(flowList);
@@ -2583,10 +2584,12 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
                 flowTask.setMotionType(motion.getMotionType());
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
+                hisTaskList.add(flowTask);
+
             }
-            hisTaskList.add(flowTask);
+            //hisTaskList.add(flowTask);
+
         }
-        page.setTotal(taskInstanceQuery.count());
         page.setRecords(hisTaskList);
 //        Map<String, Object> result = new HashMap<>();
 //        result.put("result",page);

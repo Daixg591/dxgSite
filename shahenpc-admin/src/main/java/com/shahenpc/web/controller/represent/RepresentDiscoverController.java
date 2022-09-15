@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.shahenpc.system.domain.represent.dto.DiscoverAppListDto;
 import com.shahenpc.system.domain.represent.dto.DiscoverListDto;
+import com.shahenpc.system.domain.represent.dto.DiscoverPieDto;
 import com.shahenpc.system.domain.represent.vo.DiscoverFallbackVo;
 import com.shahenpc.system.domain.represent.vo.DiscoverUpdateVo;
 import io.swagger.annotations.Api;
@@ -158,6 +159,14 @@ public class RepresentDiscoverController extends BaseController
     {
         return AjaxResult.success(representDiscoverService.pie());
     }
+
+    @ApiOperation("状态饼图")
+    @GetMapping(value = "/status/pie")
+    public AjaxResult statusPie()
+    {
+        return AjaxResult.success(representDiscoverService.statusPie());
+    }
+
 
     @ApiOperation("状态各个总数")
     @GetMapping(value = "/status/count")

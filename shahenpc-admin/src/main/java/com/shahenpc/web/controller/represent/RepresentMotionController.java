@@ -196,9 +196,10 @@ public class RepresentMotionController extends BaseController
 
     @ApiOperation("按类别饼图")
     @GetMapping("/pie")
-    public AjaxResult pie(MotionTaskVo vo){
-        vo.setProcessName("建议议案");
-        return AjaxResult.success(flowTaskService.pie(vo));
+    public AjaxResult pie(){
+        /*vo.setProcessName("建议议案");
+        return AjaxResult.success(flowTaskService.pie(vo));*/
+        return AjaxResult.success(representMotionService.pie());
     }
 
     @ApiOperation("落实率")

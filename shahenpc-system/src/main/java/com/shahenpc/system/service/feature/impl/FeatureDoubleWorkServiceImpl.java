@@ -260,6 +260,15 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                 if(featureDoubleWorkMapper.insertFeatureDoubleWork(featureDoubleWork) <= 0){
                     return AjaxResult.error("增加双联工作失败！");
                 }
+                SysUser updateUser = new SysUser();
+                updateUser.setUserId(featureDoubleWork.getSendUserId());
+                updateUser.setNickName(featureDoubleWork.getNickName());
+                updateUser.setPhonenumber(featureDoubleWork.getPhonenumber());
+                updateUser.setIdCard(featureDoubleWork.getIdCard());
+                user.setNativePlace(featureDoubleWork.getHomeAddress());
+                if(sysUserMapper.updateUser(updateUser) <= 0){
+                    return AjaxResult.error("修改用户表失败！");
+                }
                 FeatureDoubleWorkTrace featureDoubleWorkTrace = new FeatureDoubleWorkTrace();
                 featureDoubleWorkTrace.setDoubleId(featureDoubleWork.getDoubleId());
                 featureDoubleWorkTrace.setSendUserId(featureDoubleWork.getSendUserId());
@@ -333,7 +342,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
             }else{
                 FeatureDoubleWork Work = new FeatureDoubleWork();
                 Work.setDoubleId(featureDoubleWork.getDoubleId());
-                Work.setStatus(Constants.DOUBLE_STATUS_2);
+                Work.setStatus(Constants.DOUBLE_STATUS_3);
                 if(featureDoubleWorkMapper.updateFeatureDoubleWork(Work) <= 0){
                     return AjaxResult.error("记录修改失败！");
                 }
@@ -342,14 +351,14 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                 if(tr == null){
                     return AjaxResult.error("没有当前记录！");
                 }
-                tr.setStatus(Constants.DOUBLE_STATUS_2);
+                tr.setStatus(Constants.DOUBLE_STATUS_3);
                 if(featureDoubleWorkTraceMapper.updateFeatureDoubleWorkTrace(tr) <= 0){
                     return AjaxResult.error("记录修改失败！");
                 }
                 FeatureDoubleWorkTrace track = new FeatureDoubleWorkTrace();
                 track.setSendUserId(featureDoubleWork.getReceiveUserId());
                 track.setDoubleId(featureDoubleWork.getDoubleId());
-                track.setStatus(Constants.DOUBLE_STATUS_2);
+                track.setStatus(Constants.DOUBLE_STATUS_3);
                 track.setReceiveUserId(featureDoubleWork.getReceiveUserId());
                 track.setRevert(featureDoubleWork.getRevert());
                 track.setStatus(featureDoubleWork.getStatus());
