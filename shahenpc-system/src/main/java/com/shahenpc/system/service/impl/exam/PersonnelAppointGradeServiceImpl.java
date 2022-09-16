@@ -46,7 +46,7 @@ public class PersonnelAppointGradeServiceImpl implements IPersonnelAppointGradeS
     @Override
     public List<PersonnelAppointGrade> selectPersonnelAppointGradeList(PersonnelAppointGrade personnelAppointGrade)
     {
-        return personnelAppointGradeMapper.selectPersonnelAppointGradeList(personnelAppointGrade);
+        return personnelAppointGradeMapper.adminList(personnelAppointGrade);
     }
 
     /**

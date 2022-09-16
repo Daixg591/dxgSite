@@ -29,6 +29,7 @@ public interface PersonnelAppointGradeMapper
      */
     public List<PersonnelAppointGrade> selectPersonnelAppointGradeList(PersonnelAppointGrade personnelAppointGrade);
 
+    public List<PersonnelAppointGrade> adminList(PersonnelAppointGrade personnelAppointGrade);
     /**
      * 新增人事任免_法律知识考虑_成绩管理
      * 
