@@ -48,6 +48,7 @@ public class AppMeetingController extends BaseController {
         return AjaxResult.success(oaMeetingService.appDetail(meetingId));
     }
 
+
     @ApiOperation("签到")
     @GetMapping(value = "/sign/{meetingId}")
     public AjaxResult sign(@PathVariable("meetingId") Long meetingId)

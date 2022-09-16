@@ -175,7 +175,7 @@ public class OaMeetingServiceImpl implements IOaMeetingService
         if(sing.size() == 0){
             return AjaxResult.success(oaMeetingSignMapper.insertOaMeetingSign(sign));
         }else{
-            return AjaxResult.error("已签到！");
+            return AjaxResult.error("您已签到，请勿重复操作！");
         }
     }
 

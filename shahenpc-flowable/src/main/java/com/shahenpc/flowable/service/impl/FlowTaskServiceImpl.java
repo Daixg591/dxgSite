@@ -2030,8 +2030,13 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
                     .processInstanceId(task.getProcessInstanceId())
                     .singleResult();
-            SysUser startUser = sysUserService.selectUserById(Long.parseLong(historicProcessInstance.getStartUserId()));
-//            SysUser startUser = sysUserService.selectUserById(Long.parseLong(task.getAssignee()));
+            SysUser startUser = null;
+            if(historicProcessInstance.getStartUserId() == null){
+                startUser = sysUserService.selectUserById(1L);
+            }else{
+                startUser = sysUserService.selectUserById(Long.parseLong(historicProcessInstance.getStartUserId()));
+            }
+//           SysUser startUser = sysUserService.selectUserById(Long.parseLong(task.getAssignee()));
             flowTask.setStartUserId(startUser.getNickName());
             flowTask.setStartUserName(startUser.getNickName());
             flowTask.setStartDeptName(startUser.getDept().getDeptName());
