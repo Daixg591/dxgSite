@@ -1,8 +1,11 @@
 package com.shahenpc.web.controller.represent;
 
+import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.shahenpc.system.domain.represent.vo.VirtualVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -122,5 +125,11 @@ public class RepresentHomeAccessController extends BaseController {
     public TableDataInfo rankingList() {
         List<RepresentHomeAccess> list = representHomeAccessService.rankingList();
         return getDataTable(list);
+    }
+
+    @ApiOperation("创建虚拟号")
+    @GetMapping("/create/virtual")
+    public JSONObject createVirtualUser(VirtualVo vo) throws IOException {
+        return representHomeAccessService.createVirtualUser(vo);
     }
 }

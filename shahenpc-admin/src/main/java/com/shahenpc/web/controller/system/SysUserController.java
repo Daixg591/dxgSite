@@ -1,30 +1,5 @@
 package com.shahenpc.web.controller.system;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
-
-import com.shahenpc.system.domain.represent.RepresentHomeAccess;
-import com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo;
-import com.shahenpc.system.service.*;
-import com.shahenpc.system.service.represent.IRepresentHomeAccessService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import com.shahenpc.common.annotation.Log;
 import com.shahenpc.common.constant.UserConstants;
 import com.shahenpc.common.core.controller.BaseController;
@@ -36,6 +11,22 @@ import com.shahenpc.common.enums.BusinessType;
 import com.shahenpc.common.utils.SecurityUtils;
 import com.shahenpc.common.utils.StringUtils;
 import com.shahenpc.common.utils.poi.ExcelUtil;
+import com.shahenpc.system.domain.represent.RepresentHomeAccess;
+import com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo;
+import com.shahenpc.system.service.*;
+import com.shahenpc.system.service.represent.IRepresentHomeAccessService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户信息

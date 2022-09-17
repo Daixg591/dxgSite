@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
+import java.util.List;
 import java.util.Map;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -62,6 +63,129 @@ public class HttpUtils
     public static String sendGet(String url, String param)
     {
         return sendGet(url, param, Constants.UTF8);
+    }
+
+    public static String sendGetByVideos(String url, String param, String contentType,String token)
+    {
+
+        //StringBuilder result = new StringBuilder();
+        String result = "";
+        BufferedReader in = null;
+        try {
+
+            String urlNameString = StringUtils.isNotBlank(param) ? url + "?" + param : url;
+            System.out.println(urlNameString);
+            log.info("sendGet - {}" , urlNameString);
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpPost httpPost = new HttpPost(param);
+            httpPost.addHeader("Authorization" , token);
+            //CloseableHttpResponse response = httpClient.execute(httpPost);
+            URL realUrl = new URL(urlNameString);
+            URLConnection connection = realUrl.openConnection();
+            connection.setRequestProperty("accept" , "*/*");
+            connection.setRequestProperty("connection" , "Keep-Alive");
+            connection.setRequestProperty("user-agent" , "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            connection.setRequestProperty("Authorization",token);
+            connection.connect();
+            Map<String, List<String>> map = connection.getHeaderFields();
+            // 遍历所有的响应头字段
+            for (String key : map.keySet()) {
+                System.out.println(key + "--->" + map.get(key));
+            }
+            // 定义BufferedReader输入流来读取URL的响应
+            in = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result += line;
+            }
+           /* in = new BufferedReader(new InputStreamReader(connection.getInputStream(), contentType));
+            String line;
+            while ((line = in.readLine()) != null)
+            {
+                result.append(line);
+            }*/
+            log.info("recv - {}", result);
+        }
+        catch (ConnectException e)
+        {
+            log.error("调用HttpUtils.sendGet ConnectException, url=" + url + ",param=" + param, e);
+        }
+        catch (SocketTimeoutException e)
+        {
+            log.error("调用HttpUtils.sendGet SocketTimeoutException, url=" + url + ",param=" + param, e);
+        }
+        catch (IOException e)
+        {
+            log.error("调用HttpUtils.sendGet IOException, url=" + url + ",param=" + param, e);
+        }
+        catch (Exception e)
+        {
+            log.error("调用HttpsUtil.sendGet Exception, url=" + url + ",param=" + param, e);
+        }
+        finally
+        {
+            try
+            {
+                if (in != null)
+                {
+                    in.close();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.error("调用in.close Exception, url=" + url + ",param=" + param, ex);
+            }
+        }
+        //.toString()
+        return result;
+    }
+
+    public static String sendPostByVideos(String url,String param,String token) throws IOException {
+        //创建一个获取连接客户端的工具
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        //创建Post请求
+        HttpPost httpPost = new HttpPost(url);
+        //添加请求头
+        httpPost.addHeader("Content-Type","application/json;charset=UTF-8");
+        httpPost.addHeader("Authorization",token);
+        //封装请求参数，将map集合转换成json格式
+        //使用StringEntity转换成实体类型
+        StringEntity entity = new StringEntity(param,"UTF-8");
+        //将封装的参数添加到Post请求中
+        httpPost.setEntity(entity);
+        //执行请求
+        CloseableHttpResponse response =  httpClient.execute(httpPost);
+        //获取响应的实体
+        HttpEntity responseEntity = response.getEntity();
+        String entityString = EntityUtils.toString(responseEntity);
+        return entityString;
+    }
+    /**
+     *
+     * @param url
+     * @param param
+     * @return 创建 虚拟账号
+     * @throws IOException
+     */
+    public static String sendPostByVideo(String url,String param) throws IOException {
+        //创建一个获取连接客户端的工具
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        //创建Post请求
+        HttpPost httpPost = new HttpPost(url);
+        //添加请求头
+        httpPost.addHeader("Content-Type","application/json;charset=UTF-8");
+        //封装请求参数，将map集合转换成json格式
+        //使用StringEntity转换成实体类型
+        StringEntity entity = new StringEntity(param,"UTF-8");
+        //将封装的参数添加到Post请求中
+        httpPost.setEntity(entity);
+        //执行请求
+        CloseableHttpResponse response =  httpClient.execute(httpPost);
+        //获取响应的实体
+        HttpEntity responseEntity = response.getEntity();
+        String entityString = EntityUtils.toString(responseEntity);
+        return entityString;
     }
 
     /**
@@ -153,6 +277,7 @@ public class HttpUtils
             conn.setDoInput(true);
             out = new PrintWriter(conn.getOutputStream());
             out.print(param);
+            System.out.println(param);
             out.flush();
             in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
             String line;
