@@ -60,6 +60,8 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     private IRepresentWorkLogService representWorkLogService;
     @Autowired
     private FeatureSensitiveWordMapper featureSensitiveWordMapper;
+
+
     /**
      * 查询双联工作
      * 
@@ -293,12 +295,12 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
             }
         }
     }
-
+        //|| featureDoubleWork.getStatus().equals(Constants.DOUBLE_STATUS_2)
     @Override
     @Transactional
     public AjaxResult newUpdate(FeatureDoubleWorkUpdateVo featureDoubleWork) {
                 //状态 转交  办结传 2
-            if(featureDoubleWork.getStatus().equals(Constants.DOUBLE_STATUS_1)){
+            if(featureDoubleWork.getStatus().equals(Constants.DOUBLE_STATUS_1)  ){
                 FeatureDoubleWorkUpdateVo Work = new FeatureDoubleWorkUpdateVo();
                 Work.setUpdateTime(DateUtils.getNowDate());
                 if(Constants.DOUBLE_PROCESS_TYPE_1.equals(featureDoubleWork.getProcessType())){
@@ -313,13 +315,14 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                 }else if(Constants.DOUBLE_PROCESS_TYPE_3.equals(featureDoubleWork.getProcessType())){
                     Work.setProcessType(Constants.DOUBLE_PROCESS_TYPE_4);
                     //这个需要选人传入 setReceiveUserId(1)
+                    Work.setReceiveUserId(featureDoubleWork.getReceiveUserId());
                 }
                 Work.setDoubleId(featureDoubleWork.getDoubleId());
                 if(featureDoubleWorkMapper.updateFeatureDoubleWork(Work) <= 0){
                     return AjaxResult.error("修改接收人失败！");
                 }
                         //修改原来记录
-                        FeatureDoubleWorkTrace tracelist=  featureDoubleWorkTraceMapper.selectBySendUserId(featureDoubleWork.getReceiveUserId(),featureDoubleWork.getDoubleId());
+                        FeatureDoubleWorkTrace tracelist=  featureDoubleWorkTraceMapper.selectBySendUserId(featureDoubleWork.getUserId(),featureDoubleWork.getDoubleId());
                         if(tracelist == null){
                             return AjaxResult.error("没有以前的记录！");
                         }
@@ -344,14 +347,14 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                 Work.setDoubleId(featureDoubleWork.getDoubleId());
                 Work.setStatus(Constants.DOUBLE_STATUS_3);
                 if(featureDoubleWorkMapper.updateFeatureDoubleWork(Work) <= 0){
-                    return AjaxResult.error("记录修改失败！");
+                    return AjaxResult.error("修改失败！");
                 }
                 //查询当前记录
-                FeatureDoubleWorkTrace tr= featureDoubleWorkTraceMapper.selectBySendUserId(featureDoubleWork.getReceiveUserId(),featureDoubleWork.getDoubleId());
+                FeatureDoubleWorkTrace tr= featureDoubleWorkTraceMapper.selectBySendUserId(featureDoubleWork.getUserId(),featureDoubleWork.getDoubleId());
                 if(tr == null){
                     return AjaxResult.error("没有当前记录！");
                 }
-                tr.setStatus(Constants.DOUBLE_STATUS_3);
+                tr.setStatus(Constants.DOUBLE_STATUS_2);
                 if(featureDoubleWorkTraceMapper.updateFeatureDoubleWorkTrace(tr) <= 0){
                     return AjaxResult.error("记录修改失败！");
                 }
@@ -361,7 +364,6 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                 track.setStatus(Constants.DOUBLE_STATUS_3);
                 track.setReceiveUserId(featureDoubleWork.getReceiveUserId());
                 track.setRevert(featureDoubleWork.getRevert());
-                track.setStatus(featureDoubleWork.getStatus());
                 track.setProcessType(featureDoubleWork.getProcessType());
                 track.setCreateBy(featureDoubleWork.getUpdateBy());
                 track.setCreateTime(DateUtils.getNowDate());
@@ -450,6 +452,19 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     @Override
     public DoubleCountRanDto countAndranking(Long userId) {
         return featureDoubleWorkMapper.selectByCountRanking(userId);
+    }
+
+    @Override
+    public List<TodoListDto> translateList(Long userId) {
+        RepresentHomeAccess access= representHomeAccessMapper.selectByUserId(userId);
+        if(access != null){
+            if(access.getLevel() == 0){
+                return featureDoubleWorkMapper.translateList(null);
+            }else{
+                return featureDoubleWorkMapper.translateList(access.getAccessId());
+            }
+        }
+        return null;
     }
 
     /**

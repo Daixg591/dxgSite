@@ -75,6 +75,9 @@ public class LoginUser implements UserDetails
     {
         return userId;
     }
+    public Long getContactStationId(){
+        return user.getContactStationId();
+    }
 
     public void setUserId(Long userId)
     {

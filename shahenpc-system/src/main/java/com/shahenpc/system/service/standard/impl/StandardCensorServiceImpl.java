@@ -146,7 +146,7 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
             standardCensor.setType(Constants.CENSOR_TYPE_5);
         }
         // 先判断  是否是分发
-        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_4)){
+        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_3)){
             List<StandardCensorRecord> distribute= standardCensorRecordMapper.selectByDistribute(standardCensor.getCensorId());
             int dist = distribute.stream().filter(p -> p.getStatus().equals(Constants.CENSOR_TYPE_STATUS_0)).collect(Collectors.toList()).size();
             if(dist == 0){

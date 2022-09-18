@@ -6,6 +6,7 @@ import com.shahenpc.system.domain.oa.dto.MeetingAppDetailDto;
 import com.shahenpc.system.domain.oa.dto.MeetingAppListDto;
 import com.shahenpc.system.domain.oa.dto.MeetingCountMinuteDto;
 import com.shahenpc.system.domain.oa.dto.MeetingDetailDto;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 人大办公-会议管理Mapper接口
@@ -76,5 +77,5 @@ public interface OaMeetingMapper
 
     public List<MeetingAppListDto> appList(OaMeeting oaMeeting);
 
-    public MeetingAppDetailDto appDetail(Long meetingId);
+    public MeetingAppDetailDto appDetail(@Param("meetingId") Long meetingId,@Param("userId") Long userId);
 }

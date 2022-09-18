@@ -94,4 +94,9 @@ public interface RepresentDiscoverMapper
 
     public List<String> selectByLocation();
 
+
+
+
+    public List<DiscoverAppListDto> translateList(Long stationId);
+
 }

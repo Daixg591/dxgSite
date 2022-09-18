@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.oa;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-19
  */
+@Data
 public class OaVotePlayer extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -36,7 +38,7 @@ public class OaVotePlayer extends BaseEntity
 
     /** 投票数 */
     @Excel(name = "投票数")
-    private Long total;
+    private Integer total;
 
     public void setPlayerId(Long playerId) 
     {
@@ -82,15 +84,6 @@ public class OaVotePlayer extends BaseEntity
     public String getContent() 
     {
         return content;
-    }
-    public void setTotal(Long total) 
-    {
-        this.total = total;
-    }
-
-    public Long getTotal() 
-    {
-        return total;
     }
 
     @Override

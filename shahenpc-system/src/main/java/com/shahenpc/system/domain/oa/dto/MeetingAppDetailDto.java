@@ -15,4 +15,9 @@ public class MeetingAppDetailDto extends OaMeeting {
     private String meetingTypeName;
     private String statusName;
     private String isSignName;
+
+    /**
+     * 我是否签到
+     */
+    private Integer myIsSign;
 }

@@ -105,4 +105,7 @@ public interface IFeatureDoubleWorkService
 
 
     public DoubleCountRanDto countAndranking(Long userId);
+
+
+    public List<TodoListDto> translateList(Long userId);
 }

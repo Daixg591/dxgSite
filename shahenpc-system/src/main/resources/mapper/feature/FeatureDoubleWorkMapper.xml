@@ -153,7 +153,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     <select id="adminDateil" resultMap="detail">
         select w.double_id, w.type, w.title, w.status, w.pic_urls, w.content, w.create_by, w.create_time, w.update_by,
-               w.update_time, w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,
+               w.update_time, w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,w.station_id,
                w.nick_name,w.phonenumber,w.id_card,w.home_address,w.station_id,w.process_type,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = w.process_type)as processTypeName,
@@ -167,7 +167,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     <select id="selectByTodoList" parameterType="FeatureDoubleWork" resultMap="appLists">
         SELECT w.double_id, w.type, w.title, w.`status`, w.pic_urls, w.content, w.create_by, w.create_time, w.update_by, w.update_time,
-               w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,
+               w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,w.station_id,
                w.phonenumber,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = w.process_type)as processTypeName,
@@ -177,14 +177,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                (select u.nick_name FROM  sys_user u where u.user_id = w.send_user_id)as sendName,
                (select u.phonenumber FROM  sys_user u where u.user_id =w.send_user_id)as sendPhone
         FROM feature_double_work w
-        WHERE w.receive_user_id= #{receiveUserId} AND w.`status` != 2
+        WHERE w.receive_user_id= #{receiveUserId} AND w.`status` != 3
         GROUP BY w.double_id ORDER BY w.create_time DESC
-
     </select>
     <!--已办-->
     <select id="selectByDoneList" parameterType="FeatureDoubleWork" resultMap="appLists">
         SELECT  w.double_id,w.type, w.title, w.`status`, w.pic_urls, w.content, w.create_by, w.create_time, w.update_by, w.update_time,
-                w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,r.`status`,
+                w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,r.`status`,w.station_id,
                 (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName,
                 (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = w.process_type)as processTypeName,
                 (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = w.status)as statusName
@@ -200,7 +199,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="adminList" parameterType="FeatureDoubleWork" resultMap="adminList">
         select w.double_id, w.type, w.title, w.status, w.content, w.pic_urls, w.create_by, w.create_time,
         w.update_by, w.update_time, w.remark, w.send_user_id, w.receive_user_id,
-        w.rate,w.location,w.process_type,w.nick_name,w.phonenumber,
+        w.rate,w.location,w.process_type,w.nick_name,w.phonenumber,w.station_id,
         (SELECT u.nick_name FROM sys_user u WHERE u.user_id = w.receive_user_id)AS receiveName,
         (SELECT u.phonenumber FROM sys_user u WHERE u.user_id = w.receive_user_id)AS receivePhone,
         (SELECT u.avatar FROM sys_user u WHERE u.user_id = w.receive_user_id)AS avatar,
@@ -216,6 +215,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sendUserId != null and sendUserId != ''">and w.send_user_id = #{sendUserId}</if>
             <if test="receiveUserId != null and receiveUserId != ''"> and w.receive_user_id = #{receiveUserId}</if>
             <if test="rate != null and rate != ''">and w.rate = #{rate}</if>
+            <if test="stationId != null and stationId!= ''">and w.station_id = #{stationId}</if>
         </where>
     </select>
 
@@ -254,7 +254,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     <select id="appList" parameterType="FeatureDoubleWork" resultMap="appList">
         select double_id, type, title, status, content, pic_urls, create_by, create_time, update_by, update_time, remark, send_user_id,
-               receive_user_id,a.rate,a.location,
+               receive_user_id,a.rate,a.location,a.station_id,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = a.type )AS doubleTypeName,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_status' AND d.dict_value = a.status )AS doubleStatusName,
         (SELECT u.nick_name FROM sys_user u WHERE u.user_id = a.send_user_id)AS sendUserName,
@@ -298,4 +298,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectByLocation" resultType="java.lang.String">
         select location from feature_double_work
     </select>
+
+
+    <!--监督列表-->
+    <select id="translateList" resultMap="appLists" parameterType="Long">
+        SELECT w.double_id, w.type, w.title, w.`status`, w.pic_urls, w.content, w.create_by, w.create_time, w.update_by, w.update_time,
+               w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,
+               w.phonenumber,w.station_id,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = w.process_type)as processTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_status' AND d.dict_value = w.`status`)as statusName,
+               (select u.nick_name FROM  sys_user u where u.user_id = w.receive_user_id)as receiveName,
+               (select u.phonenumber FROM  sys_user u where u.user_id = w.receive_user_id)as receivePhone,
+               (select u.nick_name FROM  sys_user u where u.user_id = w.send_user_id)as sendName,
+               (select u.phonenumber FROM  sys_user u where u.user_id =w.send_user_id)as sendPhone
+        FROM feature_double_work w
+        <where>
+            <if test="stationId != null and stationId != ''">
+                w.station_id = #{stationId}
+            </if>
+        </where>
+        GROUP BY w.double_id ORDER BY w.create_time DESC
+    </select>
+
 </mapper>

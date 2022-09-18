@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.shahenpc.system.domain.feature.dto.DoubleListDto;
+import com.shahenpc.system.domain.feature.dto.TodoListDto;
 import com.shahenpc.system.domain.feature.vo.DoubleFallbackVo;
 import com.shahenpc.system.domain.feature.vo.DoubleReturnVo;
 import com.shahenpc.system.domain.feature.vo.FeatureDoubleWorkUpdateVo;
@@ -55,7 +56,18 @@ public class FeatureDoubleWorkController extends BaseController {
         startPage();
         List<DoubleListDto> list = featureDoubleWorkService.adminList(featureDoubleWork);
         return getDataTable(list);
+}
+
+    @PreAuthorize("@ss.hasPermi('feature:translate:list')")
+    @ApiOperation("双联工作列表")
+    @GetMapping("/translate/list")
+    public TableDataInfo translateList() {
+        startPage();
+        List<TodoListDto> list = featureDoubleWorkService.translateList(getUserId());
+        return getDataTable(list);
     }
+
+
 
     /**
      * 导出双联工作列表

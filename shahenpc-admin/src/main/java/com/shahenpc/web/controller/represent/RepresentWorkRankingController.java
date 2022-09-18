@@ -49,13 +49,12 @@ public class RepresentWorkRankingController extends BaseController
     }
 
     @GetMapping("/my/ranking")
-    public TableDataInfo ranking(RepresentWorkRanking representWorkRanking)
+    public AjaxResult ranking(Long userId)
     {
-        if(representWorkRanking.getUserId() == null){
-            representWorkRanking.setUserId(getUserId());
+        if(userId == null){
+            userId = getUserId();
         }
-        List<RepresentWorkRanking> list = representWorkRankingService.selectRepresentWorkRankingList(representWorkRanking);
-        return getDataTable(list);
+        return AjaxResult.success(representWorkRankingService.selectMyRanking(userId));
     }
 
     /**

@@ -83,10 +83,15 @@ public class BaseController
     protected TableDataInfo getDataTable(List<?> list)
     {
         TableDataInfo rspData = new TableDataInfo();
-        rspData.setCode(HttpStatus.SUCCESS);
-        rspData.setMsg("查询成功");
-        rspData.setData(list);
-        rspData.setTotal(new PageInfo(list).getTotal());
+        if(list == null){
+            rspData.setCode(HttpStatus.ERROR);
+            rspData.setMsg("您不是联络站负责人！");
+        }else{
+            rspData.setCode(HttpStatus.SUCCESS);
+            rspData.setMsg("查询成功");
+            rspData.setData(list);
+            rspData.setTotal(new PageInfo(list).getTotal());
+        }
         return rspData;
     }
 
@@ -167,7 +172,10 @@ public class BaseController
     {
         return getLoginUser().getUserId();
     }
-
+    public Long getContactStationId()
+    {
+        return getLoginUser().getContactStationId();
+    }
     /**
      * 获取登录部门id
      */

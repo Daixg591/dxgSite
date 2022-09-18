@@ -54,6 +54,14 @@ public class RepresentDiscoverController extends BaseController
         return getDataTable(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('discover:translate:list')")
+    @GetMapping("/translate/list")
+    public TableDataInfo translateList()
+    {
+        startPage();
+        List<DiscoverAppListDto> list = representDiscoverService.translateList(getUserId());
+        return getDataTable(list);
+    }
     /**
      * 退回
      * @param fallbackVo
@@ -81,7 +89,7 @@ public class RepresentDiscoverController extends BaseController
     {
         representDiscover.setReceiveUserId(getUserId());
         startPage();
-        List<DiscoverListDto> list = representDiscoverService.adminList(representDiscover);
+        List<DiscoverAppListDto> list = representDiscoverService.doneList(getUserId());
         return getDataTable(list);
     }
 

@@ -256,6 +256,7 @@
     </select>
 
     <select id="selectByUserId" parameterType="Long" resultMap="RepresentHomeAccessResult">
-
+        <include refid="selectRepresentHomeAccessVo"></include>
+        where user_id = #{userId}
     </select>
 </mapper>

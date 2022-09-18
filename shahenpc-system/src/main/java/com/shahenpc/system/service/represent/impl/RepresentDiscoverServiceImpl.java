@@ -453,4 +453,22 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
         }
         return AjaxResult.success();
     }
+
+    /**
+     * 督查列表
+     * @param stationId
+     * @return
+     */
+    @Override
+    public List<DiscoverAppListDto> translateList(Long userId) {
+        RepresentHomeAccess access= representHomeAccessMapper.selectByUserId(userId);
+        if(access != null){
+            if(access.getLevel() == 0){
+                return representDiscoverMapper.translateList(null);
+            }else{
+                return representDiscoverMapper.translateList(access.getAccessId());
+            }
+        }
+        return  null;
+    }
 }

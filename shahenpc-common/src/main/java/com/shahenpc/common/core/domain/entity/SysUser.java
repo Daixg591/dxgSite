@@ -74,9 +74,12 @@ public class SysUser extends BaseEntity {
     @Excel(name = "代表界别")
     private String distinction;
     /**
-     * 驿站
+     * 代表之家
+     * 访问之家
+     * 联络站
      */
     private Long stationId;
+
     /**
      * 代表届次
      * 第十届  第九届..

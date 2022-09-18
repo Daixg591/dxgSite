@@ -47,6 +47,12 @@ public class RepresentWorkRankingServiceImpl implements IRepresentWorkRankingSer
         return representWorkRankingMapper.selectRepresentWorkRankingList(representWorkRanking);
     }
 
+
+    @Override
+    public RepresentWorkRanking selectMyRanking(Long userId) {
+        return representWorkRankingMapper.selectMyRanking(userId);
+    }
+
     /**
      * 新增排行 以及 类型数  总数
      * 

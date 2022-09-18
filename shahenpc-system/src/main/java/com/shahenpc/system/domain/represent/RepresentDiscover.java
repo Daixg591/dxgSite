@@ -16,7 +16,9 @@ import com.shahenpc.common.core.domain.BaseEntity;
 public class RepresentDiscover extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
-
+    /** 联络站Id */
+    @Excel(name = "联络站Id")
+    private Long stationId;
     /**  */
     private Long discoverId;
 

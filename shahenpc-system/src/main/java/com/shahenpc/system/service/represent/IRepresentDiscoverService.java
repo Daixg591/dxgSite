@@ -104,4 +104,12 @@ public interface IRepresentDiscoverService
 
 
     public AjaxResult fallback(DiscoverFallbackVo fallbackVo);
+
+
+    /**
+     * 督查列表
+     * @param stationId
+     * @return
+     */
+    public List<DiscoverAppListDto> translateList(Long userId);
 }

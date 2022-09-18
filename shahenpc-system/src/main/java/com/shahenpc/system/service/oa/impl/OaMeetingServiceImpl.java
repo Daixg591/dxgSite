@@ -188,9 +188,8 @@ public class OaMeetingServiceImpl implements IOaMeetingService
     }
 
     @Override
-    public MeetingAppDetailDto appDetail(Long meetingId) {
-
-        return oaMeetingMapper.appDetail(meetingId);
+    public MeetingAppDetailDto appDetail(Long meetingId,Long userId) {
+        return oaMeetingMapper.appDetail(meetingId,userId);
     }
 
     /**

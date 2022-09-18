@@ -73,24 +73,31 @@ public class OaVoteRecordServiceImpl implements IOaVoteRecordService
     @Transactional(rollbackFor = Exception.class)
     public AjaxResult insertPlayerIds(VoteRecordVo requst) {
         OaVoteRecord ovVoteRecord = new OaVoteRecord();
-        for(Long item:requst.getPlayerIds()){
             ovVoteRecord.setCreateTime(DateUtils.getNowDate());
-            ovVoteRecord.setUserId(requst.getUserId());
+//          ovVoteRecord.setUserId(requst.getUserId());
             ovVoteRecord.setVoteId(requst.getVoteId());
-            ovVoteRecord.setPlayerId(item);
             ovVoteRecord.setOpenId(getWxOpenId(requst.getCode()));
             List<OaVoteRecord> list = ovVoteRecordMapper.selectOvVoteRecordList(ovVoteRecord);
             if(list.size() == 0){
-                ovVoteRecordMapper.insertOvVoteRecord(ovVoteRecord);
-                //修改
-                OaVotePlayer pla= oaVotePlayerMapper.selectOaVotePlayerByPlayerId(item);
-                pla.setTotal(pla.getTotal()+1);
-               return AjaxResult.success(oaVotePlayerMapper.updateOaVotePlayer(pla));
-            }else{
-               return AjaxResult.error("您已投票，不可重复投票。");
+                if(requst.getPlayerIds().length == 0){
+                    return AjaxResult.error("请选择投票人员！");
+                }
+                for(Long item:requst.getPlayerIds()){
+                    ovVoteRecord.setPlayerId(item);
+                    if(ovVoteRecordMapper.insertOvVoteRecord(ovVoteRecord) <= 0){
+                        return AjaxResult.error("");
+                    }
+                    //修改
+                    OaVotePlayer pla= oaVotePlayerMapper.selectOaVotePlayerByPlayerId(item);
+                    pla.setTotal(pla.getTotal()+1);
+                    if(oaVotePlayerMapper.updateOaVotePlayer(pla)<= 0 ){
+                        return AjaxResult.error("");
+                    }
             }
-        }
-        return AjaxResult.error("请选择投票人员！");
+        }else{
+                return AjaxResult.error("您已投票，不可重复投票。");
+            }
+        return AjaxResult.success();
     }
 
     private String getWxOpenId(String code) {
