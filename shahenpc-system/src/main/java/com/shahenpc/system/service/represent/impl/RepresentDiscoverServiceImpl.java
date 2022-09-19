@@ -166,7 +166,6 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
             RepresentDiscoverTrack track = new RepresentDiscoverTrack();
             //转交
             track.setCreateBy(representDiscover.getUpdateBy());
-            track.setStatus(Constants.DISCOVER_STATUS_1);
             track.setSendUserId(representDiscover.getUserId());
             track.setProcessType(representDiscover.getProcessType());
             track.setReceiveUserId(representDiscover.getReceiveUserId());
@@ -185,6 +184,17 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
             //办结流程。。发起流程修改状态   记录表新增一条 谁办结
             if(representDiscoverMapper.updateRepresentDiscover(representDiscover) <= 0 ){
                 return AjaxResult.error("记录修改失败！");
+            }
+            //查原来的 记录的id
+            RepresentDiscoverTrack trcl=representDiscoverTrackMapper.selectBySendUserId(representDiscover.getUserId(),representDiscover.getDiscoverId());
+            if(trcl == null){
+                return AjaxResult.error("流程记录，修改原来状态");
+            }
+            RepresentDiscoverTrack representDiscoverTrack = new RepresentDiscoverTrack();
+            representDiscoverTrack.setStatus(Constants.DISCOVER_STATUS_2);
+            representDiscoverTrack.setTrackId(trcl.getTrackId());
+            if(representDiscoverTrackMapper.updateRepresentDiscoverTrack(representDiscoverTrack)<=0){
+                return AjaxResult.error("流程记录，修改原来状态");
             }
             RepresentDiscoverTrack track = new RepresentDiscoverTrack();
             track.setSendUserId(representDiscover.getReceiveUserId());
