@@ -18,6 +18,11 @@ public class PersonnelAppointNotice extends BaseEntity {
 
 
     /**
+     * 移动端视频会议地址
+     */
+    private String mobileVideo;
+    
+    /**
      * 阅读次数
      */
     private Integer readCnt;
@@ -80,6 +85,13 @@ public class PersonnelAppointNotice extends BaseEntity {
     @Excel(name = "存储文件路径")
     private String fileUrl;
 
+    public String getMobileVideo() {
+        return mobileVideo;
+    }
+
+    public void setMobileVideo(String mobileVideo) {
+        this.mobileVideo = mobileVideo;
+    }
 
     public void setNoticeId(Long noticeId) {
         this.noticeId = noticeId;
