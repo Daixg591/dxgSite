@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.feature.FeatureWorkEventMapper">
-    
+
     <resultMap type="FeatureWorkEvent" id="FeatureWorkEventResult">
         <result property="eventId"    column="event_id"    />
         <result property="title"    column="title"    />
@@ -14,27 +14,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="fileUrl"    column="file_url"    />
     </resultMap>
 
     <sql id="selectFeatureWorkEventVo">
-        select event_id, title, content, work_type, remark, create_by, create_time, update_by, update_time from feature_work_event
+        select event_id, title, content, work_type, remark, create_by, create_time, update_by, update_time, file_url from feature_work_event
     </sql>
 
     <select id="selectFeatureWorkEventList" parameterType="FeatureWorkEvent" resultMap="FeatureWorkEventResult">
         <include refid="selectFeatureWorkEventVo"/>
-        <where>  
-            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+        <where>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="workType != null "> and work_type = #{workType}</if>
+            <if test="fileUrl != null  and fileUrl != ''"> and file_url = #{fileUrl}</if>
         </where>
-        order by create_time desc
     </select>
-    
+
     <select id="selectFeatureWorkEventByEventId" parameterType="Long" resultMap="FeatureWorkEventResult">
         <include refid="selectFeatureWorkEventVo"/>
         where event_id = #{eventId}
     </select>
-        
+
     <insert id="insertFeatureWorkEvent" parameterType="FeatureWorkEvent" useGeneratedKeys="true" keyProperty="eventId">
         insert into feature_work_event
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -46,7 +47,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+            <if test="fileUrl != null">file_url,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null">#{title},</if>
             <if test="content != null">#{content},</if>
@@ -56,7 +58,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+            <if test="fileUrl != null">#{fileUrl},</if>
+        </trim>
     </insert>
 
     <update id="updateFeatureWorkEvent" parameterType="FeatureWorkEvent">
@@ -70,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="fileUrl != null">file_url = #{fileUrl},</if>
         </trim>
         where event_id = #{eventId}
     </update>
@@ -79,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteFeatureWorkEventByEventIds" parameterType="String">
-        delete from feature_work_event where event_id in 
+        delete from feature_work_event where event_id in
         <foreach item="eventId" collection="array" open="(" separator="," close=")">
             #{eventId}
         </foreach>
