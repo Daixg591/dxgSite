@@ -146,7 +146,7 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
             standardCensor.setType(Constants.CENSOR_TYPE_5);
         }
         // 先判断  是否是分发
-        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_3)){
+        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_2)){
             List<StandardCensorRecord> distribute= standardCensorRecordMapper.selectByDistribute(standardCensor.getCensorId());
             int dist = distribute.stream().filter(p -> p.getStatus().equals(Constants.CENSOR_TYPE_STATUS_0)).collect(Collectors.toList()).size();
             if(dist == 0){
@@ -178,9 +178,47 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
                 return AjaxResult.success();
             }
         }
+
+        //region  todo-黄涛 临时调整 Start 2022-09-19 am
+
+        // 审查
+        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_4)){
+            // 1 查寻本流程分发状态 是否有未处理
+            // 2 没有 则更改流程状态为 反馈  CENSOR_TYPE_5
+            StandardCensorRecord paramRecord=new StandardCensorRecord();
+            paramRecord.setCensorId(standardCensor.getCensorId());
+            List<StandardCensorRecord> recordList=standardCensorRecordMapper.selectStandardCensorRecordList(paramRecord).stream()
+                    .filter(w->w.getStatus().equals(Constants.CENSOR_TYPE_STATUS_0)).collect(Collectors.toList());
+            if (recordList.size()<1){
+                standardCensor.setType(Constants.CENSOR_TYPE_5);
+                standardCensorMapper.updateStandardCensor(standardCensor);
+            }
+
+        }
+
+
+
+        standardCensor.setReceiveUserId(null);
+
+
+        //endregion
+
+
+
         int su = standardCensorMapper.updateStandardCensor(standardCensor);
+
+
+
         if(su > 0){
             StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
+
+            //region  todo-黄涛 临时调整 Start 2022-09-19 am
+            // 审查(结束流程)
+            if (standardCensor.getApprovalUserId()==null){
+                return AjaxResult.success();
+            }
+            //endregion
+
             for (String itme:standardCensor.getApprovalUserId()){
                 //发送人
                 standardCensorRecord.setSendUserId(standardCensor.getSendUserId());

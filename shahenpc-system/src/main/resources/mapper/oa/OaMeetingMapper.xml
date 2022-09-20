@@ -174,7 +174,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_type' AND d.dict_value = a.meeting_type)AS meetingTypeName,
             (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_status' AND d.dict_value = a.`status`)AS statusName,
             (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_is_sign' AND d.dict_value = a.is_sign)AS isSignName,
-            IF((SELECT s.sign_id FROM oa_meeting_sign s WHERE s.meeting_id = a.meeting_id AND s.user_id = #{userId}),1,0)AS myIsSign
+            IF((SELECT s.sign_id FROM oa_meeting_sign s WHERE s.meeting_id = a.meeting_id AND s.user_id = #{userId}  and s.status=1),1,0)AS myIsSign
         from oa_meeting a
         where meeting_id = #{meetingId}
     </select>
