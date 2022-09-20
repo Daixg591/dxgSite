@@ -128,13 +128,17 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
         vo.setCensorId(standardCensor.getCensorId());
         vo.setType(standardCensor.getType());
         vo.setReceiveUserId(getUserId());//当前人
-        StandardCensorRecord recordId=standardCensorRecordMapper.selectByRecordId(vo);
-        updateRecord.setRecordId(recordId.getRecordId());
-        updateRecord.setRevert(standardCensor.getRevert());
-        updateRecord.setStatus(Constants.CENSOR_TYPE_STATUS_1);
-        updateRecord.setUpdateTime(DateUtils.getNowDate());
-        updateRecord.setUpdateBy(standardCensor.getCreateBy());
-        standardCensorRecordMapper.updateStandardCensorRecord(updateRecord);
+
+        if (!standardCensor.getType().equals(Constants.CENSOR_TYPE_4)) {
+            // 反馈的时候不修改 因为没有.....
+            StandardCensorRecord recordId=standardCensorRecordMapper.selectByRecordId(vo);
+            updateRecord.setRecordId(recordId.getRecordId());
+            updateRecord.setRevert(standardCensor.getRevert());
+            updateRecord.setStatus(Constants.CENSOR_TYPE_STATUS_1);
+            updateRecord.setUpdateTime(DateUtils.getNowDate());
+            updateRecord.setUpdateBy(standardCensor.getCreateBy());
+            standardCensorRecordMapper.updateStandardCensorRecord(updateRecord);
+        }
         //
         if(standardCensor.getType().equals(Constants.CENSOR_TYPE_1)){
             standardCensor.setType(Constants.CENSOR_TYPE_2);
@@ -181,33 +185,51 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
 
         //region  todo-黄涛 临时调整 Start 2022-09-19 am
 
+        // 反馈
+        if (standardCensor.getType().equals(Constants.CENSOR_TYPE_5)) {
+
+            standardCensor.setType(Constants.CENSOR_TYPE_5);
+            standardCensorMapper.updateStandardCensor(standardCensor);
+
+            StandardCensorRecord standardCensorRecord=new StandardCensorRecord();
+            //发送人
+            standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
+            //接收人
+            standardCensorRecord.setReceiveUserId(null);
+            //绑定id
+            standardCensorRecord.setCensorId(standardCensor.getCensorId());
+            //回复
+            standardCensorRecord.setStatus(Constants.CENSOR_TYPE_STATUS_1);
+            standardCensorRecord.setRevert(standardCensor.getRevert());
+            standardCensorRecord.setType(Constants.CENSOR_TYPE_4);
+            standardCensorRecord.setCreateTime(DateUtils.getNowDate());
+            standardCensorRecord.setCreateBy(standardCensor.getCreateBy());
+            standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord);
+            return  AjaxResult.success();
+        }
+
+
         // 审查
         if(standardCensor.getType().equals(Constants.CENSOR_TYPE_4)){
             // 1 查寻本流程分发状态 是否有未处理
             // 2 没有 则更改流程状态为 反馈  CENSOR_TYPE_5
             StandardCensorRecord paramRecord=new StandardCensorRecord();
             paramRecord.setCensorId(standardCensor.getCensorId());
-            List<StandardCensorRecord> recordList=standardCensorRecordMapper.selectStandardCensorRecordList(paramRecord).stream()
-                    .filter(w->w.getStatus().equals(Constants.CENSOR_TYPE_STATUS_0)).collect(Collectors.toList());
+            paramRecord.setStatus(Constants.CENSOR_TYPE_STATUS_0);
+            List<StandardCensorRecord> recordList=standardCensorRecordMapper.selectStandardCensorRecordList(paramRecord);
             if (recordList.size()<1){
-                standardCensor.setType(Constants.CENSOR_TYPE_5);
                 standardCensorMapper.updateStandardCensor(standardCensor);
             }
-
+            return  AjaxResult.success();
+        } else {
+            standardCensor.setType(Constants.CENSOR_TYPE_3);
         }
-
-
-
-        standardCensor.setReceiveUserId(null);
-
 
         //endregion
 
-
+        standardCensor.setReceiveUserId(null);
 
         int su = standardCensorMapper.updateStandardCensor(standardCensor);
-
-
 
         if(su > 0){
             StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
@@ -234,6 +256,9 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
             }
             return AjaxResult.success();
         }
+
+
+
         return AjaxResult.error();
     }
 

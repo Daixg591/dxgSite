@@ -122,6 +122,7 @@ public class RepresentDiscoverController extends BaseController
     {
         representDiscover.setSendUserId(getUserId());
         representDiscover.setUpdateBy(getUsername());
+        representDiscover.setStationId(getContactStationId());
         return representDiscoverService.insertRepresentDiscover(representDiscover);
     }
 

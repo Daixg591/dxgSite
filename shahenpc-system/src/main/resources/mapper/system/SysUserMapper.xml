@@ -205,6 +205,7 @@
         </if>
         <!-- 数据范围过滤 -->
         ${params.dataScope}
+        order by create_time asc
     </select>
 
     <select id="selectRandUserList" parameterType="SysUser" resultMap="SysUserResult">

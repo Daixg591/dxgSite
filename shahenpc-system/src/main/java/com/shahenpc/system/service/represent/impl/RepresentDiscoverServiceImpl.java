@@ -94,6 +94,7 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
         RepresentHomeAccess access= representHomeAccessMapper.selectRepresentHomeAccessByAccessId(user.getContactStationId());
         if(access.getUserId() != null){
             representDiscover.setReceiveUserId(access.getUserId());
+            representDiscover.setStationId(access.getAccessId());
         }else{
             return AjaxResult.error("联络站未添加负责人");
         }

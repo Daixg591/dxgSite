@@ -108,6 +108,8 @@ public class AppRepresentDiscoverController extends BaseController
     {
         representDiscover.setSendUserId(getUserId());
         representDiscover.setCreateBy(getNickName());
+        representDiscover.setStationId(getContactStationId());
+        System.out.println(getContactStationId());
         return representDiscoverService.insertRepresentDiscover(representDiscover);
     }
 
