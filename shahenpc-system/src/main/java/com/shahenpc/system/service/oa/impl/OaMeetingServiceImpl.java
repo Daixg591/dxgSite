@@ -172,9 +172,17 @@ public class OaMeetingServiceImpl implements IOaMeetingService
         sign.setMeetingId(meetingId);
         sign.setUserId(userId);
         sign.setStatus(1);
-        List<OaMeetingSign> sing = oaMeetingSignMapper.selectOaMeetingSignList(sign);
-        if(sing.size() == 0){
-            return AjaxResult.success(oaMeetingSignMapper.updateOaMeetingSign(sign));
+        OaMeetingSign sing = oaMeetingSignMapper.selectOaMeetingSignEntity(sign);
+        if(sing == null){
+            sign.setStatus(0);
+            OaMeetingSign aa= oaMeetingSignMapper.selectOaMeetingSignEntity(sign);
+            if(aa == null){
+                return AjaxResult.error("改会议没有邀请您！");
+            }
+            aa.setStatus(1);
+            aa.setSignTime(DateUtils.getNowDate());
+            aa.setUpdateTime(DateUtils.getNowDate());
+            return AjaxResult.success(oaMeetingSignMapper.updateOaMeetingSign(aa));
         }else{
             return AjaxResult.error("您已签到，请勿重复操作！");
         }

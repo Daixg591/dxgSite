@@ -30,6 +30,7 @@ public interface OaMeetingSignMapper
      */
     public List<OaMeetingSign> selectOaMeetingSignList(OaMeetingSign oaMeetingSign);
 
+    public OaMeetingSign selectOaMeetingSignEntity(OaMeetingSign oaMeetingSign);
     /**
      * 新增会议签到记录
      * 
