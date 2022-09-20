@@ -213,9 +213,15 @@ public class OaMeetingServiceImpl implements IOaMeetingService
      * @return 结果
      */
     @Override
-    public int deleteOaMeetingByMeetingIds(Long[] meetingIds)
+    public int deleteOaMeetingByMeetingIds(Long meetingIds)
     {
-        return oaMeetingMapper.deleteOaMeetingByMeetingIds(meetingIds);
+        if(oaMeetingMapper.deleteOaMeetingByMeetingIds(meetingIds)  > 0){
+            oaMeetingRecordMapper.deleteOaMeetingRecordByMeetingId(meetingIds);
+            oaMeetingSignMapper.deleteOaMeetingSignByMeetingId(meetingIds);
+            oaMeetingPersonnelMapper.deleteOaMeetingPersonnelByMeetingId(meetingIds);
+            return 1;
+        }
+        return 0;
     }
 
     /**

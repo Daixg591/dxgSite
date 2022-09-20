@@ -62,7 +62,7 @@ public interface OaMeetingMapper
      * @param meetingIds 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteOaMeetingByMeetingIds(Long[] meetingIds);
+    public int deleteOaMeetingByMeetingIds(Long meetingIds);
 
     public MeetingDetailDto newDetail(Long meetingId);
 

@@ -25,6 +25,15 @@ import java.util.Map;
 @RequestMapping("/system/video")
 public class TransferController {
 
+    @ApiOperation("登录")
+    @PostMapping("/login")
+    public static String login() throws IOException {
+        JSONObject json = new JSONObject();
+        json.put("username","usertest3");
+        json.put("password","usertest3");
+        String res= HttpUtils.sendPostByVideo(Constants.SHIPINGHUIYI_URL+"/user/login",json.toString());
+        return res;
+    }
 
     @ApiOperation("视频会议登录")
     @PostMapping("/posturl")

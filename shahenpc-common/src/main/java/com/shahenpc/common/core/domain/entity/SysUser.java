@@ -66,6 +66,7 @@ public class SysUser extends BaseEntity {
         this.partyGroupings = partyGroupings;
     }
 
+    private String videoMeetingAccount;
     /**
      * 代表界别
      * 工人、农民和其他劳动者，专业技术人员，企事业单位负责人，公务员、解放军

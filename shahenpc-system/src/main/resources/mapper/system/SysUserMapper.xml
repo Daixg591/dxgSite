@@ -48,6 +48,8 @@
         <result property="partyGroupings" column="party_groupings"/>
         <result property="distinction" column="distinction"/>
         <result property="level" column="level"/>
+        <result property="videoMeetingAccount" column="video_meeting_account"/>
+
         <result property="contactStationId" column="contact_station_id"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
@@ -116,6 +118,7 @@
                u.party_groupings,
                u.distinction,
                u.level,
+               u.video_meeting_account,
                d.dept_id,
                d.parent_id,
                d.ancestors,
@@ -140,7 +143,7 @@
         select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status,
         u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
         u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date,
-        u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,
+        u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,u.video_meeting_account,
         u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,u.user_status,
         u.choose_area,u.party_groupings,u.distinction,u.level,
         (SELECT dict_label FROM sys_dict_data WHERE dict_type = 'sys_user_nation' AND dict_value =u. nation)AS
@@ -212,7 +215,7 @@
         select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status,
         u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
         u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date,
-        u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,
+        u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,u.video_meeting_account,
         u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,u.user_status,
         u.choose_area,u.party_groupings,u.distinction,u.level,
         (SELECT dict_label FROM sys_dict_data WHERE dict_type = 'sys_user_nation' AND dict_value =u. nation)AS
@@ -349,6 +352,8 @@
 
     <insert id="insertUser" parameterType="SysUser" useGeneratedKeys="true" keyProperty="userId">
         insert into sys_user(
+         =
+        <if test="videoMeetingAccount != null">video_meeting_account,</if>
         <if test="userId != null and userId != 0">user_id,</if>
         <if test="deptId != null and deptId != 0">dept_id,</if>
         <if test="userName != null and userName != ''">user_name,</if>
@@ -389,6 +394,7 @@
         <if test="level != null">level,</if>
         create_time
         )values(
+        <if test="videoMeetingAccount != null">#{videoMeetingAccount},</if>
         <if test="userId != null and userId != ''">#{userId},</if>
         <if test="deptId != null and deptId != ''">#{deptId},</if>
         <if test="userName != null and userName != ''">#{userName},</if>
@@ -474,7 +480,7 @@
             <if test="partyGroupings != null">party_groupings = #{partyGroupings},</if>
             <if test="distinction != null">distinction = #{distinction},</if>
             <if test="level != null">level = #{level},</if>
-
+            <if test="videoMeetingAccount != null"> video_meeting_account = #{videoMeetingAccount}</if>
             update_time = sysdate()
         </set>
         where user_id = #{userId}
@@ -531,6 +537,7 @@
 
     <select id="appSelectUserList" parameterType="SysUser" resultMap="SysUserResult">
         select u.user_id,
+               u.video_meeting_account,
                u.dept_id,
                u.nick_name,
                u.user_name,

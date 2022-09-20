@@ -103,7 +103,7 @@ public class OaMeetingController extends BaseController
     @PreAuthorize("@ss.hasPermi('oa:meeting:remove')")
     @Log(title = "人大办公-会议管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{meetingIds}")
-    public AjaxResult remove(@PathVariable Long[] meetingIds)
+    public AjaxResult remove(@PathVariable Long meetingIds)
     {
         return toAjax(oaMeetingService.deleteOaMeetingByMeetingIds(meetingIds));
     }
