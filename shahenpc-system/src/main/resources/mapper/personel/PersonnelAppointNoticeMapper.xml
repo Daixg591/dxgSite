@@ -22,10 +22,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="shareCnt"    column="share_cnt"    />
         <result property="banner"    column="banner"    />
         <result property="fileUrl"    column="file_url"    />
+        <result property="mobileVideo"    column="mobile_video"    />
     </resultMap>
 
     <sql id="selectPersonnelAppointNoticeVo">
-        select notice_id, cover_url, title, details, state, remark, create_by, create_time, update_by, update_time, del_flag, type, column_type, read_cnt, share_cnt, banner, file_url from personnel_appoint_notice
+        select notice_id, cover_url, title, details, state, remark, create_by, create_time, update_by, update_time, del_flag, type, column_type, read_cnt, share_cnt, banner, file_url,mobile_video from personnel_appoint_notice
     </sql>
 
     <select id="selectPersonnelAppointNoticeList" parameterType="PersonnelAppointNotice" resultMap="PersonnelAppointNoticeResult">
@@ -41,6 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="shareCnt != null "> and share_cnt = #{shareCnt}</if>
             <if test="banner != null "> and banner = #{banner}</if>
             <if test="fileUrl != null  and fileUrl != ''"> and file_url = #{fileUrl}</if>
+            <if test="mobileVideo != null  and mobileVideo != ''"> and mobile_video = #{mobileVideo}</if>
         </where>
         ORDER BY create_time DESC
     </select>
@@ -69,6 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="shareCnt != null">share_cnt,</if>
             <if test="banner != null">banner,</if>
             <if test="fileUrl != null">file_url,</if>
+            <if test="mobileVideo != null">mobile_video,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="coverUrl != null">#{coverUrl},</if>
@@ -87,6 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="shareCnt != null">#{shareCnt},</if>
             <if test="banner != null">#{banner},</if>
             <if test="fileUrl != null">#{fileUrl},</if>
+            <if test="mobile_video != null">#{mobileVideo},</if>
         </trim>
     </insert>
 
@@ -109,6 +113,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="shareCnt != null">share_cnt = #{shareCnt},</if>
             <if test="banner != null">banner = #{banner},</if>
             <if test="fileUrl != null">file_url = #{fileUrl},</if>
+            <if test="mobileVideo != null">mobile_video = #{mobileVideo},</if>
         </trim>
         where notice_id = #{noticeId}
     </update>
