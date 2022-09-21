@@ -393,7 +393,7 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
             int v = alarBudg.stream().filter(p -> finalDictList.get(finalI).getDictValue().equals(p.getStatus().toString()))
                     .collect(Collectors.toList()).size();
             DiscoverPieDto item = new DiscoverPieDto();
-            if(dictList.get(i).getDictLabel().equals("待交办")){
+            /*if(dictList.get(i).getDictLabel().equals("待交办")){
                 item.setName("上传");
                 item.setValue(v);
             }
@@ -408,9 +408,11 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
             if(dictList.get(i).getDictLabel().equals("已评价")){
                 item.setName("已评价");
                 item.setValue(v);
-            }
+            }*/
 //            item.setName(dictList.get(i).getDictLabel());
 //            item.setValue(v);
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
             dtoList.add(item);
         }
 //        DiscoverPieDto item = new DiscoverPieDto();
@@ -467,7 +469,7 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
 
     /**
      * 督查列表
-     * @param stationId
+     * @param userId
      * @return
      */
     @Override

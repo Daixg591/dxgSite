@@ -25,7 +25,23 @@ import java.util.Map;
 @RequestMapping("/system/video")
 public class TransferController {
 
-    @ApiOperation("登录")
+    @ApiOperation("app登录及列表")
+    @PostMapping("/list")
+    public static String list(@RequestBody videoEntity entity) throws IOException {
+        JSONObject json = new JSONObject();
+        json.put("username","usertest3");
+        json.put("password","usertest3");
+        String res= HttpUtils.sendPostByVideo(Constants.SHIPINGHUIYI_URL+"/user/login",json.toString());
+        JSONObject jsonObject = JSONObject.parseObject(res);
+        System.out.println("jsonObject>>==>"+jsonObject);
+        JSONObject dataJson = JSONObject.parseObject(jsonObject.get("data").toString());
+        System.out.println(dataJson.get("token"));
+        String param = "page="+entity.getPage()+"&size="+entity.getSize();
+        System.out.println(param);
+        String list = HttpUtils.sendGetByVideos(Constants.SHIPINGHUIYI_URL+"/conferenceAppointment/list",param,null,dataJson.get("token").toString());
+        return list;
+    }
+    @ApiOperation("app登录")
     @PostMapping("/login")
     public static String login() throws IOException {
         JSONObject json = new JSONObject();

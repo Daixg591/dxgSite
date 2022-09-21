@@ -81,6 +81,10 @@ public class HttpUtils
             //CloseableHttpResponse response = httpClient.execute(httpPost);
             URL realUrl = new URL(urlNameString);
             URLConnection connection = realUrl.openConnection();
+            connection.setDoInput(true); //设置输入流采用字节流
+            connection.setDoOutput(true);//设置输出流采用字节流
+            connection.setUseCaches(false);
+            connection.setRequestProperty("Content-Type","application/json;charset=UTF-8");
             connection.setRequestProperty("accept" , "*/*");
             connection.setRequestProperty("connection" , "Keep-Alive");
             connection.setRequestProperty("user-agent" , "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
@@ -93,8 +97,7 @@ public class HttpUtils
                 System.out.println(key + "--->" + map.get(key));
             }
             // 定义BufferedReader输入流来读取URL的响应
-            in = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(connection.getInputStream(),"UTF-8"));
             String line;
             while ((line = in.readLine()) != null) {
                 result += line;
@@ -268,6 +271,7 @@ public class HttpUtils
             log.info("sendPost - {}", url);
             URL realUrl = new URL(url);
             URLConnection conn = realUrl.openConnection();
+
             conn.setRequestProperty("accept", "*/*");
             conn.setRequestProperty("connection", "Keep-Alive");
             conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
