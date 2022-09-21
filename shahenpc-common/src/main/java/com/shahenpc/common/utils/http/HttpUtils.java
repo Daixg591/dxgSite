@@ -74,7 +74,6 @@ public class HttpUtils
         try {
 
             String urlNameString = StringUtils.isNotBlank(param) ? url + "?" + param : url;
-            System.out.println(urlNameString);
             log.info("sendGet - {}" , urlNameString);
             CloseableHttpClient httpClient = HttpClients.createDefault();
             HttpPost httpPost = new HttpPost(param);
@@ -86,6 +85,7 @@ public class HttpUtils
             connection.setRequestProperty("connection" , "Keep-Alive");
             connection.setRequestProperty("user-agent" , "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
             connection.setRequestProperty("Authorization",token);
+            connection.setRequestProperty("Charset","utf-8");
             connection.connect();
             Map<String, List<String>> map = connection.getHeaderFields();
             // 遍历所有的响应头字段

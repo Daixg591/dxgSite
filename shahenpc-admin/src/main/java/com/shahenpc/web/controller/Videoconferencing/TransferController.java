@@ -34,6 +34,15 @@ public class TransferController {
         String res= HttpUtils.sendPostByVideo(Constants.SHIPINGHUIYI_URL+"/user/login",json.toString());
         return res;
     }
+    @ApiOperation("pc登录")
+    @PostMapping("/pc/login")
+    public static String pcLogin() throws IOException {
+        JSONObject json = new JSONObject();
+        json.put("username","usertest31");
+        json.put("password","usertest31");
+        String res= HttpUtils.sendPostByVideo(Constants.SHIPINGHUIYI_URL+"/user/login",json.toString());
+        return res;
+    }
 
     @ApiOperation("视频会议登录")
     @PostMapping("/posturl")

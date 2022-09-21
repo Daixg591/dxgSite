@@ -133,6 +133,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectBySatisfiedRate" resultType="com.shahenpc.system.domain.represent.dto.ProposalRingDto">
         SELECT
             CONCAT(FORMAT(SUM(rate) / COUNT(p.`proposal_id`),2)) as rate
-        FROM represent_proposal p
+        FROM represent_proposal p where status = 2
     </select>
 </mapper>

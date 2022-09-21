@@ -5,107 +5,77 @@
 <mapper namespace="com.shahenpc.system.mapper.represent.RepresentHomeAccessMapper">
 
     <resultMap type="RepresentHomeAccess" id="RepresentHomeAccessResult">
-        <result property="accessId" column="access_id"/>
-        <result property="title" column="title"/>
-        <result property="provinceCode" column="province_code"/>
-        <result property="provinceName" column="province_name"/>
-        <result property="cityCode" column="city_code"/>
-        <result property="cityName" column="city_name"/>
-        <result property="areaCode" column="area_code"/>
-        <result property="areaName" column="area_name"/>
-        <result property="latitude" column="latitude"/>
-        <result property="longitude" column="longitude"/>
-        <result property="address" column="address"/>
-        <result property="content" column="content"/>
-        <result property="picUrl" column="pic_url"/>
-        <result property="browseNumber" column="browse_number"/>
-        <result property="remark" column="remark"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateBy" column="update_by"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="createBy" column="create_by"/>
-        <result property="mapWidth" column="map_width"/>
-        <result property="mapHeight" column="map_height"/>
-        <result property="mapArea" column="map_area"/>
-        <result property="location" column="location"/>
-        <result property="phone" column="phone"/>
-        <result property="leader" column="leader"/>
-        <result property="virtualMobile" column="virtual_mobile"/>
-        <result property="videoUserId" column="video_user_id"/>
-        <result property="shortName" column="short_name"/>
-        <result property="ysxMobile" column="ysx_mobile"/>
-        <result property="ysxPwd" column="ysx_pwd"/>
-        <result property="userId" column="user_id"/>
-        <result property="area" column="area"/>
-        <result property="level" column="level"/>
+        <result property="accessId"    column="access_id"    />
+        <result property="title"    column="title"    />
+        <result property="provinceCode"    column="province_code"    />
+        <result property="provinceName"    column="province_name"    />
+        <result property="cityCode"    column="city_code"    />
+        <result property="cityName"    column="city_name"    />
+        <result property="areaCode"    column="area_code"    />
+        <result property="areaName"    column="area_name"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="address"    column="address"    />
+        <result property="content"    column="content"    />
+        <result property="picUrl"    column="pic_url"    />
+        <result property="browseNumber"    column="browse_number"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="mapWidth"    column="map_width"    />
+        <result property="mapHeight"    column="map_height"    />
+        <result property="mapArea"    column="map_area"    />
+        <result property="location"    column="location"    />
+        <result property="phone"    column="phone"    />
+        <result property="leader"    column="leader"    />
+        <result property="virtualMobile"    column="virtual_mobile"    />
+        <result property="videoUserId"    column="video_user_id"    />
+        <result property="shortName"    column="short_name"    />
+        <result property="ysxMobile"    column="ysx_mobile"    />
+        <result property="ysxPwd"    column="ysx_pwd"    />
+        <result property="userId"    column="user_id"    />
+        <result property="area"    column="area"    />
+        <result property="level"    column="level"    />
+        <result property="terminalId"    column="terminal_id"    />
     </resultMap>
 
     <sql id="selectRepresentHomeAccessVo">
-        select access_id,
-               title,
-               province_code,
-               province_name,
-               city_code,
-               city_name,
-               area_code,
-               area_name,
-               latitude,
-               longitude,
-               address,
-               content,
-               pic_url,
-               browse_number,
-               remark,
-               create_time,
-               update_by,
-               update_time,
-               create_by,
-               map_width,
-               map_height,
-               map_area,
-               location,
-               phone,
-               leader,
-               virtual_mobile,
-               video_user_id,
-               ysx_mobile,
-               ysx_pwd,
-               user_id,
-               short_name,
-               area,
-               level
-        from represent_home_access
+        select access_id, title, province_code, province_name, city_code, city_name, area_code, area_name, latitude, longitude, address, content, pic_url, browse_number, remark, create_time, update_by, update_time, create_by, map_width, map_height, map_area, location, phone, leader, virtual_mobile, video_user_id, short_name, ysx_mobile, ysx_pwd, user_id, area, level, terminal_id from represent_home_access
     </sql>
 
-    <select id="selectRepresentHomeAccessList" parameterType="RepresentHomeAccess"
-            resultMap="RepresentHomeAccessResult">
+    <select id="selectRepresentHomeAccessList" parameterType="RepresentHomeAccess" resultMap="RepresentHomeAccessResult">
         <include refid="selectRepresentHomeAccessVo"/>
         <where>
-            <if test="title != null  and title != ''">and title = #{title}</if>
-            <if test="provinceCode != null  and provinceCode != ''">and province_code = #{provinceCode}</if>
-            <if test="provinceName != null  and provinceName != ''">and province_name like concat('%', #{provinceName},
-                '%')
-            </if>
-            <if test="cityCode != null  and cityCode != ''">and city_code = #{cityCode}</if>
-            <if test="cityName != null  and cityName != ''">and city_name like concat('%', #{cityName}, '%')</if>
-            <if test="areaCode != null  and areaCode != ''">and area_code = #{areaCode}</if>
-            <if test="areaName != null  and areaName != ''">and area_name like concat('%', #{areaName}, '%')</if>
-            <if test="latitude != null  and latitude != ''">and latitude = #{latitude}</if>
-            <if test="longitude != null  and longitude != ''">and longitude = #{longitude}</if>
-            <if test="address != null  and address != ''">and address = #{address}</if>
-            <if test="content != null  and content != ''">and content = #{content}</if>
-            <if test="picUrl != null  and picUrl != ''">and pic_url = #{picUrl}</if>
-            <if test="browseNumber != null ">and browse_number = #{browseNumber}</if>
-            <if test="mapWidth != null ">and map_width = #{mapWidth}</if>
-            <if test="mapHeight != null ">and map_height = #{mapHeight}</if>
-            <if test="mapArea != null  and mapArea != ''">and map_area = #{mapArea}</if>
-            <if test="location != null  and location != ''">and location = #{location}</if>
-            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
-            <if test="leader != null  and leader != ''">and leader = #{leader}</if>
-            <if test="virtualMobile != null  and virtualMobile != ''">and virtual_mobile = #{virtualMobile}</if>
-            <if test="videoUserId != null  and videoUserId != ''">and video_user_id = #{videoUserId}</if>
-            <if test="area != null  and area != ''">and area = #{area}</if>
-            <if test="level != null ">and level = #{level}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="provinceCode != null  and provinceCode != ''"> and province_code = #{provinceCode}</if>
+            <if test="provinceName != null  and provinceName != ''"> and province_name like concat('%', #{provinceName}, '%')</if>
+            <if test="cityCode != null  and cityCode != ''"> and city_code = #{cityCode}</if>
+            <if test="cityName != null  and cityName != ''"> and city_name like concat('%', #{cityName}, '%')</if>
+            <if test="areaCode != null  and areaCode != ''"> and area_code = #{areaCode}</if>
+            <if test="areaName != null  and areaName != ''"> and area_name like concat('%', #{areaName}, '%')</if>
+            <if test="latitude != null  and latitude != ''"> and latitude = #{latitude}</if>
+            <if test="longitude != null  and longitude != ''"> and longitude = #{longitude}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="picUrl != null  and picUrl != ''"> and pic_url = #{picUrl}</if>
+            <if test="browseNumber != null "> and browse_number = #{browseNumber}</if>
+            <if test="mapWidth != null "> and map_width = #{mapWidth}</if>
+            <if test="mapHeight != null "> and map_height = #{mapHeight}</if>
+            <if test="mapArea != null  and mapArea != ''"> and map_area = #{mapArea}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="leader != null  and leader != ''"> and leader = #{leader}</if>
+            <if test="virtualMobile != null  and virtualMobile != ''"> and virtual_mobile = #{virtualMobile}</if>
+            <if test="videoUserId != null  and videoUserId != ''"> and video_user_id = #{videoUserId}</if>
+            <if test="shortName != null  and shortName != ''"> and short_name like concat('%', #{shortName}, '%')</if>
+            <if test="ysxMobile != null  and ysxMobile != ''"> and ysx_mobile = #{ysxMobile}</if>
+            <if test="ysxPwd != null  and ysxPwd != ''"> and ysx_pwd = #{ysxPwd}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="level != null "> and level = #{level}</if>
+            <if test="terminalId != null "> and terminal_id = #{terminalId}</if>
         </where>
     </select>
 
@@ -114,8 +84,7 @@
         where access_id = #{accessId}
     </select>
 
-    <insert id="insertRepresentHomeAccess" parameterType="RepresentHomeAccess" useGeneratedKeys="true"
-            keyProperty="accessId">
+    <insert id="insertRepresentHomeAccess" parameterType="RepresentHomeAccess" useGeneratedKeys="true" keyProperty="accessId">
         insert into represent_home_access
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="title != null">title,</if>
@@ -144,13 +113,13 @@
             <if test="leader != null">leader,</if>
             <if test="virtualMobile != null">virtual_mobile,</if>
             <if test="videoUserId != null">video_user_id,</if>
-
             <if test="shortName != null">short_name,</if>
             <if test="ysxMobile != null">ysx_mobile,</if>
             <if test="ysxPwd != null">ysx_pwd,</if>
             <if test="userId != null">user_id,</if>
             <if test="area != null">area,</if>
             <if test="level != null">level,</if>
+            <if test="terminalId != null">terminal_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null">#{title},</if>
@@ -182,9 +151,10 @@
             <if test="shortName != null">#{shortName},</if>
             <if test="ysxMobile != null">#{ysxMobile},</if>
             <if test="ysxPwd != null">#{ysxPwd},</if>
-            <if test="userId != null">#{user_id},</if>
+            <if test="userId != null">#{userId},</if>
             <if test="area != null">#{area},</if>
             <if test="level != null">#{level},</if>
+            <if test="terminalId != null">#{terminalId},</if>
         </trim>
     </insert>
 
@@ -223,14 +193,13 @@
             <if test="userId != null">user_id = #{userId},</if>
             <if test="area != null">area = #{area},</if>
             <if test="level != null">level = #{level},</if>
+            <if test="terminalId != null">terminal_id = #{terminalId},</if>
         </trim>
         where access_id = #{accessId}
     </update>
 
     <delete id="deleteRepresentHomeAccessByAccessId" parameterType="Long">
-        delete
-        from represent_home_access
-        where access_id = #{accessId}
+        delete from represent_home_access where access_id = #{accessId}
     </delete>
 
     <delete id="deleteRepresentHomeAccessByAccessIds" parameterType="String">

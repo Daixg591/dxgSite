@@ -119,6 +119,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/system/upgrade/liset").permitAll()
                 // 排名
                 .antMatchers("/represent/ranking/my/ranking").permitAll()
+                //履职日志
+                .antMatchers("/work/log/list").permitAll()
                 //投票白名单
                 .antMatchers("/oa/vote/*").permitAll()
                 .antMatchers("/app/login","/wx/user/wxlogin","/wx/user/massesreg",
