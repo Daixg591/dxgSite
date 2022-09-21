@@ -206,9 +206,10 @@
         <if test="contactStationId != null and contactStationId != ''">
             AND u.contact_station_id = #{contactStationId}
         </if>
+        and u.userId!=1
         <!-- 数据范围过滤 -->
         ${params.dataScope}
-        order by create_time asc
+        order by user_id asc
     </select>
 
     <select id="selectRandUserList" parameterType="SysUser" resultMap="SysUserResult">
