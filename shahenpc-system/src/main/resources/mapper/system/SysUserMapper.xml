@@ -206,7 +206,7 @@
         <if test="contactStationId != null and contactStationId != ''">
             AND u.contact_station_id = #{contactStationId}
         </if>
-        and u.userId!=1
+        and u.user_id!=1
         <!-- 数据范围过滤 -->
         ${params.dataScope}
         order by user_id asc
