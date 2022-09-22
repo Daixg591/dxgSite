@@ -136,6 +136,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from oa_vote
     </select>-->
     <!--=========================================================分割线-->
+    <select id="detailAdmin" parameterType="Long" resultMap="OaVoteResult">
+        select vote_id, title, remark, create_time, update_by, update_time, create_by, start_time, end_time, content, cover_url, status, total,
+               (SELECT COUNT(p.vote_id) FROM oa_vote_player p WHERE p.vote_id = o.vote_id)AS voter,
+               visit, is_many, least, biggest from oa_vote o
+        where vote_id = #{voteId}
+    </select>
+
     <select id="selectCount" resultType="com.shahenpc.system.domain.oa.dto.VoteCount">
         SELECT COUNT(o.vote_id) AS `all`,
         (SELECT COUNT(b.vote_id) FROM oa_vote b WHERE b.start_time <![CDATA[>]]> NOW() AND b.`status` = 0) AS `notstart`,

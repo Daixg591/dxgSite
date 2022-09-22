@@ -35,7 +35,8 @@ public class OaVoteServiceImpl extends BaseController implements IOaVoteService
     @Override
     public OaVote selectOaVoteByVoteId(Long voteId)
     {
-        return oaVoteMapper.selectOaVoteByVoteId(voteId);
+        //更换了
+        return oaVoteMapper.detailAdmin(voteId);
     }
 
     /**
