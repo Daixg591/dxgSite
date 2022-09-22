@@ -1,6 +1,7 @@
 package com.shahenpc.web.controller.system;
 
 import com.shahenpc.framework.config.CustomLoginAuthenticationProvider;
+import com.shahenpc.system.domain.dto.AppUpdatePasswordDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -119,6 +120,31 @@ public class SysProfileController extends BaseController
             tokenService.setLoginUser(loginUser);
             user.setPassword(SecurityUtils.encryptPassword(newPassword));
             userService.updateUser(user);
+            return AjaxResult.success();
+        }
+        return AjaxResult.error("修改密码异常，请联系管理员");
+    }
+
+    @Log(title = "个人信息", businessType = BusinessType.UPDATE)
+    @PostMapping("/app/updatePwd")
+    public AjaxResult appUpdatePwd(@RequestBody AppUpdatePasswordDto dto)
+    {
+        LoginUser loginUser = getLoginUser();
+        String userName = loginUser.getUsername();
+        String password = loginUser.getPassword();
+        if (!SecurityUtils.matchesPassword(dto.getOldPassword(), password))
+        {
+            return AjaxResult.error("修改密码失败，旧密码错误");
+        }
+        if (SecurityUtils.matchesPassword(dto.getNewPassword(), password))
+        {
+            return AjaxResult.error("新密码不能与旧密码相同");
+        }
+        if (userService.resetUserPwd(userName, SecurityUtils.encryptPassword(dto.getNewPassword())) > 0)
+        {
+            // 更新缓存用户密码
+            loginUser.getUser().setPassword(SecurityUtils.encryptPassword(dto.getNewPassword()));
+            tokenService.setLoginUser(loginUser);
             return AjaxResult.success();
         }
         return AjaxResult.error("修改密码异常，请联系管理员");

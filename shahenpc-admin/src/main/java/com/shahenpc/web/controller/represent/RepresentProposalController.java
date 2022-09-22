@@ -68,7 +68,6 @@ public class RepresentProposalController extends BaseController
      * 获取代-建议详细信息
      */
     @ApiOperation("详情")
-    @PreAuthorize("@ss.hasPermi('represent:proposal:query')")
     @GetMapping(value = "/{proposalId}")
     public AjaxResult getInfo(@PathVariable("proposalId") Long proposalId)
     {

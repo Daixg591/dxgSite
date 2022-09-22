@@ -479,7 +479,7 @@
             <if test="partyGroupings != null">party_groupings = #{partyGroupings},</if>
             <if test="distinction != null">distinction = #{distinction},</if>
             <if test="level != null">level = #{level},</if>
-            <if test="videoMeetingAccount != null"> video_meeting_account = #{videoMeetingAccount}</if>
+            <if test="videoMeetingAccount != null"> video_meeting_account = #{videoMeetingAccount},</if>
             update_time = sysdate()
         </set>
         where user_id = #{userId}
