@@ -43,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="replyContent != null  and replyContent != ''"> and reply_content = #{replyContent}</if>
             <if test="replyTime != null "> and reply_time = #{replyTime}</if>
         </where>
+        ORDER BY `number`
     </select>
     
     <select id="selectRepresentProposalByProposalId" parameterType="Long" resultMap="RepresentProposalResult">

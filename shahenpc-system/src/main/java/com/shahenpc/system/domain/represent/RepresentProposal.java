@@ -1,13 +1,13 @@
 package com.shahenpc.system.domain.represent;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.shahenpc.common.annotation.Excel;
+import com.shahenpc.common.core.domain.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.shahenpc.common.annotation.Excel;
-import com.shahenpc.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 代-建议对象 represent_proposal
@@ -25,7 +25,7 @@ public class RepresentProposal extends BaseEntity
 
     /** 案号 */
     @Excel(name = "案号")
-    private String number;
+    private Integer number;
 
     /** 类型 */
     @Excel(name = "类型")
@@ -77,16 +77,7 @@ public class RepresentProposal extends BaseEntity
     {
         return proposalId;
     }
-    public void setNumber(String number) 
-    {
-        this.number = number;
-    }
-
-    public String getNumber() 
-    {
-        return number;
-    }
-    public void setType(Long type) 
+    public void setType(Long type)
     {
         this.type = type;
     }
