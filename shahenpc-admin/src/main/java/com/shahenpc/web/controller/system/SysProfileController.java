@@ -105,7 +105,7 @@ public class SysProfileController extends BaseController
         SysUser user=userService.selectUserById(loginUser.getUserId());
         String entityPassword=user.getPassword();
 //        if (!SecurityUtils.matchesPassword(oldPassword, entityPassword))
-        if (!matches(oldPassword, entityPassword))
+        if (!matches(oldPassword,entityPassword))
         {
             return AjaxResult.error("修改密码失败，旧密码错误");
         }
@@ -132,11 +132,13 @@ public class SysProfileController extends BaseController
         LoginUser loginUser = getLoginUser();
         String userName = loginUser.getUsername();
         String password = loginUser.getPassword();
-        if (!SecurityUtils.matchesPassword(dto.getOldPassword(), password))
+        SysUser user=userService.selectUserById(loginUser.getUserId());
+        String entityPassword=user.getPassword();
+        if (!matches(dto.getOldPassword(),entityPassword))
         {
             return AjaxResult.error("修改密码失败，旧密码错误");
         }
-        if (SecurityUtils.matchesPassword(dto.getNewPassword(), password))
+        if (matches(dto.getNewPassword(), entityPassword))
         {
             return AjaxResult.error("新密码不能与旧密码相同");
         }
@@ -145,6 +147,8 @@ public class SysProfileController extends BaseController
             // 更新缓存用户密码
             loginUser.getUser().setPassword(SecurityUtils.encryptPassword(dto.getNewPassword()));
             tokenService.setLoginUser(loginUser);
+            user.setPassword(SecurityUtils.encryptPassword(dto.getNewPassword()));
+            userService.updateUser(user);
             return AjaxResult.success();
         }
         return AjaxResult.error("修改密码异常，请联系管理员");
@@ -187,6 +191,8 @@ public class SysProfileController extends BaseController
             throw new IllegalArgumentException("rawPassword cannot be null");
         } else if (encodedPassword != null && encodedPassword.length() != 0) {
             String oldEncodedPwd=SecurityUtils.encryptPassword(rawPassword);
+            System.out.println("oldEncodedPwd+"+oldEncodedPwd);
+            System.out.println("encodedPassword"+encodedPassword);
             boolean res=oldEncodedPwd.equals(encodedPassword);
             return res;
         } else {
