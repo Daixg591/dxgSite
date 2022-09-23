@@ -406,10 +406,19 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     @Override
     public FeatureEachCount eachCount() {
         FeatureEachCount each =  featureDoubleWorkMapper.eachCount();
-        if(each.getProcessed() != 0 && each.getProportion() != 0) {
-            each.setProportion(each.getProcessed() / (each.getProcessed() + each.getProportion()));
+        if(each != null) {
+            if (each.getProcessed() != 0 && each.getProportion() != 0) {
+                each.setProportion(each.getProcessed() / (each.getProcessed() + each.getProportion()));
+                each.setProportion(Double.valueOf(String.format("%.2f", each.getProportion())));
+            }
+        }else{
+            FeatureEachCount aa= new FeatureEachCount();
+            aa.setProportion(0.00);
+            aa.setMasses(0);
+            aa.setParticipate(0);
+            aa.setProcessed(0);
+            each =aa;
         }
-        each.setProportion(Double.valueOf(String.format("%.2f", each.getProportion())));
         return each;
     }
 

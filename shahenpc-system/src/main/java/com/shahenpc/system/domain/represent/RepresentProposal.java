@@ -19,7 +19,8 @@ import java.util.Date;
 public class RepresentProposal extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
-
+    /** 自定义*/
+    private String typeName;
     /** 主键 */
     private Long proposalId;
 

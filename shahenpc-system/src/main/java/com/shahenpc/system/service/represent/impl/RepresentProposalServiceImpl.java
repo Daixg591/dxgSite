@@ -42,7 +42,7 @@ public class RepresentProposalServiceImpl implements IRepresentProposalService
     @Override
     public List<RepresentProposal> selectRepresentProposalList(RepresentProposal representProposal)
     {
-        return representProposalMapper.selectRepresentProposalList(representProposal);
+        return representProposalMapper.adminList(representProposal);
     }
 
     /**

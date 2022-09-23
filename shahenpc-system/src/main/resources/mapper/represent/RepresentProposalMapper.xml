@@ -126,6 +126,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <!--==============================================================自定义-->
+    <select id="adminList" parameterType="RepresentProposal" resultMap="RepresentProposalResult">
+        select proposal_id, number, type, title, proposal_name, status, rate, content, lord_do, will_do,
+               reply_content, reply_time, remark, create_by, create_time, update_by, update_time,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='represent_proposal_type' AND d.dict_value = p.type)AS typeName
+        from represent_proposal p
+        <where>
+            <if test="number != null  and number != ''"> and number = #{number}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="proposalName != null  and proposalName != ''"> and proposal_name like concat('%', #{proposalName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="rate != null "> and rate = #{rate}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="lordDo != null  and lordDo != ''"> and lord_do = #{lordDo}</if>
+            <if test="willDo != null  and willDo != ''"> and will_do = #{willDo}</if>
+            <if test="replyContent != null  and replyContent != ''"> and reply_content = #{replyContent}</if>
+            <if test="replyTime != null "> and reply_time = #{replyTime}</if>
+        </where>
+        ORDER BY `number`
+    </select>
+
     <select id="selectByConcludeRate" resultType="com.shahenpc.system.domain.represent.dto.ProposalRingDto">
         SELECT
             CONCAT(ROUND(SUM(CASE `status` WHEN 2 THEN 1 ELSE 0 END) / COUNT(p.`proposal_id`),2))AS rate
@@ -135,5 +156,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT
             CONCAT(FORMAT(SUM(rate) / COUNT(p.`proposal_id`),2)) as rate
         FROM represent_proposal p where status = 2
+    </select>
+
+    <select id="getCount" resultType="java.lang.Integer">
+        SELECT COUNT(proposal_id) FROM represent_proposal
     </select>
 </mapper>

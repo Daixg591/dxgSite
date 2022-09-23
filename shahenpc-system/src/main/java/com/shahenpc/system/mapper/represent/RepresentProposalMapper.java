@@ -27,7 +27,7 @@ public interface RepresentProposalMapper
      * @return 代-建议集合
      */
     public List<RepresentProposal> selectRepresentProposalList(RepresentProposal representProposal);
-
+    public List<RepresentProposal> adminList(RepresentProposal representProposal);
     /**
      * 新增代-建议
      * 
@@ -63,5 +63,10 @@ public interface RepresentProposalMapper
     public ProposalRingDto selectByConcludeRate();
 
     public ProposalRingDto selectBySatisfiedRate();
+
+    public Integer getCount();
+
+
+
 
 }
