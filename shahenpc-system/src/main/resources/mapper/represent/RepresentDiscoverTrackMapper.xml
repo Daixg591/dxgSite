@@ -128,7 +128,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_status' AND d.dict_value = t.status )AS discoverStatusName
         from represent_discover_track t
         where t.discover_id = #{discoverId}
-        ORDER BY t.create_time DESC
+        ORDER BY t.create_time
     </select>
 
 

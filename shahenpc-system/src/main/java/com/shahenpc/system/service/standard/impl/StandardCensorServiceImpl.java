@@ -154,7 +154,7 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
             List<StandardCensorRecord> distribute= standardCensorRecordMapper.selectByDistribute(standardCensor.getCensorId());
             int dist = distribute.stream().filter(p -> p.getStatus().equals(Constants.CENSOR_TYPE_STATUS_0)).collect(Collectors.toList()).size();
             if(dist == 0){
-                standardCensor.setReceiveUserId(standardCensor.getSendUserId().toString());
+                standardCensor.setReceiveUserId(standardCensor.getReceiveUserId().toString());
                 int su = standardCensorMapper.updateStandardCensor(standardCensor);
                 if(su > 0) {
                     StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
@@ -217,6 +217,7 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
             paramRecord.setCensorId(standardCensor.getCensorId());
             paramRecord.setStatus(Constants.CENSOR_TYPE_STATUS_0);
             List<StandardCensorRecord> recordList=standardCensorRecordMapper.selectStandardCensorRecordList(paramRecord);
+            System.out.println(recordList.toString());
             if (recordList.size()<1){
                 standardCensorMapper.updateStandardCensor(standardCensor);
             }
@@ -416,6 +417,12 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
         Collections.reverse(res.getLabel());
         return res;
     }
+
+    @Override
+    public List<StandardCensor> selectByTypeList(Integer type) {
+        return standardCensorMapper.selectByTypeList(type);
+    }
+
     /**
      * 获取最近六个月份  ["2022-07","2022-06","2022-05"...]
      *

@@ -108,7 +108,7 @@ public interface IRepresentDiscoverService
 
     /**
      * 督查列表
-     * @param stationId
+     * @param userId
      * @return
      */
     public List<DiscoverAppListDto> translateList(Long userId);

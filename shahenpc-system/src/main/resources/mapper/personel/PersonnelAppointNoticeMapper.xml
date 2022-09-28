@@ -90,7 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="shareCnt != null">#{shareCnt},</if>
             <if test="banner != null">#{banner},</if>
             <if test="fileUrl != null">#{fileUrl},</if>
-            <if test="mobile_video != null">#{mobileVideo},</if>
+            <if test="mobileVideo != null">#{mobileVideo},</if>
         </trim>
     </insert>
 

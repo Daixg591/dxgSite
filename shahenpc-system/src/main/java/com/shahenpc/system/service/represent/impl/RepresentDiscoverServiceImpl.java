@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.shahenpc.common.constant.Constants;
+import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.core.domain.entity.SysUser;
@@ -41,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2022-07-28
  */
 @Service
-public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService 
+public class RepresentDiscoverServiceImpl extends BaseController implements IRepresentDiscoverService
 {
     @Autowired
     private RepresentDiscoverMapper representDiscoverMapper;
@@ -477,8 +478,10 @@ public class RepresentDiscoverServiceImpl implements IRepresentDiscoverService
         RepresentHomeAccess access= representHomeAccessMapper.selectByUserId(userId);
         if(access != null){
             if(access.getLevel() == 0){
+                startPage();
                 return representDiscoverMapper.translateList(null);
             }else{
+                startPage();
                 return representDiscoverMapper.translateList(access.getAccessId());
             }
         }

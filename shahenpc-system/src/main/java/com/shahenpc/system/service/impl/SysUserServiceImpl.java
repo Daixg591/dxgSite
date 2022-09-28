@@ -560,7 +560,9 @@ public class SysUserServiceImpl implements ISysUserService
                 {
                     BeanValidators.validateWithException(validator, user);
                     user.setUpdateBy(operName);
-                    this.updateUser(user);
+                    user.setUserId(this.selectUserByUserName(user.getUserName()).getUserId());
+                    //this.updateUser(user);
+                    this.updateUserProfile(user);
                     successNum++;
                     successMsg.append("<br/>" + successNum + "、账号 " + user.getUserName() + " 更新成功");
                 }

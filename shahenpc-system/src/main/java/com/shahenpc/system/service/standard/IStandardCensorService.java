@@ -113,4 +113,12 @@ public interface IStandardCensorService
      */
     MotionLingDto line();
 
+
+    /**
+     * 全部
+     * @param type
+     * @return
+     */
+    public List<StandardCensor> selectByTypeList(Integer type);
+
 }

@@ -37,6 +37,7 @@ public class AppRepresentDiscoverController extends BaseController
      * 查询代-代发现列表
      */
     @ApiOperation("列表")
+    @PreAuthorize("@ss.hasPermi('discover:translate:all')")
     @GetMapping("/all/list")
     public TableDataInfo allList(RepresentDiscover representDiscover)
     {

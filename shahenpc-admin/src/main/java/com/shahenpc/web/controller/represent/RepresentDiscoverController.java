@@ -58,7 +58,7 @@ public class RepresentDiscoverController extends BaseController
     @GetMapping("/translate/list")
     public TableDataInfo translateList()
     {
-        startPage();
+
         List<DiscoverAppListDto> list = representDiscoverService.translateList(getUserId());
         return getDataTable(list);
     }
@@ -79,7 +79,7 @@ public class RepresentDiscoverController extends BaseController
     {
         representDiscover.setReceiveUserId(getUserId());
         startPage();
-        List<DiscoverListDto> list = representDiscoverService.adminList(representDiscover);
+        List<DiscoverAppListDto> list = representDiscoverService.todoList(representDiscover);
         return getDataTable(list);
     }
 

@@ -66,6 +66,7 @@ public class SysUser extends BaseEntity {
         this.partyGroupings = partyGroupings;
     }
 
+
     private String videoMeetingAccount;
     /**
      * 代表界别
@@ -136,6 +137,7 @@ public class SysUser extends BaseEntity {
     /**
      * 所属单位
      */
+    @Excel(name = "所属单位")
     private String organName;
 
     /**

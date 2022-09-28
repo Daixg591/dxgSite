@@ -259,7 +259,7 @@
                (SELECT u.nick_name FROM sys_user u WHERE u.user_id = d.receive_user_id)AS receiveUserName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_process_type' AND d.dict_value = d.process_type)AS processTypeName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_type' AND d.dict_value = d.discover_type)AS discoverTypeName,
-               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_status' AND d.dict_value = d.status )AS discoverStatusName
+               (SELECT d1.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='discover_status' AND d1.dict_value = d.status )AS statusName
         FROM represent_discover d LEFT JOIN  represent_discover_track t ON d.discover_id = t.discover_id
         WHERE t.send_user_id = #{sendUserId} and (d.`status` != 1 or d.process_type != 1)
         GROUP BY d.discover_id ORDER BY d.create_time DESC
