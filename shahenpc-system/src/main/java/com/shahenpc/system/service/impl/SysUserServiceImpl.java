@@ -716,4 +716,9 @@ public class SysUserServiceImpl implements ISysUserService
         return dto;
     }
 
+    @Override
+    public String selectByPassword(Long userId) {
+        return userMapper.selectByPassword(userId);
+    }
+
 }

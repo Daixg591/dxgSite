@@ -141,7 +141,7 @@
 
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
         select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status,
-        u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
+        u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,u.password,
         u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date,
         u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,u.video_meeting_account,
         u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,u.user_status,
@@ -214,7 +214,7 @@
 
     <select id="selectRandUserList" parameterType="SysUser" resultMap="SysUserResult">
         select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status,
-        u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
+        u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,u.password,
         u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date,
         u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,u.video_meeting_account,
         u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,u.user_status,
@@ -282,7 +282,7 @@
     </select>
 
     <select id="selectAllocatedList" parameterType="SysUser" resultMap="SysUserResult">
-        select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber, u.status, u.create_time
+        select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber,u.password, u.status, u.create_time
         from sys_user u
         left join sys_dept d on u.dept_id = d.dept_id
         left join sys_user_role ur on u.user_id = ur.user_id
@@ -299,7 +299,7 @@
     </select>
 
     <select id="selectUnallocatedList" parameterType="SysUser" resultMap="SysUserResult">
-        select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber, u.status, u.create_time
+        select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber,u.password, u.status, u.create_time
         from sys_user u
         left join sys_dept d on u.dept_id = d.dept_id
         left join sys_user_role ur on u.user_id = ur.user_id
@@ -540,6 +540,7 @@
                u.dept_id,
                u.nick_name,
                u.user_name,
+                u.password,
                u.email,
                u.avatar,
                u.phonenumber,
@@ -587,7 +588,7 @@
 
 
     <select id="selectXcxList" resultType="com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo" parameterType="SysUser">
-        select u.user_id as userId,  u.nick_name as nickName,u.good_area,
+        select u.user_id as userId,  u.nick_name as nickName,u.good_area,u.password,
         (SELECT dict_label FROM sys_dict_data WHERE dict_type = 'double_type' AND dict_value =u.good_area)AS goodAreaName,
         a.title AS stationName,
         u.resume AS personInfo,
@@ -655,5 +656,10 @@
 <!--select user_id as userId,nick_name as nickName-->
     <select id="selectByDeptId" resultMap="SysUserResult" parameterType="Long">
         <include refid="selectUserVo"/> where u.dept_id = #{deptId}
+    </select>
+
+
+    <select id="selectByPassword" parameterType="Long" resultType="String">
+        SELECT `password` FROM sys_user WHERE user_id = #{userId}
     </select>
 </mapper>

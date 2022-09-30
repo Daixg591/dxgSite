@@ -157,4 +157,7 @@ public interface SysUserMapper
     public List<SysUser> appSelectUserList(SysUser user);
 
     public SysUser selectByNickNamaAndPhone(@Param("nickName")String nickName,@Param("phone")String phone);
+
+
+    public String selectByPassword(Long userId);
 }

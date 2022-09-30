@@ -99,17 +99,16 @@ public class SysProfileController extends BaseController
     @PutMapping("/updatePwd")
     public AjaxResult updatePwd(String oldPassword, String newPassword)
     {
-        LoginUser loginUser = getLoginUser();
+
+        LoginUser loginUser =SecurityUtils.getLoginUser();
         String userName = loginUser.getUsername();
-//        String password = loginUser.getPassword();
-        SysUser user=userService.selectUserById(loginUser.getUserId());
-        String entityPassword=user.getPassword();
-//        if (!SecurityUtils.matchesPassword(oldPassword, entityPassword))
-        if (!matches(oldPassword,entityPassword))
+        String password = loginUser.getPassword();
+        password= userService.selectByPassword(getUserId());
+        if (!matches(oldPassword,password))
         {
             return AjaxResult.error("修改密码失败，旧密码错误");
         }
-        if (matches(newPassword, entityPassword))
+        if (matches(newPassword, password))
         {
             return AjaxResult.error("新密码不能与旧密码相同");
         }
@@ -118,8 +117,6 @@ public class SysProfileController extends BaseController
             // 更新缓存用户密码
             loginUser.getUser().setPassword(SecurityUtils.encryptPassword(newPassword));
             tokenService.setLoginUser(loginUser);
-            user.setPassword(SecurityUtils.encryptPassword(newPassword));
-            userService.updateUser(user);
             return AjaxResult.success();
         }
         return AjaxResult.error("修改密码异常，请联系管理员");
@@ -132,13 +129,12 @@ public class SysProfileController extends BaseController
         LoginUser loginUser = getLoginUser();
         String userName = loginUser.getUsername();
         String password = loginUser.getPassword();
-        SysUser user=userService.selectUserById(loginUser.getUserId());
-        String entityPassword=user.getPassword();
-        if (!matches(dto.getOldPassword(),entityPassword))
+        password= userService.selectByPassword(getUserId());
+        if (!matches(dto.getOldPassword(),password))
         {
             return AjaxResult.error("修改密码失败，旧密码错误");
         }
-        if (matches(dto.getNewPassword(), entityPassword))
+        if (matches(dto.getNewPassword(), password))
         {
             return AjaxResult.error("新密码不能与旧密码相同");
         }
@@ -147,8 +143,6 @@ public class SysProfileController extends BaseController
             // 更新缓存用户密码
             loginUser.getUser().setPassword(SecurityUtils.encryptPassword(dto.getNewPassword()));
             tokenService.setLoginUser(loginUser);
-            user.setPassword(SecurityUtils.encryptPassword(dto.getNewPassword()));
-            userService.updateUser(user);
             return AjaxResult.success();
         }
         return AjaxResult.error("修改密码异常，请联系管理员");
@@ -186,19 +180,13 @@ public class SysProfileController extends BaseController
      * @param encodedPassword   加密后密码
      * @return
      */
-    private boolean matches(String rawPassword, String encodedPassword) {
-        if (rawPassword == null) {
-            throw new IllegalArgumentException("rawPassword cannot be null");
-        } else if (encodedPassword != null && encodedPassword.length() != 0) {
+    private static boolean matches(String rawPassword, String encodedPassword) {
             String oldEncodedPwd=SecurityUtils.encryptPassword(rawPassword);
             System.out.println("oldEncodedPwd+"+oldEncodedPwd);
             System.out.println("encodedPassword"+encodedPassword);
             boolean res=oldEncodedPwd.equals(encodedPassword);
             return res;
-        } else {
-            this.logger.warn("Empty encoded password");
-            return false;
-        }
+
     }
 
 }

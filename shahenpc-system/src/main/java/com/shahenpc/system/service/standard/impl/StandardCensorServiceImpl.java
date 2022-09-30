@@ -325,7 +325,7 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
     public int deleteStandardCensorByProcessIds(Long[] processIds)
     {
         if(standardCensorMapper.deleteStandardCensorByCensorIds(processIds)>0){
-            return  standardCensorRecordMapper.deleteStandardCensorRecordByCensorIds(processIds);
+            return standardCensorRecordMapper.deleteStandardCensorRecordByCensorIds(processIds);
         }
         return 0;
     }
