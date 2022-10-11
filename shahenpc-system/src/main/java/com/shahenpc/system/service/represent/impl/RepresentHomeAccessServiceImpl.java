@@ -1,7 +1,16 @@
 package com.shahenpc.system.service.represent.impl;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.alibaba.fastjson2.JSONObject;
+import com.shahenpc.common.constant.Constants;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.common.utils.http.HttpUtils;
+import com.shahenpc.common.utils.sign.Sign;
+import com.shahenpc.system.domain.represent.vo.VirtualVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.represent.RepresentHomeAccessMapper;
@@ -102,5 +111,29 @@ public class RepresentHomeAccessServiceImpl implements IRepresentHomeAccessServi
     @Override
     public List<RepresentHomeAccess> rankingList() {
         return representHomeAccessMapper.rankingList();
+    }
+
+    @Override
+    public JSONObject createVirtualUser(VirtualVo vo) throws IOException {
+        Map<String,String> parameters = new HashMap<String,String>();
+        // HTTP 参数列表
+        parameters.put("identity", Constants.IDENTITY);
+        parameters.put("mobile",vo.getPhone());
+        parameters.put("name",vo.getLeader());
+        parameters.put("orgCode",Constants.ORG_CODE);
+        parameters.put("isTrial",Constants.IS_TRIAL);
+        parameters.put("timestamp",String.valueOf(DateUtils.getNowDate().getTime()));
+        parameters.put("ECID",Constants.ECID);
+        String sign = Sign.sign(Constants.KEY,parameters);
+        parameters.put("sign",sign);
+        JSONObject json = new JSONObject(parameters);
+        String code =  HttpUtils.sendPostByVideo(Constants.YDIP+"/access/rest/v200/createVirtualUser",json.toString());
+        String res = code.replaceAll("\\\\","");
+        JSONObject jsonObject = JSONObject.parseObject(res);
+        if(jsonObject.get("code").equals(200)){
+            return jsonObject;
+        }else {
+            return jsonObject;
+        }
     }
 }

@@ -203,6 +203,8 @@ public interface IFlowTaskService {
 
     void motionRemind(FlowTaskVo flowTaskVo);
 
+    int deleteRepresentMotionByMotionIds(Long[] motionIds);
+
     AjaxResult motionFlowRecord(String procInsId,String deployId);
 
     AjaxResult motionComplete(FlowTaskVo task);

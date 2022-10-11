@@ -44,6 +44,8 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
     @Autowired
     private RepresentMotionMapper representMotionMapper;
     @Autowired
+    private RepresentProposalMapper representProposalMapper;
+    @Autowired
     private ISysDictTypeService sysDictTypeService;
     /**
      * 查询代-活动列
@@ -192,7 +194,9 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
         dto.setExperienceCount(representExperienceMapper.getCount());
         dto.setDoubleCount(featureDoubleWorkMapper.getCount());
         dto.setDiscoveryCount(representDiscoverMapper.getCount());
-        dto.setMotionCount(representMotionMapper.getCount());
+
+        //改成建议
+        dto.setMotionCount(representProposalMapper.getCount());
         dto.setTotalCount(dto.getActivityCount()+dto.getDoubleCount()+dto.getDiscoveryCount()+dto.getMotionCount()+dto.getExperienceCount());
         return dto;
     }

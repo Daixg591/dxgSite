@@ -21,7 +21,6 @@ public interface IFlowDefinitionService {
 
     boolean exist(String processDefinitionKey);
 
-
     /**
      * 流程定义列表
      *

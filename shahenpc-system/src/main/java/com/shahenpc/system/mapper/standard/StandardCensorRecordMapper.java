@@ -61,9 +61,15 @@ public interface StandardCensorRecordMapper
      */
     public int deleteStandardCensorRecordByRecordIds(Long[] recordIds);
 
+
+    public int deleteStandardCensorRecordByCensorIds(Long[] censorIds);
+
     public StandardCensorRecord selectBySuperior(@Param("censorId") Long censorId,@Param("type") Integer type);
 
     public List<StandardCensorRecord> selectByDistribute(Long censorId);
 
     public StandardCensorRecord selectByRecordId(RecordByRecordIdVo vo);
+
+
+
 }

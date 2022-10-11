@@ -98,6 +98,8 @@ public class FlowTaskDto implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date finishTime;
 
+    private Integer categoryType;
+
     @ApiModelProperty("流程id")
     private Long processId;
 
@@ -128,5 +130,19 @@ public class FlowTaskDto implements Serializable {
     /**发文机关*/
     @ApiModelProperty("发文机关")
     private String organName;
+
+
+
+    private String representName;
+    private String representTeam;
+    private String representCount;
+    private String representCard;
+    private String postalCode;
+    private String opinion;
+    private String opinionType;
+    private String isXingcheng;
+    private String survey;
+    private String yearly;
+    private String isGoutong;
 
 }

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.represent.RepresentProposalMapper">
+    
+    <resultMap type="RepresentProposal" id="RepresentProposalResult">
+        <result property="proposalId"    column="proposal_id"    />
+        <result property="number"    column="number"    />
+        <result property="type"    column="type"    />
+        <result property="title"    column="title"    />
+        <result property="proposalName"    column="proposal_name"    />
+        <result property="status"    column="status"    />
+        <result property="rate"    column="rate"    />
+        <result property="content"    column="content"    />
+        <result property="lordDo"    column="lord_do"    />
+        <result property="willDo"    column="will_do"    />
+        <result property="replyContent"    column="reply_content"    />
+        <result property="replyTime"    column="reply_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectRepresentProposalVo">
+        select proposal_id, number, type, title, proposal_name, status, rate, content, lord_do, will_do, reply_content, reply_time, remark, create_by, create_time, update_by, update_time from represent_proposal
+    </sql>
+
+    <select id="selectRepresentProposalList" parameterType="RepresentProposal" resultMap="RepresentProposalResult">
+        <include refid="selectRepresentProposalVo"/>
+        <where>  
+            <if test="number != null  and number != ''"> and number = #{number}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="proposalName != null  and proposalName != ''"> and proposal_name like concat('%', #{proposalName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="rate != null "> and rate = #{rate}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="lordDo != null  and lordDo != ''"> and lord_do = #{lordDo}</if>
+            <if test="willDo != null  and willDo != ''"> and will_do = #{willDo}</if>
+            <if test="replyContent != null  and replyContent != ''"> and reply_content = #{replyContent}</if>
+            <if test="replyTime != null "> and reply_time = #{replyTime}</if>
+        </where>
+        ORDER BY `number`
+    </select>
+    
+    <select id="selectRepresentProposalByProposalId" parameterType="Long" resultMap="RepresentProposalResult">
+        <include refid="selectRepresentProposalVo"/>
+        where proposal_id = #{proposalId}
+    </select>
+        
+    <insert id="insertRepresentProposal" parameterType="RepresentProposal" useGeneratedKeys="true" keyProperty="proposalId">
+        insert into represent_proposal
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="number != null">`number`,</if>
+            <if test="type != null">`type`,</if>
+            <if test="title != null">title,</if>
+            <if test="proposalName != null">proposal_name,</if>
+            <if test="status != null">status,</if>
+            <if test="rate != null">rate,</if>
+            <if test="content != null">content,</if>
+            <if test="lordDo != null">lord_do,</if>
+            <if test="willDo != null">will_do,</if>
+            <if test="replyContent != null">reply_content,</if>
+            <if test="replyTime != null">reply_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="number != null">#{number},</if>
+            <if test="type != null">#{type},</if>
+            <if test="title != null">#{title},</if>
+            <if test="proposalName != null">#{proposalName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="rate != null">#{rate},</if>
+            <if test="content != null">#{content},</if>
+            <if test="lordDo != null">#{lordDo},</if>
+            <if test="willDo != null">#{willDo},</if>
+            <if test="replyContent != null">#{replyContent},</if>
+            <if test="replyTime != null">#{replyTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRepresentProposal" parameterType="RepresentProposal">
+        update represent_proposal
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="number != null">number = #{number},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="proposalName != null">proposal_name = #{proposalName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="rate != null">rate = #{rate},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="lordDo != null">lord_do = #{lordDo},</if>
+            <if test="willDo != null">will_do = #{willDo},</if>
+            <if test="replyContent != null">reply_content = #{replyContent},</if>
+            <if test="replyTime != null">reply_time = #{replyTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where proposal_id = #{proposalId}
+    </update>
+
+    <delete id="deleteRepresentProposalByProposalId" parameterType="Long">
+        delete from represent_proposal where proposal_id = #{proposalId}
+    </delete>
+
+    <delete id="deleteRepresentProposalByProposalIds" parameterType="String">
+        delete from represent_proposal where proposal_id in
+        <foreach item="proposalId" collection="array" open="(" separator="," close=")">
+            #{proposalId}
+        </foreach>
+    </delete>
+
+    <!--==============================================================自定义-->
+    <select id="adminList" parameterType="RepresentProposal" resultMap="RepresentProposalResult">
+        select proposal_id, number, type, title, proposal_name, status, rate, content, lord_do, will_do,
+               reply_content, reply_time, remark, create_by, create_time, update_by, update_time,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='represent_proposal_type' AND d.dict_value = p.type)AS typeName
+        from represent_proposal p
+        <where>
+            <if test="number != null  and number != ''"> and number = #{number}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="proposalName != null  and proposalName != ''"> and proposal_name like concat('%', #{proposalName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="rate != null "> and rate = #{rate}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="lordDo != null  and lordDo != ''"> and lord_do = #{lordDo}</if>
+            <if test="willDo != null  and willDo != ''"> and will_do = #{willDo}</if>
+            <if test="replyContent != null  and replyContent != ''"> and reply_content = #{replyContent}</if>
+            <if test="replyTime != null "> and reply_time = #{replyTime}</if>
+        </where>
+        ORDER BY `number`
+    </select>
+
+    <select id="selectByConcludeRate" resultType="com.shahenpc.system.domain.represent.dto.ProposalRingDto">
+        SELECT
+            CONCAT(ROUND(SUM(CASE `status` WHEN 2 THEN 1 ELSE 0 END) / COUNT(p.`proposal_id`),2))AS rate
+        FROM represent_proposal p
+    </select>
+    <select id="selectBySatisfiedRate" resultType="com.shahenpc.system.domain.represent.dto.ProposalRingDto">
+        SELECT
+            CONCAT(FORMAT(SUM(rate) / COUNT(p.`proposal_id`),2)) as rate
+        FROM represent_proposal p where status = 2
+    </select>
+
+    <select id="getCount" resultType="java.lang.Integer">
+        SELECT COUNT(proposal_id) FROM represent_proposal
+    </select>
+</mapper>

@@ -5,6 +5,7 @@ import java.util.List;
 import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.system.domain.data.dto.DataCountDto;
 import com.shahenpc.system.domain.dto.NpcCakeDto;
+import com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo;
 
 /**
  * 用户 业务层
@@ -21,6 +22,9 @@ public interface ISysUserService
      */
     public List<SysUser> selectUserList(SysUser user);
 
+    public List<SysUser> selectRandUserList(SysUser user);
+
+    public List<WxUserInfoVo> selectXcxList(SysUser user);
     /**
      * 根据条件分页查询已分配用户角色列表
      * 
@@ -228,5 +232,8 @@ public interface ISysUserService
 
     /** 大数据页面数据*/
     public DataCountDto count();
+
+
+    public String selectByPassword(Long userId);
 
 }

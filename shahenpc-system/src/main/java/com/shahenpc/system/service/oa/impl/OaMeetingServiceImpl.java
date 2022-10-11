@@ -171,11 +171,20 @@ public class OaMeetingServiceImpl implements IOaMeetingService
         OaMeetingSign sign = new OaMeetingSign();
         sign.setMeetingId(meetingId);
         sign.setUserId(userId);
-        List<OaMeetingSign> sing = oaMeetingSignMapper.selectOaMeetingSignList(sign);
-        if(sing.size() == 0){
-            return AjaxResult.success(oaMeetingSignMapper.insertOaMeetingSign(sign));
+        sign.setStatus(1);
+        OaMeetingSign sing = oaMeetingSignMapper.selectOaMeetingSignEntity(sign);
+        if(sing == null){
+            sign.setStatus(0);
+            OaMeetingSign aa= oaMeetingSignMapper.selectOaMeetingSignEntity(sign);
+            if(aa == null){
+                return AjaxResult.error("改会议没有邀请您！");
+            }
+            aa.setStatus(1);
+            aa.setSignTime(DateUtils.getNowDate());
+            aa.setUpdateTime(DateUtils.getNowDate());
+            return AjaxResult.success(oaMeetingSignMapper.updateOaMeetingSign(aa));
         }else{
-            return AjaxResult.error("已签到！");
+            return AjaxResult.error("您已签到，请勿重复操作！");
         }
     }
 
@@ -188,9 +197,8 @@ public class OaMeetingServiceImpl implements IOaMeetingService
     }
 
     @Override
-    public MeetingAppDetailDto appDetail(Long meetingId) {
-
-        return oaMeetingMapper.appDetail(meetingId);
+    public MeetingAppDetailDto appDetail(Long meetingId,Long userId) {
+        return oaMeetingMapper.appDetail(meetingId,userId);
     }
 
     /**
@@ -213,9 +221,15 @@ public class OaMeetingServiceImpl implements IOaMeetingService
      * @return 结果
      */
     @Override
-    public int deleteOaMeetingByMeetingIds(Long[] meetingIds)
+    public int deleteOaMeetingByMeetingIds(Long meetingIds)
     {
-        return oaMeetingMapper.deleteOaMeetingByMeetingIds(meetingIds);
+        if(oaMeetingMapper.deleteOaMeetingByMeetingIds(meetingIds)  > 0){
+            oaMeetingRecordMapper.deleteOaMeetingRecordByMeetingId(meetingIds);
+            oaMeetingSignMapper.deleteOaMeetingSignByMeetingId(meetingIds);
+            oaMeetingPersonnelMapper.deleteOaMeetingPersonnelByMeetingId(meetingIds);
+            return 1;
+        }
+        return 0;
     }
 
     /**

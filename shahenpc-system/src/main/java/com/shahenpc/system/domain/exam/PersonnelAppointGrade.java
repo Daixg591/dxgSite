@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.exam;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,13 +12,16 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-27
  */
+@Data
 public class PersonnelAppointGrade extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+    private String nickName;
+    private Integer sex;
     /**
      * 任免记录考试绑定id
      */
-    private Long regExamId;
+    //private Long regExamId;
 
     /**
      * 任免记录id
@@ -104,7 +108,6 @@ public class PersonnelAppointGrade extends BaseEntity {
                 .append("updateTime", getUpdateTime())
                 .append("delFlag", getDelFlag())
                 .append("score", getScore())
-                .append("regExamId", getRegExamId())
                 .toString();
     }
 
@@ -116,11 +119,4 @@ public class PersonnelAppointGrade extends BaseEntity {
         this.score = score;
     }
 
-    public Long getRegExamId() {
-        return regExamId;
-    }
-
-    public void setRegExamId(Long regExamId) {
-        this.regExamId = regExamId;
-    }
 }

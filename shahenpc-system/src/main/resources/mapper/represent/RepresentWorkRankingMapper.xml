@@ -94,4 +94,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteAll">
         DELETE  FROM represent_work_ranking;
     </delete>
+
+    <select id="selectMyRanking" parameterType="Long" resultMap="RepresentWorkRankingResult">
+        <include refid="selectRepresentWorkRankingVo"/>
+        where user_id = #{userId}
+    </select>
 </mapper>

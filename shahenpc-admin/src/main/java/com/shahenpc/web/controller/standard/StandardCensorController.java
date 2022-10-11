@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.common.constant.Constants;
 import com.shahenpc.flowable.domain.dto.FlowTaskDto;
 import com.shahenpc.flowable.domain.vo.FlowTaskVo;
 import com.shahenpc.flowable.service.IFlowDefinitionService;
@@ -83,6 +84,15 @@ public class StandardCensorController extends BaseController
         return AjaxResult.success(standardCensorService.selectByCensorId(censorId));
     }
 
+
+    @PreAuthorize("@ss.hasPermi('censor:type:list')")
+    @GetMapping("/type/list")
+    public TableDataInfo typeList(Integer type)
+    {
+        startPage();
+        List<StandardCensor> list = standardCensorService.selectByTypeList(type);
+        return getDataTable(list);
+    }
     /**
      * 我的查流程列表
      */
@@ -106,6 +116,9 @@ public class StandardCensorController extends BaseController
     {
         startPage();
         standardCensor.setReceiveUserId(getUserId().toString());
+        if (standardCensor.getType().equals(Constants.CENSOR_TYPE_4)){
+            standardCensor.setReceiveUserId(null);
+        }
         List<StandardCensor> list = standardCensorService.selectByTodoList(standardCensor);
         return getDataTable(list);
     }

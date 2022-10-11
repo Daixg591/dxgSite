@@ -39,7 +39,7 @@ public class OvVoteRecordController extends BaseController
     /**
      * 查询投票记录列表
      */
-    @PreAuthorize("@ss.hasPermi('vote:record:list')")
+//    @PreAuthorize("@ss.hasPermi('vote:record:list')")
     @GetMapping("/list")
     public TableDataInfo list(OaVoteRecord ovVoteRecord)
     {
@@ -64,7 +64,7 @@ public class OvVoteRecordController extends BaseController
     /**
      * 获取投票记录详细信息
      */
-    @PreAuthorize("@ss.hasPermi('vote:record:query')")
+//    @PreAuthorize("@ss.hasPermi('vote:record:query')")
     @GetMapping(value = "/{recordId}")
     public AjaxResult getInfo(@PathVariable("recordId") Long recordId)
     {
@@ -78,6 +78,7 @@ public class OvVoteRecordController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody VoteRecordVo requst)
     {
+//        requst.setUserId(getUserId());
         return ovVoteRecordService.insertPlayerIds(requst);
     }
 
@@ -87,7 +88,7 @@ public class OvVoteRecordController extends BaseController
     /**
      * 修改投票记录
      */
-    @PreAuthorize("@ss.hasPermi('vote:record:edit')")
+//    @PreAuthorize("@ss.hasPermi('vote:record:edit')")
     @Log(title = "投票记录", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody OaVoteRecord ovVoteRecord)

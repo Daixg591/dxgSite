@@ -8,6 +8,7 @@ import javax.swing.plaf.synth.Region;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.common.utils.StringUtils;
 import com.shahenpc.system.domain.BackVo.PersonalInfo;
 import com.shahenpc.system.domain.personel.PersonnelAppointEduLog;
 import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
@@ -40,6 +41,7 @@ import com.shahenpc.system.domain.personel.PersonnelAppointRegister;
 import com.shahenpc.system.service.personel.IPersonnelAppointRegisterService;
 import com.shahenpc.common.utils.poi.ExcelUtil;
 import com.shahenpc.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 人事任免_任免记录Controller
@@ -95,7 +97,20 @@ public class PersonnelAppointRegisterController extends BaseController {
         ExcelUtil<PersonnelAppointRegister> util = new ExcelUtil<PersonnelAppointRegister>(PersonnelAppointRegister.class);
         util.exportExcel(response, list, "人事任免_任免记录数据");
     }
-
+    /**
+     * 导入人事任免_任免记录列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:import')")
+    @ApiOperation("批量导入")
+    @Log(title = "人事任免_任免记录", businessType = BusinessType.IMPORT)
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport)throws Exception{
+        ExcelUtil<PersonnelAppointRegister> util = new ExcelUtil<PersonnelAppointRegister>(PersonnelAppointRegister.class);
+        List<PersonnelAppointRegister> userList = util.importExcel(file.getInputStream());
+        String operName = getUsername();
+        String message = personnelAppointRegisterService.importUser(userList, updateSupport, operName);
+        return AjaxResult.success(message);
+    }
     /**
      * 获取人事任免_任免记录详细信息
      */

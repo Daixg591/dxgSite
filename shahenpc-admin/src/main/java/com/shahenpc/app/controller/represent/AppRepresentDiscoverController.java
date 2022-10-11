@@ -8,6 +8,7 @@ import com.shahenpc.common.enums.BusinessType;
 import com.shahenpc.common.utils.poi.ExcelUtil;
 import com.shahenpc.system.domain.represent.RepresentDiscover;
 import com.shahenpc.system.domain.represent.dto.DiscoverAppListDto;
+import com.shahenpc.system.domain.represent.vo.DiscoverUpdateVo;
 import com.shahenpc.system.service.represent.IRepresentDiscoverService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,20 +37,49 @@ public class AppRepresentDiscoverController extends BaseController
      * 查询代-代发现列表
      */
     @ApiOperation("列表")
-    @PreAuthorize("@ss.hasPermi('represent:discover:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(RepresentDiscover representDiscover)
+    @PreAuthorize("@ss.hasPermi('discover:translate:all')")
+    @GetMapping("/all/list")
+    public TableDataInfo allList(RepresentDiscover representDiscover)
     {
         startPage();
         List<DiscoverAppListDto> list = representDiscoverService.appList(representDiscover);
         return getDataTable(list);
     }
+    /**
+     * 查询代-代发现列表
+     */
+    @ApiOperation("列表")
+    @GetMapping("/list")
+    public TableDataInfo list(RepresentDiscover representDiscover)
+    {
+        startPage();
+        representDiscover.setSendUserId(getUserId());
+        List<DiscoverAppListDto> list = representDiscoverService.appList(representDiscover);
+        return getDataTable(list);
+    }
 
+    @ApiOperation("待办列表")
+    @GetMapping("/todo/list")
+    public TableDataInfo todoList(RepresentDiscover representDiscover)
+    {
+        representDiscover.setReceiveUserId(getUserId());
+        startPage();
+        List<DiscoverAppListDto> list = representDiscoverService.todoList(representDiscover);
+        return getDataTable(list);
+    }
+
+    @ApiOperation("已办列表")
+    @GetMapping("/done/list")
+    public TableDataInfo doneList()
+    {
+        startPage();
+        List<DiscoverAppListDto> list = representDiscoverService.doneList(getUserId());
+        return getDataTable(list);
+    }
     /**
      * 导出代-代发现列表
      */
     @ApiOperation("导出")
-    @PreAuthorize("@ss.hasPermi('represent:discover:export')")
     @Log(title = "代-代发现", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, RepresentDiscover representDiscover)
@@ -63,7 +93,6 @@ public class AppRepresentDiscoverController extends BaseController
      * 获取代-代发现详细信息
      */
     @ApiOperation("详情")
-    @PreAuthorize("@ss.hasPermi('represent:discover:query')")
     @GetMapping(value = "/{discoverId}")
     public AjaxResult getInfo(@PathVariable("discoverId") Long discoverId)
     {
@@ -74,32 +103,34 @@ public class AppRepresentDiscoverController extends BaseController
      * 新增代-代发现
      */
     @ApiOperation("新增")
-    @PreAuthorize("@ss.hasPermi('represent:discover:add')")
     @Log(title = "代-代发现", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody RepresentDiscover representDiscover)
     {
         representDiscover.setSendUserId(getUserId());
-        return toAjax(representDiscoverService.insertRepresentDiscover(representDiscover));
+        representDiscover.setCreateBy(getNickName());
+        representDiscover.setStationId(getContactStationId());
+        System.out.println(getContactStationId());
+        return representDiscoverService.insertRepresentDiscover(representDiscover);
     }
 
     /**
      * 修改代-代发现
      */
     @ApiOperation("新增")
-    @PreAuthorize("@ss.hasPermi('represent:discover:edit')")
     @Log(title = "代-代发现", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody RepresentDiscover representDiscover)
+    public AjaxResult edit(@RequestBody DiscoverUpdateVo representDiscover)
     {
-        return toAjax(representDiscoverService.updateRepresentDiscover(representDiscover));
+        representDiscover.setUpdateBy(getNickName());
+        representDiscover.setUserId(getUserId());
+        return representDiscoverService.updateRepresentDiscover(representDiscover);
     }
 
     /**
      * 删除代-代发现
      */
     @ApiOperation("删除")
-    @PreAuthorize("@ss.hasPermi('represent:discover:remove')")
     @Log(title = "代-代发现", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{discoverIds}")
     public AjaxResult remove(@PathVariable Long[] discoverIds)

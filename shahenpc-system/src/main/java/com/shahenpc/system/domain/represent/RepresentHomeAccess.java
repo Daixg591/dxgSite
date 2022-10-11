@@ -19,7 +19,10 @@ public class RepresentHomeAccess extends BaseEntity
 
     /**  */
     private Long accessId;
-
+    /**
+     * 设备id
+     */
+    private Long terminalId;
     /**
      * 联络站等级
      */

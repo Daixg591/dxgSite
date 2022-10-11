@@ -24,12 +24,12 @@ public class RepresentMotion extends BaseEntity
     @Excel(name = "议案类型")
     private Integer motionType;
 
-    /**  */
-    @Excel(name = "")
+    /** 议案标题 */
+    @Excel(name = "议案标题")
     private String title;
 
-    /**  */
-    @Excel(name = "")
+    /** 内容 */
+    @Excel(name = "内容")
     private String content;
 
     /** 多个逗号分割 */
@@ -84,8 +84,57 @@ public class RepresentMotion extends BaseEntity
     @Excel(name = "电话")
     private String phone;
 
-    private String taskName;
+    /** 1议案  2.建议 */
+    @Excel(name = "1议案  2.建议")
+    private Integer categoryType;
 
+    /** 建议-代表姓名 */
+    @Excel(name = "建议-代表姓名")
+    private String representName;
+
+    /** 建议-代表团 */
+    @Excel(name = "建议-代表团")
+    private String representTeam;
+
+    /** 建议-代表等名 */
+    @Excel(name = "建议-代表等名")
+    private String representCount;
+
+    /** 建议-代表证号 */
+    @Excel(name = "建议-代表证号")
+    private String representCard;
+
+    /** 建议-邮政编号 */
+    @Excel(name = "建议-邮政编号")
+    private String postalCode;
+
+    /** 建议-意见 */
+    @Excel(name = "建议-意见")
+    private String opinion;
+
+    /** 建议-意见类型 */
+    @Excel(name = "建议-意见类型")
+    private String opinionType;
+
+    /** 建议-是否形成 */
+    @Excel(name = "建议-是否形成")
+    private String isXingcheng;
+
+    /** 建议-研究 */
+    @Excel(name = "建议-研究")
+    private String survey;
+
+    /** 建议-年次 */
+    @Excel(name = "建议-年次")
+    private String yearly;
+
+    /** 建议-沟通 */
+    @Excel(name = "建议-沟通")
+    private String isGoutong;
+
+    private String TaskName;
+
+    private String taskId;
     public void setMotionId(Long motionId) 
     {
         this.motionId = motionId;

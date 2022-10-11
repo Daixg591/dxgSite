@@ -128,13 +128,17 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
         vo.setCensorId(standardCensor.getCensorId());
         vo.setType(standardCensor.getType());
         vo.setReceiveUserId(getUserId());//当前人
-        StandardCensorRecord recordId=standardCensorRecordMapper.selectByRecordId(vo);
-        updateRecord.setRecordId(recordId.getRecordId());
-        updateRecord.setRevert(standardCensor.getRevert());
-        updateRecord.setStatus(Constants.CENSOR_TYPE_STATUS_1);
-        updateRecord.setUpdateTime(DateUtils.getNowDate());
-        updateRecord.setUpdateBy(standardCensor.getCreateBy());
-        standardCensorRecordMapper.updateStandardCensorRecord(updateRecord);
+
+        if (!standardCensor.getType().equals(Constants.CENSOR_TYPE_4)) {
+            // 反馈的时候不修改 因为没有.....
+            StandardCensorRecord recordId=standardCensorRecordMapper.selectByRecordId(vo);
+            updateRecord.setRecordId(recordId.getRecordId());
+            updateRecord.setRevert(standardCensor.getRevert());
+            updateRecord.setStatus(Constants.CENSOR_TYPE_STATUS_1);
+            updateRecord.setUpdateTime(DateUtils.getNowDate());
+            updateRecord.setUpdateBy(standardCensor.getCreateBy());
+            standardCensorRecordMapper.updateStandardCensorRecord(updateRecord);
+        }
         //
         if(standardCensor.getType().equals(Constants.CENSOR_TYPE_1)){
             standardCensor.setType(Constants.CENSOR_TYPE_2);
@@ -146,11 +150,11 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
             standardCensor.setType(Constants.CENSOR_TYPE_5);
         }
         // 先判断  是否是分发
-        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_4)){
+        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_2)){
             List<StandardCensorRecord> distribute= standardCensorRecordMapper.selectByDistribute(standardCensor.getCensorId());
             int dist = distribute.stream().filter(p -> p.getStatus().equals(Constants.CENSOR_TYPE_STATUS_0)).collect(Collectors.toList()).size();
             if(dist == 0){
-                standardCensor.setReceiveUserId(standardCensor.getSendUserId().toString());
+                standardCensor.setReceiveUserId(standardCensor.getReceiveUserId().toString());
                 int su = standardCensorMapper.updateStandardCensor(standardCensor);
                 if(su > 0) {
                     StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
@@ -178,9 +182,66 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
                 return AjaxResult.success();
             }
         }
+
+        //region  todo-黄涛 临时调整 Start 2022-09-19 am
+
+        // 反馈
+        if (standardCensor.getType().equals(Constants.CENSOR_TYPE_5)) {
+
+            standardCensor.setType(Constants.CENSOR_TYPE_5);
+            standardCensorMapper.updateStandardCensor(standardCensor);
+
+            StandardCensorRecord standardCensorRecord=new StandardCensorRecord();
+            //发送人
+            standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
+            //接收人
+            standardCensorRecord.setReceiveUserId(null);
+            //绑定id
+            standardCensorRecord.setCensorId(standardCensor.getCensorId());
+            //回复
+            standardCensorRecord.setStatus(Constants.CENSOR_TYPE_STATUS_1);
+            standardCensorRecord.setRevert(standardCensor.getRevert());
+            standardCensorRecord.setType(Constants.CENSOR_TYPE_4);
+            standardCensorRecord.setCreateTime(DateUtils.getNowDate());
+            standardCensorRecord.setCreateBy(standardCensor.getCreateBy());
+            standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord);
+            return  AjaxResult.success();
+        }
+
+
+        // 审查
+        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_4)){
+            // 1 查寻本流程分发状态 是否有未处理
+            // 2 没有 则更改流程状态为 反馈  CENSOR_TYPE_5
+            StandardCensorRecord paramRecord=new StandardCensorRecord();
+            paramRecord.setCensorId(standardCensor.getCensorId());
+            paramRecord.setStatus(Constants.CENSOR_TYPE_STATUS_0);
+            List<StandardCensorRecord> recordList=standardCensorRecordMapper.selectStandardCensorRecordList(paramRecord);
+            System.out.println(recordList.toString());
+            if (recordList.size()<1){
+                standardCensorMapper.updateStandardCensor(standardCensor);
+            }
+            return  AjaxResult.success();
+        } else {
+            standardCensor.setType(Constants.CENSOR_TYPE_3);
+        }
+
+        //endregion
+
+        standardCensor.setReceiveUserId(null);
+
         int su = standardCensorMapper.updateStandardCensor(standardCensor);
+
         if(su > 0){
             StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
+
+            //region  todo-黄涛 临时调整 Start 2022-09-19 am
+            // 审查(结束流程)
+            if (standardCensor.getApprovalUserId()==null){
+                return AjaxResult.success();
+            }
+            //endregion
+
             for (String itme:standardCensor.getApprovalUserId()){
                 //发送人
                 standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
@@ -196,6 +257,9 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
             }
             return AjaxResult.success();
         }
+
+
+
         return AjaxResult.error();
     }
 
@@ -260,7 +324,10 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
     @Override
     public int deleteStandardCensorByProcessIds(Long[] processIds)
     {
-        return standardCensorMapper.deleteStandardCensorByCensorIds(processIds);
+        if(standardCensorMapper.deleteStandardCensorByCensorIds(processIds)>0){
+            return standardCensorRecordMapper.deleteStandardCensorRecordByCensorIds(processIds);
+        }
+        return 0;
     }
 
     /**
@@ -350,6 +417,12 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
         Collections.reverse(res.getLabel());
         return res;
     }
+
+    @Override
+    public List<StandardCensor> selectByTypeList(Integer type) {
+        return standardCensorMapper.selectByTypeList(type);
+    }
+
     /**
      * 获取最近六个月份  ["2022-07","2022-06","2022-05"...]
      *

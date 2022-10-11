@@ -116,6 +116,6 @@ public class OaMeetingSignController extends BaseController
     @GetMapping("/sign/{meetingId}")
     public AjaxResult sign(@PathVariable("meetingId")Long meetingId)
     {
-        return toAjax(oaMeetingSignService.sign(meetingId,getUserId()));
+        return oaMeetingSignService.sign(meetingId,getUserId());
     }
 }

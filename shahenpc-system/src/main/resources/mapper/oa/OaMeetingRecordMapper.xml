@@ -96,4 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectOaMeetingRecordVo"/>
         where meeting_id = #{meetingId}
     </select>
+    <delete id="deleteOaMeetingRecordByMeetingId"  parameterType="Long">
+        delete from oa_meeting_record where meeting_id = #{meetingId}
+    </delete>
 </mapper>

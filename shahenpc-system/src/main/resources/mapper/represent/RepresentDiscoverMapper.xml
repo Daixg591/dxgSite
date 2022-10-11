@@ -16,15 +16,18 @@
         <result property="createBy"    column="create_by"    />
         <result property="address"    column="address"    />
         <result property="location"    column="location"    />
-        <result property="status"    column="status"    />
         <result property="reply"    column="reply"    />
         <result property="rate"    column="rate"    />
         <result property="sendUserId"    column="send_user_id"    />
         <result property="receiveUserId"    column="receive_user_id"    />
+        <result property="status"    column="status"    />
+        <result property="processType"    column="process_type"    />
+        <result property="picUrls"    column="pic_urls"    />
+        <result property="stationId"    column="station_id"    />
     </resultMap>
 
     <sql id="selectRepresentDiscoverVo">
-        select discover_id, title, content, discover_type, remark, create_time, update_by, update_time, create_by, address, location, status, reply, rate, send_user_id, receive_user_id from represent_discover
+        select discover_id, title, content, discover_type, remark, create_time, update_by, update_time, create_by, address, location, reply, rate, send_user_id, receive_user_id, status, process_type, pic_urls, station_id from represent_discover
     </sql>
 
     <select id="selectRepresentDiscoverList" parameterType="RepresentDiscover" resultMap="RepresentDiscoverResult">
@@ -35,11 +38,14 @@
             <if test="discoverType != null "> and discover_type = #{discoverType}</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
             <if test="location != null  and location != ''"> and location = #{location}</if>
-            <if test="status != null "> and status = #{status}</if>
             <if test="reply != null  and reply != ''"> and reply = #{reply}</if>
             <if test="rate != null "> and rate = #{rate}</if>
             <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
             <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="processType != null "> and process_type = #{processType}</if>
+            <if test="picUrls != null  and picUrls != ''"> and pic_urls = #{picUrls}</if>
+            <if test="stationId != null "> and station_id = #{stationId}</if>
         </where>
     </select>
 
@@ -61,11 +67,14 @@
             <if test="createBy != null">create_by,</if>
             <if test="address != null">address,</if>
             <if test="location != null">location,</if>
-            <if test="status != null">status,</if>
             <if test="reply != null">reply,</if>
             <if test="rate != null">rate,</if>
             <if test="sendUserId != null">send_user_id,</if>
             <if test="receiveUserId != null">receive_user_id,</if>
+            <if test="status != null">status,</if>
+            <if test="processType != null">process_type,</if>
+            <if test="picUrls != null">pic_urls,</if>
+            <if test="stationId != null">station_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null">#{title},</if>
@@ -78,11 +87,14 @@
             <if test="createBy != null">#{createBy},</if>
             <if test="address != null">#{address},</if>
             <if test="location != null">#{location},</if>
-            <if test="status != null">#{status},</if>
             <if test="reply != null">#{reply},</if>
             <if test="rate != null">#{rate},</if>
             <if test="sendUserId != null">#{sendUserId},</if>
             <if test="receiveUserId != null">#{receiveUserId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="processType != null">#{processType},</if>
+            <if test="picUrls != null">#{picUrls},</if>
+            <if test="stationId != null">#{stationId},</if>
         </trim>
     </insert>
 
@@ -99,11 +111,14 @@
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="address != null">address = #{address},</if>
             <if test="location != null">location = #{location},</if>
-            <if test="status != null">status = #{status},</if>
             <if test="reply != null">reply = #{reply},</if>
             <if test="rate != null">rate = #{rate},</if>
             <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
             <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="processType != null">process_type = #{processType},</if>
+            <if test="picUrls != null">pic_urls = #{picUrls},</if>
+            <if test="stationId != null">station_id = #{stationId},</if>
         </trim>
         where discover_id = #{discoverId}
     </update>
@@ -119,6 +134,7 @@
         </foreach>
     </delete>
     <!-- ==========================================分割线-->
+
     <select id="getCount" resultType="java.lang.Integer">
         SELECT COUNT(discover_id) FROM represent_discover
     </select>
@@ -130,23 +146,35 @@
     </select>
 
     <resultMap id="adminDetail" type="com.shahenpc.system.domain.represent.dto.DiscoverDetailDto" extends="RepresentDiscoverResult">
-            <association property="track" column="discover_id" select="com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper.selectByDiscoverId"></association>
+        <association property="track" column="discover_id" select="com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper.selectByDiscoverId"></association>
     </resultMap>
     <select id="detail" parameterType="Long" resultMap="adminDetail">
-        select discover_id, title, content, discover_type, remark, create_time, update_by, update_time, create_by, address, location, status, reply, rate, send_user_id, receive_user_id,
-               (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
-               (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName
-        from represent_discover where discover_id = #{discoverId}
+
+        select
+            discover_id, title, content,pic_urls, discover_type, remark, create_time, update_by, update_time, create_by, address, location, reply, rate, send_user_id, receive_user_id,
+            status, process_type,
+            (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = di.process_type)as processTypeName,
+            (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = di.status)as statusName,
+            (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
+            (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName
+        from represent_discover di where di.discover_id = #{discoverId}
     </select>
 
     <resultMap id="adminList" type="com.shahenpc.system.domain.represent.dto.DiscoverListDto" extends="RepresentDiscoverResult">
 
     </resultMap>
     <select id="adminList" parameterType="RepresentDiscover" resultMap="adminList">
-        select discover_id, title, content, discover_type, remark, create_time, update_by, update_time, create_by, address, location, status, reply, rate, send_user_id, receive_user_id,
-        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
-        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName
-        from represent_discover
+        select d.discover_id,
+        d.title, d.content,d.pic_urls, d.discover_type, d.remark,
+        d.create_time, d.update_by, d.update_time, d.create_by, d.address, d.location,
+        d.status, d.reply, d.rate, d.send_user_id,d.receive_user_id,
+        (SELECT a.title FROM represent_home_access a WHERE a.access_id = d.station_id)AS accessName,
+        (SELECT d1.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='discover_status' AND d1.dict_value = d.status)AS processTypeName,
+        (SELECT d1.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='process_type' AND d1.dict_value = d.process_type)AS processTypeName,
+        (SELECT d1.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='discover_type' AND d1.dict_value = d.discover_type)AS discoverTypeName,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = d.send_user_id)AS sendUserName,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = d.receive_user_id)AS receiveUserName
+        from represent_discover d
         <where>
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
@@ -159,15 +187,17 @@
             <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
             <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
         </where>
+        ORDER BY d.create_time DESC
     </select>
 
     <resultMap id="appList" type="com.shahenpc.system.domain.represent.dto.DiscoverAppListDto" extends="RepresentDiscoverResult">
 
     </resultMap>
     <select id="appList" parameterType="RepresentDiscover" resultMap="appList">
-        select discover_id, title, content, discover_type, remark, create_time, update_by, update_time, create_by, address, location, status, reply, rate, send_user_id, receive_user_id,
+        select discover_id, title, content,pic_urls, discover_type, remark, create_time, update_by, update_time, create_by, address, location, reply, rate, send_user_id, receive_user_id, status, process_type,
         (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
         (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_process_type' AND d.dict_value = a.process_type)AS processTypeName,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_type' AND d.dict_value = a.discover_type)AS discoverTypeName,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_status' AND d.dict_value = a.status )AS discoverStatusName
         from represent_discover a
@@ -183,13 +213,16 @@
             <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
             <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
         </where>
+        ORDER BY a.create_time DESC
     </select>
 
-    <resultMap id="appDetail" type="com.shahenpc.system.domain.represent.dto.DiscoverAppDetailDto" extends="RepresentDiscoverResult">
 
+    <resultMap id="appDetail" type="com.shahenpc.system.domain.represent.dto.DiscoverAppDetailDto" extends="RepresentDiscoverResult">
+        <association property="track" column="discover_id" select="com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper.selectByDiscoverId"></association>
     </resultMap>
     <select id="appDetail" parameterType="Long" resultMap="appDetail">
-        select discover_id, title, content, discover_type, remark, create_time, update_by, update_time, create_by, address, location, status, reply, rate, send_user_id, receive_user_id,
+        select discover_id, title, content,pic_urls, discover_type, remark, create_time, update_by, update_time, create_by, address, location,
+               status, reply, rate, send_user_id, receive_user_id,process_type,
                (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
                (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_type' AND d.dict_value = a.discover_type)AS discoverTypeName,
@@ -219,5 +252,97 @@
 
     <select id="selectByLocation" resultType="java.lang.String">
         select location from represent_discover
+    </select>
+
+    <select id="doneList" resultMap="appDetail" parameterType="Long">
+        SELECT d.discover_id, d.title, d.content, d.discover_type, d.remark, d.create_time, d.update_by, d.update_time, d.create_by,
+               d.address, d.location, d.reply, d.rate, d.send_user_id, d.receive_user_id, d.status, d.process_type, d.pic_urls,
+               (SELECT u.nick_name FROM sys_user u WHERE u.user_id = d.send_user_id)AS sendUserName,
+               (SELECT u.nick_name FROM sys_user u WHERE u.user_id = d.receive_user_id)AS receiveUserName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_process_type' AND d.dict_value = d.process_type)AS processTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_type' AND d.dict_value = d.discover_type)AS discoverTypeName,
+               (SELECT d1.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='discover_status' AND d1.dict_value = d.status )AS statusName
+        FROM represent_discover d LEFT JOIN  represent_discover_track t ON d.discover_id = t.discover_id
+        WHERE t.send_user_id = #{sendUserId} and (d.`status` != 1 or d.process_type != 1)
+        GROUP BY d.discover_id ORDER BY d.create_time DESC
+    </select>
+    <!--AND t.process_type != 1-->
+
+
+    <select id="todoList" parameterType="RepresentDiscover" resultMap="appList">
+        select discover_id, title, content,pic_urls, discover_type, remark, create_time, update_by, update_time, create_by, address, location, reply, rate, send_user_id, receive_user_id, status, process_type,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_process_type' AND d.dict_value = a.process_type)AS processTypeName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_type' AND d.dict_value = a.discover_type)AS discoverTypeName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_status' AND d.dict_value = a.status )AS discoverStatusName
+        from represent_discover a
+        <where>
+            and a.status != 3
+            <if test="stationId != null "> and station_id = #{stationId}</if>
+            <if test="title != null  and title != ''"> and a.title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="discoverType != null "> and discover_type = #{discoverType}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="reply != null  and reply != ''"> and reply = #{reply}</if>
+            <if test="rate != null "> and rate = #{rate}</if>
+            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <!--督查列表  -->
+    <select id="translateList" parameterType="Long" resultMap="appList">
+        select discover_id, title, content,pic_urls, discover_type, remark, create_time, update_by, update_time, create_by, address, location, reply, rate, send_user_id, receive_user_id, status, process_type,
+               (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
+               (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_process_type' AND d.dict_value = a.process_type)AS processTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_type' AND d.dict_value = a.discover_type)AS discoverTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_status' AND d.dict_value = a.status )AS discoverStatusName
+        from represent_discover a
+        <where>
+            <if test="stationId != null and stationId != ''">
+                a.station_id = #{stationId}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectByGeRenRanking" resultType="com.shahenpc.system.domain.represent.dto.DiscoverRankingDto">
+        SELECT
+                (SELECT u.nick_name FROM sys_user u WHERE u.user_id =r.send_user_id) AS nickName,
+                (SELECT a.title FROM represent_home_access a WHERE a.access_id = r.station_id) AS accessName,
+                COUNT(send_user_id)AS ranking
+        FROM  represent_discover r GROUP BY send_user_id ORDER BY ranking DESC
+    </select>
+
+    <select id="selectByContactRanking" resultType="com.shahenpc.system.domain.represent.dto.DiscoverContactRankingDto">
+        SELECT
+            (SELECT a.title FROM represent_home_access a WHERE a.access_id = r.station_id) AS accessName,
+            COUNT(station_id)AS ranking,
+            COUNT(DISTINCT r.send_user_id)AS canyuCount,
+            (SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id)AS contactCount,
+            CONCAT(ROUND(COUNT(DISTINCT r.send_user_id) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id),2),'%')AS baifenlv
+        FROM  represent_discover r GROUP BY r.station_id ORDER BY ranking DESC
+    </select>
+
+    <select id="selectByContactbaifenlvRanking" resultType="com.shahenpc.system.domain.represent.dto.DiscoverContactRankingDto">
+        SELECT
+            (SELECT a.title FROM represent_home_access a WHERE a.access_id = r.station_id) AS accessName,
+            COUNT(station_id)AS ranking,
+            COUNT(DISTINCT r.send_user_id)AS canyuCount,
+            (SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id)AS contactCount,
+            CONCAT(ROUND(COUNT(DISTINCT r.send_user_id) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id),2),'%')AS baifenlv
+        FROM  represent_discover r GROUP BY r.station_id ORDER BY baifenlv DESC
+    </select>
+
+
+    <select id="selectByTotalLv" resultType="String">
+        SELECT
+            CONCAT(ROUND(COUNT(DISTINCT send_user_id) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.identity = 3),2),'%')AS baifenlv
+        FROM  represent_discover r
     </select>
 </mapper>

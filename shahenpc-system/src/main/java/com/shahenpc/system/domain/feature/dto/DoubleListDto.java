@@ -9,8 +9,9 @@ import lombok.Data;
 @Data
 public class DoubleListDto extends FeatureDoubleWork {
     private String avatar;
-    private String nickName;
+
     private String receivePhone;
-    private String sendPhone;
     private String receiveName;
+    private String sendName;
+    private String sendPhone;
 }

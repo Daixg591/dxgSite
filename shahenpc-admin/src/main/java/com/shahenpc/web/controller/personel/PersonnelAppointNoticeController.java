@@ -50,7 +50,6 @@ public class PersonnelAppointNoticeController extends BaseController {
      * 查询人事任免_任免通知列表
      */
     @ApiOperation("查询-任免通知")
-//    @PreAuthorize("@ss.hasPermi('system:inform:list')")
     @GetMapping("/list")
     public TableDataInfo list(PersonnelAppointNotice personnelAppointNotice) {
         startPage();
@@ -86,7 +85,6 @@ public class PersonnelAppointNoticeController extends BaseController {
      * 获取人事任免_任免通知详细信息
      */
     @ApiOperation("详情-任免通知")
-//    @PreAuthorize("@ss.hasPermi('system:inform:query')")
     @GetMapping(value = "/{noticeId}")
     public AjaxResult getInfo(@PathVariable("noticeId") Long noticeId) {
         PersonnelAppointNotice entity = personnelAppointNoticeService.selectPersonnelAppointNoticeByNoticeId(noticeId);

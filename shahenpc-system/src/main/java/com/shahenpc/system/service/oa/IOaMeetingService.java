@@ -52,7 +52,7 @@ public interface IOaMeetingService
      * @param meetingIds 需要删除的人大办公-会议管理主键集合
      * @return 结果
      */
-    public int deleteOaMeetingByMeetingIds(Long[] meetingIds);
+    public int deleteOaMeetingByMeetingIds(Long meetingIds);
 
     /**
      * 删除人大办公-会议管理信息
@@ -91,5 +91,5 @@ public interface IOaMeetingService
 
     public AjaxResult signSuccess(Long meetingId, Long userId);
 
-    public MeetingAppDetailDto appDetail(Long meetingId);
+    public MeetingAppDetailDto appDetail(Long meetingId,Long userId);
 }

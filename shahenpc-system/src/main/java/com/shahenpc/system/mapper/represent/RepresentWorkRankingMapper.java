@@ -60,4 +60,7 @@ public interface RepresentWorkRankingMapper
     public int deleteRepresentWorkRankingByRankingIds(Long[] rankingIds);
 
     public int deleteAll();
+
+
+    public RepresentWorkRanking selectMyRanking(Long userId);
 }

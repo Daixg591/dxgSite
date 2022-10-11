@@ -95,6 +95,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <!--====================================================分割线 -->
+    <select id="selectOaMeetingSignEntity" parameterType="OaMeetingSign" resultMap="OaMeetingSignResult">
+        <include refid="selectOaMeetingSignVo"/>
+        <where>
+            <if test="meetingId != null "> and meeting_id = #{meetingId}</if>
+            <if test="personnelId != null "> and personnel_id = #{personnelId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="signTime != null "> and sign_time = #{signTime}</if>
+        </where>
+    </select>
+
     <delete id="deleteOaMeetingSignByMeetingId" parameterType="Long">
         delete from oa_meeting_sign where meeting_id = #{meetingId}
     </delete>
@@ -120,5 +131,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="appDetail">
 
+    </select>
+
+    <select id="selectByMeetingIdAndUserIds" resultMap="OaMeetingSignResult">
+        <include refid="selectOaMeetingSignVo"/>
+        <where>
+            <if test="meetingId != null "> and meeting_id = #{meetingId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
     </select>
 </mapper>

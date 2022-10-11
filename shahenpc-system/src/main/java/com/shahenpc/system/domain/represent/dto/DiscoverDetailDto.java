@@ -11,4 +11,8 @@ public class DiscoverDetailDto extends RepresentDiscover {
     private String receiveUserName;
     private List<DiscoverTrackDetailListDto> track;
 
+    private String processTypeName;
+
+    private String statusName;
+
 }

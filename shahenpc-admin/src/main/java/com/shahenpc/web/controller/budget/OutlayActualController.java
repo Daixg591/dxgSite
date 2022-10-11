@@ -60,6 +60,7 @@ public class OutlayActualController extends BaseController
     /**
      * 查询实际支出列表
      */
+
     @ApiOperation("实际支出列表")
     @PreAuthorize("@ss.hasPermi('outlay:actual:list')")
     @GetMapping("/list")
@@ -69,6 +70,7 @@ public class OutlayActualController extends BaseController
         List<OutlayActualListDto> list = outlayActualService.newList(request);
         return getDataTable(list);
     }
+
     @ApiOperation("导出模板")
     @PreAuthorize("@ss.hasPermi('outlay:actual:template')")
     @Log(title = "实际支出", businessType = BusinessType.CLEAN)
@@ -136,7 +138,7 @@ public class OutlayActualController extends BaseController
     public AjaxResult add(@RequestBody OutlayActual outlayActual)
     {
         outlayActual.setCreateBy(getUsername());
-        return toAjax(outlayActualService.insertOutlayActual(outlayActual));
+        return outlayActualService.insertOutlayActual(outlayActual);
     }
 
     /**

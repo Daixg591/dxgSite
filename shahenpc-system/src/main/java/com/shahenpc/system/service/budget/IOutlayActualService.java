@@ -1,6 +1,8 @@
 package com.shahenpc.system.service.budget;
 
 import java.util.List;
+
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.system.domain.budget.OutlayActual;
 import com.shahenpc.system.domain.budget.OutlayBudget;
 import com.shahenpc.system.domain.budget.dto.ActualListConutDto;
@@ -38,7 +40,7 @@ public interface IOutlayActualService
      * @param outlayActual 实际支出
      * @return 结果
      */
-    public int insertOutlayActual(OutlayActual outlayActual);
+    public AjaxResult insertOutlayActual(OutlayActual outlayActual);
 
     /**
      * 修改实际支出

@@ -36,9 +36,8 @@ public class SysDeptController extends BaseController
     private ISysDeptService deptService;
 
     /**
-     * 获取部门列表
+     * 获取部门列表 @PreAuthorize("@ss.hasPermi('system:dept:list')")
      */
-    @PreAuthorize("@ss.hasPermi('system:dept:list')")
     @GetMapping("/list")
     public AjaxResult list(SysDept dept)
     {
@@ -88,6 +87,11 @@ public class SysDeptController extends BaseController
         return AjaxResult.success(deptService.buildDeptTreeSelect(depts));
     }
 
+    @GetMapping("/dept/user")
+    public AjaxResult deptUser()
+    {
+        return AjaxResult.success(deptService.selectByUser());
+    }
     /**
      * 加载对应角色部门列表树
      */
@@ -162,4 +166,6 @@ public class SysDeptController extends BaseController
         deptService.checkDeptDataScope(deptId);
         return toAjax(deptService.deleteDeptById(deptId));
     }
+
+
 }

@@ -1,8 +1,11 @@
 package com.shahenpc.web.controller.oa;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.system.domain.oa.OaVotePlayer;
+import com.shahenpc.system.service.oa.IOaVotePlayerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,6 +41,9 @@ public class OaVoteController extends BaseController
     @Autowired
     private IOaVoteService oaVoteService;
 
+    @Autowired
+    private IOaVotePlayerService playerService;
+
     /**
      * 查询投票窗口列表
      */
@@ -71,7 +77,23 @@ public class OaVoteController extends BaseController
     @GetMapping(value = "/{voteId}")
     public AjaxResult getInfo(@PathVariable("voteId") Long voteId)
     {
-        return AjaxResult.success(oaVoteService.selectOaVoteByVoteId(voteId));
+        OaVote entity=oaVoteService.selectOaVoteByVoteId(voteId);
+        entity.setVisit(entity.getVisit()+1);
+        oaVoteService.updateOaVote(entity);
+
+        //region 投票Total
+        OaVotePlayer playerParam=new OaVotePlayer();
+        playerParam.setVoteId(entity.getVoteId());
+
+        List<OaVotePlayer> playerList=playerService.selectOaVotePlayerList(playerParam);
+        int totalRes=0;
+        if(playerList.size() != 0) {
+            for (int i = 0; i < playerList.size(); i++) {
+                totalRes += playerList.get(i).getTotal();
+            }
+        }
+        entity.setTotal(totalRes);
+        return AjaxResult.success(entity);
     }
 
     /**

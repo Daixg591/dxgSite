@@ -66,6 +66,8 @@ public class SysUser extends BaseEntity {
         this.partyGroupings = partyGroupings;
     }
 
+
+    private String videoMeetingAccount;
     /**
      * 代表界别
      * 工人、农民和其他劳动者，专业技术人员，企事业单位负责人，公务员、解放军
@@ -74,9 +76,12 @@ public class SysUser extends BaseEntity {
     @Excel(name = "代表界别")
     private String distinction;
     /**
-     * 驿站
+     * 代表之家
+     * 访问之家
+     * 联络站
      */
     private Long stationId;
+
     /**
      * 代表届次
      * 第十届  第九届..
@@ -132,6 +137,7 @@ public class SysUser extends BaseEntity {
     /**
      * 所属单位
      */
+    @Excel(name = "所属单位")
     private String organName;
 
     /**
@@ -159,9 +165,9 @@ public class SysUser extends BaseEntity {
     private String email;
 
     /**
-     * 手机号码
+     * 联系电话
      */
-    @Excel(name = "手机号码")
+    @Excel(name = "联系电话")
     private String phonenumber;
 
     /**
@@ -243,12 +249,10 @@ public class SysUser extends BaseEntity {
             "40=普米族,41=鄂温克族,42=怒族,43=京族,44=基诺族,45=德昂族,46=保安族,47=俄罗斯族," +
             "48=裕固族,49=乌孜别克族,50=门巴族,51=鄂伦春族,52=独龙族,53=塔塔尔族,54=赫哲族,55=珞巴族")
     private String nation;
-
-
     /**
      * 用户状态
      */
-    private int userStatus;
+    private String userStatus;
 
     /**
      * 入党时间
@@ -464,13 +468,6 @@ public class SysUser extends BaseEntity {
         this.avatar = avatar;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getStatus() {
         return status;
@@ -494,14 +491,6 @@ public class SysUser extends BaseEntity {
 
     public String getIdCard() {
         return idCard;
-    }
-
-    public void setUserStatus(Integer userStatus) {
-        this.userStatus = userStatus;
-    }
-
-    public Integer getUserStatus() {
-        return userStatus;
     }
 
     public void setIdentity(String identity) {
@@ -700,7 +689,6 @@ public class SysUser extends BaseEntity {
                 .append("updateTime", getUpdateTime())
                 .append("remark", getRemark())
                 .append("dept", getDept())
-                .append("userStatus", getUserStatus())
                 .append("nowDuty", getNowDuty())
                 .append("edu", getEdu())
                 .append("goodArea", getGoodArea())

@@ -1,16 +1,15 @@
 package com.shahenpc.system.service.budget.impl;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.budget.OutlayAlarmSetting;
 import com.shahenpc.system.domain.budget.dto.OutlayAlarmSettingDictDto;
-import com.shahenpc.system.service.ISysDictDataService;
+import com.shahenpc.system.mapper.budget.OutlayAlarmSettingMapper;
+import com.shahenpc.system.service.budget.IOutlayAlarmSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.shahenpc.system.mapper.budget.OutlayAlarmSettingMapper;
-import com.shahenpc.system.domain.budget.OutlayAlarmSetting;
-import com.shahenpc.system.service.budget.IOutlayAlarmSettingService;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 告警设置-规则Service业务层处理
@@ -23,8 +22,6 @@ public class OutlayAlarmSettingServiceImpl implements IOutlayAlarmSettingService
 {
     @Autowired
     private OutlayAlarmSettingMapper outlayAlarmSettingMapper;
-    @Autowired
-    private ISysDictDataService dictDataService;
     /**
      * 查询告警设置-规则
      *

@@ -27,6 +27,8 @@ public interface IRepresentWorkRankingService
      */
     public List<RepresentWorkRanking> selectRepresentWorkRankingList(RepresentWorkRanking representWorkRanking);
 
+    public RepresentWorkRanking selectMyRanking(Long userId);
+
     /**
      * 新增排行 以及 类型数  总数
      * 

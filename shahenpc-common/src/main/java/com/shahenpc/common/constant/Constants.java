@@ -9,6 +9,75 @@ import io.jsonwebtoken.Claims;
  */
 public class Constants
 {
+
+    /**
+     * 生产：https://contacts.125339.com.cn
+     * 测试：https://contactstest.125339.com.cn
+     * 测试：https://contactstest.jiaxincloud.com
+     * 生产：https://contacts.jiaxincloud.com
+     */
+    public static final String YDIP="https://contactstest.125339.com.cn";
+    /**
+     * 移动秘钥 签名秘钥
+     */
+    public static final String KEY = "da4915d1a4e700f181053bd59727e5d6";
+    /**
+     *  标识 厂商标识
+     */
+    public static final String IDENTITY = "63fed4179f6f919534bb816045f4294c";
+    /**
+     *企业编码
+     */
+    public static final String ORG_CODE = "281";
+    /**
+     *用户试用或付费(0 为付费，1 为试用)
+     */
+    public static final String IS_TRIAL="1";
+
+    /**
+     * 对应 bboss 的 ecid,作为企业的标识
+     */
+    public static final String ECID="281";
+    /**
+     * 公共 调用 视频会议
+     */
+    public static final String SHIPINGHUIYI_URL="http://218.28.249.133:8899/fcm/mobile";
+
+
+    public static final Integer DISCOVER_PROCESS_TYPE_3=3;
+    /**
+     * 代表发现类型
+     */
+    public static final Integer DISCOVER_PROCESS_TYPE_2=2;
+    /**
+     * 代表发现类型
+     */
+    public static final Integer DISCOVER_PROCESS_TYPE_1=1;
+    /**
+     * 代表发现类型
+     */
+    public static final Integer DISCOVER_PROCESS_TYPE_0=0;
+    /**
+     * 代表发现状态 处理中
+     */
+    public static final Integer DISCOVER_STATUS_0=0;
+    /**
+     * 代表发现状态
+     */
+    public static final Integer DISCOVER_STATUS_1=1;
+    /**
+     * 代表发现状态
+     */
+    public static final Integer DISCOVER_STATUS_2=2;
+    /**
+     *  办结
+     */
+    public static final Integer DISCOVER_STATUS_3=3;
+    /**
+     * 已退回
+     */
+    public static final Integer DISCOVER_STATUS_4=4;
+
     public static final Integer DOUBLE_PROCESS_TYPE_0=0;
     /**
      * 群众发送 到  人大代表 代表1
@@ -22,6 +91,7 @@ public class Constants
      * 联络站 发送 到 总联络站 负责人 3
      */
     public static final Integer DOUBLE_PROCESS_TYPE_3=3;
+    public static final Integer DOUBLE_PROCESS_TYPE_4 = 4;
     /**
      * 双联工作 类型 民生类
      */

@@ -1,7 +1,13 @@
 package com.shahenpc.system.service.impl.personel;
 
 import java.util.List;
+
+import com.shahenpc.common.core.domain.entity.SysUser;
+import com.shahenpc.common.exception.ServiceException;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.common.utils.SecurityUtils;
+import com.shahenpc.common.utils.StringUtils;
+import com.shahenpc.common.utils.bean.BeanValidators;
 import com.shahenpc.system.domain.personel.dto.PersonnelQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +57,28 @@ public class PersonnelAppointRegisterServiceImpl implements IPersonnelAppointReg
             item.setAppointType(item.getAppointType());
         }
         return list;
+    }
+
+    @Override
+    public String importUser(List<PersonnelAppointRegister> userList, Boolean isUpdateSupport, String operName) {
+        if (StringUtils.isNull(userList) || userList.size() == 0)
+        {
+            throw new ServiceException("导入用户数据不能为空！");
+        }
+        int successNum = 0;
+        int failureNum = 0;
+        StringBuilder successMsg = new StringBuilder();
+        StringBuilder failureMsg = new StringBuilder();
+        if (failureNum > 0)
+        {
+            failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
+            throw new ServiceException(failureMsg.toString());
+        }
+        else
+        {
+            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
+        }
+        return successMsg.toString();
     }
 
     /**

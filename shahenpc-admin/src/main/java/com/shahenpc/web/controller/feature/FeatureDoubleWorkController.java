@@ -5,8 +5,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.shahenpc.system.domain.feature.dto.DoubleListDto;
+import com.shahenpc.system.domain.feature.dto.TodoListDto;
+import com.shahenpc.system.domain.feature.vo.DoubleFallbackVo;
 import com.shahenpc.system.domain.feature.vo.DoubleReturnVo;
 import com.shahenpc.system.domain.feature.vo.FeatureDoubleWorkUpdateVo;
+import com.shahenpc.system.domain.represent.vo.DiscoverFallbackVo;
 import com.shahenpc.system.domain.standard.vo.CensorReturnVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -51,10 +54,20 @@ public class FeatureDoubleWorkController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(FeatureDoubleWork featureDoubleWork) {
         startPage();
-        featureDoubleWork.setSendUserId(getUserId());
         List<DoubleListDto> list = featureDoubleWorkService.adminList(featureDoubleWork);
         return getDataTable(list);
+}
+
+    @PreAuthorize("@ss.hasPermi('feature:translate:list')")
+    @ApiOperation("双联工作列表")
+    @GetMapping("/translate/list")
+    public TableDataInfo translateList() {
+        startPage();
+        List<TodoListDto> list = featureDoubleWorkService.translateList(getUserId());
+        return getDataTable(list);
     }
+
+
 
     /**
      * 导出双联工作列表
@@ -129,6 +142,7 @@ public class FeatureDoubleWorkController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody FeatureDoubleWorkUpdateVo featureDoubleWork) {
         featureDoubleWork.setUpdateBy(getNickName());
+        featureDoubleWork.setUserId(getUserId());
         return featureDoubleWorkService.newUpdate(featureDoubleWork);
     }
 
@@ -149,6 +163,18 @@ public class FeatureDoubleWorkController extends BaseController {
     @DeleteMapping("/{doubleIds}")
     public AjaxResult remove(@PathVariable Long[] doubleIds) {
         return toAjax(featureDoubleWorkService.deleteFeatureDoubleWorkByDoubleIds(doubleIds));
+    }
+
+    /**
+     * 退回
+     * @param fallbackVo
+     * @return
+     */
+    @PostMapping("/fallback")
+    public AjaxResult fallback(@RequestBody DoubleFallbackVo fallbackVo)
+    {
+        fallbackVo.setUpdateBy(getNickName());
+        return featureDoubleWorkService.fallback(fallbackVo);
     }
 
     /**

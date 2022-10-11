@@ -3,7 +3,11 @@ package com.shahenpc.web.controller.represent;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.system.domain.represent.dto.DiscoverAppListDto;
 import com.shahenpc.system.domain.represent.dto.DiscoverListDto;
+import com.shahenpc.system.domain.represent.dto.DiscoverPieDto;
+import com.shahenpc.system.domain.represent.vo.DiscoverFallbackVo;
+import com.shahenpc.system.domain.represent.vo.DiscoverUpdateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +46,6 @@ public class RepresentDiscoverController extends BaseController
     /**
      * 查询代-代发现列表
      */
-    @PreAuthorize("@ss.hasPermi('represent:discover:list')")
     @GetMapping("/list")
     public TableDataInfo list(RepresentDiscover representDiscover)
     {
@@ -51,23 +54,60 @@ public class RepresentDiscoverController extends BaseController
         return getDataTable(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('discover:translate:list')")
+    @GetMapping("/translate/list")
+    public TableDataInfo translateList()
+    {
+        List<DiscoverAppListDto> list = representDiscoverService.translateList(getUserId());
+        return getDataTable(list);
+    }
+    /**
+     * 退回
+     * @param fallbackVo
+     * @return
+     */
+    @PostMapping("/fallback")
+    public AjaxResult fallback(@RequestBody DiscoverFallbackVo fallbackVo)
+    {
+        fallbackVo.setUpdateBy(getNickName());
+       return representDiscoverService.fallback(fallbackVo);
+    }
+    @ApiOperation("待办列表")
+    @GetMapping("/todo/list")
+    public TableDataInfo todoList(RepresentDiscover representDiscover)
+    {
+        representDiscover.setReceiveUserId(getUserId());
+        startPage();
+        List<DiscoverAppListDto> list = representDiscoverService.todoList(representDiscover);
+        return getDataTable(list);
+    }
+
+    @ApiOperation("已办列表")
+    @GetMapping("/done/list")
+    public TableDataInfo doneList(RepresentDiscover representDiscover)
+    {
+        representDiscover.setReceiveUserId(getUserId());
+        startPage();
+        List<DiscoverAppListDto> list = representDiscoverService.doneList(getUserId());
+        return getDataTable(list);
+    }
+
     /**
      * 导出代-代发现列表
      */
-    @PreAuthorize("@ss.hasPermi('represent:discover:export')")
+    @ApiOperation("代表发现导出")
     @Log(title = "代-代发现", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, RepresentDiscover representDiscover)
     {
-        List<RepresentDiscover> list = representDiscoverService.selectRepresentDiscoverList(representDiscover);
-        ExcelUtil<RepresentDiscover> util = new ExcelUtil<RepresentDiscover>(RepresentDiscover.class);
+        List<DiscoverListDto> list = representDiscoverService.adminList(representDiscover);
+        ExcelUtil<DiscoverListDto> util = new ExcelUtil<DiscoverListDto>(DiscoverListDto.class);
         util.exportExcel(response, list, "代-代发现数据");
     }
 
     /**
      * 获取代-代发现详细信息
      */
-    @PreAuthorize("@ss.hasPermi('represent:discover:query')")
     @GetMapping(value = "/{discoverId}")
     public AjaxResult getInfo(@PathVariable("discoverId") Long discoverId)
     {
@@ -76,31 +116,31 @@ public class RepresentDiscoverController extends BaseController
     /**
      * 新增代-代发现
      */
-    @PreAuthorize("@ss.hasPermi('represent:discover:add')")
     @Log(title = "代-代发现", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody RepresentDiscover representDiscover)
     {
         representDiscover.setSendUserId(getUserId());
         representDiscover.setUpdateBy(getUsername());
-        return toAjax(representDiscoverService.insertRepresentDiscover(representDiscover));
+        representDiscover.setStationId(getContactStationId());
+        return representDiscoverService.insertRepresentDiscover(representDiscover);
     }
 
     /**
      * 修改代-代发现
      */
-    @PreAuthorize("@ss.hasPermi('represent:discover:edit')")
     @Log(title = "代-代发现", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody RepresentDiscover representDiscover)
+    public AjaxResult edit(@RequestBody DiscoverUpdateVo representDiscover)
     {
-        return toAjax(representDiscoverService.updateRepresentDiscover(representDiscover));
+        representDiscover.setUpdateBy(getNickName());
+        representDiscover.setUserId(getUserId());
+        return representDiscoverService.updateRepresentDiscover(representDiscover);
     }
 
     /**
      * 删除代-代发现
      */
-    @PreAuthorize("@ss.hasPermi('represent:discover:remove')")
     @Log(title = "代-代发现", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{discoverIds}")
     public AjaxResult remove(@PathVariable Long[] discoverIds)
@@ -129,6 +169,14 @@ public class RepresentDiscoverController extends BaseController
         return AjaxResult.success(representDiscoverService.pie());
     }
 
+    @ApiOperation("状态饼图")
+    @GetMapping(value = "/status/pie")
+    public AjaxResult statusPie()
+    {
+        return AjaxResult.success(representDiscoverService.statusPie());
+    }
+
+
     @ApiOperation("状态各个总数")
     @GetMapping(value = "/status/count")
     public AjaxResult statusCount()
@@ -147,5 +195,42 @@ public class RepresentDiscoverController extends BaseController
     @GetMapping(value = "/heatmap")
     public AjaxResult heatmap() {
         return AjaxResult.success(representDiscoverService.heatmap());
+    }
+
+
+    /**
+     * 代表发现排名 个人
+     */
+    @ApiOperation("排行")
+    @GetMapping(value = "/ranking")
+    public AjaxResult Ranking()
+    {
+        return AjaxResult.success(representDiscoverService.ranking());
+    }
+
+
+    /**
+     * 代表发现排名 个人
+     */
+    @ApiOperation("联络站排行")
+    @GetMapping(value = "/contact/ranking")
+    public AjaxResult contactRanking()
+    {
+        return AjaxResult.success(representDiscoverService.contactRanking());
+    }
+
+    @ApiOperation("联络站百分率排行")
+    @GetMapping(value = "/contact/baifenlv/ranking")
+    public AjaxResult contactBaiRanking()
+    {
+        return AjaxResult.success(representDiscoverService.contactBaiFenLvRanking());
+    }
+
+
+    @ApiOperation("一个率")
+    @GetMapping(value = "/total/lv")
+    public AjaxResult TotalLv()
+    {
+        return AjaxResult.success(representDiscoverService.selectByTotalLv());
     }
 }

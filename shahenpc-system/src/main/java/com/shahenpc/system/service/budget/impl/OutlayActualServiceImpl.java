@@ -3,6 +3,7 @@ package com.shahenpc.system.service.budget.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.exception.ServiceException;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.StringUtils;
@@ -14,8 +15,8 @@ import com.shahenpc.system.domain.budget.dto.BudgetDto;
 import com.shahenpc.system.domain.budget.dto.CountDto;
 import com.shahenpc.system.domain.budget.dto.OutlayActualListDto;
 import com.shahenpc.system.mapper.budget.OutlayAlarmMapper;
-import com.shahenpc.system.mapper.budget.OutlayAlarmSettingMapper;
 import com.shahenpc.system.mapper.budget.OutlayBudgetMapper;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,6 @@ public class OutlayActualServiceImpl implements IOutlayActualService
 {
     @Autowired
     private OutlayActualMapper outlayActualMapper;
-    @Autowired
-    private OutlayAlarmSettingMapper outlayAlarmSettingMapper;
     @Autowired
     private OutlayBudgetMapper outlayBudgetMapper;
     @Autowired
@@ -78,34 +77,39 @@ public class OutlayActualServiceImpl implements IOutlayActualService
      * @return 结果
      */
     @Override
-    public int insertOutlayActual(OutlayActual outlayActual)
+    public AjaxResult insertOutlayActual(OutlayActual outlayActual)
     {
         outlayActual.setCreateTime(DateUtils.getNowDate());
         //查预计支出
         OutlayBudget budget=outlayBudgetMapper.selectUserByProjectNumben(outlayActual.getProjectNumber());
-        int success =  outlayActualMapper.insertOutlayActual(outlayActual);
-        //查找规则
-        if( budget != null) {
-            if((outlayActual.getAmount().subtract(budget.getAmount())).divide(budget.getAmount()).multiply(new BigDecimal(100)).compareTo(budget.getBeyondRatio()) == 1 ) {
-                    OutlayAlarm alarm = new OutlayAlarm();
-                    //实际id
-                    alarm.setActualId(outlayActual.getActualId());
-                    //预计id
-                    alarm.setBudgetId(budget.getBudgetId());
-                    //说明
-                    alarm.setCause("实际支出 超出 预计支出 比例");
-                    //预计设定 百分比
-                    alarm.setSettingRatio(budget.getBeyondRatio());
-                    //创建时间
-                    alarm.setCreateTime(DateUtils.getNowDate());
-                    //超出比例
-                    BigDecimal Hundred = new BigDecimal(100);
-                    alarm.setBeyondRatio((outlayActual.getAmount().subtract(budget.getAmount())).divide(budget.getAmount()).multiply( Hundred));
-                    outlayAlarmMapper.insertOutlayAlarm(alarm);
-            }
+        if(budget != null) {
+            //查找规则  预算执行金额
+           /* if(budget.getAmount().compareTo(outlayActual.getAmount()) == -1){
+                return AjaxResult.error("超出预算金额");
+            }*/
+                int success =  outlayActualMapper.insertOutlayActual(outlayActual);
+                if((outlayActual.getAmount().subtract(budget.getAmount())).divide(budget.getAmount()).multiply(new BigDecimal(100)).compareTo(budget.getBeyondRatio()) == 1 ) {
+                        OutlayAlarm alarm = new OutlayAlarm();
+                        //实际id
+                        alarm.setActualId(outlayActual.getActualId());
+                        //预计id
+                        alarm.setBudgetId(budget.getBudgetId());
+                        //说明
+                        alarm.setCause("实际支出 超出 预计支出 比例");
+                        //预计设定 百分比
+                        alarm.setSettingRatio(budget.getBeyondRatio());
+                        //创建时间
+                        alarm.setCreateTime(DateUtils.getNowDate());
+                        //超出比例
+                        BigDecimal Hundred = new BigDecimal(100);
+                        alarm.setBeyondRatio((outlayActual.getAmount().subtract(budget.getAmount())).divide(budget.getAmount()).multiply( Hundred));
+                        outlayAlarmMapper.insertOutlayAlarm(alarm);
+                }
+            //查出 规则
+            return AjaxResult.success(success);
+        }else{
+            return AjaxResult.error("预算科目编码有误。");
         }
-        //查出 规则
-        return success;
     }
 
     /**

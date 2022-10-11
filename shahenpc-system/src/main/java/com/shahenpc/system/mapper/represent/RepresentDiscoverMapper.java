@@ -62,6 +62,20 @@ public interface RepresentDiscoverMapper
 
     public List<DiscoverAppListDto> appList(RepresentDiscover representDiscover);
 
+    /**
+     * 已办
+     * @param sendUserId
+     * @return
+     */
+    public List<DiscoverAppListDto> doneList(Long sendUserId);
+
+    /**
+     * 待办
+     * @param representDiscover
+     * @return
+     */
+    public List<DiscoverAppListDto> todoList(RepresentDiscover representDiscover);
+
     public DiscoverAppDetailDto appDetail(Long discoverId);
 
     public DiscoverDetailDto detail(Long discoverId);
@@ -79,4 +93,18 @@ public interface RepresentDiscoverMapper
     public Integer selectByTotal();
 
     public List<String> selectByLocation();
+
+
+
+
+    public List<DiscoverAppListDto> translateList(Long stationId);
+
+
+    public List<DiscoverRankingDto> selectByGeRenRanking();
+
+    public List<DiscoverContactRankingDto> selectByContactRanking();
+
+    public List<DiscoverContactRankingDto> selectByContactbaifenlvRanking();
+
+    public String selectByTotalLv();
 }

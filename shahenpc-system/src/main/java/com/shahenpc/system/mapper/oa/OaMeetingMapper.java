@@ -6,6 +6,7 @@ import com.shahenpc.system.domain.oa.dto.MeetingAppDetailDto;
 import com.shahenpc.system.domain.oa.dto.MeetingAppListDto;
 import com.shahenpc.system.domain.oa.dto.MeetingCountMinuteDto;
 import com.shahenpc.system.domain.oa.dto.MeetingDetailDto;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 人大办公-会议管理Mapper接口
@@ -61,7 +62,7 @@ public interface OaMeetingMapper
      * @param meetingIds 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteOaMeetingByMeetingIds(Long[] meetingIds);
+    public int deleteOaMeetingByMeetingIds(Long meetingIds);
 
     public MeetingDetailDto newDetail(Long meetingId);
 
@@ -76,5 +77,5 @@ public interface OaMeetingMapper
 
     public List<MeetingAppListDto> appList(OaMeeting oaMeeting);
 
-    public MeetingAppDetailDto appDetail(Long meetingId);
+    public MeetingAppDetailDto appDetail(@Param("meetingId") Long meetingId,@Param("userId") Long userId);
 }

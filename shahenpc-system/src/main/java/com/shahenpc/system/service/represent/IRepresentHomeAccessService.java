@@ -1,7 +1,11 @@
 package com.shahenpc.system.service.represent;
 
+import java.io.IOException;
 import java.util.List;
+
+import com.alibaba.fastjson2.JSONObject;
 import com.shahenpc.system.domain.represent.RepresentHomeAccess;
+import com.shahenpc.system.domain.represent.vo.VirtualVo;
 
 /**
  * 代之家访问Service接口
@@ -62,4 +66,7 @@ public interface IRepresentHomeAccessService
     public int selectVisitsCount();
 
     public List<RepresentHomeAccess> rankingList();
+
+
+    public JSONObject createVirtualUser(VirtualVo vo) throws IOException;
 }

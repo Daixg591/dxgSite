@@ -3,67 +3,75 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.represent.RepresentDiscoverTrackMapper">
-    
+
     <resultMap type="RepresentDiscoverTrack" id="RepresentDiscoverTrackResult">
         <result property="trackId"    column="track_id"    />
         <result property="discoverId"    column="discover_id"    />
         <result property="sendUserId"    column="send_user_id"    />
         <result property="receiveUserId"    column="receive_user_id"    />
-        <result property="content"    column="content"    />
-        <result property="status"    column="status"    />
         <result property="remark"    column="remark"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="createBy"    column="create_by"    />
+        <result property="revert"    column="revert"    />
+        <result property="status"    column="status"    />
+        <result property="processType"    column="process_type"    />
+        <result property="picUrls"    column="pic_urls"    />
     </resultMap>
 
     <sql id="selectRepresentDiscoverTrackVo">
-        select track_id, discover_id, send_user_id, receive_user_id, content, status, remark, create_time, update_by, update_time, create_by from represent_discover_track
+        select track_id, discover_id, send_user_id, receive_user_id, remark, create_time, update_by, update_time, create_by, revert, status, process_type, pic_urls from represent_discover_track
     </sql>
 
     <select id="selectRepresentDiscoverTrackList" parameterType="RepresentDiscoverTrack" resultMap="RepresentDiscoverTrackResult">
         <include refid="selectRepresentDiscoverTrackVo"/>
-        <where>  
+        <where>
             <if test="discoverId != null "> and discover_id = #{discoverId}</if>
             <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
             <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
-            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="revert != null  and revert != ''"> and revert = #{revert}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="processType != null "> and process_type = #{processType}</if>
+            <if test="picUrls != null  and picUrls != ''"> and pic_urls = #{picUrls}</if>
         </where>
     </select>
-    
+
     <select id="selectRepresentDiscoverTrackByTrackId" parameterType="Long" resultMap="RepresentDiscoverTrackResult">
         <include refid="selectRepresentDiscoverTrackVo"/>
         where track_id = #{trackId}
     </select>
-        
+
     <insert id="insertRepresentDiscoverTrack" parameterType="RepresentDiscoverTrack" useGeneratedKeys="true" keyProperty="trackId">
         insert into represent_discover_track
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="discoverId != null">discover_id,</if>
             <if test="sendUserId != null">send_user_id,</if>
             <if test="receiveUserId != null">receive_user_id,</if>
-            <if test="content != null">content,</if>
-            <if test="status != null">status,</if>
             <if test="remark != null">remark,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="createBy != null">create_by,</if>
-         </trim>
+            <if test="revert != null">revert,</if>
+            <if test="status != null">status,</if>
+            <if test="processType != null">process_type,</if>
+            <if test="picUrls != null">pic_urls,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="discoverId != null">#{discoverId},</if>
             <if test="sendUserId != null">#{sendUserId},</if>
             <if test="receiveUserId != null">#{receiveUserId},</if>
-            <if test="content != null">#{content},</if>
-            <if test="status != null">#{status},</if>
             <if test="remark != null">#{remark},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="createBy != null">#{createBy},</if>
-         </trim>
+            <if test="revert != null">#{revert},</if>
+            <if test="status != null">#{status},</if>
+            <if test="processType != null">#{processType},</if>
+            <if test="picUrls != null">#{picUrls},</if>
+        </trim>
     </insert>
 
     <update id="updateRepresentDiscoverTrack" parameterType="RepresentDiscoverTrack">
@@ -72,13 +80,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="discoverId != null">discover_id = #{discoverId},</if>
             <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
             <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
-            <if test="content != null">content = #{content},</if>
-            <if test="status != null">status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="revert != null">revert = #{revert},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="processType != null">process_type = #{processType},</if>
+            <if test="picUrls != null">pic_urls = #{picUrls},</if>
         </trim>
         where track_id = #{trackId}
     </update>
@@ -88,21 +98,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteRepresentDiscoverTrackByTrackIds" parameterType="String">
-        delete from represent_discover_track where track_id in 
+        delete from represent_discover_track where track_id in
         <foreach item="trackId" collection="array" open="(" separator="," close=")">
             #{trackId}
         </foreach>
     </delete>
 
     <!--=======================================================分割线-->
+    <delete id="deleteRepresentDiscoverTrackByDiscoverIds" parameterType="String">
+        delete from represent_discover_track where discover_id in
+        <foreach item="discoverId" collection="array" open="(" separator="," close=")">
+            #{discoverId}
+        </foreach>
+    </delete>
+
+
     <resultMap id="detail" type="com.shahenpc.system.domain.represent.dto.DiscoverTrackDetailListDto" extends="RepresentDiscoverTrackResult">
 
     </resultMap>
     <select id="selectByDiscoverId" parameterType="Long" resultMap="detail">
-        select track_id, discover_id, send_user_id, receive_user_id, content, status, remark, create_time, update_by, update_time, create_by,
+        select track_id, discover_id, send_user_id, receive_user_id, revert, status, remark,
+               process_type,create_time, update_by, update_time, create_by,pic_urls,
         (SELECT u.nick_name FROM sys_user u WHERE u.user_id = send_user_id)AS sendUserName,
-        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName
-        from represent_discover_track
-        where discover_id = #{discoverId}
+        (SELECT u.nick_name FROM sys_user u WHERE u.user_id = receive_user_id)AS receiveUserName,
+               (SELECT a.title FROM represent_home_access a WHERE a.access_id = (SELECT u.contact_station_id FROM sys_user u WHERE u.user_id = t.send_user_id ))AS sendAccessName,
+               (SELECT a.title FROM represent_home_access a WHERE a.access_id = (SELECT u.contact_station_id FROM sys_user u WHERE u.user_id = t.receive_user_id))AS receiveAccessName,
+               (SELECT de.dept_name FROM sys_dept de WHERE de.dept_id = (SELECT u.dept_id FROM sys_user u WHERE u.user_id = t.receive_user_id)) AS receiceDeptName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_process_type' AND d.dict_value = t.process_type)AS processTypeName,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='discover_status' AND d.dict_value = t.status )AS discoverStatusName
+        from represent_discover_track t
+        where t.discover_id = #{discoverId}
+        ORDER BY t.create_time
+    </select>
+
+
+    <select id="selectBySendUserId" resultMap="RepresentDiscoverTrackResult">
+        <include refid="selectRepresentDiscoverTrackVo"/>
+        WHERE receive_user_id = #{receiveUserId} AND discover_id = #{discoverId} AND `status` != 4
     </select>
 </mapper>

@@ -1,16 +1,18 @@
 package com.shahenpc.system.domain.represent;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
 import com.shahenpc.common.core.domain.BaseEntity;
 
 /**
- * 【请填写功能名称】对象 represent_discover_track
+ * 代发现-记录对象 represent_discover_track
  * 
  * @author ruoyi
- * @date 2022-07-30
+ * @date 2022-09-09
  */
+@Data
 public class RepresentDiscoverTrack extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -30,13 +32,21 @@ public class RepresentDiscoverTrack extends BaseEntity
     @Excel(name = "接收人用户id 0-全部")
     private Long receiveUserId;
 
-    /** 内容 */
-    @Excel(name = "内容")
-    private String content;
+    /**  */
+    @Excel(name = "")
+    private String revert;
 
     /** 状态 */
     @Excel(name = "状态")
-    private Long status;
+    private Integer status;
+
+    /** 流程类型 */
+    @Excel(name = "流程类型")
+    private Integer processType;
+
+    /** 多个照片 */
+    @Excel(name = "多个照片")
+    private String picUrls;
 
     public void setTrackId(Long trackId) 
     {
@@ -74,23 +84,32 @@ public class RepresentDiscoverTrack extends BaseEntity
     {
         return receiveUserId;
     }
-    public void setContent(String content) 
+    public void setRevert(String revert) 
     {
-        this.content = content;
+        this.revert = revert;
     }
 
-    public String getContent() 
+    public String getRevert() 
     {
-        return content;
+        return revert;
     }
-    public void setStatus(Long status) 
+    public void setStatus(Integer status)
     {
         this.status = status;
     }
 
-    public Long getStatus() 
+    public Integer getStatus()
     {
         return status;
+    }
+    public void setProcessType(Integer processType)
+    {
+        this.processType = processType;
+    }
+
+    public Integer getProcessType()
+    {
+        return processType;
     }
 
     @Override
@@ -100,13 +119,14 @@ public class RepresentDiscoverTrack extends BaseEntity
             .append("discoverId", getDiscoverId())
             .append("sendUserId", getSendUserId())
             .append("receiveUserId", getReceiveUserId())
-            .append("content", getContent())
-            .append("status", getStatus())
             .append("remark", getRemark())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("createBy", getCreateBy())
+            .append("revert", getRevert())
+            .append("status", getStatus())
+            .append("processType", getProcessType())
             .toString();
     }
 }

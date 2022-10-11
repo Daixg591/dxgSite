@@ -60,6 +60,8 @@ public interface OaVoteMapper
      */
     public int deleteOaVoteByVoteIds(Long[] voteIds);
 
+    public OaVote  detailAdmin(Long voteId);
+
 
     public VoteCount selectCount();
 }

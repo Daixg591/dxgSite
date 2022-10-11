@@ -1,5 +1,6 @@
 package com.shahenpc.system.domain.feature;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-15
  */
+@Data
 public class FeatureWorkEvent extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -29,6 +31,8 @@ public class FeatureWorkEvent extends BaseEntity
     /** 工作类型 */
     @Excel(name = "工作类型")
     private Integer workType;
+
+    private String fileUrl;
 
     public void setEventId(Long eventId) 
     {

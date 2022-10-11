@@ -1,6 +1,8 @@
 package com.shahenpc.system.mapper;
 
 import java.util.List;
+
+import com.shahenpc.system.domain.dto.DeptByUser;
 import org.apache.ibatis.annotations.Param;
 import com.shahenpc.common.core.domain.entity.SysDept;
 
@@ -115,4 +117,6 @@ public interface SysDeptMapper
      * @return 结果
      */
     public int deleteDeptById(Long deptId);
+
+    public List<DeptByUser> selectByUser();
 }

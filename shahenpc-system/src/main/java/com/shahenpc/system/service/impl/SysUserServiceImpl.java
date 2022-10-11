@@ -9,6 +9,7 @@ import com.shahenpc.system.domain.data.dto.DataCountDto;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.personel.PersonnelAppointEduLog;
 import com.shahenpc.system.domain.represent.RepresentDiscover;
+import com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper;
 import com.shahenpc.system.mapper.represent.RepresentDiscoverMapper;
 import com.shahenpc.system.service.personel.IPersonnelAppointEduLogService;
@@ -95,6 +96,19 @@ public class SysUserServiceImpl implements ISysUserService
     {
         return userMapper.selectUserList(user);
     }
+
+    @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
+    public List<SysUser> selectRandUserList(SysUser user){
+        return userMapper.selectRandUserList(user);
+    }
+
+    //小程序获取人大信息列表(用户信息处理,不返所有信息)
+    @Override
+    public List<WxUserInfoVo> selectXcxList(SysUser user){
+        return userMapper.selectXcxList(user);
+    }
+
 
     /**
      * 根据条件分页查询已分配用户角色列表
@@ -546,7 +560,9 @@ public class SysUserServiceImpl implements ISysUserService
                 {
                     BeanValidators.validateWithException(validator, user);
                     user.setUpdateBy(operName);
-                    this.updateUser(user);
+                    user.setUserId(this.selectUserByUserName(user.getUserName()).getUserId());
+                    //this.updateUser(user);
+                    this.updateUserProfile(user);
                     successNum++;
                     successMsg.append("<br/>" + successNum + "、账号 " + user.getUserName() + " 更新成功");
                 }
@@ -698,6 +714,11 @@ public class SysUserServiceImpl implements ISysUserService
         dto.setDoubleCount(featureDoubleWorkMapper.selectByTotal());
         dto.setDiscoverCount(representDiscoverMapper.selectByTotal());
         return dto;
+    }
+
+    @Override
+    public String selectByPassword(Long userId) {
+        return userMapper.selectByPassword(userId);
     }
 
 }

@@ -1,6 +1,8 @@
 package com.shahenpc.system.service.oa;
 
 import java.util.List;
+
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.system.domain.oa.OaMeetingSign;
 
 /**
@@ -59,5 +61,5 @@ public interface IOaMeetingSignService
      */
     public int deleteOaMeetingSignBySignId(Long signId);
 
-    public int sign(Long meeting,Long userId);
+    public AjaxResult sign(Long meeting, Long userId);
 }

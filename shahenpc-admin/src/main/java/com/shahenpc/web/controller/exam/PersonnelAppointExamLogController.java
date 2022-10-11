@@ -153,7 +153,7 @@ public class PersonnelAppointExamLogController extends BaseController {
             return null;
         }
         for (int i = 0; i < logList.size(); i++) {
-            res.setRegExamId(logList.get(0).getRegExamId());
+            //res.setRegExamId(logList.get(0).getRegExamId());
             res.setUserId(getUserId());
             res.setExamId(logList.get(i).getExamId());
             res.setCreateBy(getUsername());

@@ -28,6 +28,8 @@ import com.shahenpc.system.domain.represent.dto.MotionRingDto;
 import com.shahenpc.system.domain.represent.vo.MotionTaskVo;
 import com.shahenpc.system.domain.standard.StandardCensor;
 import com.shahenpc.system.mapper.FlowDeployMapper;
+import com.shahenpc.system.mapper.represent.RepresentMotionMapper;
+import com.shahenpc.system.mapper.represent.RepresentMotionRecordMapper;
 import com.shahenpc.system.service.ISysDictDataService;
 import com.shahenpc.system.service.ISysDictTypeService;
 import com.shahenpc.system.service.ISysRoleService;
@@ -59,6 +61,7 @@ import org.flowable.task.api.Task;
 import org.flowable.task.api.TaskQuery;
 import org.flowable.task.api.history.HistoricTaskInstance;
 import org.flowable.task.api.history.HistoricTaskInstanceQuery;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -569,6 +572,17 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setTitle(motion.getTitle());
                 flowTask.setContent(motion.getContent());
                 flowTask.setSuggestUserId(motion.getSuggestUserId());
+                flowTask.setRepresentName(motion.getRepresentName());
+                flowTask.setRepresentTeam(motion.getRepresentTeam());
+                flowTask.setRepresentCount(motion.getRepresentCount());
+                flowTask.setRepresentCard(motion.getRepresentCard());
+                flowTask.setPostalCode(motion.getPostalCode());
+                flowTask.setOpinion(motion.getOpinion());
+                flowTask.setOpinionType(motion.getOpinionType());
+                flowTask.setIsXingcheng(motion.getIsXingcheng());
+                flowTask.setSurvey(motion.getSurvey());
+                flowTask.setYearly(motion.getYearly());
+                flowTask.setIsGoutong(motion.getIsGoutong());
                 List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
                 motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
@@ -637,6 +651,17 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setSerial(motion.getMotionId());
                 flowTask.setTitle(motion.getTitle());
                 flowTask.setContent(motion.getContent());
+                flowTask.setRepresentName(motion.getRepresentName());
+                flowTask.setRepresentTeam(motion.getRepresentTeam());
+                flowTask.setRepresentCount(motion.getRepresentCount());
+                flowTask.setRepresentCard(motion.getRepresentCard());
+                flowTask.setPostalCode(motion.getPostalCode());
+                flowTask.setOpinion(motion.getOpinion());
+                flowTask.setOpinionType(motion.getOpinionType());
+                flowTask.setIsXingcheng(motion.getIsXingcheng());
+                flowTask.setSurvey(motion.getSurvey());
+                flowTask.setYearly(motion.getYearly());
+                flowTask.setIsGoutong(motion.getIsGoutong());
             }
             flowList.add(flowTask);
         }
@@ -720,6 +745,17 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                     flowTask.setSuggestUserId(motion.getSuggestUserId());
                     List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
                     motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
+                    flowTask.setRepresentName(motion.getRepresentName());
+                    flowTask.setRepresentTeam(motion.getRepresentTeam());
+                    flowTask.setRepresentCount(motion.getRepresentCount());
+                    flowTask.setRepresentCard(motion.getRepresentCard());
+                    flowTask.setPostalCode(motion.getPostalCode());
+                    flowTask.setOpinion(motion.getOpinion());
+                    flowTask.setOpinionType(motion.getOpinionType());
+                    flowTask.setIsXingcheng(motion.getIsXingcheng());
+                    flowTask.setSurvey(motion.getSurvey());
+                    flowTask.setYearly(motion.getYearly());
+                    flowTask.setIsGoutong(motion.getIsGoutong());
                     flowTask.setSuggestUserName(motion.getSuggestUserName());
                 }
                 flowList.add(flowTask);
@@ -745,6 +781,8 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 .orderByProcessInstanceStartTime()
                 .desc();
         List<HistoricProcessInstance> historicProcessInstances = historicProcessInstanceQuery.listPage(pageSize * (pageNum - 1), pageSize);
+
+        //List<RepresentMotion> list=representMotionService.selectRepresentMotionList(null);
         //自定义
         page.setTotal(historicProcessInstanceQuery.count());
         List<FlowTaskDto> flowList = new ArrayList<>();
@@ -784,6 +822,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             flowTask.setProcDefVersion(pd.getVersion());
             flowTask.setCategory(pd.getCategory());
             flowTask.setProcDefVersion(pd.getVersion());
+
             // 当前所处流程 .processDefinitionName(representMotion.getTaskName())
             List<Task> taskList = taskService.createTaskQuery().processInstanceId(hisIns.getId()).list();
             if (CollectionUtils.isNotEmpty(taskList)) {
@@ -796,17 +835,27 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             representMotion.setProcinsId(hisIns.getId());
             RepresentMotion motion=representMotionService.selectByWorkflowId(representMotion);
             if(motion != null) {
+                flowTask.setCategoryType(motion.getCategoryType());
                 flowTask.setMotionId(motion.getMotionId());
                 flowTask.setMotionType(motion.getMotionType());
                 flowTask.setSerial(motion.getMotionId());
                 flowTask.setTitle(motion.getTitle());
                 flowTask.setContent(motion.getContent());
                 flowTask.setSuggestUserId(motion.getSuggestUserId());
+                flowTask.setRepresentName(motion.getRepresentName());
+                flowTask.setRepresentTeam(motion.getRepresentTeam());
+                flowTask.setRepresentCount(motion.getRepresentCount());
+                flowTask.setRepresentCard(motion.getRepresentCard());
+                flowTask.setPostalCode(motion.getPostalCode());
+                flowTask.setOpinion(motion.getOpinion());
+                flowTask.setOpinionType(motion.getOpinionType());
+                flowTask.setIsXingcheng(motion.getIsXingcheng());
+                flowTask.setSurvey(motion.getSurvey());
+                flowTask.setYearly(motion.getYearly());
+                flowTask.setIsGoutong(motion.getIsGoutong());
                 //List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
                 //motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
-            }
-            if(flowTask.getTitle() != null){
                 flowList.add(flowTask);
             }
             if(representMotion.getTaskName() != null){
@@ -1524,6 +1573,17 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setSuggestUserId(motion.getSuggestUserId());
                 List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
                 motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
+                flowTask.setRepresentName(motion.getRepresentName());
+                flowTask.setRepresentTeam(motion.getRepresentTeam());
+                flowTask.setRepresentCount(motion.getRepresentCount());
+                flowTask.setRepresentCard(motion.getRepresentCard());
+                flowTask.setPostalCode(motion.getPostalCode());
+                flowTask.setOpinion(motion.getOpinion());
+                flowTask.setOpinionType(motion.getOpinionType());
+                flowTask.setIsXingcheng(motion.getIsXingcheng());
+                flowTask.setSurvey(motion.getSurvey());
+                flowTask.setYearly(motion.getYearly());
+                flowTask.setIsGoutong(motion.getIsGoutong());
                 flowTask.setMotionType(motion.getMotionType());
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
             }
@@ -1607,6 +1667,17 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setSuggestUserId(motion.getSuggestUserId());
                 List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
                 motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
+                flowTask.setRepresentName(motion.getRepresentName());
+                flowTask.setRepresentTeam(motion.getRepresentTeam());
+                flowTask.setRepresentCount(motion.getRepresentCount());
+                flowTask.setRepresentCard(motion.getRepresentCard());
+                flowTask.setPostalCode(motion.getPostalCode());
+                flowTask.setOpinion(motion.getOpinion());
+                flowTask.setOpinionType(motion.getOpinionType());
+                flowTask.setIsXingcheng(motion.getIsXingcheng());
+                flowTask.setSurvey(motion.getSurvey());
+                flowTask.setYearly(motion.getYearly());
+                flowTask.setIsGoutong(motion.getIsGoutong());
                 flowTask.setMotionType(motion.getMotionType());
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
             }
@@ -1959,8 +2030,13 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
                     .processInstanceId(task.getProcessInstanceId())
                     .singleResult();
-            SysUser startUser = sysUserService.selectUserById(Long.parseLong(historicProcessInstance.getStartUserId()));
-//            SysUser startUser = sysUserService.selectUserById(Long.parseLong(task.getAssignee()));
+            SysUser startUser = null;
+            if(historicProcessInstance.getStartUserId() == null){
+                startUser = sysUserService.selectUserById(1L);
+            }else{
+                startUser = sysUserService.selectUserById(Long.parseLong(historicProcessInstance.getStartUserId()));
+            }
+//           SysUser startUser = sysUserService.selectUserById(Long.parseLong(task.getAssignee()));
             flowTask.setStartUserId(startUser.getNickName());
             flowTask.setStartUserName(startUser.getNickName());
             flowTask.setStartDeptName(startUser.getDept().getDeptName());
@@ -1975,9 +2051,22 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
                 motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
                 flowTask.setMotionType(motion.getMotionType());
+                flowTask.setCategoryType(motion.getCategoryType());
+                flowTask.setRepresentName(motion.getRepresentName());
+                flowTask.setRepresentTeam(motion.getRepresentTeam());
+                flowTask.setRepresentCount(motion.getRepresentCount());
+                flowTask.setRepresentCard(motion.getRepresentCard());
+                flowTask.setPostalCode(motion.getPostalCode());
+                flowTask.setOpinion(motion.getOpinion());
+                flowTask.setOpinionType(motion.getOpinionType());
+                flowTask.setIsXingcheng(motion.getIsXingcheng());
+                flowTask.setSurvey(motion.getSurvey());
+                flowTask.setYearly(motion.getYearly());
+                flowTask.setIsGoutong(motion.getIsGoutong());
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
+                flowList.add(flowTask);
+
             }
-            flowList.add(flowTask);
         }
         //flowList.stream().filter(w -> w.getDeployId().equals(type)).collect(Collectors.toList());
         page.setRecords(flowList);
@@ -2016,11 +2105,11 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
                     .processInstanceId(task.getProcessInstanceId())
                     .singleResult();
-            SysUser startUser = sysUserService.selectUserById(Long.parseLong(historicProcessInstance.getStartUserId()));
+//            SysUser startUser = sysUserService.selectUserById(Long.parseLong(historicProcessInstance.getStartUserId()));
 //            SysUser startUser = sysUserService.selectUserById(Long.parseLong(task.getAssignee()));
-            flowTask.setStartUserId(startUser.getNickName());
-            flowTask.setStartUserName(startUser.getNickName());
-            flowTask.setStartDeptName(startUser.getDept().getDeptName());
+            //flowTask.setStartUserId(startUser.getUserId());
+            //flowTask.setStartUserName(startUser.getNickName());
+            //flowTask.setStartDeptName(startUser.getDept().getDeptName());
             List<HistoricActivityInstance> list = historyService
                     .createHistoricActivityInstanceQuery()
                     .processInstanceId(flowTask.getProcInsId())//我发起的id
@@ -2041,6 +2130,7 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
             representMotion.setProcinsId(task.getProcessInstanceId());
                 RepresentMotion motion = representMotionService.selectByWorkflowId(representMotion);
             if(motion != null) {
+                flowTask.setCategoryType(motion.getCategoryType());
                 flowTask.setMotionId(motion.getMotionId());
                 flowTask.setSerial(motion.getMotionId());
                 flowTask.setTitle(motion.getTitle());
@@ -2048,10 +2138,21 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setSuggestUserId(motion.getSuggestUserId());
                 List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
                 motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
+                flowTask.setRepresentName(motion.getRepresentName());
+                flowTask.setRepresentTeam(motion.getRepresentTeam());
+                flowTask.setRepresentCount(motion.getRepresentCount());
+                flowTask.setRepresentCard(motion.getRepresentCard());
+                flowTask.setPostalCode(motion.getPostalCode());
+                flowTask.setOpinion(motion.getOpinion());
+                flowTask.setOpinionType(motion.getOpinionType());
+                flowTask.setIsXingcheng(motion.getIsXingcheng());
+                flowTask.setSurvey(motion.getSurvey());
+                flowTask.setYearly(motion.getYearly());
+                flowTask.setIsGoutong(motion.getIsGoutong());
                 flowTask.setMotionType(motion.getMotionType());
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
+                flowList.add(flowTask);
             }
-            flowList.add(flowTask);
         }
         //flowList.stream().filter(w -> w.getDeployId().equals(type)).collect(Collectors.toList());
         page.setRecords(flowList);
@@ -2081,6 +2182,25 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
         mes.setMessage(flowTaskVo.getComment());
         mes.setType(3);
         messageDataService.insertMessageData(mes);
+    }
+
+    @Autowired
+    private RepresentMotionMapper representMotionMapper;
+    @Autowired
+    private RepresentMotionRecordMapper representMotionRecordMapper;
+
+    @Override
+    public int deleteRepresentMotionByMotionIds(Long[] motionIds) {
+
+        List<RepresentMotion> motion= representMotionMapper.selectByMotionIds(motionIds);
+        for (RepresentMotion item:motion){
+            taskService.deleteTask(item.getProcinsId(), "就是删除");
+        }
+        if(representMotionMapper.deleteRepresentMotionByMotionIds(motionIds)>0){
+
+            return representMotionRecordMapper.deleteRepresentMotionRecordByMotionIds(motionIds);
+        }
+        return 0;
     }
 
     @Override
@@ -2454,14 +2574,27 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
                 flowTask.setContent(motion.getContent());
                 flowTask.setSuggestUserId(motion.getSuggestUserId());
                 flowTask.setRate(motion.getRate());
+                flowTask.setRepresentName(motion.getRepresentName());
+                flowTask.setRepresentTeam(motion.getRepresentTeam());
+                flowTask.setRepresentCount(motion.getRepresentCount());
+                flowTask.setRepresentCard(motion.getRepresentCard());
+                flowTask.setPostalCode(motion.getPostalCode());
+                flowTask.setOpinion(motion.getOpinion());
+                flowTask.setOpinionType(motion.getOpinionType());
+                flowTask.setIsXingcheng(motion.getIsXingcheng());
+                flowTask.setSurvey(motion.getSurvey());
+                flowTask.setYearly(motion.getYearly());
+                flowTask.setIsGoutong(motion.getIsGoutong());
                 List<SysUser> user=sysUserService.selectUserByuserIds(motion.getSuggestUserId());
                 motion.setSuggestUserName(user.stream().map(SysUser::getNickName).collect(Collectors.joining(",")));
                 flowTask.setMotionType(motion.getMotionType());
                 flowTask.setSuggestUserName(motion.getSuggestUserName());
+                hisTaskList.add(flowTask);
+
             }
-            hisTaskList.add(flowTask);
+            //hisTaskList.add(flowTask);
+
         }
-        page.setTotal(taskInstanceQuery.count());
         page.setRecords(hisTaskList);
 //        Map<String, Object> result = new HashMap<>();
 //        result.put("result",page);
@@ -2503,14 +2636,17 @@ public class FlowTaskServiceImpl extends FlowServiceFactory implements IFlowTask
     //
     @Override
     public List<MotionPieDto> pie(MotionTaskVo vo) {
-        List<HistoricActivityInstance> receiveTotal = historyService.createHistoricActivityInstanceQuery().activityName(vo.getTaskName())
+        /*List<HistoricActivityInstance> receiveTotal = historyService.createHistoricActivityInstanceQuery().activityName(vo.getTaskName())
                 .orderByHistoricActivityInstanceStartTime()
-                .desc().list();
+                .desc().list();*/
+        RepresentMotion representMotion = new RepresentMotion();
+        representMotion.setCategoryType(2);
+        List<RepresentMotion>  receiveTotal= representMotionMapper.selectRepresentMotionList(representMotion);
         List<MotionPieDto> dto = new ArrayList<>();
         List<SysDictData> dictList = dictTypeService.selectDictDataByType("motion_type");
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
-            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictLabel().equals(p.getActivityName()))
+            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getMotionType().toString()))
                     .collect(Collectors.toList()).size();
             MotionPieDto item = new MotionPieDto();
             item.setName(dictList.get(i).getDictLabel());

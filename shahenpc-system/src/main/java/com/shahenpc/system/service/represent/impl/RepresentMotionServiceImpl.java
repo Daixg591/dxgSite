@@ -1,12 +1,22 @@
 package com.shahenpc.system.service.represent.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.represent.dto.MotionPieDto;
+import com.shahenpc.system.mapper.SysDictDataMapper;
+import com.shahenpc.system.mapper.represent.RepresentMotionRecordMapper;
+import com.shahenpc.system.service.ISysDictTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.represent.RepresentMotionMapper;
 import com.shahenpc.system.domain.represent.RepresentMotion;
 import com.shahenpc.system.service.represent.IRepresentMotionService;
+
+import javax.annotation.Resource;
 
 /**
  * 工作-建议议案处理Service业务层处理
@@ -19,7 +29,10 @@ public class RepresentMotionServiceImpl implements IRepresentMotionService
 {
     @Autowired
     private RepresentMotionMapper representMotionMapper;
-
+    @Resource
+    private ISysDictTypeService dictTypeService;
+    @Autowired
+    private RepresentMotionRecordMapper representMotionRecordMapper;
     /**
      * 查询工作-建议议案处理
      * 
@@ -70,6 +83,7 @@ public class RepresentMotionServiceImpl implements IRepresentMotionService
         return representMotionMapper.updateRepresentMotion(representMotion);
     }
 
+
     /**
      * 批量删除工作-建议议案处理
      * 
@@ -79,7 +93,10 @@ public class RepresentMotionServiceImpl implements IRepresentMotionService
     @Override
     public int deleteRepresentMotionByMotionIds(Long[] motionIds)
     {
-        return representMotionMapper.deleteRepresentMotionByMotionIds(motionIds);
+        if(representMotionMapper.deleteRepresentMotionByMotionIds(motionIds)>0){
+            return representMotionRecordMapper.deleteRepresentMotionRecordByMotionIds(motionIds);
+        }
+        return 0;
     }
 
     /**
@@ -96,12 +113,30 @@ public class RepresentMotionServiceImpl implements IRepresentMotionService
 
     /**
      *
-     * @param procinsId
+     * @param
      * @return
      */
     @Override
     public RepresentMotion selectByWorkflowId(RepresentMotion representMotion) {
 
         return representMotionMapper.selectByWorkflowId(representMotion);
+    }
+
+    @Override
+    public List<MotionPieDto> pie() {
+        RepresentMotion representMotion = new RepresentMotion();
+        List<RepresentMotion>  receiveTotal= representMotionMapper.selectRepresentMotionList(representMotion);
+        List<MotionPieDto> dto = new ArrayList<>();
+        List<SysDictData> dictList = dictTypeService.selectDictDataByType("motion_category_type");
+        for (int i = 0; i < dictList.size(); i++) {
+            int finalI = i;
+            int v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getCategoryType().toString()))
+                    .collect(Collectors.toList()).size();
+            MotionPieDto item = new MotionPieDto();
+            item.setName(dictList.get(i).getDictLabel());
+            item.setValue(v);
+            dto.add(item);
+        }
+        return dto;
     }
 }

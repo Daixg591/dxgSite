@@ -95,4 +95,7 @@ public interface FeatureDoubleWorkMapper
     public Integer selectByTotal();
 
     public List<String> selectByLocation();
+
+
+    public List<TodoListDto> translateList(Long stationId);
 }

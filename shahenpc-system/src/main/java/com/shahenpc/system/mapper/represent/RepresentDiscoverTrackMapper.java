@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper.represent;
 
 import java.util.List;
 import com.shahenpc.system.domain.represent.RepresentDiscoverTrack;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -58,4 +59,9 @@ public interface RepresentDiscoverTrackMapper
      * @return 结果
      */
     public int deleteRepresentDiscoverTrackByTrackIds(Long[] trackIds);
+
+    public int deleteRepresentDiscoverTrackByDiscoverIds(Long[] discoverIds);
+
+    public RepresentDiscoverTrack selectBySendUserId(@Param("receiveUserId") Long receiveUserId,@Param("discoverId") Long discoverId);
+
 }
