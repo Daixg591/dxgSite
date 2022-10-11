@@ -17,57 +17,44 @@ public class RepresentDiscover extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
     /** 联络站Id */
-    @Excel(name = "联络站Id")
     private Long stationId;
     /**  */
     private Long discoverId;
 
     /**  */
-    @Excel(name = "")
     private String title;
 
     /**  */
-    @Excel(name = "")
     private String content;
 
     /** 发现类型 */
-    @Excel(name = "发现类型")
     private Long discoverType;
 
     /** 通讯地点 */
-    @Excel(name = "通讯地点")
     private String address;
 
     /** 经纬度逗号分割 */
-    @Excel(name = "经纬度逗号分割")
     private String location;
 
     /** 回复 */
-    @Excel(name = "回复")
     private String reply;
 
     /** 评价 */
-    @Excel(name = "评价")
     private Long rate;
 
     /** 发送用户id 0-系统消息 */
-    @Excel(name = "发送用户id 0-系统消息")
     private Long sendUserId;
 
     /** 接收人用户id 0-全部 */
-    @Excel(name = "接收人用户id 0-全部")
     private Long receiveUserId;
 
     /** 状态 */
-    @Excel(name = "状态")
     private Integer status;
 
     /** 流程类型 */
-    @Excel(name = "流程类型")
     private Integer processType;
 
     /** 多个照片 */
-    @Excel(name = "多个照片")
     private String picUrls;
 
     public void setDiscoverId(Long discoverId) 

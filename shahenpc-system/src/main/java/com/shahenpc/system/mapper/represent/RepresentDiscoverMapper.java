@@ -99,4 +99,12 @@ public interface RepresentDiscoverMapper
 
     public List<DiscoverAppListDto> translateList(Long stationId);
 
+
+    public List<DiscoverRankingDto> selectByGeRenRanking();
+
+    public List<DiscoverContactRankingDto> selectByContactRanking();
+
+    public List<DiscoverContactRankingDto> selectByContactbaifenlvRanking();
+
+    public String selectByTotalLv();
 }

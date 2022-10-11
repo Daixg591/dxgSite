@@ -58,7 +58,6 @@ public class RepresentDiscoverController extends BaseController
     @GetMapping("/translate/list")
     public TableDataInfo translateList()
     {
-
         List<DiscoverAppListDto> list = representDiscoverService.translateList(getUserId());
         return getDataTable(list);
     }
@@ -96,12 +95,13 @@ public class RepresentDiscoverController extends BaseController
     /**
      * 导出代-代发现列表
      */
+    @ApiOperation("代表发现导出")
     @Log(title = "代-代发现", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, RepresentDiscover representDiscover)
     {
-        List<RepresentDiscover> list = representDiscoverService.selectRepresentDiscoverList(representDiscover);
-        ExcelUtil<RepresentDiscover> util = new ExcelUtil<RepresentDiscover>(RepresentDiscover.class);
+        List<DiscoverListDto> list = representDiscoverService.adminList(representDiscover);
+        ExcelUtil<DiscoverListDto> util = new ExcelUtil<DiscoverListDto>(DiscoverListDto.class);
         util.exportExcel(response, list, "代-代发现数据");
     }
 
@@ -195,5 +195,42 @@ public class RepresentDiscoverController extends BaseController
     @GetMapping(value = "/heatmap")
     public AjaxResult heatmap() {
         return AjaxResult.success(representDiscoverService.heatmap());
+    }
+
+
+    /**
+     * 代表发现排名 个人
+     */
+    @ApiOperation("排行")
+    @GetMapping(value = "/ranking")
+    public AjaxResult Ranking()
+    {
+        return AjaxResult.success(representDiscoverService.ranking());
+    }
+
+
+    /**
+     * 代表发现排名 个人
+     */
+    @ApiOperation("联络站排行")
+    @GetMapping(value = "/contact/ranking")
+    public AjaxResult contactRanking()
+    {
+        return AjaxResult.success(representDiscoverService.contactRanking());
+    }
+
+    @ApiOperation("联络站百分率排行")
+    @GetMapping(value = "/contact/baifenlv/ranking")
+    public AjaxResult contactBaiRanking()
+    {
+        return AjaxResult.success(representDiscoverService.contactBaiFenLvRanking());
+    }
+
+
+    @ApiOperation("一个率")
+    @GetMapping(value = "/total/lv")
+    public AjaxResult TotalLv()
+    {
+        return AjaxResult.success(representDiscoverService.selectByTotalLv());
     }
 }

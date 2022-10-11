@@ -487,4 +487,25 @@ public class RepresentDiscoverServiceImpl extends BaseController implements IRep
         }
         return  null;
     }
+
+    @Override
+    public List<DiscoverRankingDto> ranking() {
+        return representDiscoverMapper.selectByGeRenRanking();
+    }
+
+    @Override
+    public List<DiscoverContactRankingDto> contactRanking() {
+        return representDiscoverMapper.selectByContactRanking();
+    }
+
+    @Override
+    public List<DiscoverContactRankingDto> contactBaiFenLvRanking() {
+        return representDiscoverMapper.selectByContactbaifenlvRanking();
+    }
+
+    @Override
+    public String selectByTotalLv() {
+        return representDiscoverMapper.selectByTotalLv();
+    }
+
 }

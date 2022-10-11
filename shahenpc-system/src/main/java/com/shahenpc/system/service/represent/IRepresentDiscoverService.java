@@ -112,4 +112,12 @@ public interface IRepresentDiscoverService
      * @return
      */
     public List<DiscoverAppListDto> translateList(Long userId);
+
+    public List<DiscoverRankingDto> ranking();
+
+    public List<DiscoverContactRankingDto> contactRanking();
+
+    public List<DiscoverContactRankingDto> contactBaiFenLvRanking();
+
+    public String selectByTotalLv();
 }

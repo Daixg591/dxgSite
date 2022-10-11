@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.shahenpc.common.annotation.Excel;
 
 /**
  * Entity基类
@@ -35,6 +36,7 @@ public class BaseEntity implements Serializable
 
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "上传时间")
     private Date createTime;
 
     /** 更新者 */

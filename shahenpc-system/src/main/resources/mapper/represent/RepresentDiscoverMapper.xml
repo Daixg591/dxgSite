@@ -134,6 +134,7 @@
         </foreach>
     </delete>
     <!-- ==========================================分割线-->
+
     <select id="getCount" resultType="java.lang.Integer">
         SELECT COUNT(discover_id) FROM represent_discover
     </select>
@@ -167,6 +168,7 @@
         d.title, d.content,d.pic_urls, d.discover_type, d.remark,
         d.create_time, d.update_by, d.update_time, d.create_by, d.address, d.location,
         d.status, d.reply, d.rate, d.send_user_id,d.receive_user_id,
+        (SELECT a.title FROM represent_home_access a WHERE a.access_id = d.station_id)AS accessName,
         (SELECT d1.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='discover_status' AND d1.dict_value = d.status)AS processTypeName,
         (SELECT d1.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='process_type' AND d1.dict_value = d.process_type)AS processTypeName,
         (SELECT d1.dict_label FROM sys_dict_data d1 WHERE d1.dict_type='discover_type' AND d1.dict_value = d.discover_type)AS discoverTypeName,
@@ -306,5 +308,41 @@
                 a.station_id = #{stationId}
             </if>
         </where>
+    </select>
+
+
+    <select id="selectByGeRenRanking" resultType="com.shahenpc.system.domain.represent.dto.DiscoverRankingDto">
+        SELECT
+                (SELECT u.nick_name FROM sys_user u WHERE u.user_id =r.send_user_id) AS nickName,
+                (SELECT a.title FROM represent_home_access a WHERE a.access_id = r.station_id) AS accessName,
+                COUNT(send_user_id)AS ranking
+        FROM  represent_discover r GROUP BY send_user_id ORDER BY ranking DESC
+    </select>
+
+    <select id="selectByContactRanking" resultType="com.shahenpc.system.domain.represent.dto.DiscoverContactRankingDto">
+        SELECT
+            (SELECT a.title FROM represent_home_access a WHERE a.access_id = r.station_id) AS accessName,
+            COUNT(station_id)AS ranking,
+            COUNT(DISTINCT r.send_user_id)AS canyuCount,
+            (SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id)AS contactCount,
+            CONCAT(ROUND(COUNT(DISTINCT r.send_user_id) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id),2),'%')AS baifenlv
+        FROM  represent_discover r GROUP BY r.station_id ORDER BY ranking DESC
+    </select>
+
+    <select id="selectByContactbaifenlvRanking" resultType="com.shahenpc.system.domain.represent.dto.DiscoverContactRankingDto">
+        SELECT
+            (SELECT a.title FROM represent_home_access a WHERE a.access_id = r.station_id) AS accessName,
+            COUNT(station_id)AS ranking,
+            COUNT(DISTINCT r.send_user_id)AS canyuCount,
+            (SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id)AS contactCount,
+            CONCAT(ROUND(COUNT(DISTINCT r.send_user_id) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id),2),'%')AS baifenlv
+        FROM  represent_discover r GROUP BY r.station_id ORDER BY baifenlv DESC
+    </select>
+
+
+    <select id="selectByTotalLv" resultType="String">
+        SELECT
+            CONCAT(ROUND(COUNT(DISTINCT send_user_id) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.identity = 3),2),'%')AS baifenlv
+        FROM  represent_discover r
     </select>
 </mapper>
