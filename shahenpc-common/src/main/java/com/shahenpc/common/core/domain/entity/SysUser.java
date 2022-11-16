@@ -253,6 +253,19 @@ public class SysUser extends BaseEntity {
             "40=普米族,41=鄂温克族,42=怒族,43=京族,44=基诺族,45=德昂族,46=保安族,47=俄罗斯族," +
             "48=裕固族,49=乌孜别克族,50=门巴族,51=鄂伦春族,52=独龙族,53=塔塔尔族,54=赫哲族,55=珞巴族")
     private String nation;
+
+    /**
+     * 所属网格
+     */
+    @Excel(name = "所属网格")
+    private String gridding;
+
+    /**
+     * 代表级别
+     */
+    @Excel(name = "代表级别", readConverterExp = "0=全国,1=省人大,2=市人大,3=区/县人大,4=乡镇人大")
+    private String newLevel;
+
     /**
      * 用户状态
      */

@@ -50,8 +50,9 @@
         <result property="level" column="level"/>
         <result property="shortName" column="short_name"/>
         <result property="videoMeetingAccount" column="video_meeting_account"/>
-
         <result property="contactStationId" column="contact_station_id"/>
+        <result property="gridding" column="gridding"/>
+        <result property="newLevel" column="new_level"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
     </resultMap>
@@ -121,6 +122,8 @@
                u.distinction,
                u.level,
                u.video_meeting_account,
+               u.gridding,
+               u.new_level,
                d.dept_id,
                d.parent_id,
                d.ancestors,
@@ -147,7 +150,8 @@
         u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date,
         u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,u.video_meeting_account,
         u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,u.user_status,
-        u.choose_area,u.party_groupings,u.distinction,u.level,u.user_type,
+        u.choose_area,u.party_groupings,u.distinction,u.level,u.user_type,u.gridding,
+        u.new_level,
         (SELECT dict_label FROM sys_dict_data WHERE dict_type = 'sys_user_nation' AND dict_value =u. nation)AS nationName,
         a.short_name,d.dept_name, d.leader
         from sys_user u
@@ -221,7 +225,7 @@
         u.id_card, u.identity, u.open_id, u.born_date, u.native_place, u.born_place, u.nation, u.party_date,
         u.job_date,u.edu_log_list,u.good_area,u.contact_station_id,u.video_meeting_account,
         u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,u.user_status,
-        u.choose_area,u.party_groupings,u.distinction,u.level,
+        u.choose_area,u.party_groupings,u.distinction,u.level,u.gridding,u.new_level,
         (SELECT dict_label FROM sys_dict_data WHERE dict_type = 'sys_user_nation' AND dict_value =u. nation)AS
         nationName,
         d.dept_name, d.leader from sys_user u
@@ -396,6 +400,8 @@
         <if test="distinction != null">distinction,</if>
         <if test="userType != null">user_type,</if>
         <if test="level != null">level,</if>
+        <if test="gridding != null">gridding,</if>
+        <if test="newLevel != null">new_level,</if>
         create_time
         )values(
         <if test="videoMeetingAccount != null">#{videoMeetingAccount},</if>
@@ -438,6 +444,8 @@
         <if test="distinction != null">#{distinction},</if>
         <if test="userType != null">#{userType},</if>
         <if test="level != null">#{level},</if>
+        <if test="gridding != null">#{gridding},</if>
+        <if test="newLevel != null">#{newLevel},</if>
         sysdate()
         )
     </insert>
@@ -486,6 +494,8 @@
             <if test="level != null">level = #{level},</if>
             <if test="userType != null">user_type = #{userType},</if>
             <if test="videoMeetingAccount != null"> video_meeting_account = #{videoMeetingAccount},</if>
+            <if test="gridding != null"> gridding = #{gridding},</if>
+            <if test="newLevel != null"> new_level = #{newLevel},</if>
             update_time = sysdate()
         </set>
         where user_id = #{userId}
@@ -575,7 +585,9 @@
                u.now_duty,
                u.edu,
                u.choose_area,
-               u.party_groupings
+               u.party_groupings,
+               u.gridding,
+               u.new_level
         from sys_user u
         WHERE u.identity = #{identity}
     </select>
