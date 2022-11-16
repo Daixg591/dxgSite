@@ -186,7 +186,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 w.remark, w.receive_user_id, w.send_user_id, w.rate, w.address, w.location,r.`status`,w.station_id,
                 (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_type' AND d.dict_value = w.type )AS doubleTypeName,
                 (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type' AND d.dict_value = w.process_type)as processTypeName,
-                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = w.status)as statusName
+                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='double_process_type_status' AND d.dict_value = w.status)as statusName,
+                (select u.nick_name FROM  sys_user u where u.user_id = w.receive_user_id)as receiveName,
+                (select u.phonenumber FROM  sys_user u where u.user_id = w.receive_user_id)as receivePhone,
+                (select u.nick_name FROM  sys_user u where u.user_id = w.send_user_id)as sendName,
+                (select u.phonenumber FROM  sys_user u where u.user_id =w.send_user_id)as sendPhone
         FROM feature_double_work_trace r RIGHT JOIN feature_double_work w ON w.double_id = r.double_id
         WHERE r.send_user_id= #{sendUserId}
         ORDER BY r.create_time DESC

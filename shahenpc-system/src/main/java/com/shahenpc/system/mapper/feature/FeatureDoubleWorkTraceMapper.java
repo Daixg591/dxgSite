@@ -54,6 +54,10 @@ public interface FeatureDoubleWorkTraceMapper
      */
     public int deleteFeatureDoubleWorkTraceByTraceId(Long traceId);
 
+    public int deleteFeatureDoubleWorkTraceByDoubleId(Long doubleId);
+
+    public int deleteFeatureDoubleWorkTraceByDoubleIds(Long[] doubleId);
+
     /**
      * 批量删除双连工作 聊天
      *

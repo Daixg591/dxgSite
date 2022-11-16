@@ -55,11 +55,11 @@ public interface FeatureDoubleWorkMapper
     /**
      * 待办
      */
-    public List<FeatureDoubleWork> selectByTodoList(FeatureDoubleWork request);
+    public List<TodoListDto> selectByTodoList(FeatureDoubleWork request);
     /**
      * 已办
      */
-    public List<FeatureDoubleWork> selectByDoneList(FeatureDoubleWork request);
+    public List<TodoListDto> selectByDoneList(FeatureDoubleWork request);
     /**
      * 详情
      * @param doubleId

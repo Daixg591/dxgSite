@@ -11,4 +11,9 @@ public class TodoListDto extends FeatureDoubleWork {
     private String doubleTypeName;
     private String processTypeName;
     private String statusName;
+
+    private String receiveName;
+    private String receivePhone;
+    private String sendName;
+    private String sendPhone;
 }

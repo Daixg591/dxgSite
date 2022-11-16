@@ -140,4 +140,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null "> and user_id = #{userId}</if>
         </where>
     </select>
+
+    <select id="selectByUserId" parameterType="Long" resultType="com.shahenpc.system.domain.oa.dto.MeetingUserIdListDto">
+        select m.title,m.create_time as createTime from oa_meeting_sign s LEFT JOIN oa_meeting m ON s.meeting_id = m.meeting_id WHERE s.user_id = #{userId} AND s.status = 1
+    </select>
 </mapper>
