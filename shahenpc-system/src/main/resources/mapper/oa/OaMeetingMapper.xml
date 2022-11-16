@@ -19,10 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="createBy"    column="create_by"    />
+        <result property="fileList" column="file_list"/>
     </resultMap>
 
     <sql id="selectOaMeetingVo">
-        select meeting_id, title, meeting_type, start_time, end_time, address, content, is_sign, status, remark, create_time, update_by, update_time, create_by from oa_meeting
+        select meeting_id, title, meeting_type, start_time, end_time, address, content, is_sign, status, remark, create_time, update_by, update_time, create_by,file_list from oa_meeting
     </sql>
 
     <select id="selectOaMeetingList" parameterType="OaMeeting" resultMap="OaMeetingResult">
@@ -61,6 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="createBy != null">create_by,</if>
+            <if test="fileList != null">file_list,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null">#{title},</if>
@@ -76,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="createBy != null">#{createBy},</if>
+            <if test="fileList != null">#{fileList},</if>
         </trim>
     </insert>
 
@@ -95,6 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="fileList != null">file_list = #{fileList},</if>
         </trim>
         where meeting_id = #{meetingId}
     </update>
@@ -133,7 +137,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     <select id="selectByAppHomeList" resultMap="meetingList">
         select
-            meeting_id, title, meeting_type, start_time, end_time, address, content, is_sign, status, remark, create_time, update_by, update_time, create_by,
+            meeting_id, title, meeting_type, start_time, end_time, address, content, is_sign, status, remark, create_time, update_by, update_time, create_by,file_list,
             (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_type' AND d.dict_value = a.meeting_type)AS meetingTypeName,
             (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_status' AND d.dict_value = a.`status`)AS statusName,
             (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_is_sign' AND d.dict_value = a.is_sign)AS isSignName
@@ -144,7 +148,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="appList" resultMap="meetingList" parameterType="OaMeeting">
         select
-        meeting_id, title, meeting_type, start_time, end_time, address, content, is_sign, status, remark, create_time, update_by, update_time, create_by,
+        meeting_id, title, meeting_type, start_time, end_time, address, content, is_sign, status, remark, create_time, update_by, update_time, create_by,file_list,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_type' AND d.dict_value = a.meeting_type)AS meetingTypeName,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_status' AND d.dict_value = a.`status`)AS statusName,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_is_sign' AND d.dict_value = a.is_sign)AS isSignName
@@ -170,7 +174,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     <select id="appDetail" resultMap="appDetail">
         select
-            meeting_id, title, meeting_type, start_time, end_time, address, content, is_sign, status, remark, create_time, update_by, update_time, create_by,
+            meeting_id, title, meeting_type, start_time, end_time, address, content, is_sign, status, remark, create_time, update_by, update_time, create_by,file_list,
             (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_type' AND d.dict_value = a.meeting_type)AS meetingTypeName,
             (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_status' AND d.dict_value = a.`status`)AS statusName,
             (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='meeting_is_sign' AND d.dict_value = a.is_sign)AS isSignName,

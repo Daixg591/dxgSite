@@ -106,5 +106,7 @@ public interface RepresentDiscoverMapper
 
     public List<DiscoverContactRankingDto> selectByContactbaifenlvRanking();
 
-    public String selectByTotalLv();
+    public DiscoverTotalRenLVDto selectByTotalLv();
+
+    public List<DiscoverUserIdDto> selectByReceiveUserId(Long userId);
 }

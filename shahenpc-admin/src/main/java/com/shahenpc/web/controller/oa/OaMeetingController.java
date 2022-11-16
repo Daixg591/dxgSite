@@ -40,7 +40,6 @@ public class OaMeetingController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(OaMeeting oaMeeting)
     {
-        startPage();
         List<OaMeeting> list = oaMeetingService.selectOaMeetingList(oaMeeting);
         return getDataTable(list);
     }

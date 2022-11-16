@@ -119,5 +119,5 @@ public interface IRepresentDiscoverService
 
     public List<DiscoverContactRankingDto> contactBaiFenLvRanking();
 
-    public String selectByTotalLv();
+    public DiscoverTotalRenLVDto selectByTotalLv();
 }

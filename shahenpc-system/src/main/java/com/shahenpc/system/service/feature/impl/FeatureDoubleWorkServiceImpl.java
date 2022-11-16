@@ -121,7 +121,10 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     @Override
     public int deleteFeatureDoubleWorkByDoubleIds(Long[] doubleIds)
     {
-        return featureDoubleWorkMapper.deleteFeatureDoubleWorkByDoubleIds(doubleIds);
+        if(featureDoubleWorkMapper.deleteFeatureDoubleWorkByDoubleIds(doubleIds) > 0){
+            return featureDoubleWorkTraceMapper.deleteFeatureDoubleWorkTraceByDoubleIds(doubleIds);
+        }
+        return 0;
     }
 
     @Override
@@ -160,13 +163,13 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     }
 
     @Override
-    public List<FeatureDoubleWork> todoList(FeatureDoubleWork request) {
+    public List<TodoListDto> todoList(FeatureDoubleWork request) {
 
         return featureDoubleWorkMapper.selectByTodoList(request);
     }
 
     @Override
-    public List<FeatureDoubleWork> doneList(FeatureDoubleWork request) {
+    public List<TodoListDto> doneList(FeatureDoubleWork request) {
 
         return featureDoubleWorkMapper.selectByDoneList(request);
     }
@@ -185,6 +188,7 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
     @Override
     public int deleteFeatureDoubleWorkByDoubleId(Long doubleId)
     {
+        featureDoubleWorkTraceMapper.deleteFeatureDoubleWorkTraceByDoubleId(doubleId);
         return featureDoubleWorkMapper.deleteFeatureDoubleWorkByDoubleId(doubleId);
     }
 
@@ -305,7 +309,13 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                 Work.setUpdateTime(DateUtils.getNowDate());
                 if(Constants.DOUBLE_PROCESS_TYPE_1.equals(featureDoubleWork.getProcessType())){
                     SysUser user=sysUserMapper.selectUserById(featureDoubleWork.getReceiveUserId());
+                    if(user.getContactStationId() == null){
+                        return AjaxResult.error("未绑定联络站！");
+                    }
                     RepresentHomeAccess access= representHomeAccessMapper.selectRepresentHomeAccessByAccessId(user.getContactStationId());
+                    if(access == null){
+                        return AjaxResult.error("联络站不存在！");
+                    }
                     Work.setReceiveUserId(access.getUserId());
                     Work.setProcessType(Constants.DOUBLE_PROCESS_TYPE_2);
                 }else if(Constants.DOUBLE_PROCESS_TYPE_2.equals(featureDoubleWork.getProcessType())){
@@ -314,6 +324,10 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
                     Work.setProcessType(Constants.DOUBLE_PROCESS_TYPE_3);
                 }else if(Constants.DOUBLE_PROCESS_TYPE_3.equals(featureDoubleWork.getProcessType())){
                     Work.setProcessType(Constants.DOUBLE_PROCESS_TYPE_4);
+                    //这个需要选人传入 setReceiveUserId(1)|
+                    Work.setReceiveUserId(sysUserMapper.selectByZhengFuBan());
+                }else if(Constants.DOUBLE_PROCESS_TYPE_4.equals(featureDoubleWork.getProcessType())){
+                    Work.setProcessType(Constants.DOUBLE_PROCESS_TYPE_5);
                     //这个需要选人传入 setReceiveUserId(1)
                     Work.setReceiveUserId(featureDoubleWork.getReceiveUserId());
                 }

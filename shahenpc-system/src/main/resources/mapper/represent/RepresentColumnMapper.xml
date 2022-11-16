@@ -110,7 +110,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     <select id="selectByAdminList" parameterType="RepresentColumn" resultMap="adminList">
         select c.column_id, c.name, c.order_num, c.status, c.remark, c.create_time, c.update_by, c.update_time, c.create_by, c.column_type, c.is_app_show, c.is_wx_show,
-        c.category,
+        c.category,c.sort,
         (SELECT COUNT(n.notice_id) FROM personnel_appoint_notice n WHERE n.type = c.category)AS conuts
         from represent_column c
         <where>
@@ -122,6 +122,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isWxShow != null "> and is_wx_show = #{isWxShow}</if>
             <if test="category != null "> and category = #{category}</if>
         </where>
-        ORDER BY c.order_num
+        ORDER BY c.sort
     </select>
 </mapper>

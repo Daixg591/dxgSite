@@ -160,4 +160,7 @@ public interface SysUserMapper
 
 
     public String selectByPassword(Long userId);
+
+
+    public Long selectByZhengFuBan();
 }

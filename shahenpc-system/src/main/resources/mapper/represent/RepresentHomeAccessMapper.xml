@@ -210,7 +210,7 @@
     </delete>
     <!--=========================================分割线-->
     <select id="selectVisitsCount" resultType="java.lang.Integer">
-        SELECT COUNT(browse_number)
+        SELECT SUM(browse_number)
         FROM represent_home_access
     </select>
 

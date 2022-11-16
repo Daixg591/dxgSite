@@ -3,6 +3,7 @@ package com.shahenpc.system.service.oa.impl;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
@@ -26,7 +27,7 @@ import com.shahenpc.system.service.oa.IOaMeetingService;
  * @date 2022-07-19
  */
 @Service
-public class OaMeetingServiceImpl implements IOaMeetingService 
+public class OaMeetingServiceImpl extends BaseController implements IOaMeetingService
 {
     @Autowired
     private OaMeetingMapper oaMeetingMapper;
@@ -78,6 +79,7 @@ public class OaMeetingServiceImpl implements IOaMeetingService
                 }
             }
         }
+        startPage();
         return oaMeetingMapper.selectOaMeetingList(oaMeeting);
     }
 

@@ -504,7 +504,7 @@ public class RepresentDiscoverServiceImpl extends BaseController implements IRep
     }
 
     @Override
-    public String selectByTotalLv() {
+    public DiscoverTotalRenLVDto selectByTotalLv() {
         return representDiscoverMapper.selectByTotalLv();
     }
 

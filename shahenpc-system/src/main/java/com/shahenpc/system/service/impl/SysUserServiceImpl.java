@@ -98,6 +98,11 @@ public class SysUserServiceImpl implements ISysUserService
     }
 
     @Override
+    public List<SysUser> selectUserListTest(SysUser user) {
+        return userMapper.selectUserList(user);
+    }
+
+    @Override
     @DataScope(deptAlias = "d", userAlias = "u")
     public List<SysUser> selectRandUserList(SysUser user){
         return userMapper.selectRandUserList(user);
@@ -433,7 +438,9 @@ public class SysUserServiceImpl implements ISysUserService
      */
     public void insertUserRole(SysUser user)
     {
-        this.insertUserRole(user.getUserId(), user.getRoleIds());
+        if(StringUtils.isNotEmpty(user.getRoleIds())){
+            this.insertUserRole(user.getUserId(), user.getRoleIds());
+        }
     }
 
     /**

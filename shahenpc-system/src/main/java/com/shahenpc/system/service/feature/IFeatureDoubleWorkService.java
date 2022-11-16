@@ -60,9 +60,9 @@ public interface IFeatureDoubleWorkService
 
     public AjaxResult fallback(DoubleFallbackVo fallbackVo);
 
-    public List<FeatureDoubleWork> todoList(FeatureDoubleWork request);
+    public List<TodoListDto> todoList(FeatureDoubleWork request);
 
-    public List<FeatureDoubleWork> doneList(FeatureDoubleWork request);
+    public List<TodoListDto> doneList(FeatureDoubleWork request);
 
     public DoubleDetatilDto adminDateil(Long doubleId);
     /**

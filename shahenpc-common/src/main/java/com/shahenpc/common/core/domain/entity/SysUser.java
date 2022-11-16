@@ -25,7 +25,8 @@ import com.shahenpc.common.xss.Xss;
 public class SysUser extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-
+    /** 用户类型 */
+    private Integer userType;
     public String getDistinction() {
         return distinction;
     }
@@ -73,6 +74,8 @@ public class SysUser extends BaseEntity {
      * 工人、农民和其他劳动者，专业技术人员，企事业单位负责人，公务员、解放军
      */
 //    @Excel(name = "代表界别", readConverterExp = "0=工人、农民和其他劳动者,1=专业技术人员,2=企事业单位负责人,3=公务员,4=解放军")
+    @Excel(name = "联络站")
+    private String shortName;
     @Excel(name = "代表界别")
     private String distinction;
     /**
@@ -187,6 +190,7 @@ public class SysUser extends BaseEntity {
     @JsonIgnore
     private String password;
 
+    private String initPassword;
     /**
      * 帐号状态（0正常 1停用）
      */
@@ -664,7 +668,6 @@ public class SysUser extends BaseEntity {
                 .append("phonenumber", getPhonenumber())
                 .append("sex", getSex())
                 .append("avatar", getAvatar())
-                .append("password", getPassword())
                 .append("status", getStatus())
                 .append("delFlag", getDelFlag())
                 .append("idCard", getIdCard())

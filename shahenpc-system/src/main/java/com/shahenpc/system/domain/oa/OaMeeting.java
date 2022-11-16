@@ -2,6 +2,7 @@ package com.shahenpc.system.domain.oa;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.shahenpc.common.annotation.Excel;
@@ -13,6 +14,7 @@ import com.shahenpc.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2022-07-19
  */
+@Data
 public class OaMeeting extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -53,6 +55,9 @@ public class OaMeeting extends BaseEntity
     /** 会议状态 */
     @Excel(name = "会议状态")
     private Integer status;
+
+    @Excel(name = "附件")
+    private String fileList;
 
     public void setMeetingId(Long meetingId)
     {

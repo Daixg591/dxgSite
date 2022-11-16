@@ -109,6 +109,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     <!--===============================================================分割线-->
+
+    <delete id="deleteFeatureDoubleWorkTraceByDoubleId" parameterType="Long">
+        delete from feature_double_work_trace where double_id = #{doubleId}
+    </delete>
+    <delete id="deleteFeatureDoubleWorkTraceByDoubleIds" parameterType="String">
+        delete from feature_double_work_trace where double_id in
+        <foreach item="doubleId" collection="array" open="(" separator="," close=")">
+            #{doubleId}
+        </foreach>
+    </delete>
+
     <resultMap id="adminList" type="com.shahenpc.system.domain.feature.dto.TraceListDto" extends="FeatureDoubleWorkTraceResult">
 
     </resultMap>

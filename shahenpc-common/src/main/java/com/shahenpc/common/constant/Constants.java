@@ -92,6 +92,7 @@ public class Constants
      */
     public static final Integer DOUBLE_PROCESS_TYPE_3=3;
     public static final Integer DOUBLE_PROCESS_TYPE_4 = 4;
+    public static final Integer DOUBLE_PROCESS_TYPE_5 = 5;
     /**
      * 双联工作 类型 民生类
      */

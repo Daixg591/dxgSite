@@ -131,10 +131,10 @@ public class OutlayAlarmServiceImpl implements IOutlayAlarmService
         List<QuarterAlarmDto>  construction=outlayAlarmMapper.selectByQuarter(3,year);
         List<QuarterAlarmDto>  technology=outlayAlarmMapper.selectByQuarter(4,year);
         JSONObject resPersonMap = new JSONObject();
-        resPersonMap.put("educate", getBar(educate));
-        resPersonMap.put("society", getBar(society));
-        resPersonMap.put("construction", getBar(construction));
-        resPersonMap.put("technology", getBar(technology));
+        resPersonMap.put("一般公共预算", getBar(educate));
+        resPersonMap.put("政府性基金预算", getBar(society));
+        resPersonMap.put("国有资本经营预算", getBar(construction));
+        resPersonMap.put("社会保险基金预算", getBar(technology));
         return resPersonMap;
     }
 

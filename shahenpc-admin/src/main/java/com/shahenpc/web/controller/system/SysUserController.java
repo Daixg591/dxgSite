@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -63,6 +64,18 @@ public class SysUserController extends BaseController {
     public TableDataInfo list(SysUser user) {
         startPage();
         List<SysUser> list = userService.selectUserList(user);
+        return getDataTable(list);
+    }
+
+    /**
+     * 给 何兴用
+     * @param user
+     * @return
+     */
+    @GetMapping("/test/list")
+    public TableDataInfo testList(SysUser user) {
+        startPage();
+        List<SysUser> list = userService.selectUserListTest(user);
         return getDataTable(list);
     }
 
@@ -199,21 +212,36 @@ public class SysUserController extends BaseController {
     public AjaxResult add(@Validated @RequestBody SysUser user) {
         if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserName()))) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
-        } else if (StringUtils.isNotEmpty(user.getPhonenumber())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
-            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
-        } else if (StringUtils.isNotEmpty(user.getEmail())
+        }
+//        else if (StringUtils.isNotEmpty(user.getPhonenumber())
+//                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
+//            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
+//        }
+        else if (StringUtils.isNotEmpty(user.getEmail())
                 && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
         user.setCreateBy(getUsername());
-        if (user.getPassword() == "" || user.getPassword() == null) {
-            //.selectConfigByKey("sys.user.initPassword");
-            user.setPassword(SecurityUtils.encryptPassword(user.getPhonenumber().substring(user.getPhonenumber().length() - 6)));
+        user.setPassword(user.getInitPassword());
+        if (user.getPassword() == null) {
+            if(user.getPhonenumber() != null){
+                user.setPassword(SecurityUtils.encryptPassword(user.getPhonenumber().substring(user.getPhonenumber().length() - 6)));
+            }else{
+                user.setPassword(SecurityUtils.encryptPassword("123456"));
+            }
         } else {
             user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         }
         return toAjax(userService.insertUser(user));
+    }
+
+    @PreAuthorize("@ss.hasPermi('system:user:uppws')")
+    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
+    @PutMapping("/update/pws")
+    public AjaxResult updatePws(@Validated @RequestBody SysUser user) {
+        user.setUpdateBy(getUsername());
+        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+        return toAjax(userService.updateUser(user));
     }
 
     /**

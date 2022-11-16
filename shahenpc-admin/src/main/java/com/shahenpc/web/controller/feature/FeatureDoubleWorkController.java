@@ -121,7 +121,7 @@ public class FeatureDoubleWorkController extends BaseController {
     public TableDataInfo todoList(FeatureDoubleWork featureDoubleWork) {
         startPage();
         featureDoubleWork.setReceiveUserId(getUserId());
-        List<FeatureDoubleWork> list = featureDoubleWorkService.todoList(featureDoubleWork);
+        List<TodoListDto> list = featureDoubleWorkService.todoList(featureDoubleWork);
         return getDataTable(list);
     }
 
@@ -130,7 +130,7 @@ public class FeatureDoubleWorkController extends BaseController {
     public TableDataInfo doneList(FeatureDoubleWork featureDoubleWork) {
         startPage();
         featureDoubleWork.setSendUserId(getUserId());
-        List<FeatureDoubleWork> list = featureDoubleWorkService.doneList(featureDoubleWork);
+        List<TodoListDto> list = featureDoubleWorkService.doneList(featureDoubleWork);
         return getDataTable(list);
     }
 

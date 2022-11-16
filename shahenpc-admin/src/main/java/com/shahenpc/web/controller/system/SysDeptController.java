@@ -41,10 +41,18 @@ public class SysDeptController extends BaseController
     @GetMapping("/list")
     public AjaxResult list(SysDept dept)
     {
-        List<SysDept> depts = deptService.selectDeptList(dept);
+        List<SysDept> depts = deptService.selectDeptListTest(dept);
         return AjaxResult.success(depts);
     }
-
+    /**
+     * 获取部门下拉树列表
+     */
+    @GetMapping("/treeselect")
+    public AjaxResult treeselect(SysDept dept)
+    {
+        List<SysDept> depts = deptService.selectDeptListTest(dept);
+        return AjaxResult.success(deptService.buildDeptTreeSelect(depts));
+    }
     /**
      * 查询部门列表（排除节点）
      */
@@ -77,15 +85,7 @@ public class SysDeptController extends BaseController
         return AjaxResult.success(deptService.selectDeptById(deptId));
     }
 
-    /**
-     * 获取部门下拉树列表
-     */
-    @GetMapping("/treeselect")
-    public AjaxResult treeselect(SysDept dept)
-    {
-        List<SysDept> depts = deptService.selectDeptList(dept);
-        return AjaxResult.success(deptService.buildDeptTreeSelect(depts));
-    }
+
 
     @GetMapping("/dept/user")
     public AjaxResult deptUser()

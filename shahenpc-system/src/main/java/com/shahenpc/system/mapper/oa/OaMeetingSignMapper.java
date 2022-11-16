@@ -3,6 +3,7 @@ package com.shahenpc.system.mapper.oa;
 import java.util.List;
 import com.shahenpc.system.domain.oa.OaMeetingSign;
 import com.shahenpc.system.domain.oa.dto.MeetingAppDetailDto;
+import com.shahenpc.system.domain.oa.dto.MeetingUserIdListDto;
 import com.shahenpc.system.domain.oa.dto.SignListDto;
 import org.apache.ibatis.annotations.Param;
 
@@ -71,5 +72,5 @@ public interface OaMeetingSignMapper
 
     public OaMeetingSign selectByMeetingIdAndUserIds(@Param("meetingId") Long meetingId,@Param("userId") Long userId);
 
-
+    List<MeetingUserIdListDto> selectByUserId(Long userId);
 }

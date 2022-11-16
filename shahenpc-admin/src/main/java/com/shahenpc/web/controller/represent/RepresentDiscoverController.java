@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.shahenpc.system.domain.represent.dto.DiscoverAppListDto;
 import com.shahenpc.system.domain.represent.dto.DiscoverListDto;
 import com.shahenpc.system.domain.represent.dto.DiscoverPieDto;
+import com.shahenpc.system.domain.represent.dto.DiscoverRankingDto;
 import com.shahenpc.system.domain.represent.vo.DiscoverFallbackVo;
 import com.shahenpc.system.domain.represent.vo.DiscoverUpdateVo;
 import io.swagger.annotations.Api;
@@ -203,11 +204,12 @@ public class RepresentDiscoverController extends BaseController
      */
     @ApiOperation("排行")
     @GetMapping(value = "/ranking")
-    public AjaxResult Ranking()
+    public TableDataInfo Ranking()
     {
-        return AjaxResult.success(representDiscoverService.ranking());
+        startPage();
+        List<DiscoverRankingDto> list = representDiscoverService.ranking();
+        return getDataTable(list);
     }
-
 
     /**
      * 代表发现排名 个人
