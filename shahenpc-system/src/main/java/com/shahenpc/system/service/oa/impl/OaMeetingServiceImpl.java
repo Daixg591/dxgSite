@@ -203,6 +203,11 @@ public class OaMeetingServiceImpl extends BaseController implements IOaMeetingSe
         return oaMeetingMapper.appDetail(meetingId,userId);
     }
 
+    @Override
+    public List<OaMeeting> selectByUserId(Long userId) {
+        return oaMeetingMapper.selectByUserId(userId);
+    }
+
     /**
      * 修改人大办公-会议管理
      * 

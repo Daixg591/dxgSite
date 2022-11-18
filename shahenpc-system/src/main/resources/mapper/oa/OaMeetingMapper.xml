@@ -182,4 +182,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from oa_meeting a
         where meeting_id = #{meetingId}
     </select>
+
+
+    <select id="selectByUserId" resultMap="OaMeetingResult" parameterType="Long">
+        SELECT m.* FROM oa_meeting_personnel p LEFT JOIN oa_meeting m ON m.meeting_id = p.meeting_id WHERE p.user_id = #{userId}
+    </select>
 </mapper>

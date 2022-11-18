@@ -130,4 +130,16 @@ public class OaMeetingController extends BaseController
     {
         return AjaxResult.success(oaMeetingService.columnarCount());
     }
+
+
+    @ApiOperation("我参加会议列表")
+    @PreAuthorize("@ss.hasPermi('oa:meeting:my:list')")
+    @GetMapping("/my/list")
+    public TableDataInfo myList()
+    {
+        System.out.println(getUserId());
+        startPage();
+        List<OaMeeting> list = oaMeetingService.selectByUserId(getUserId());
+        return getDataTable(list);
+    }
 }

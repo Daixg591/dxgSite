@@ -211,7 +211,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         (SELECT u.phonenumber FROM sys_user u WHERE u.user_id = w.send_user_id)AS sendPhone
         from feature_double_work w
         <where>
-            <if test="type != null and type != ''">and w.type = #{type},</if>
+            <if test="type != null and type != ''">and w.type = #{type}</if>
             <if test="title != null  and title != ''"> and w.title = #{title}</if>
             <if test="status != null and status != ''"> and w.status = #{status}</if>
             <if test="content != null  and content != ''"> and w.content = #{content}</if>

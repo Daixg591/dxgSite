@@ -92,4 +92,6 @@ public interface IOaMeetingService
     public AjaxResult signSuccess(Long meetingId, Long userId);
 
     public MeetingAppDetailDto appDetail(Long meetingId,Long userId);
+
+    public List<OaMeeting> selectByUserId(Long userId);
 }

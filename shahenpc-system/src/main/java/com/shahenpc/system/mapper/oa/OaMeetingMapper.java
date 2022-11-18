@@ -78,4 +78,6 @@ public interface OaMeetingMapper
     public List<MeetingAppListDto> appList(OaMeeting oaMeeting);
 
     public MeetingAppDetailDto appDetail(@Param("meetingId") Long meetingId,@Param("userId") Long userId);
+
+    public List<OaMeeting> selectByUserId(Long userId);
 }
