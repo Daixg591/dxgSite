@@ -36,7 +36,7 @@ public class OaMeetingController extends BaseController
      * 查询人大办公-会议管理列表
      */
     @ApiOperation("列表")
-    @PreAuthorize("@ss.hasPermi('oa:meeting:list')")
+    @PreAuthorize("@ss.hasPermi('oa:meeting:all')")
     @GetMapping("/list")
     public TableDataInfo list(OaMeeting oaMeeting)
     {
@@ -133,13 +133,12 @@ public class OaMeetingController extends BaseController
 
 
     @ApiOperation("我参加会议列表")
-    @PreAuthorize("@ss.hasPermi('oa:meeting:my:list')")
     @GetMapping("/my/list")
-    public TableDataInfo myList()
+    public TableDataInfo myList(OaMeeting meeting)
     {
-        System.out.println(getUserId());
+        meeting.setUserId(getUserId());
         startPage();
-        List<OaMeeting> list = oaMeetingService.selectByUserId(getUserId());
+        List<OaMeeting> list = oaMeetingService.selectByUserId(meeting);
         return getDataTable(list);
     }
 }

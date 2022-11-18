@@ -204,8 +204,8 @@ public class OaMeetingServiceImpl extends BaseController implements IOaMeetingSe
     }
 
     @Override
-    public List<OaMeeting> selectByUserId(Long userId) {
-        return oaMeetingMapper.selectByUserId(userId);
+    public List<OaMeeting> selectByUserId(OaMeeting meeting) {
+        return oaMeetingMapper.selectByUserId(meeting);
     }
 
     /**
@@ -230,7 +230,7 @@ public class OaMeetingServiceImpl extends BaseController implements IOaMeetingSe
     @Override
     public int deleteOaMeetingByMeetingIds(Long meetingIds)
     {
-        if(oaMeetingMapper.deleteOaMeetingByMeetingIds(meetingIds)  > 0){
+        if(oaMeetingMapper.deleteOaMeetingByMeetingId(meetingIds)  > 0){
             oaMeetingRecordMapper.deleteOaMeetingRecordByMeetingId(meetingIds);
             oaMeetingSignMapper.deleteOaMeetingSignByMeetingId(meetingIds);
             oaMeetingPersonnelMapper.deleteOaMeetingPersonnelByMeetingId(meetingIds);

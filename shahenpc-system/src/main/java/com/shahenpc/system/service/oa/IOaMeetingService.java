@@ -93,5 +93,5 @@ public interface IOaMeetingService
 
     public MeetingAppDetailDto appDetail(Long meetingId,Long userId);
 
-    public List<OaMeeting> selectByUserId(Long userId);
+    public List<OaMeeting> selectByUserId(OaMeeting userId);
 }
