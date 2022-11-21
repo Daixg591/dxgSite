@@ -17,6 +17,8 @@ import com.shahenpc.common.core.domain.BaseEntity;
 @Data
 public class OaMeeting extends BaseEntity
 {
+    //勿删
+    private Long userId;
     private static final long serialVersionUID = 1L;
 
     /**  */

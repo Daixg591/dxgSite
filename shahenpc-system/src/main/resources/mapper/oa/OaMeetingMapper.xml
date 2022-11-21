@@ -182,4 +182,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from oa_meeting a
         where meeting_id = #{meetingId}
     </select>
+
+
+    <select id="selectByUserId" resultMap="OaMeetingResult" parameterType="OaMeeting">
+        SELECT m.* FROM oa_meeting_personnel p LEFT JOIN oa_meeting m ON m.meeting_id = p.meeting_id
+        <where>
+            and p.user_id = #{userId}
+            <if test="title != null  and title != ''"> and m.title = #{title}</if>
+            <if test="meetingType != null "> and m.meeting_type = #{meetingType}</if>
+            <if test="startTime != null "> and m.start_time = #{startTime}</if>
+            <if test="endTime != null "> and m.end_time = #{endTime}</if>
+            <if test="address != null  and address != ''"> and m.address = #{address}</if>
+            <if test="content != null  and content != ''"> and m.content = #{content}</if>
+            <if test="isSign != null "> and m.is_sign = #{isSign}</if>
+            <if test="status != null "> and m.status = #{status}</if>
+        </where>
+    </select>
 </mapper>

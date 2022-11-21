@@ -36,7 +36,7 @@ public class OaMeetingController extends BaseController
      * 查询人大办公-会议管理列表
      */
     @ApiOperation("列表")
-    @PreAuthorize("@ss.hasPermi('oa:meeting:list')")
+    @PreAuthorize("@ss.hasPermi('oa:meeting:all')")
     @GetMapping("/list")
     public TableDataInfo list(OaMeeting oaMeeting)
     {
@@ -129,5 +129,16 @@ public class OaMeetingController extends BaseController
     public AjaxResult monthCount()
     {
         return AjaxResult.success(oaMeetingService.columnarCount());
+    }
+
+
+    @ApiOperation("我参加会议列表")
+    @GetMapping("/my/list")
+    public TableDataInfo myList(OaMeeting meeting)
+    {
+        meeting.setUserId(getUserId());
+        startPage();
+        List<OaMeeting> list = oaMeetingService.selectByUserId(meeting);
+        return getDataTable(list);
     }
 }

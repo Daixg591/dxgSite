@@ -203,6 +203,11 @@ public class OaMeetingServiceImpl extends BaseController implements IOaMeetingSe
         return oaMeetingMapper.appDetail(meetingId,userId);
     }
 
+    @Override
+    public List<OaMeeting> selectByUserId(OaMeeting meeting) {
+        return oaMeetingMapper.selectByUserId(meeting);
+    }
+
     /**
      * 修改人大办公-会议管理
      * 
@@ -225,7 +230,7 @@ public class OaMeetingServiceImpl extends BaseController implements IOaMeetingSe
     @Override
     public int deleteOaMeetingByMeetingIds(Long meetingIds)
     {
-        if(oaMeetingMapper.deleteOaMeetingByMeetingIds(meetingIds)  > 0){
+        if(oaMeetingMapper.deleteOaMeetingByMeetingId(meetingIds)  > 0){
             oaMeetingRecordMapper.deleteOaMeetingRecordByMeetingId(meetingIds);
             oaMeetingSignMapper.deleteOaMeetingSignByMeetingId(meetingIds);
             oaMeetingPersonnelMapper.deleteOaMeetingPersonnelByMeetingId(meetingIds);
