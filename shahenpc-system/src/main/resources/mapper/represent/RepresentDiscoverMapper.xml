@@ -331,8 +331,8 @@
             a.short_name AS accessName,
             COUNT(station_id)AS ranking,
             COUNT(DISTINCT r.send_user_id)AS canyuCount,
-            (SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0')AS contactCount,
-            CONCAT(ROUND(COUNT(DISTINCT r.send_user_id) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0'),2),'')AS baifenlv
+            (SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0' and user_type &amp; 1 >0)AS contactCount,
+            CONCAT(ROUND(COUNT(DISTINCT r.send_user_id) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0' and user_type &amp; 1 >0),2),'')AS baifenlv
         FROM  represent_discover r LEFT JOIN represent_home_access a ON a.access_id = r.station_id  WHERE a.`level` != 0
         GROUP BY r.station_id ORDER BY ranking DESC
     </select>
@@ -342,8 +342,8 @@
             (SELECT a.short_name FROM represent_home_access a WHERE a.access_id = r.station_id) AS accessName,
             COUNT(station_id)AS ranking,
             COUNT(DISTINCT r.send_user_id)AS canyuCount,
-            (SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0')AS contactCount,
-            CONCAT(ROUND(COUNT(DISTINCT r.send_user_id) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0'),2),'')AS baifenlv
+            (SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0' and user_type &amp; 1 >0)AS contactCount,
+            CONCAT(ROUND(COUNT(DISTINCT r.send_user_id) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0' and user_type &amp; 1 >0),2),'')AS baifenlv
         FROM  represent_discover r GROUP BY r.station_id ORDER BY baifenlv DESC
     </select>
 

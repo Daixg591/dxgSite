@@ -152,7 +152,8 @@
         u.health_state, u.duty, u.expert, u.resume, u.file_ids,u.now_duty,u.edu,u.organ_name,u.job_state,u.user_status,
         u.choose_area,u.party_groupings,u.distinction,u.level,u.user_type,u.gridding,
         u.new_level,
-        (SELECT dict_label FROM sys_dict_data WHERE dict_type = 'sys_user_nation' AND dict_value =u. nation)AS nationName,
+        (SELECT dict_label FROM sys_dict_data WHERE dict_type = 'sys_user_nation' AND dict_value =u. nation)AS
+        nationName,
         a.short_name,d.dept_name, d.leader
         from sys_user u
         LEFT JOIN sys_dept d on u.dept_id = d.dept_id
@@ -190,6 +191,12 @@
         </if>
         <if test="userType != null and userType != ''">
             and(u.user_type &amp; #{userType}) > 0
+        </if>
+        <if test="newLevel != null and newLevel != ''">
+            AND u.new_level &amp; #{newLevel}>0
+        </if>
+        <if test="gridding != null and gridding != ''">
+            AND u.gridding = #{gridding}
         </if>
         <if test="identity =='2'">
             AND u.identity = 1 or u.identity=2
@@ -254,7 +261,12 @@
         <if test="nation != null and nation != ''">
             AND u.nation = #{nation}
         </if>
-
+        <if test="newLevel != null and newLevel != ''">
+            AND u.new_level &amp; #{newLevel}>0
+        </if>
+        <if test="gridding != null and gridding != ''">
+            AND u.gridding = #{gridding}
+        </if>
         <if test="userName != null and userName != ''">
             AND u.user_name like concat('%', #{userName}, '%')
         </if>
@@ -289,7 +301,8 @@
     </select>
 
     <select id="selectAllocatedList" parameterType="SysUser" resultMap="SysUserResult">
-        select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber,u.password, u.status, u.create_time
+        select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber,u.password, u.status,
+        u.create_time
         from sys_user u
         left join sys_dept d on u.dept_id = d.dept_id
         left join sys_user_role ur on u.user_id = ur.user_id
@@ -306,7 +319,8 @@
     </select>
 
     <select id="selectUnallocatedList" parameterType="SysUser" resultMap="SysUserResult">
-        select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber,u.password, u.status, u.create_time
+        select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber,u.password, u.status,
+        u.create_time
         from sys_user u
         left join sys_dept d on u.dept_id = d.dept_id
         left join sys_user_role ur on u.user_id = ur.user_id
@@ -493,9 +507,9 @@
             <if test="distinction != null">distinction = #{distinction},</if>
             <if test="level != null">level = #{level},</if>
             <if test="userType != null">user_type = #{userType},</if>
-            <if test="videoMeetingAccount != null"> video_meeting_account = #{videoMeetingAccount},</if>
-            <if test="gridding != null"> gridding = #{gridding},</if>
-            <if test="newLevel != null"> new_level &amp; #{newLevel} >0,</if>
+            <if test="videoMeetingAccount != null">video_meeting_account = #{videoMeetingAccount},</if>
+            <if test="gridding != null">gridding = #{gridding},</if>
+            <if test="newLevel != null">new_level= #{newLevel},</if>
             update_time = sysdate()
         </set>
         where user_id = #{userId}
@@ -556,7 +570,7 @@
                u.dept_id,
                u.nick_name,
                u.user_name,
-                u.password,
+               u.password,
                u.email,
                u.avatar,
                u.phonenumber,
@@ -605,9 +619,11 @@
     </select>
 
 
-    <select id="selectXcxList" resultType="com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo" parameterType="SysUser">
-        select u.user_id as userId,  u.nick_name as nickName,u.good_area,u.password,
-        (SELECT dict_label FROM sys_dict_data WHERE dict_type = 'double_type' AND dict_value =u.good_area)AS goodAreaName,
+    <select id="selectXcxList" resultType="com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo"
+            parameterType="SysUser">
+        select u.user_id as userId, u.nick_name as nickName,u.good_area,u.password,
+        (SELECT dict_label FROM sys_dict_data WHERE dict_type = 'double_type' AND dict_value =u.good_area)AS
+        goodAreaName,
         a.title AS stationName,
         u.resume AS personInfo,
         u.avatar
@@ -671,17 +687,22 @@
         ${params.dataScope}
     </select>
 
-<!--select user_id as userId,nick_name as nickName-->
+    <!--select user_id as userId,nick_name as nickName-->
     <select id="selectByDeptId" resultMap="SysUserResult" parameterType="Long">
-        <include refid="selectUserVo"/> where u.dept_id = #{deptId}
+        <include refid="selectUserVo"/>
+        where u.dept_id = #{deptId}
     </select>
 
 
     <select id="selectByPassword" parameterType="Long" resultType="String">
-        SELECT `password` FROM sys_user WHERE user_id = #{userId}
+        SELECT `password`
+        FROM sys_user
+        WHERE user_id = #{userId}
     </select>
 
     <select id="selectByZhengFuBan" resultType="java.lang.Long">
-        SELECT user_id FROM sys_user WHERE dept_id = 174 LIMIT 1;
+        SELECT user_id
+        FROM sys_user
+        WHERE dept_id = 174 LIMIT 1;
     </select>
 </mapper>

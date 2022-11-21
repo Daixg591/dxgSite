@@ -4,6 +4,7 @@ import com.shahenpc.common.annotation.Log;
 import com.shahenpc.common.constant.UserConstants;
 import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
+import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.core.domain.entity.SysRole;
 import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.common.core.page.TableDataInfo;
@@ -56,6 +57,7 @@ public class SysUserController extends BaseController {
     @Autowired
     private IRepresentHomeAccessService homeAccessService;
 
+
     /**
      * 获取用户列表
      */
@@ -69,6 +71,7 @@ public class SysUserController extends BaseController {
 
     /**
      * 给 何兴用
+     *
      * @param user
      * @return
      */
@@ -92,7 +95,24 @@ public class SysUserController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:user:export')")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysUser user) {
+        SysDictData dictData = new SysDictData();
+        dictData.setDictType("user_level_type");
+        List<SysDictData> listDic = dictDataService.selectDictDataList(dictData);
+
         List<SysUser> list = userService.selectUserList(user);
+        for (SysUser sysUser : list) {
+            if (sysUser.getNewLevel()!=null){
+                String tempNewLevel = listDic.stream().filter(a -> (Integer.parseInt(a.getDictValue()) & sysUser.getNewLevel()) > 0).collect(Collectors.toList()) .stream().map(item -> item.getDictLabel()).collect(Collectors.joining("、"));;
+                sysUser.setNewLevelName(tempNewLevel);
+            }
+
+//            for (int i = 0; i < tempNewLevel.size(); i++) {
+//                System.out.println(tempNewLevel.get(i).getDictLabel());
+//            }
+//                    .stream().map(item -> item.getDictLabel()).collect(Collectors.joining("、"));
+//            sysUser.setNewLevelName(tempNewLevel);
+        }
+        System.out.println(list);
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         util.exportExcel(response, list, "用户数据");
     }
@@ -156,11 +176,10 @@ public class SysUserController extends BaseController {
             resInfo.setPersonInfo(sysUser.getResume());
             resInfo.setAvatar(sysUser.getAvatar());
             resInfo.setGoodAreaName(dictDataService.selectDictLabel("double_type", sysUser.getGoodArea()));
-            if (sysUser.getContactStationId()!=null ) {
+            if (sysUser.getContactStationId() != null) {
                 RepresentHomeAccess homeAccess = homeAccessService.selectRepresentHomeAccessByAccessId(sysUser.getContactStationId());
                 resInfo.setStationName(homeAccess.getTitle());
-            }
-            else {
+            } else {
                 resInfo.setStationName("暂无信息");
             }
         }
@@ -177,7 +196,7 @@ public class SysUserController extends BaseController {
     public TableDataInfo getUserList(SysUser user) {
         user.setIdentity("1");
         startPage();
-        List<WxUserInfoVo> list= userService.selectXcxList(user);
+        List<WxUserInfoVo> list = userService.selectXcxList(user);
         /*user.setIdentity("1");
         List<SysUser> list = userService.selectRandUserList(user);
         List<WxUserInfoVo> res = new ArrayList<>();
@@ -224,9 +243,9 @@ public class SysUserController extends BaseController {
         user.setCreateBy(getUsername());
         user.setPassword(user.getInitPassword());
         if (user.getPassword() == null) {
-            if(user.getPhonenumber() != null){
+            if (user.getPhonenumber() != null) {
                 user.setPassword(SecurityUtils.encryptPassword(user.getPhonenumber().substring(user.getPhonenumber().length() - 6)));
-            }else{
+            } else {
                 user.setPassword(SecurityUtils.encryptPassword("123456"));
             }
         } else {
