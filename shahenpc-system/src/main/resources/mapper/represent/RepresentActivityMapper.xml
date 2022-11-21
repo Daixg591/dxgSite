@@ -1,51 +1,84 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.represent.RepresentActivityMapper">
-    
+
     <resultMap type="RepresentActivity" id="RepresentActivityResult">
-        <result property="activityId"    column="activity_id"    />
-        <result property="activityType"    column="activity_type"    />
-        <result property="remark"    column="remark"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="title"    column="title"    />
-        <result property="startTime"    column="start_time"    />
-        <result property="endTime"    column="end_time"    />
-        <result property="address"    column="address"    />
-        <result property="status"    column="status"    />
-        <result property="participateConut"    column="participate_conut"    />
-        <result property="content"    column="content"    />
+        <result property="activityId" column="activity_id"/>
+        <result property="activityType" column="activity_type"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="title" column="title"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="address" column="address"/>
+        <result property="status" column="status"/>
+        <result property="participateConut" column="participate_conut"/>
+        <result property="content" column="content"/>
+        <result property="npcClaim" column="npc_claim"/>
+        <result property="openFlag" column="open_flag"/>
+        <association property="records" column="record_id" javaType="representActivityRecord" resultMap="logResult"/>
+    </resultMap>
+
+    <resultMap id="logResult" type="representActivityRecord">
+        <result property="recordId" column="record_id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="content" column="content"/>
+        <result property="submitTime" column="submit_time"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="status" column="status"/>
     </resultMap>
 
     <sql id="selectRepresentActivityVo">
-        select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content from represent_activity
+        select activity_id,
+               activity_type,
+               remark,
+               create_time,
+               update_by,
+               update_time,
+               create_by,
+               title,
+               start_time,
+               end_time,
+               address,
+               status,
+               participate_conut,
+               content,
+               npc_claim,
+               open_flag
+        from represent_activity
     </sql>
 
     <select id="selectRepresentActivityList" parameterType="RepresentActivity" resultMap="RepresentActivityResult">
         <include refid="selectRepresentActivityVo"/>
-        <where>  
-            <if test="activityType != null "> and activity_type = #{activityType}</if>
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="startTime != null "> and start_time = #{startTime}</if>
-            <if test="endTime != null "> and end_time = #{endTime}</if>
-            <if test="address != null  and address != ''"> and address = #{address}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="participateConut != null "> and participate_conut = #{participateConut}</if>
-            <if test="content != null  and content != ''"> and content = #{content}</if>
+        <where>
+            <if test="activityType != null ">and activity_type = #{activityType}</if>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="startTime != null ">and start_time = #{startTime}</if>
+            <if test="endTime != null ">and end_time = #{endTime}</if>
+            <if test="address != null  and address != ''">and address = #{address}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="participateConut != null ">and participate_conut = #{participateConut}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="npcClaim != null  and npcClaim != ''">and npc_claim = #{npcClaim}</if>
+            <if test="openFlag != null and npcClaim != '' ">and open_flag = #{openFlag}</if>
         </where>
         ORDER BY start_time DESC
     </select>
-    
+
     <select id="selectRepresentActivityByActivityId" parameterType="Long" resultMap="RepresentActivityResult">
         <include refid="selectRepresentActivityVo"/>
         where activity_id = #{activityId}
     </select>
-        
-    <insert id="insertRepresentActivity" parameterType="RepresentActivity" useGeneratedKeys="true" keyProperty="activityId">
+
+    <insert id="insertRepresentActivity" parameterType="RepresentActivity" useGeneratedKeys="true"
+            keyProperty="activityId">
         insert into represent_activity
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="activityType != null">activity_type,</if>
@@ -61,7 +94,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">status,</if>
             <if test="participateConut != null">participate_conut,</if>
             <if test="content != null">content,</if>
-         </trim>
+            <if test="npcClaim != null">npc_claim,</if>
+            <if test="openFlag != null">open_flag,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="activityType != null">#{activityType},</if>
             <if test="remark != null">#{remark},</if>
@@ -76,7 +111,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">#{status},</if>
             <if test="participateConut != null">#{participateConut},</if>
             <if test="content != null">#{content},</if>
-         </trim>
+            <if test="npcClaim != null">#{npcClaim},</if>
+            <if test="openFlag != null">#{openFlag},</if>
+        </trim>
     </insert>
 
     <update id="updateRepresentActivity" parameterType="RepresentActivity">
@@ -95,79 +132,171 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">status = #{status},</if>
             <if test="participateConut != null">participate_conut = #{participateConut},</if>
             <if test="content != null">content = #{content},</if>
+            <if test="npcClaim != null">npc_claim = #{npcClaim},</if>
+            <if test="openFlag != null">open_flag = #{openFlag},</if>
         </trim>
         where activity_id = #{activityId}
     </update>
 
     <delete id="deleteRepresentActivityByActivityId" parameterType="Long">
-        delete from represent_activity where activity_id = #{activityId}
+        delete
+        from represent_activity
+        where activity_id = #{activityId}
     </delete>
 
     <delete id="deleteRepresentActivityByActivityIds" parameterType="String">
-        delete from represent_activity where activity_id in 
+        delete from represent_activity where activity_id in
         <foreach item="activityId" collection="array" open="(" separator="," close=")">
             #{activityId}
         </foreach>
     </delete>
 
     <!--======================================================分割线-->
-    <select id="selectByFinishCount" resultType="com.shahenpc.system.domain.represent.dto.ActivityFinishCountDto" parameterType="java.lang.Long">
-        SELECT
-            sum((SELECT COUNT(a.activity_id) FROM represent_activity a WHERE a1.`status` = 4 AND a.activity_id =a1.activity_id))AS finishCount,
-            COUNT(a1.activity_id)AS `count`
-        FROM represent_activity a1 LEFT JOIN represent_activity_record r1 ON a1.activity_id = r1.activity_id
-        WHERE r1.user_id= #{userId}
+    <select id="selectByFinishCount" resultType="com.shahenpc.system.domain.represent.dto.ActivityFinishCountDto"
+            parameterType="java.lang.Long">
+        SELECT sum((SELECT COUNT(a.activity_id)
+                    FROM represent_activity a
+                    WHERE a1.`status` = 4
+                      AND a.activity_id = a1.activity_id)) AS finishCount,
+               COUNT(a1.activity_id)                       AS `count`
+        FROM represent_activity a1
+                 LEFT JOIN represent_activity_record r1 ON a1.activity_id = r1.activity_id
+        WHERE r1.user_id = #{userId}
     </select>
 
     <!--app  详情-->
-    <resultMap id="activityList" type="com.shahenpc.system.domain.represent.dto.ActivityAppListDto" extends="RepresentActivityResult">
-        <association property="record" column="activity_id" select="com.shahenpc.system.mapper.represent.RepresentActivityRecordMapper.selectByActivityId"></association>
+    <resultMap id="activityList" type="com.shahenpc.system.domain.represent.dto.ActivityAppListDto"
+               extends="RepresentActivityResult">
+        <association property="record" column="activity_id"
+                     select="com.shahenpc.system.mapper.represent.RepresentActivityRecordMapper.selectByActivityId"></association>
     </resultMap>
     <select id="selectByAppHomeList" resultMap="activityList">
-        select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content,
-        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type )AS activityTypeName,
-        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
+        select activity_id,
+               activity_type,
+               remark,
+               create_time,
+               update_by,
+               update_time,
+               create_by,
+               title,
+               start_time,
+               end_time,
+               address,
+               status,
+               participate_conut,
+               content,
+               npc_claim,
+               open_flag,
+               (SELECT d.dict_label
+                FROM sys_dict_data d
+                WHERE d.dict_type = 'activity_type'
+                  AND d.dict_value = a.activity_type) AS activityTypeName,
+               (SELECT d.dict_label
+                FROM sys_dict_data d
+                WHERE d.dict_type = 'activity_status'
+                  AND d.dict_value = a.`status`)      AS statusName
         from represent_activity a
-        WHERE `status` IN(1,2)
+        WHERE `status` IN (1, 2)
         ORDER BY start_time DESC
     </select>
 
 
     <select id="appList" parameterType="RepresentActivity" resultMap="activityList">
-        select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time, end_time, address, status, participate_conut, content,
-               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type )AS activityTypeName,
-               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
+        select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time,
+        end_time, address, status, participate_conut, content, npc_claim, open_flag,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type
+        )AS activityTypeName,
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS
+        statusName
         from represent_activity a
         <where>
-            <if test="activityType != null "> and a.activity_type = #{activityType}</if>
-            <if test="title != null  and title != ''"> and a.title = #{title}</if>
-            <if test="startTime != null "> and a.start_time = #{startTime}</if>
-            <if test="endTime != null "> and a.end_time = #{endTime}</if>
-            <if test="address != null  and address != ''"> and a.address = #{address}</if>
-            <if test="status != null "> and a.status = #{status}</if>
-            <if test="participateConut != null "> and a.participate_conut = #{participateConut}</if>
-            <if test="content != null  and content != ''"> and a.content = #{content}</if>
+            <if test="activityType != null ">and a.activity_type = #{activityType}</if>
+            <if test="title != null  and title != ''">and a.title = #{title}</if>
+            <if test="startTime != null ">and a.start_time = #{startTime}</if>
+            <if test="endTime != null ">and a.end_time = #{endTime}</if>
+            <if test="address != null  and address != ''">and a.address = #{address}</if>
+            <if test="status != null ">and a.status = #{status}</if>
+            <if test="participateConut != null ">and a.participate_conut = #{participateConut}</if>
+            <if test="content != null  and content != ''">and a.content = #{content}</if>
+            <if test="npcClaim != null ">and a.npc_claim = #{npcClaim}</if>
+            <if test="openFlag != null ">and a.open_flag = #{openFlag}</if>
         </where>
         ORDER BY start_time DESC
     </select>
     <!--详情-->
     <select id="appDetail" resultMap="activityList" parameterType="Long">
-        select a.activity_id, a.activity_type, a.remark, a.create_time, a.update_by, a.update_time, a.create_by, a.title, a.start_time, a.end_time, a.address, a.status, a.participate_conut,
+        select a.activity_id,
+               a.activity_type,
+               a.remark,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               a.create_by,
+               a.title,
+               a.start_time,
+               a.end_time,
+               a.address,
+               a.status,
+               a.participate_conut,
                a.content,
-               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type )AS activityTypeName,
-               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS statusName
-        from represent_activity a where a.activity_id = #{activityId}
+                a.npc_claim,
+                a.open_flag,
+               (SELECT d.dict_label
+                FROM sys_dict_data d
+                WHERE d.dict_type = 'activity_type'
+                  AND d.dict_value = a.activity_type) AS activityTypeName,
+               (SELECT d.dict_label
+                FROM sys_dict_data d
+                WHERE d.dict_type = 'activity_status'
+                  AND d.dict_value = a.`status`)      AS statusName
+        from represent_activity a
+        where a.activity_id = #{activityId}
     </select>
 
     <select id="getCount" resultType="java.lang.Integer">
-        select COUNT(activity_id) from represent_activity
+        select COUNT(activity_id)
+        from represent_activity
     </select>
 
-    <resultMap id="detail" type="com.shahenpc.system.domain.represent.dto.ActivityDetailDto" extends="RepresentActivityResult">
-        <association property="record" column="activity_id" select="com.shahenpc.system.mapper.represent.RepresentActivityRecordMapper.selectByActivityId"></association>
+    <resultMap id="detail" type="com.shahenpc.system.domain.represent.dto.ActivityDetailDto"
+               extends="RepresentActivityResult">
+        <association property="record" column="activity_id"
+                     select="com.shahenpc.system.mapper.represent.RepresentActivityRecordMapper.selectByActivityId"></association>
     </resultMap>
     <select id="newDetail" parameterType="Long" resultMap="detail">
         <include refid="selectRepresentActivityVo"/>
         where activity_id = #{activityId}
     </select>
+
+    <select id="selectClaimList" parameterType="RepresentActivity" resultMap="RepresentActivityResult" >
+        SELECT
+        act.activity_id,
+        act.activity_type,
+        act.create_time,
+        act.title,
+        act.start_time,
+        act.end_time,
+        act.address,
+        act.participate_conut,
+        act.content,
+        act.npc_claim,
+        act.open_flag,
+        log.record_id,
+        log.user_id,
+        log.content as feedBackContent,
+        log.submit_time,
+        log.status as feedBackStatus,
+        log.title as feedBackTitle
+        FROM
+        represent_activity AS act
+        LEFT JOIN represent_activity_record AS log ON act.activity_id = log.record_id
+        <where>
+            and act.npc_claim = '1'
+            <if test="status != null  and status != ''">and log.status = #{status}</if>
+            <if test="userId != null  and userId != ''">and (log.user_id = #{userId} or act.open_flag='1')</if>
+            <if test="title != null  and title != ''">and act.title = #{title}</if>
+        </where>
+        ORDER BY act.activity_id DESC
+    </select>
+
 </mapper>

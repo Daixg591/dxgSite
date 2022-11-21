@@ -263,8 +263,8 @@ public class SysUser extends BaseEntity {
     /**
      * 代表级别
      */
-    @Excel(name = "代表级别", readConverterExp = "0=全国,1=省人大,2=市人大,3=区/县人大,4=乡镇人大")
-    private String newLevel;
+    @Excel(name = "代表级别")
+    private Integer newLevel;
 
     /**
      * 用户状态

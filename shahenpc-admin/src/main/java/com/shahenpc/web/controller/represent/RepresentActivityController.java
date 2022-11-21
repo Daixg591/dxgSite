@@ -1,10 +1,13 @@
 package com.shahenpc.web.controller.represent;
 
 import java.util.List;
+import java.util.Objects;
 import javax.servlet.http.HttpServletResponse;
 
 import com.shahenpc.flowable.service.IFlowTaskService;
+import com.shahenpc.system.domain.represent.RepresentActivityRecord;
 import com.shahenpc.system.domain.represent.dto.ActivityAddDto;
+import com.shahenpc.system.service.represent.IRepresentActivityRecordService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,44 +28,66 @@ import com.shahenpc.system.domain.represent.RepresentActivity;
 import com.shahenpc.system.service.represent.IRepresentActivityService;
 import com.shahenpc.common.utils.poi.ExcelUtil;
 import com.shahenpc.common.core.page.TableDataInfo;
+import oshi.util.Util;
 
 /**
  * 代-活动列Controller
- * 
+ *
  * @author ruoyi
  * @date 2022-07-21
  */
 @Api(tags = "履职活动管理")
 @RestController
 @RequestMapping("/represent/activity")
-public class RepresentActivityController extends BaseController
-{
+public class RepresentActivityController extends BaseController {
     @Autowired
     private IRepresentActivityService representActivityService;
+
     @Autowired
     private IFlowTaskService flowTaskService;
+
+    @Autowired
+    private IRepresentActivityRecordService representActivityRecordService;
+
     /**
      * 查询代-活动列列表
      */
     @ApiOperation("列表")
     @PreAuthorize("@ss.hasPermi('represent:activity:list')")
     @GetMapping("/list")
-    public TableDataInfo list(RepresentActivity representActivity)
-    {
+    public TableDataInfo list(RepresentActivity representActivity) {
         startPage();
+        representActivity.setNpcClaim("0");
         List<RepresentActivity> list = representActivityService.selectRepresentActivityList(representActivity);
         return getDataTable(list);
     }
 
+    @ApiOperation("代表认领列表")
+    @PreAuthorize("@ss.hasPermi('represent:activity:list')")
+    @GetMapping("/claimList")
+    public TableDataInfo claimList(RepresentActivity representActivity) {
+        startPage();
+        representActivity.setNpcClaim("1");
+        List<RepresentActivity> list = representActivityService.selectRepresentActivityList(representActivity);
+        for (RepresentActivity activity : list) {
+            RepresentActivityRecord logDto = new RepresentActivityRecord();
+            logDto.setActivityId(activity.getActivityId());
+            logDto.setUserId(getLoginUser().getUser().getUserId());
+            List<RepresentActivityRecord> logList = representActivityRecordService.selectRepresentActivityRecordList(logDto);
+            activity.setClaim(logList.size() > 0);
+        }
+        return getDataTable(list);
+    }
+
+
     /**
-     * 导出代-活动列列表
+     * 导出代表活动列列表
      */
     @ApiOperation("导出")
     @PreAuthorize("@ss.hasPermi('represent:activity:export')")
     @Log(title = "代-活动列", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, RepresentActivity representActivity)
-    {
+    public void export(HttpServletResponse response, RepresentActivity representActivity) {
         List<RepresentActivity> list = representActivityService.selectRepresentActivityList(representActivity);
         ExcelUtil<RepresentActivity> util = new ExcelUtil<RepresentActivity>(RepresentActivity.class);
         util.exportExcel(response, list, "代-活动列数据");
@@ -74,21 +99,19 @@ public class RepresentActivityController extends BaseController
     @ApiOperation("详情")
     @PreAuthorize("@ss.hasPermi('represent:activity:query')")
     @GetMapping(value = "/{activityId}")
-    public AjaxResult getInfo(@PathVariable("activityId") Long activityId)
-    {
+    public AjaxResult getInfo(@PathVariable("activityId") Long activityId) {
         return AjaxResult.success(representActivityService.newDetail(activityId));
     }
 
     /**
      * 新增代-活动列
-    @ApiOperation("新增")
-    @PreAuthorize("@ss.hasPermi('represent:activity:add')")
-    @Log(title = "代-活动列", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody RepresentActivity representActivity)
-    {
-        return toAjax(representActivityService.insertRepresentActivity(representActivity));
-    }*/
+     @ApiOperation("新增")
+     @PreAuthorize("@ss.hasPermi('represent:activity:add')")
+     @Log(title = "代-活动列", businessType = BusinessType.INSERT)
+     @PostMapping public AjaxResult add(@RequestBody RepresentActivity representActivity)
+     {
+     return toAjax(representActivityService.insertRepresentActivity(representActivity));
+     }*/
 
     /**
      * 修改代-活动列
@@ -97,8 +120,7 @@ public class RepresentActivityController extends BaseController
     @PreAuthorize("@ss.hasPermi('represent:activity:edit')")
     @Log(title = "代-活动列", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ActivityAddDto representActivity)
-    {
+    public AjaxResult edit(@RequestBody ActivityAddDto representActivity) {
         representActivity.setUpdateBy(getNickName());
         return toAjax(representActivityService.newUpdate(representActivity));
     }
@@ -109,15 +131,14 @@ public class RepresentActivityController extends BaseController
     @ApiOperation("删除")
     @PreAuthorize("@ss.hasPermi('represent:activity:remove')")
     @Log(title = "代-活动列", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{activityIds}")
-    public AjaxResult remove(@PathVariable Long[] activityIds)
-    {
+    @DeleteMapping("/{activityIds}")
+    public AjaxResult remove(@PathVariable Long[] activityIds) {
         return toAjax(representActivityService.deleteRepresentActivityByActivityIds(activityIds));
     }
 
     @ApiOperation("履职统计")
     @GetMapping("/count")
-    public AjaxResult totalConut(){
+    public AjaxResult totalConut() {
         return AjaxResult.success(representActivityService.totalConut());
     }
 
@@ -126,8 +147,7 @@ public class RepresentActivityController extends BaseController
     @PreAuthorize("@ss.hasPermi('represent:activity:add')")
     @Log(title = "代-活动列", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ActivityAddDto representActivity)
-    {
+    public AjaxResult add(@RequestBody ActivityAddDto representActivity) {
         representActivity.setSendUserId(getUserId());
         representActivity.setCreateBy(getNickName());
         return toAjax(representActivityService.newAdd(representActivity));

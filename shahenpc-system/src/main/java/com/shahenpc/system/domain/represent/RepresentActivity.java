@@ -19,6 +19,13 @@ public class RepresentActivity extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    private RepresentActivityRecord records;
+
+
+
+    /** 是否认领 */
+    private boolean isClaim;
+
     /**  */
     private Long activityId;
 
@@ -57,6 +64,23 @@ public class RepresentActivity extends BaseEntity
     private String content;
 
     private Long sendUserId;
+
+    public String getNpcClaim() {
+        return npcClaim;
+    }
+
+    public void setNpcClaim(String npcClaim) {
+        this.npcClaim = npcClaim;
+    }
+
+    /** 代表认领标识 */
+    private String npcClaim;
+
+    /** 公开标识 */
+    private String openFlag;
+
+    /** 用户Id */
+    private Long userId;
 
     public void setActivityId(Long activityId) 
     {
@@ -138,6 +162,14 @@ public class RepresentActivity extends BaseEntity
     public String getContent() 
     {
         return content;
+    }
+
+    public boolean getClaim() {
+        return isClaim;
+    }
+
+    public void setClaim(boolean claim) {
+        isClaim = claim;
     }
 
     @Override

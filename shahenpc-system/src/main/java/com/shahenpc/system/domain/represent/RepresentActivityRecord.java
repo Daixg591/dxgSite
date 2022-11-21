@@ -34,6 +34,8 @@ public class RepresentActivityRecord extends BaseEntity
     @Excel(name = "内容")
     private String content;
 
+    private String feedBackStatus;
+
     /** 提交时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "提交时间", width = 30, dateFormat = "yyyy-MM-dd")
@@ -42,6 +44,19 @@ public class RepresentActivityRecord extends BaseEntity
     private String nickName;
     /**头像*/
     private String avatar;
+
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    /**反馈状态 0 待认领；1 已完成；2 代反馈；3 已取消*/
+    private String status;
+
 
     public void setRecordId(Long recordId) 
     {

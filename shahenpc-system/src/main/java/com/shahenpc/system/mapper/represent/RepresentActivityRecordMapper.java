@@ -1,8 +1,8 @@
 package com.shahenpc.system.mapper.represent;
 
-import java.util.List;
 import com.shahenpc.system.domain.represent.RepresentActivityRecord;
-import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 代-活动记录Mapper接口
@@ -23,7 +23,7 @@ public interface RepresentActivityRecordMapper
     /**
      * 查询代-活动记录列表
      * 
-     * @param representActivityRecord 代-活动记录
+     * @param representActivityRecord 代-活动记录`
      * @return 代-活动记录集合
      */
     public List<RepresentActivityRecord> selectRepresentActivityRecordList(RepresentActivityRecord representActivityRecord);

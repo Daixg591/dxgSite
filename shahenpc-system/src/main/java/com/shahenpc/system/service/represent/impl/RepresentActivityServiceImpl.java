@@ -71,6 +71,11 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
         return representActivityMapper.selectRepresentActivityList(representActivity);
     }
 
+    @Override
+    public List<RepresentActivity> selectClaimList(RepresentActivity representActivity) {
+        return representActivityMapper.selectClaimList(representActivity);
+    }
+
     /**
      * 新增代-活动列
      * 

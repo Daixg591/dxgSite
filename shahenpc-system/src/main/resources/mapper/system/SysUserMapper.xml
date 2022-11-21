@@ -495,7 +495,7 @@
             <if test="userType != null">user_type = #{userType},</if>
             <if test="videoMeetingAccount != null"> video_meeting_account = #{videoMeetingAccount},</if>
             <if test="gridding != null"> gridding = #{gridding},</if>
-            <if test="newLevel != null"> new_level = #{newLevel},</if>
+            <if test="newLevel != null"> new_level &amp; #{newLevel} >0,</if>
             update_time = sysdate()
         </set>
         where user_id = #{userId}
