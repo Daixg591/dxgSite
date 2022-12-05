@@ -322,7 +322,9 @@
         SELECT
                 (SELECT u.nick_name FROM sys_user u WHERE u.user_id =r.send_user_id) AS nickName,
                 (SELECT a.short_name FROM represent_home_access a WHERE a.access_id = r.station_id) AS accessName,
-                COUNT(send_user_id)AS ranking
+                COUNT(send_user_id)AS ranking,
+                (SELECT u.now_duty FROM sys_user u WHERE u.user_id =r.send_user_id) AS nowDuty,
+                (SELECT u.user_name FROM sys_user u WHERE u.user_id =r.send_user_id) AS userName
         FROM  represent_discover r GROUP BY send_user_id ORDER BY ranking DESC
     </select>
 

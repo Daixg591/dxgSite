@@ -210,6 +210,14 @@ public class RepresentDiscoverController extends BaseController
         List<DiscoverRankingDto> list = representDiscoverService.ranking();
         return getDataTable(list);
     }
+    @ApiOperation("排行导出")
+    @GetMapping(value = "/ranking/export")
+    public TableDataInfo RankingExport()
+    {
+        startPage();
+        List<DiscoverRankingDto> list = representDiscoverService.ranking();
+        return getDataTable(list);
+    }
 
     /**
      * 代表发现排名 个人
