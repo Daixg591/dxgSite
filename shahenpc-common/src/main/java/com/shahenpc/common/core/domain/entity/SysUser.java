@@ -25,8 +25,11 @@ import com.shahenpc.common.xss.Xss;
 public class SysUser extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 用户类型 */
+    /**
+     * 用户类型
+     */
     private Integer userType;
+
     public String getDistinction() {
         return distinction;
     }
@@ -108,7 +111,7 @@ public class SysUser extends BaseEntity {
     /**
      * 党派
      */
-    @Excel(name = "党派",readConverterExp = "1=中国共产党,2=中国国民党革命委员会,3=中国民主同盟,4=中国民主建国会,5=中国民主促进会," +
+    @Excel(name = "党派", readConverterExp = "1=中国共产党,2=中国国民党革命委员会,3=中国民主同盟,4=中国民主建国会,5=中国民主促进会," +
             "6=中国农工民主党,7=中国致公党,8=九三学社,9=台湾民主自治同盟,10=无党派人士,11=群众")
     private String partyGroupings;
 
@@ -128,7 +131,7 @@ public class SysUser extends BaseEntity {
     /**
      * 用户ID
      */
-    @Excel(name = "用户序号", cellType = ColumnType.NUMERIC, prompt = "用户编号")
+//    @Excel(name = "用户序号", cellType = ColumnType.NUMERIC, prompt = "用户编号")
     private Long userId;
 
     /**
@@ -227,7 +230,7 @@ public class SysUser extends BaseEntity {
      * 出生年月
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "出生年月")
+    @Excel(name = "出生年月", type = Type.IMPORT)
     private Date bornDate;
 
     /**
@@ -253,6 +256,22 @@ public class SysUser extends BaseEntity {
             "40=普米族,41=鄂温克族,42=怒族,43=京族,44=基诺族,45=德昂族,46=保安族,47=俄罗斯族," +
             "48=裕固族,49=乌孜别克族,50=门巴族,51=鄂伦春族,52=独龙族,53=塔塔尔族,54=赫哲族,55=珞巴族")
     private String nation;
+
+    /**
+     * 所属网格
+     */
+    @Excel(name = "所属网格")
+    private String gridding;
+
+    /**
+     * 代表级别
+     */
+    @Excel(name = "代表级别", type = Type.IMPORT)
+    private Integer newLevel;
+
+    @Excel(name = "代表级别", type = Type.EXPORT)
+    private String newLevelName;
+
     /**
      * 用户状态
      */
@@ -275,7 +294,7 @@ public class SysUser extends BaseEntity {
     /**
      * 健康状况
      */
-    @Excel(name = "健康状况")
+//    @Excel(name = "健康状况")
     private String healthState;
 
     /**
@@ -308,7 +327,7 @@ public class SysUser extends BaseEntity {
     /**
      * 最后登录IP
      */
-    @Excel(name = "最后登录IP", type = Type.EXPORT)
+//    @Excel(name = "最后登录IP", type = Type.EXPORT)
     private String loginIp;
 
     /**

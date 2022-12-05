@@ -1,42 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.represent.RepresentActivityRecordMapper">
-    
+
     <resultMap type="RepresentActivityRecord" id="RepresentActivityRecordResult">
-        <result property="recordId"    column="record_id"    />
-        <result property="activityId"    column="activity_id"    />
-        <result property="userId"    column="user_id"    />
-        <result property="content"    column="content"    />
-        <result property="submitTime"    column="submit_time"    />
-        <result property="remark"    column="remark"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="createBy"    column="create_by"    />
+        <result property="recordId" column="record_id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="content" column="content"/>
+        <result property="submitTime" column="submit_time"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="status" column="status"/>
     </resultMap>
 
     <sql id="selectRepresentActivityRecordVo">
-        select record_id, activity_id, user_id, content, submit_time, remark, create_time, update_by, update_time, create_by from represent_activity_record
+        select record_id,
+               activity_id,
+               user_id,
+               content,
+               submit_time,
+               remark,
+               create_time,
+               update_by,
+               update_time,
+               create_by,
+               status
+        from represent_activity_record
     </sql>
 
-    <select id="selectRepresentActivityRecordList" parameterType="RepresentActivityRecord" resultMap="RepresentActivityRecordResult">
+    <select id="selectRepresentActivityRecordList" parameterType="RepresentActivityRecord"
+            resultMap="RepresentActivityRecordResult">
         <include refid="selectRepresentActivityRecordVo"/>
-        <where>  
-            <if test="activityId != null "> and activity_id = #{activityId}</if>
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="content != null  and content != ''"> and content = #{content}</if>
-            <if test="submitTime != null "> and submit_time = #{submitTime}</if>
+        <where>
+            <if test="activityId != null ">and activity_id = #{activityId}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="submitTime != null ">and submit_time = #{submitTime}</if>
+            <if test="status != null ">and status = #{status}</if>
         </where>
     </select>
-    
+
     <select id="selectRepresentActivityRecordByRecordId" parameterType="Long" resultMap="RepresentActivityRecordResult">
         <include refid="selectRepresentActivityRecordVo"/>
         where record_id = #{recordId}
     </select>
-        
-    <insert id="insertRepresentActivityRecord" parameterType="RepresentActivityRecord" useGeneratedKeys="true" keyProperty="recordId">
+
+    <insert id="insertRepresentActivityRecord" parameterType="RepresentActivityRecord" useGeneratedKeys="true"
+            keyProperty="recordId">
         insert into represent_activity_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="activityId != null">activity_id,</if>
@@ -48,7 +63,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="createBy != null">create_by,</if>
-         </trim>
+            <if test="status != null">status,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="activityId != null">#{activityId},</if>
             <if test="userId != null">#{userId},</if>
@@ -59,7 +75,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="createBy != null">#{createBy},</if>
-         </trim>
+            <if test="status != null">#{status},</if>
+        </trim>
     </insert>
 
     <update id="updateRepresentActivityRecord" parameterType="RepresentActivityRecord">
@@ -74,29 +91,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="status != null">status = #{status},</if>
         </trim>
         where record_id = #{recordId}
     </update>
 
     <delete id="deleteRepresentActivityRecordByRecordId" parameterType="Long">
-        delete from represent_activity_record where record_id = #{recordId}
+        delete
+        from represent_activity_record
+        where record_id = #{recordId}
     </delete>
 
     <delete id="deleteRepresentActivityRecordByRecordIds" parameterType="String">
-        delete from represent_activity_record where record_id in 
+        delete from represent_activity_record where record_id in
         <foreach item="recordId" collection="array" open="(" separator="," close=")">
             #{recordId}
         </foreach>
     </delete>
     <!--===========================================分割线-->
     <delete id="delectByActivityId" parameterType="Long">
-        delete from represent_activity_record where activity_id = #{activityId}
+        delete
+        from represent_activity_record
+        where activity_id = #{activityId}
     </delete>
 
     <select id="selectByActivityId" parameterType="Long" resultMap="RepresentActivityRecordResult">
-        select r.record_id, r.activity_id, r.user_id, r.content, r.submit_time, r.remark, r.create_time, r.update_by, r.update_time, r.create_by,
-        u.nick_name as nickName,u.avatar
-        from represent_activity_record r LEFT JOIN sys_user u ON u.user_id = r.user_id
+        select r.record_id,
+               r.activity_id,
+               r.user_id,
+               r.content,
+               r.submit_time,
+               r.remark,
+               r.create_time,
+               r.update_by,
+               r.update_time,
+               r.create_by,
+               r.status,
+               u.nick_name as nickName,
+               u.avatar
+        from represent_activity_record r
+                 LEFT JOIN sys_user u ON u.user_id = r.user_id
         where activity_id = #{activityId}
     </select>
 

@@ -81,7 +81,7 @@ public class RepresentActivityRecordController extends BaseController
      */
     @ApiOperation("新增")
     @PreAuthorize("@ss.hasPermi('represent:record:add')")
-    @Log(title = "代-活动记录", businessType = BusinessType.INSERT)
+    @Log(title = "代表活动记录", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody RepresentActivityRecord representActivityRecord)
     {

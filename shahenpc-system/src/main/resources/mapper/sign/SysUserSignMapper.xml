@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.sign.SysUserSignMapper">
+    
+    <resultMap type="SysUserSign" id="SysUserSignResult">
+        <result property="signId"    column="sign_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysUserSignVo">
+        select sign_id, user_id, remark, create_by, create_time, update_by, update_time, del_flag from sys_user_sign
+    </sql>
+
+    <select id="selectSysUserSignList" parameterType="SysUserSign" resultMap="SysUserSignResult">
+        <include refid="selectSysUserSignVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysUserSignBySignId" parameterType="Long" resultMap="SysUserSignResult">
+        <include refid="selectSysUserSignVo"/>
+        where sign_id = #{signId}
+    </select>
+        
+    <insert id="insertSysUserSign" parameterType="SysUserSign">
+        insert into sys_user_sign
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="signId != null">sign_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="signId != null">#{signId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysUserSign" parameterType="SysUserSign">
+        update sys_user_sign
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where sign_id = #{signId}
+    </update>
+
+    <delete id="deleteSysUserSignBySignId" parameterType="Long">
+        delete from sys_user_sign where sign_id = #{signId}
+    </delete>
+
+    <delete id="deleteSysUserSignBySignIds" parameterType="String">
+        delete from sys_user_sign where sign_id in 
+        <foreach item="signId" collection="array" open="(" separator="," close=")">
+            #{signId}
+        </foreach>
+    </delete>
+
+<!--    ************************************自定义*************************    -->
+    <select id="isTodaySign" parameterType="Long" resultMap="SysUserSignResult">
+        select user_id from sys_user_sign where
+        to_days(create_time)=to_days(now())
+        and user_id = #{userId}
+    </select>
+
+</mapper>

@@ -28,6 +28,9 @@ public interface IRepresentActivityService
      */
     public List<RepresentActivity> selectRepresentActivityList(RepresentActivity representActivity);
 
+
+    public List<RepresentActivity> selectClaimList(RepresentActivity representActivity);
+
     /**
      * 新增代-活动列
      * 

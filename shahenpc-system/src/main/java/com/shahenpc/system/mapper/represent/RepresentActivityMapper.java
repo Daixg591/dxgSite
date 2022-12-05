@@ -30,6 +30,14 @@ public interface RepresentActivityMapper
      */
     public List<RepresentActivity> selectRepresentActivityList(RepresentActivity representActivity);
 
+
+    /**
+     * 查询代表认领列表
+     * @param representActivity 代表活动-认领
+     * @return 代表活动-认领集合
+     */
+    public List<RepresentActivity> selectClaimList(RepresentActivity representActivity);
+
     /**
      * 新增代-活动列
      * 
