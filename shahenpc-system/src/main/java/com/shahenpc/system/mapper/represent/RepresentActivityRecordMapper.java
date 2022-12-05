@@ -1,6 +1,7 @@
 package com.shahenpc.system.mapper.represent;
 
 import com.shahenpc.system.domain.represent.RepresentActivityRecord;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -61,4 +62,6 @@ public interface RepresentActivityRecordMapper
     public int deleteRepresentActivityRecordByRecordIds(Long[] recordIds);
 
     public int delectByActivityId(Long activityId);
+
+    public int insertList(List<RepresentActivityRecord> list);
 }

@@ -140,11 +140,14 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
         log.setUserId(dto.getSendUserId());
         log.setRemark("履职活动！");
         representWorkLogService.insertRepresentWorkLog(log);
+        List<RepresentActivityRecord> RecordDate = new ArrayList<RepresentActivityRecord>();
         for(RepresentActivityRecord item:dto.getRecord()){
             item.setActivityId(dto.getActivityId());
             item.setCreateTime(DateUtils.getNowDate());
-            representActivityRecordMapper.insertRepresentActivityRecord(item);
+            item.setCreateBy(dto.getCreateBy());
+            RecordDate.add(item);
         }
+        representActivityRecordMapper.insertList(RecordDate);
         RepresentActivity ac = new  RepresentActivity();
         ac.setActivityId(dto.getActivityId());
         ac.setParticipateConut(dto.getRecord().size());
@@ -154,13 +157,16 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
 
     @Override
     public int newUpdate(ActivityAddDto dto) {
-       int a =  representActivityMapper.updateRepresentActivity(dto);
+            int a =  representActivityMapper.updateRepresentActivity(dto);
             representActivityRecordMapper.delectByActivityId(dto.getActivityId());
+            List<RepresentActivityRecord> RecordDate = new ArrayList<RepresentActivityRecord>();
             for(RepresentActivityRecord item:dto.getRecord()){
                 item.setActivityId(dto.getActivityId());
-                item.setCreateTime(DateUtils.getNowDate());
-                representActivityRecordMapper.insertRepresentActivityRecord(item);
+                item.setUpdateTime(DateUtils.getNowDate());
+                item.setUpdateBy(dto.getUpdateBy());
+                RecordDate.add(item);
             }
+            representActivityRecordMapper.insertList(RecordDate);
             RepresentActivity ac = new  RepresentActivity();
             ac.setActivityId(dto.getActivityId());
             ac.setParticipateConut(dto.getRecord().size());
@@ -211,7 +217,7 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
     public List<ActivityPieDto> pie() {
         List<ActivityPieDto> dtoList = new ArrayList<>();
         List<RepresentActivity> alarBudg=representActivityMapper.selectRepresentActivityList(null);
-        List<SysDictData> dictList=sysDictTypeService.selectDictDataByType("activity_type");
+        List<SysDictData> dictList=sysDictTypeService.selectDictDataByType("activity_categories");
         for (int i = 0; i < dictList.size(); i++) {
             int finalI = i;
             int v = 0;
@@ -223,6 +229,11 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
             dtoList.add(item);
         }
         return dtoList;
+    }
+
+    @Override
+    public List<RepresentActivity> selectByUserId(RepresentActivity meeting) {
+        return representActivityMapper.selectByUserId(meeting);
     }
 
 

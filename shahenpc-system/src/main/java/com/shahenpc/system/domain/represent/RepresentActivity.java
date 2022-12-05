@@ -65,16 +65,8 @@ public class RepresentActivity extends BaseEntity
 
     private Long sendUserId;
 
-    public String getNpcClaim() {
-        return npcClaim;
-    }
-
-    public void setNpcClaim(String npcClaim) {
-        this.npcClaim = npcClaim;
-    }
-
     /** 代表认领标识 */
-    private String npcClaim;
+    private Boolean npcClaim;
 
     /** 公开标识 */
     private String openFlag;

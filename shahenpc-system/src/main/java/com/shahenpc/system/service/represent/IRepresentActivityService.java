@@ -79,4 +79,6 @@ public interface IRepresentActivityService
 
     public List<ActivityPieDto> pie();
 
+    public List<RepresentActivity> selectByUserId(RepresentActivity meeting);
+
 }

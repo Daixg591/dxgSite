@@ -1,6 +1,8 @@
 package com.shahenpc.system.mapper.represent;
 
 import java.util.List;
+
+import com.shahenpc.system.domain.oa.OaMeeting;
 import com.shahenpc.system.domain.represent.RepresentActivity;
 import com.shahenpc.system.domain.represent.dto.ActivityAppListDto;
 import com.shahenpc.system.domain.represent.dto.ActivityDetailDto;
@@ -81,4 +83,7 @@ public interface RepresentActivityMapper
     public Integer getCount();
 
     public ActivityDetailDto newDetail(Long activityId);
+
+
+    public List<RepresentActivity> selectByUserId(RepresentActivity meeting);
 }

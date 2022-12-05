@@ -134,4 +134,12 @@
         where activity_id = #{activityId}
     </select>
 
+    <insert id="insertList" parameterType="java.util.List">
+        INSERT INTO represent_activity_record
+            (activity_id,user_id,content,submit_time,remark,create_time,update_by,update_time,create_by,status)
+            VALUES
+           <foreach collection="list" item="item" separator="," index="index">
+               (#{item.activityId},#{item.userId},#{item.content},#{item.submitTime},#{item.remark},#{item.createTime},#{item.updateBy},#{item.updateTime},#{item.createBy},#{item.status})
+           </foreach>
+    </insert>
 </mapper>

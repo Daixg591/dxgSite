@@ -189,7 +189,7 @@
                open_flag,
                (SELECT d.dict_label
                 FROM sys_dict_data d
-                WHERE d.dict_type = 'activity_type'
+                WHERE d.dict_type = 'activity_categories'
                   AND d.dict_value = a.activity_type) AS activityTypeName,
                (SELECT d.dict_label
                 FROM sys_dict_data d
@@ -204,7 +204,7 @@
     <select id="appList" parameterType="RepresentActivity" resultMap="activityList">
         select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time,
         end_time, address, status, participate_conut, content, npc_claim, open_flag,
-        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_type' AND d.dict_value = a.activity_type
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_categories' AND d.dict_value = a.activity_type
         )AS activityTypeName,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS
         statusName
@@ -243,7 +243,7 @@
                 a.open_flag,
                (SELECT d.dict_label
                 FROM sys_dict_data d
-                WHERE d.dict_type = 'activity_type'
+                WHERE d.dict_type = 'activity_categories'
                   AND d.dict_value = a.activity_type) AS activityTypeName,
                (SELECT d.dict_label
                 FROM sys_dict_data d
@@ -299,4 +299,21 @@
         ORDER BY act.activity_id DESC
     </select>
 
+
+    <select id="selectByUserId" resultMap="RepresentActivityResult" parameterType="RepresentActivity">
+        SELECT m.* FROM represent_activity_record p LEFT JOIN represent_activity m ON m.activity_id = p.activity_id
+        <where>
+            and p.user_id = #{userId}
+            <if test="activityType != null ">and activity_type = #{activityType}</if>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="startTime != null ">and start_time = #{startTime}</if>
+            <if test="endTime != null ">and end_time = #{endTime}</if>
+            <if test="address != null  and address != ''">and address = #{address}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="participateConut != null ">and participate_conut = #{participateConut}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="npcClaim != null  and npcClaim != ''">and npc_claim = #{npcClaim}</if>
+            <if test="openFlag != null and npcClaim != '' ">and open_flag = #{openFlag}</if>
+        </where>
+    </select>
 </mapper>

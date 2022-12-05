@@ -57,8 +57,17 @@ public class RepresentActivityController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(RepresentActivity representActivity) {
         startPage();
-        representActivity.setNpcClaim("0");
+        representActivity.setNpcClaim(false);
         List<RepresentActivity> list = representActivityService.selectRepresentActivityList(representActivity);
+        return getDataTable(list);
+    }
+    @ApiOperation("我的列表")
+    @GetMapping("/my/list")
+    public TableDataInfo myList(RepresentActivity representActivity) {
+        representActivity.setUserId(getUserId());
+        startPage();
+        representActivity.setNpcClaim(false);
+        List<RepresentActivity> list = representActivityService.selectByUserId(representActivity);
         return getDataTable(list);
     }
 
@@ -67,7 +76,7 @@ public class RepresentActivityController extends BaseController {
     @GetMapping("/claimList")
     public TableDataInfo claimList(RepresentActivity representActivity) {
         startPage();
-        representActivity.setNpcClaim("1");
+        representActivity.setNpcClaim(true);
         List<RepresentActivity> list = representActivityService.selectRepresentActivityList(representActivity);
         for (RepresentActivity activity : list) {
             RepresentActivityRecord logDto = new RepresentActivityRecord();

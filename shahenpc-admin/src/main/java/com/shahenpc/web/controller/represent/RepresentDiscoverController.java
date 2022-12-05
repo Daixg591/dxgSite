@@ -211,12 +211,12 @@ public class RepresentDiscoverController extends BaseController
         return getDataTable(list);
     }
     @ApiOperation("排行导出")
-    @GetMapping(value = "/ranking/export")
-    public TableDataInfo RankingExport()
+    @PostMapping(value = "/ranking/export")
+    public void RankingExport(HttpServletResponse response, RepresentDiscover representDiscover)
     {
-        startPage();
         List<DiscoverRankingDto> list = representDiscoverService.ranking();
-        return getDataTable(list);
+        ExcelUtil<DiscoverRankingDto> util = new ExcelUtil<DiscoverRankingDto>(DiscoverRankingDto.class);
+        util.exportExcel(response, list, "代-代发现数据");
     }
 
     /**
