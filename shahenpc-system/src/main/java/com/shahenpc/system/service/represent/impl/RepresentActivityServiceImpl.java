@@ -145,6 +145,11 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
             item.setActivityId(dto.getActivityId());
             item.setCreateTime(DateUtils.getNowDate());
             item.setCreateBy(dto.getCreateBy());
+            if(dto.getNpcClaim()){
+                item.setStatus(1);
+            }else {
+                item.setStatus(2);
+            }
             RecordDate.add(item);
         }
         representActivityRecordMapper.insertList(RecordDate);
@@ -164,6 +169,11 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService
                 item.setActivityId(dto.getActivityId());
                 item.setUpdateTime(DateUtils.getNowDate());
                 item.setUpdateBy(dto.getUpdateBy());
+                if(dto.getNpcClaim()){
+                    item.setStatus(1);
+                }else {
+                    item.setStatus(2);
+                }
                 RecordDate.add(item);
             }
             representActivityRecordMapper.insertList(RecordDate);

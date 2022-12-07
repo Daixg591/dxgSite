@@ -58,4 +58,9 @@ public interface PersonnelAppointNoticeMapper
      * @return 结果
      */
     public int deletePersonnelAppointNoticeByNoticeIds(Long[] noticeIds);
+
+
+    public List<PersonnelAppointNotice> selectByUserId(Long userId);
+
+
 }

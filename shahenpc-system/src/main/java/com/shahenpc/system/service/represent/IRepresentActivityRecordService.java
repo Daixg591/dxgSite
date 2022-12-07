@@ -1,6 +1,8 @@
 package com.shahenpc.system.service.represent;
 
 import java.util.List;
+
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.system.domain.represent.RepresentActivityRecord;
 
 /**
@@ -27,6 +29,7 @@ public interface IRepresentActivityRecordService
      */
     public List<RepresentActivityRecord> selectRepresentActivityRecordList(RepresentActivityRecord representActivityRecord);
 
+    public RepresentActivityRecord selectRepresentActivityRecord(RepresentActivityRecord representActivityRecord);
     /**
      * 新增代-活动记录
      * 
@@ -43,6 +46,7 @@ public interface IRepresentActivityRecordService
      */
     public int updateRepresentActivityRecord(RepresentActivityRecord representActivityRecord);
 
+    public AjaxResult updateMyStatus(RepresentActivityRecord representActivityRecord);
     /**
      * 批量删除代-活动记录
      * 

@@ -263,6 +263,7 @@
         <association property="record" column="activity_id"
                      select="com.shahenpc.system.mapper.represent.RepresentActivityRecordMapper.selectByActivityId"></association>
     </resultMap>
+
     <select id="newDetail" parameterType="Long" resultMap="detail">
         <include refid="selectRepresentActivityVo"/>
         where activity_id = #{activityId}

@@ -13,6 +13,7 @@ public class DiscoverRankingDto {
     private String nowDuty;
     @Excel(name = "乡镇办")
     private String accessName;
+    @Excel(name = "次数")
     private Integer ranking;
 
 }

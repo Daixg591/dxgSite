@@ -19,6 +19,7 @@ public class RepresentActivityRecord extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    private String statusName;
     /**  */
     private Long recordId;
 
@@ -45,17 +46,8 @@ public class RepresentActivityRecord extends BaseEntity
     /**头像*/
     private String avatar;
 
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    /**反馈状态 0 待认领；1 已完成；2 代反馈；3 已取消*/
-    private String status;
+    /**状态（1.待认领 2.已认领 3.取消）*/
+    private Integer status;
 
 
     public void setRecordId(Long recordId) 

@@ -60,4 +60,7 @@ public interface IPersonnelAppointNoticeService
      * @return 结果
      */
     public int deletePersonnelAppointNoticeByNoticeId(Long noticeId);
+
+
+    public List<PersonnelAppointNotice> selectByUserId(Long userId);
 }

@@ -214,7 +214,7 @@ public class RepresentDiscoverController extends BaseController
     @PostMapping(value = "/ranking/export")
     public void RankingExport(HttpServletResponse response, RepresentDiscover representDiscover)
     {
-        List<DiscoverRankingDto> list = representDiscoverService.ranking();
+        List<DiscoverRankingDto> list = representDiscoverService.selectByExportRanking();
         ExcelUtil<DiscoverRankingDto> util = new ExcelUtil<DiscoverRankingDto>(DiscoverRankingDto.class);
         util.exportExcel(response, list, "代-代发现数据");
     }

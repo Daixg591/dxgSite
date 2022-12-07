@@ -107,6 +107,10 @@ public class PersonnelAppointNoticeServiceImpl implements IPersonnelAppointNotic
         return personnelAppointNoticeMapper.deletePersonnelAppointNoticeByNoticeId(noticeId);
     }
 
+    @Override
+    public List<PersonnelAppointNotice> selectByUserId(Long userId) {
+        return personnelAppointNoticeMapper.selectByUserId(userId);
+    }
 
 
     public int alterPersonnelAppointNotice(PersonnelAppointNotice personnelAppointNotice)

@@ -109,4 +109,8 @@ public interface RepresentDiscoverMapper
     public DiscoverTotalRenLVDto selectByTotalLv();
 
     public List<DiscoverUserIdDto> selectByReceiveUserId(Long userId);
+
+    public List<RepresentDiscover> selectByUserId(Long userId);
+
+    public  List<DiscoverRankingDto> selectByExportRanking();
 }

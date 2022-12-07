@@ -28,7 +28,7 @@ public interface RepresentActivityRecordMapper
      * @return 代-活动记录集合
      */
     public List<RepresentActivityRecord> selectRepresentActivityRecordList(RepresentActivityRecord representActivityRecord);
-
+    public RepresentActivityRecord selectRepresentActivityRecord(RepresentActivityRecord representActivityRecord);
     /**
      * 新增代-活动记录
      * 
@@ -64,4 +64,6 @@ public interface RepresentActivityRecordMapper
     public int delectByActivityId(Long activityId);
 
     public int insertList(List<RepresentActivityRecord> list);
+
+    public int updateMyStatus(RepresentActivityRecord representActivityRecord);
 }

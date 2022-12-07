@@ -128,8 +128,9 @@
                r.create_by,
                r.status,
                u.nick_name as nickName,
-               u.avatar
-        from represent_activity_record r
+               u.avatar,
+               (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type = 'activity_record_status' AND d.dict_value =r.status)AS statusName
+            from represent_activity_record r
                  LEFT JOIN sys_user u ON u.user_id = r.user_id
         where activity_id = #{activityId}
     </select>
@@ -142,4 +143,27 @@
                (#{item.activityId},#{item.userId},#{item.content},#{item.submitTime},#{item.remark},#{item.createTime},#{item.updateBy},#{item.updateTime},#{item.createBy},#{item.status})
            </foreach>
     </insert>
+
+    <update id="updateMyStatus" parameterType="RepresentActivityRecord">
+        update represent_activity_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="status != null">status = #{status},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where activity_id = #{activityId} and user_id = #{userId}
+    </update>
+
+    <select id="selectRepresentActivityRecord" parameterType="RepresentActivityRecord"
+            resultMap="RepresentActivityRecordResult">
+        <include refid="selectRepresentActivityRecordVo"/>
+        <where>
+            <if test="activityId != null ">and activity_id = #{activityId}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="submitTime != null ">and submit_time = #{submitTime}</if>
+            <if test="status != null ">and status = #{status}</if>
+        </where>
+    </select>
 </mapper>

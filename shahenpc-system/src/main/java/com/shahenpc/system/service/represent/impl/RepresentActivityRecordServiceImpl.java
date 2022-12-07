@@ -1,6 +1,8 @@
 package com.shahenpc.system.service.represent.impl;
 
 import java.util.List;
+
+import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,11 @@ public class RepresentActivityRecordServiceImpl implements IRepresentActivityRec
         return representActivityRecordMapper.selectRepresentActivityRecordList(representActivityRecord);
     }
 
+    @Override
+    public RepresentActivityRecord selectRepresentActivityRecord(RepresentActivityRecord representActivityRecord) {
+        return null;
+    }
+
     /**
      * 新增代-活动记录
      * 
@@ -68,6 +75,17 @@ public class RepresentActivityRecordServiceImpl implements IRepresentActivityRec
     {
         representActivityRecord.setUpdateTime(DateUtils.getNowDate());
         return representActivityRecordMapper.updateRepresentActivityRecord(representActivityRecord);
+    }
+
+    @Override
+    public AjaxResult updateMyStatus(RepresentActivityRecord representActivityRecord) {
+        List<RepresentActivityRecord> record =representActivityRecordMapper.selectRepresentActivityRecordList(representActivityRecord);
+        if(record.size() != 0){
+            representActivityRecord.setUpdateTime(DateUtils.getNowDate());
+            return AjaxResult.success(representActivityRecordMapper.updateMyStatus(representActivityRecord));
+        }else{
+            return AjaxResult.error("活动不存在！");
+        }
     }
 
     /**

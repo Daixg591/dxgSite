@@ -129,4 +129,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     <!--==============================自定义=========-->
+
+    <select id="selectByUserId" resultMap="PersonnelAppointNoticeResult" parameterType="Long">
+        SELECT n.* FROM personnel_appoint_notice n LEFT JOIN personnel_appoint_notice_read_log l ON n.notice_id = l.notice_id
+                   WHERE l.user_id = #{userId}
+    </select>
 </mapper>

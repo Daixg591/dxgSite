@@ -120,4 +120,8 @@ public interface IRepresentDiscoverService
     public List<DiscoverContactRankingDto> contactBaiFenLvRanking();
 
     public DiscoverTotalRenLVDto selectByTotalLv();
+
+    public List<RepresentDiscover> selectByUserId(Long userId);
+
+    public  List<DiscoverRankingDto> selectByExportRanking();
 }

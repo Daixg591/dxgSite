@@ -24,7 +24,7 @@ public class RepresentActivity extends BaseEntity
 
 
     /** 是否认领 */
-    private boolean isClaim;
+    private Boolean isClaim;
 
     /**  */
     private Long activityId;
@@ -156,12 +156,12 @@ public class RepresentActivity extends BaseEntity
         return content;
     }
 
-    public boolean getClaim() {
+    public Boolean getClaim() {
         return isClaim;
     }
 
-    public void setClaim(boolean claim) {
-        isClaim = claim;
+    public void setClaim(Boolean claim) {
+        this.isClaim = claim;
     }
 
     @Override

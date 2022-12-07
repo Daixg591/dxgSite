@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.shahenpc.flowable.service.IFlowTaskService;
 import com.shahenpc.system.domain.represent.RepresentActivityRecord;
 import com.shahenpc.system.domain.represent.dto.ActivityAddDto;
+import com.shahenpc.system.domain.represent.dto.ActivityDetailDto;
 import com.shahenpc.system.service.represent.IRepresentActivityRecordService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -59,15 +60,42 @@ public class RepresentActivityController extends BaseController {
         startPage();
         representActivity.setNpcClaim(false);
         List<RepresentActivity> list = representActivityService.selectRepresentActivityList(representActivity);
+        for (RepresentActivity activity : list) {
+            RepresentActivityRecord logDto = new RepresentActivityRecord();
+            logDto.setActivityId(activity.getActivityId());
+            logDto.setUserId(getLoginUser().getUser().getUserId());
+            RepresentActivityRecord logList = representActivityRecordService.selectRepresentActivityRecord(logDto);
+            if(logList == null){
+                activity.setClaim(null);
+            }else if(logList.getStatus() == 2){
+                activity.setClaim(true);
+            }else {
+                activity.setClaim(false);
+            }
+        }
         return getDataTable(list);
     }
     @ApiOperation("我的列表")
     @GetMapping("/my/list")
     public TableDataInfo myList(RepresentActivity representActivity) {
-        representActivity.setUserId(getUserId());
+
         startPage();
         representActivity.setNpcClaim(false);
+        representActivity.setUserId(getUserId());
         List<RepresentActivity> list = representActivityService.selectByUserId(representActivity);
+        for (RepresentActivity activity : list) {
+            RepresentActivityRecord logDto = new RepresentActivityRecord();
+            logDto.setActivityId(activity.getActivityId());
+            logDto.setUserId(getLoginUser().getUser().getUserId());
+            RepresentActivityRecord logList = representActivityRecordService.selectRepresentActivityRecord(logDto);
+            if(logList == null){
+                activity.setClaim(null);
+            }else if(logList.getStatus() == 2){
+                activity.setClaim(true);
+            }else {
+                activity.setClaim(false);
+            }
+        }
         return getDataTable(list);
     }
 
@@ -76,14 +104,19 @@ public class RepresentActivityController extends BaseController {
     @GetMapping("/claimList")
     public TableDataInfo claimList(RepresentActivity representActivity) {
         startPage();
-        representActivity.setNpcClaim(true);
         List<RepresentActivity> list = representActivityService.selectRepresentActivityList(representActivity);
         for (RepresentActivity activity : list) {
             RepresentActivityRecord logDto = new RepresentActivityRecord();
             logDto.setActivityId(activity.getActivityId());
             logDto.setUserId(getLoginUser().getUser().getUserId());
-            List<RepresentActivityRecord> logList = representActivityRecordService.selectRepresentActivityRecordList(logDto);
-            activity.setClaim(logList.size() > 0);
+            RepresentActivityRecord logList = representActivityRecordService.selectRepresentActivityRecord(logDto);
+            if(logList == null){
+                activity.setClaim(null);
+            }else if(logList.getStatus() == 2){
+                activity.setClaim(true);
+            }else {
+                activity.setClaim(false);
+            }
         }
         return getDataTable(list);
     }
@@ -109,7 +142,19 @@ public class RepresentActivityController extends BaseController {
     @PreAuthorize("@ss.hasPermi('represent:activity:query')")
     @GetMapping(value = "/{activityId}")
     public AjaxResult getInfo(@PathVariable("activityId") Long activityId) {
-        return AjaxResult.success(representActivityService.newDetail(activityId));
+        ActivityDetailDto dto=  representActivityService.newDetail(activityId);
+        RepresentActivityRecord logDto = new RepresentActivityRecord();
+        logDto.setActivityId(dto.getActivityId());
+        logDto.setUserId(getUserId());
+        RepresentActivityRecord logList = representActivityRecordService.selectRepresentActivityRecord(logDto);
+        if(logList == null){
+            dto.setClaim(null);
+        }else if(logList.getStatus() == 2){
+            dto.setClaim(true);
+        }else {
+            dto.setClaim(false);
+        }
+        return AjaxResult.success(dto);
     }
 
     /**

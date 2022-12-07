@@ -12,6 +12,7 @@ import com.shahenpc.common.enums.BusinessType;
 import com.shahenpc.common.utils.SecurityUtils;
 import com.shahenpc.common.utils.StringUtils;
 import com.shahenpc.common.utils.poi.ExcelUtil;
+import com.shahenpc.system.domain.dto.MyArchivesDto;
 import com.shahenpc.system.domain.represent.RepresentHomeAccess;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo;
 import com.shahenpc.system.service.*;
@@ -57,7 +58,11 @@ public class SysUserController extends BaseController {
     @Autowired
     private IRepresentHomeAccessService homeAccessService;
 
-
+    @ApiOperation("代表履职档案")
+    @GetMapping("/archives")
+    public AjaxResult Archives() {
+        return AjaxResult.success(userService.Archives(getUserId()));
+    }
     /**
      * 获取用户列表
      */

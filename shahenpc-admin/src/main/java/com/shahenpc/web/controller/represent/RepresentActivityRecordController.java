@@ -102,6 +102,16 @@ public class RepresentActivityRecordController extends BaseController
         return toAjax(representActivityRecordService.updateRepresentActivityRecord(representActivityRecord));
     }
 
+    @ApiOperation("修改")
+    @PreAuthorize("@ss.hasPermi('represent:record:my:edit')")
+    @Log(title = "代-活动记录", businessType = BusinessType.UPDATE)
+    @PutMapping("/my/update")
+    public AjaxResult myEdit(@RequestBody RepresentActivityRecord representActivityRecord)
+    {
+        representActivityRecord.setUserId(getUserId());
+        representActivityRecord.setUpdateBy(getNickName());
+        return representActivityRecordService.updateMyStatus(representActivityRecord);
+    }
     /**
      * 删除代-活动记录
      */

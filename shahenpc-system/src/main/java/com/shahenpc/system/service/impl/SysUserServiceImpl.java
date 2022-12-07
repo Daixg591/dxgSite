@@ -6,18 +6,24 @@ import java.util.stream.Collectors;
 import javax.validation.Validator;
 
 import com.shahenpc.system.domain.data.dto.DataCountDto;
+import com.shahenpc.system.domain.dto.MyArchivesDto;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
+import com.shahenpc.system.domain.oa.OaMeeting;
 import com.shahenpc.system.domain.personel.PersonnelAppointEduLog;
+import com.shahenpc.system.domain.personel.PersonnelAppointNotice;
 import com.shahenpc.system.domain.represent.RepresentDiscover;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo;
 import com.shahenpc.system.mapper.feature.FeatureDoubleWorkMapper;
 import com.shahenpc.system.mapper.represent.RepresentDiscoverMapper;
+import com.shahenpc.system.service.oa.IOaMeetingService;
 import com.shahenpc.system.service.personel.IPersonnelAppointEduLogService;
 import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.age.AgeUtils;
 import com.shahenpc.system.domain.dto.NpcCakeDto;
 import com.shahenpc.system.service.ISysDictDataService;
+import com.shahenpc.system.service.personel.IPersonnelAppointNoticeService;
+import com.shahenpc.system.service.represent.IRepresentDiscoverService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -726,6 +732,20 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public String selectByPassword(Long userId) {
         return userMapper.selectByPassword(userId);
+    }
+    private IPersonnelAppointNoticeService personnelAppointNoticeService;
+    private IOaMeetingService oaMeetingService;
+    private IRepresentDiscoverService representDiscoverService;
+    @Override
+    public MyArchivesDto Archives(Long userId) {
+        MyArchivesDto dto = new MyArchivesDto();
+        dto.setStudy(personnelAppointNoticeService.selectByUserId(userId));
+        OaMeeting oa = new OaMeeting();
+        oa.setUserId(userId);
+        dto.setMeeting(oaMeetingService.selectByUserId(oa));
+        dto.setDiscover(representDiscoverService.selectByUserId(userId));
+
+        return dto;
     }
 
 }
