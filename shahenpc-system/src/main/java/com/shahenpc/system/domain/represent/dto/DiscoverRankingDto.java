@@ -12,7 +12,7 @@ public class DiscoverRankingDto {
     @Excel(name = "职务")
     private String nowDuty;
     @Excel(name = "乡镇办")
-    private String accessName;
+    private String shortName;
     @Excel(name = "次数")
     private Integer ranking;
 

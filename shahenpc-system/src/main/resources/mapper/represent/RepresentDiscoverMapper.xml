@@ -334,7 +334,7 @@
             COUNT(station_id)AS ranking,
             COUNT(DISTINCT(SELECT u1.user_id FROM sys_user u1 WHERE u1.user_id IN (r.send_user_id) AND u1.del_flag = '0' AND u1.user_type &amp;1 >0 and u1.contact_station_id = r.station_id))AS canyuCount,
             (SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0' and user_type &amp; 1 >0)AS contactCount,
-            CONCAT(ROUND(COUNT(DISTINCT r.send_user_id) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0' and user_type &amp; 1 >0),2),'')AS baifenlv
+            CONCAT(ROUND(COUNT(DISTINCT(SELECT u1.user_id FROM sys_user u1 WHERE u1.user_id IN (r.send_user_id) AND u1.del_flag = '0' AND u1.user_type &amp;1 >0 and u1.contact_station_id = r.station_id)) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0' and user_type &amp; 1 >0),2),'')AS baifenlv
         FROM  represent_discover r LEFT JOIN represent_home_access a ON a.access_id = r.station_id  WHERE a.`level` != 0
         GROUP BY r.station_id ORDER BY ranking DESC
     </select>
@@ -343,9 +343,9 @@
         SELECT
             (SELECT a.short_name FROM represent_home_access a WHERE a.access_id = r.station_id) AS accessName,
             COUNT(station_id)AS ranking,
-            COUNT(DISTINCT r.send_user_id)AS canyuCount,
+            COUNT(DISTINCT(SELECT u1.user_id FROM sys_user u1 WHERE u1.user_id IN (r.send_user_id) AND u1.del_flag = '0' AND u1.user_type &amp;1 >0 and u1.contact_station_id = r.station_id))AS canyuCount,
             (SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0' and user_type &amp; 1 >0)AS contactCount,
-            CONCAT(ROUND(COUNT(DISTINCT r.send_user_id) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0' and user_type &amp; 1 >0),2),'')AS baifenlv
+            CONCAT(ROUND(COUNT(DISTINCT(SELECT u1.user_id FROM sys_user u1 WHERE u1.user_id IN (r.send_user_id) AND u1.del_flag = '0' AND u1.user_type &amp;1 >0 and u1.contact_station_id = r.station_id)) /(SELECT COUNT(u.user_id) FROM sys_user u WHERE u.contact_station_id = r.station_id AND u.del_flag = '0' and user_type &amp; 1 >0),2),'')AS baifenlv
         FROM  represent_discover r GROUP BY r.station_id ORDER BY baifenlv DESC
     </select>
 
@@ -369,7 +369,7 @@
 
 
     <select id="selectByExportRanking" resultType="com.shahenpc.system.domain.represent.dto.DiscoverRankingDto">
-        SELECT u.nick_name,u.now_duty,u.user_name,a.short_name,
+        SELECT u.nick_name as nickName,u.now_duty as nowDuty,u.user_name as userName,a.short_name as shortName,
                (SELECT COUNT(d.send_user_id) FROM represent_discover d WHERE d.send_user_id = u.user_id)AS ranking
         FROM sys_user u LEFT JOIN represent_home_access a ON u.contact_station_id = a.access_id  WHERE u.user_type &amp;1 > 0  ORDER BY ranking DESC
     </select>
