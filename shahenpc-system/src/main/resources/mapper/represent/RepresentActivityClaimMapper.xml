@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shahenpc.system.mapper.represent.RepresentActivityClaimMapper">
+
+    <resultMap type="RepresentActivityClaim" id="RepresentActivityClaimResult">
+        <result property="claimId" column="claim_id"/>
+        <result property="activityGroupId" column="activity_group_id"/>
+        <result property="status" column="status"/>
+        <result property="userId" column="user_id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectRepresentActivityClaimVo">
+        select claim_id,
+               activity_group_id,
+               status,
+               user_id,
+               activity_id,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               remark
+        from represent_activity_claim
+    </sql>
+
+    <select id="selectRepresentActivityClaimList" parameterType="RepresentActivityClaim"
+            resultMap="RepresentActivityClaimResult">
+        <include refid="selectRepresentActivityClaimVo"/>
+        <where>
+            <if test="activityGroupId != null ">and activity_group_id = #{activityGroupId}</if>
+            <if test="status != null and status!=0">and status = #{status}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="activityId != null ">and activity_id = #{activityId}</if>
+        </where>
+    </select>
+
+    <select id="selectRepresentActivityClaimByClaimId" parameterType="Long" resultMap="RepresentActivityClaimResult">
+        <include refid="selectRepresentActivityClaimVo"/>
+        where claim_id = #{claimId}
+    </select>
+
+    <insert id="insertRepresentActivityClaim" parameterType="RepresentActivityClaim" useGeneratedKeys="true"
+            keyProperty="claimId">
+        insert into represent_activity_claim
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="activityGroupId != null">activity_group_id,</if>
+            <if test="status != null">status,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="activityId != null">activity_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="activityGroupId != null">#{activityGroupId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="activityId != null">#{activityId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRepresentActivityClaim" parameterType="RepresentActivityClaim">
+        update represent_activity_claim
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="activityGroupId != null">activity_group_id = #{activityGroupId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="activityId != null">activity_id = #{activityId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where claim_id = #{claimId}
+    </update>
+
+    <delete id="deleteRepresentActivityClaimByClaimId" parameterType="Long">
+        delete
+        from represent_activity_claim
+        where claim_id = #{claimId}
+    </delete>
+
+    <delete id="deleteRepresentActivityClaimByClaimIds" parameterType="String">
+        delete from represent_activity_claim where claim_id in
+        <foreach item="claimId" collection="array" open="(" separator="," close=")">
+            #{claimId}
+        </foreach>
+    </delete>
+
+    <!--    ********************* 以下为自定义方法 *********************-->
+    <!--    新增列表-->
+    <insert id="insertList" parameterType="java.util.List">
+        INSERT INTO represent_activity_claim
+        (
+        claim_id,
+        activity_group_id,
+        status,
+        user_id,
+        activity_id,
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        remark
+        )
+        VALUES
+        <foreach collection="list" item="item" separator="," index="index">
+            (
+            #{item.claimId},
+            #{item.activityGroupId},
+            #{item.status},
+            #{item.userId},
+            #{item.activityId},
+            #{item.createBy},
+            #{item.createTime},
+            #{item.updateBy},
+            #{item.updateTime},
+            #{item.remark}
+            )
+        </foreach>
+    </insert>
+
+    <!--    根据指定条件查询 【活动分组认领记录】-->
+    <select id="selectRepresentActivityClaim" parameterType="RepresentActivityClaim"
+            resultMap="RepresentActivityClaimResult">
+        <include refid="selectRepresentActivityClaimVo"/>
+        <where>
+            <if test="activityId != null ">and activity_id = #{activityId}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="activityGroupId != null ">and activity_group_id = #{activityGroupId}</if>
+        </where>
+    </select>
+
+    <delete id="deleteByActivityId" parameterType="Long">
+        delete
+        from represent_activity_claim
+        where activity_id = #{activityId}
+    </delete>
+
+
+    <resultMap type="RepresentActivityClaim" id="ClaimResult">
+        <result property="claimId" column="claim_id"/>
+        <result property="activityGroupId" column="activity_group_id"/>
+        <result property="status" column="status"/>
+        <result property="userId" column="user_id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="groupName" column="group_name"/>
+        <result property="nickName" column="nick_name"/>
+    </resultMap>
+
+    <select id="selectClaimList" parameterType="RepresentActivityClaim" resultMap="ClaimResult">
+        select claim_id,
+        claim.activity_group_id,
+        claim.status,
+        claim.user_id,
+        claim.activity_id,
+        claim.create_by,
+        claim.create_time,
+        claim.update_by,
+        claim.update_time,
+        claim.remark,
+        user.nick_name,
+        agroup.group_name
+        from represent_activity_claim claim
+        LEFT JOIN sys_user user ON claim.user_id=user.user_id
+        LEFT JOIN represent_activity_group agroup on claim.activity_group_id=agroup.activity_group_id
+        <where>
+            <if test="activityGroupId != null ">and claim.activity_group_id = #{activityGroupId}</if>
+            <if test="status != null and status!=0">and claim.status = #{status}</if>
+            <if test="userId != null ">and claim.user_id = #{userId}</if>
+            <if test="activityId != null ">and claim.activity_id = #{activityId}</if>
+        </where>
+    </select>
+
+    <update id="npcClaim" parameterType="RepresentActivityClaim">
+        update represent_activity_claim
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="activityGroupId != null">activity_group_id = #{activityGroupId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="activityId != null">activity_id = #{activityId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        <where>
+            <if test="activityGroupId != null ">and activity_group_id = #{activityGroupId}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="activityId != null ">and activity_id = #{activityId}</if>
+        </where>
+    </update>
+
+</mapper>

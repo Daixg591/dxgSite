@@ -1,6 +1,10 @@
 package com.shahenpc.system.mapper.sign;
 
 import java.util.List;
+
+import com.shahenpc.system.domain.represent.SignRankingDto;
+import com.shahenpc.system.domain.represent.dto.DiscoverRankingDto;
+import com.shahenpc.system.domain.represent.vo.SignTimeDto;
 import com.shahenpc.system.domain.sign.SysUserSign;
 
 /**
@@ -65,4 +69,13 @@ public interface SysUserSignMapper
      * @return
      */
     public List<Long> isTodaySign(Long userId);
+
+    /**
+     * 获取用户签到数据集
+     * @param dto
+     * @return
+     */
+    public List<SignRankingDto> selectByExportRanking(SignTimeDto dto);
+
+    public List<SignRankingDto> selectTopRanking();
 }

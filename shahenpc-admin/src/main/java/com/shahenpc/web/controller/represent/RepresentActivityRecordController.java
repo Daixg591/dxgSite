@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.Get;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,11 +43,12 @@ public class RepresentActivityRecordController extends BaseController
      * 查询代-活动记录列表
      */
     @ApiOperation("列表")
-    @PreAuthorize("@ss.hasPermi('represent:record:list')")
+//    @PreAuthorize("@ss.hasPermi('represent:record:list')")
     @GetMapping("/list")
     public TableDataInfo list(RepresentActivityRecord representActivityRecord)
     {
         startPage();
+
         List<RepresentActivityRecord> list = representActivityRecordService.selectRepresentActivityRecordList(representActivityRecord);
         return getDataTable(list);
     }
@@ -55,7 +57,7 @@ public class RepresentActivityRecordController extends BaseController
      * 导出代-活动记录列表
      */
     @ApiOperation("导出")
-    @PreAuthorize("@ss.hasPermi('represent:record:export')")
+//    @PreAuthorize("@ss.hasPermi('represent:record:export')")
     @Log(title = "代-活动记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, RepresentActivityRecord representActivityRecord)
@@ -69,7 +71,7 @@ public class RepresentActivityRecordController extends BaseController
      * 获取代-活动记录详细信息
      */
     @ApiOperation("详情")
-    @PreAuthorize("@ss.hasPermi('represent:record:query')")
+//    @PreAuthorize("@ss.hasPermi('represent:record:query')")
     @GetMapping(value = "/{recordId}")
     public AjaxResult getInfo(@PathVariable("recordId") Long recordId)
     {
@@ -80,12 +82,13 @@ public class RepresentActivityRecordController extends BaseController
      * 新增代-活动记录
      */
     @ApiOperation("新增")
-    @PreAuthorize("@ss.hasPermi('represent:record:add')")
+//    @PreAuthorize("@ss.hasPermi('represent:record:add')")
     @Log(title = "代表活动记录", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody RepresentActivityRecord representActivityRecord)
     {
         representActivityRecord.setCreateBy(getNickName());
+        representActivityRecord.setUserId(getUserId());
         return toAjax(representActivityRecordService.insertRepresentActivityRecord(representActivityRecord));
     }
 
@@ -93,7 +96,7 @@ public class RepresentActivityRecordController extends BaseController
      * 修改代-活动记录
      */
     @ApiOperation("修改")
-    @PreAuthorize("@ss.hasPermi('represent:record:edit')")
+//    @PreAuthorize("@ss.hasPermi('represent:record:edit')")
     @Log(title = "代-活动记录", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody RepresentActivityRecord representActivityRecord)
@@ -103,7 +106,7 @@ public class RepresentActivityRecordController extends BaseController
     }
 
     @ApiOperation("修改")
-    @PreAuthorize("@ss.hasPermi('represent:record:my:edit')")
+//    @PreAuthorize("@ss.hasPermi('represent:record:my:edit')")
     @Log(title = "代-活动记录", businessType = BusinessType.UPDATE)
     @PutMapping("/my/update")
     public AjaxResult myEdit(@RequestBody RepresentActivityRecord representActivityRecord)
@@ -116,7 +119,7 @@ public class RepresentActivityRecordController extends BaseController
      * 删除代-活动记录
      */
     @ApiOperation("删除")
-    @PreAuthorize("@ss.hasPermi('represent:record:remove')")
+//    @PreAuthorize("@ss.hasPermi('represent:record:remove')")
     @Log(title = "代-活动记录", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{recordIds}")
     public AjaxResult remove(@PathVariable Long[] recordIds)

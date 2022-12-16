@@ -25,45 +25,44 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * 审查流程Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2022-07-22
  */
 @Service
-public class StandardCensorServiceImpl extends BaseController implements IStandardCensorService
-{
+public class StandardCensorServiceImpl extends BaseController implements IStandardCensorService {
     @Autowired
     private StandardCensorMapper standardCensorMapper;
     @Autowired
     private StandardCensorRecordMapper standardCensorRecordMapper;
     @Resource
     private ISysDictTypeService dictTypeService;
+
     /**
      * 查询审查流程
-     * 
+     *
      * @param processId 审查流程主键
      * @return 审查流程
      */
     @Override
-    public StandardCensor selectStandardCensorByProcessId(Long processId)
-    {
+    public StandardCensor selectStandardCensorByProcessId(Long processId) {
         return standardCensorMapper.selectStandardCensorByCensorId(processId);
     }
 
     /**
      * 查询审查流程列表
-     * 
+     *
      * @param standardCensor 审查流程
      * @return 审查流程
      */
     @Override
-    public List<StandardCensor> selectStandardCensorList(StandardCensor standardCensor)
-    {
+    public List<StandardCensor> selectStandardCensorList(StandardCensor standardCensor) {
         return standardCensorMapper.selectStandardCensorList(standardCensor);
     }
 
@@ -79,20 +78,19 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
 
     /**
      * 新增审查流程
-     * 
+     *
      * @param standardCensor 审查流程
      * @return 结果
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public AjaxResult insertStandardCensor(CensorAddVo standardCensor)
-    {
+    public AjaxResult insertStandardCensor(CensorAddVo standardCensor) {
         standardCensor.setCreateTime(DateUtils.getNowDate());
-        standardCensor.setReceiveUserId(StringUtils.join(standardCensor.getApprovalUserId(),","));
+        standardCensor.setReceiveUserId(StringUtils.join(standardCensor.getApprovalUserId(), ","));
         standardCensor.setType(Constants.CENSOR_TYPE_1);
-        int su =  standardCensorMapper.insertStandardCensor(standardCensor);
-        if(su > 0){
-            for (String itme:standardCensor.getApprovalUserId()){
+        int su = standardCensorMapper.insertStandardCensor(standardCensor);
+        if (su > 0) {
+            for (String itme : standardCensor.getApprovalUserId()) {
                 StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
                 standardCensorRecord.setType(Constants.CENSOR_TYPE_1);
                 //发送人
@@ -105,23 +103,22 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
                 standardCensorRecord.setCreateBy(standardCensor.getCreateBy());
                 return AjaxResult.success(standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord));
             }
-       }
+        }
         return AjaxResult.error("异常");
     }
 
 
     /**
      * 修改审查流程
-     * 
+     *
      * @param standardCensor 审查流程
      * @return 结果
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public AjaxResult updateStandardCensor(CensorUpdateVo standardCensor)
-    {
+    public AjaxResult updateStandardCensor(CensorUpdateVo standardCensor) {
         standardCensor.setUpdateTime(DateUtils.getNowDate());
-        standardCensor.setReceiveUserId(StringUtils.join(standardCensor.getApprovalUserId(),","));
+        standardCensor.setReceiveUserId(StringUtils.join(standardCensor.getApprovalUserId(), ","));
         //修改原来的记录的状态 不修改type
         StandardCensorRecord updateRecord = new StandardCensorRecord();
         RecordByRecordIdVo vo = new RecordByRecordIdVo();
@@ -131,7 +128,7 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
 
         if (!standardCensor.getType().equals(Constants.CENSOR_TYPE_4)) {
             // 反馈的时候不修改 因为没有.....
-            StandardCensorRecord recordId=standardCensorRecordMapper.selectByRecordId(vo);
+            StandardCensorRecord recordId = standardCensorRecordMapper.selectByRecordId(vo);
             updateRecord.setRecordId(recordId.getRecordId());
             updateRecord.setRevert(standardCensor.getRevert());
             updateRecord.setStatus(Constants.CENSOR_TYPE_STATUS_1);
@@ -140,38 +137,38 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
             standardCensorRecordMapper.updateStandardCensorRecord(updateRecord);
         }
         //
-        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_1)){
+        if (standardCensor.getType().equals(Constants.CENSOR_TYPE_1)) {
             standardCensor.setType(Constants.CENSOR_TYPE_2);
-        }else if(standardCensor.getType().equals(Constants.CENSOR_TYPE_2)){
+        } else if (standardCensor.getType().equals(Constants.CENSOR_TYPE_2)) {
             standardCensor.setType(Constants.CENSOR_TYPE_3);
-        }else if(standardCensor.getType().equals(Constants.CENSOR_TYPE_3)){
+        } else if (standardCensor.getType().equals(Constants.CENSOR_TYPE_3)) {
             standardCensor.setType(Constants.CENSOR_TYPE_4);
-        }else{
+        } else {
             standardCensor.setType(Constants.CENSOR_TYPE_5);
         }
         // 先判断  是否是分发
-        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_2)){
-            List<StandardCensorRecord> distribute= standardCensorRecordMapper.selectByDistribute(standardCensor.getCensorId());
+        if (standardCensor.getType().equals(Constants.CENSOR_TYPE_2)) {
+            List<StandardCensorRecord> distribute = standardCensorRecordMapper.selectByDistribute(standardCensor.getCensorId());
             int dist = distribute.stream().filter(p -> p.getStatus().equals(Constants.CENSOR_TYPE_STATUS_0)).collect(Collectors.toList()).size();
-            if(dist == 0){
+            if (dist == 0) {
                 standardCensor.setReceiveUserId(standardCensor.getReceiveUserId().toString());
                 int su = standardCensorMapper.updateStandardCensor(standardCensor);
-                if(su > 0) {
+                if (su > 0) {
                     StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
-                        //发送人
-                        standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
-                        //接收人
-                        standardCensorRecord.setReceiveUserId(Long.parseLong(standardCensor.getReceiveUserId()));
-                        //绑定id
-                        standardCensorRecord.setCensorId(standardCensor.getCensorId());
-                        //回复
-                        standardCensorRecord.setType(standardCensor.getType());
-                        standardCensorRecord.setCreateTime(DateUtils.getNowDate());
-                        standardCensorRecord.setCreateBy(standardCensor.getCreateBy());
-                        standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord);
+                    //发送人
+                    standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
+                    //接收人
+                    standardCensorRecord.setReceiveUserId(Long.parseLong(standardCensor.getReceiveUserId()));
+                    //绑定id
+                    standardCensorRecord.setCensorId(standardCensor.getCensorId());
+                    //回复
+                    standardCensorRecord.setType(standardCensor.getType());
+                    standardCensorRecord.setCreateTime(DateUtils.getNowDate());
+                    standardCensorRecord.setCreateBy(standardCensor.getCreateBy());
+                    standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord);
                     return AjaxResult.success();
                 }
-            }else{
+            } else {
                /* StandardCensorRecord updateRecord1 = new StandardCensorRecord();
                 updateRecord1.setRecordId(standardCensor.getRecordId());
                 updateRecord1.setRevert(standardCensor.getRevert());
@@ -191,7 +188,7 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
             standardCensor.setType(Constants.CENSOR_TYPE_5);
             standardCensorMapper.updateStandardCensor(standardCensor);
 
-            StandardCensorRecord standardCensorRecord=new StandardCensorRecord();
+            StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
             //发送人
             standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
             //接收人
@@ -205,23 +202,23 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
             standardCensorRecord.setCreateTime(DateUtils.getNowDate());
             standardCensorRecord.setCreateBy(standardCensor.getCreateBy());
             standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord);
-            return  AjaxResult.success();
+            return AjaxResult.success();
         }
 
 
         // 审查
-        if(standardCensor.getType().equals(Constants.CENSOR_TYPE_4)){
+        if (standardCensor.getType().equals(Constants.CENSOR_TYPE_4)) {
             // 1 查寻本流程分发状态 是否有未处理
             // 2 没有 则更改流程状态为 反馈  CENSOR_TYPE_5
-            StandardCensorRecord paramRecord=new StandardCensorRecord();
+            StandardCensorRecord paramRecord = new StandardCensorRecord();
             paramRecord.setCensorId(standardCensor.getCensorId());
             paramRecord.setStatus(Constants.CENSOR_TYPE_STATUS_0);
-            List<StandardCensorRecord> recordList=standardCensorRecordMapper.selectStandardCensorRecordList(paramRecord);
+            List<StandardCensorRecord> recordList = standardCensorRecordMapper.selectStandardCensorRecordList(paramRecord);
             System.out.println(recordList.toString());
-            if (recordList.size()<1){
+            if (recordList.size() < 1) {
                 standardCensorMapper.updateStandardCensor(standardCensor);
             }
-            return  AjaxResult.success();
+            return AjaxResult.success();
         } else {
             standardCensor.setType(Constants.CENSOR_TYPE_3);
         }
@@ -232,17 +229,17 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
 
         int su = standardCensorMapper.updateStandardCensor(standardCensor);
 
-        if(su > 0){
+        if (su > 0) {
             StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
 
             //region  todo-黄涛 临时调整 Start 2022-09-19 am
             // 审查(结束流程)
-            if (standardCensor.getApprovalUserId()==null){
+            if (standardCensor.getApprovalUserId() == null) {
                 return AjaxResult.success();
             }
             //endregion
 
-            for (String itme:standardCensor.getApprovalUserId()){
+            for (String itme : standardCensor.getApprovalUserId()) {
                 //发送人
                 standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
                 //接收人
@@ -259,33 +256,31 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
         }
 
 
-
         return AjaxResult.error();
     }
-
 
 
     @Override
     public AjaxResult censorReturn(CensorReturnVo vo) {
         StandardCensor standardCensor = new StandardCensor();
         standardCensor.setUpdateTime(DateUtils.getNowDate());
-        if(vo.getType().equals(Constants.CENSOR_TYPE_3)){
+        if (vo.getType().equals(Constants.CENSOR_TYPE_3)) {
             standardCensor.setType(Constants.CENSOR_TYPE_2);
-        }else if(vo.getType().equals(Constants.CENSOR_TYPE_2)){
+        } else if (vo.getType().equals(Constants.CENSOR_TYPE_2)) {
             standardCensor.setType(Constants.CENSOR_TYPE_1);
         }
-        StandardCensorRecord sup = standardCensorRecordMapper.selectBySuperior(vo.getCensorId(),standardCensor.getType());
+        StandardCensorRecord sup = standardCensorRecordMapper.selectBySuperior(vo.getCensorId(), standardCensor.getType());
         //修改当前状态
-        StandardCensorRecord update =standardCensorRecordMapper.selectBySuperior(vo.getCensorId(),vo.getType());
+        StandardCensorRecord update = standardCensorRecordMapper.selectBySuperior(vo.getCensorId(), vo.getType());
         update.setStatus(Constants.CENSOR_TYPE_STATUS_3);
         update.setRevert(vo.getRevert());
-        if(standardCensorRecordMapper.updateStandardCensorRecord(update) < 0){
+        if (standardCensorRecordMapper.updateStandardCensorRecord(update) < 0) {
             AjaxResult.error();
         }
-        if(sup != null){
+        if (sup != null) {
             standardCensor.setReceiveUserId(sup.getReceiveUserId().toString());
             standardCensor.setCensorId(vo.getCensorId());
-            if(standardCensorMapper.updateStandardCensor(standardCensor) > 0){
+            if (standardCensorMapper.updateStandardCensor(standardCensor) > 0) {
                 StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
                 //发送人
                 standardCensorRecord.setSendUserId(vo.getUserId());
@@ -317,14 +312,13 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
 
     /**
      * 批量删除审查流程
-     * 
+     *
      * @param processIds 需要删除的审查流程主键
      * @return 结果
      */
     @Override
-    public int deleteStandardCensorByProcessIds(Long[] processIds)
-    {
-        if(standardCensorMapper.deleteStandardCensorByCensorIds(processIds)>0){
+    public int deleteStandardCensorByProcessIds(Long[] processIds) {
+        if (standardCensorMapper.deleteStandardCensorByCensorIds(processIds) > 0) {
             return standardCensorRecordMapper.deleteStandardCensorRecordByCensorIds(processIds);
         }
         return 0;
@@ -332,13 +326,12 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
 
     /**
      * 删除审查流程信息
-     * 
+     *
      * @param processId 审查流程主键
      * @return 结果
      */
     @Override
-    public int deleteStandardCensorByProcessId(Long processId)
-    {
+    public int deleteStandardCensorByProcessId(Long processId) {
         return standardCensorMapper.deleteStandardCensorByCensorId(processId);
     }
 
@@ -354,57 +347,70 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
     }
 
 
-
     @Override
-    public String ring(Integer taskName) {
-        StandardCensor cen = new StandardCensor();
-        cen.setType(taskName);
-        int StayTotal=standardCensorMapper.selectStandardCensorList(cen).size();
-        TotalAndStatyDto dto=standardCensorMapper.selectByTotalAndStay();
+    public String ring(StandardCensor standardCensor) {
+
+        TotalAndStatyDto dto = standardCensorMapper.selectWorkTotal(standardCensor);
+        BigDecimal b1 = new BigDecimal(dto.getTotal() - dto.getStayTotal());
+        BigDecimal b2 = new BigDecimal(dto.getTotal());
+        if (b2.compareTo(BigDecimal.ZERO) == 0) {
+            return "100";
+        }
+        return b1.divide(b2, 2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100 + "";
+
+        //region  //  注释掉刚子  吧擦黑
+
+        //        StandardCensor cen = new StandardCensor();
+        //        cen.setType(taskName);
+        //        int StayTotal = standardCensorMapper.selectStandardCensorList(standardCensor).size();
+        //        TotalAndStatyDto dto = standardCensorMapper.selectByTotalAndStay(standardCensor);
+
         // 待处理的  已处理的   全部接收的
         //int count = stayTotal+receiveTotal+doneTotal;
-        MotionRingDto cakedto =new MotionRingDto();
-        BigDecimal a = new BigDecimal(StayTotal);
-        BigDecimal b = new BigDecimal(dto.getTotal());
-        BigDecimal gd = new BigDecimal(0.00);
-        if(!b.equals(BigDecimal.ZERO)){
-            gd = a.divide(b,2,BigDecimal.ROUND_CEILING);
-        }
-        cakedto.setValue(gd.toString());
-        return cakedto.getValue();
+//        MotionRingDto cakedto = new MotionRingDto();
+//        BigDecimal a = new BigDecimal(StayTotal);
+//        BigDecimal b = new BigDecimal(dto.getTotal());
+//        BigDecimal gd = new BigDecimal(0.00);
+//        if (!b.equals(BigDecimal.ZERO)) {
+//            gd = a.divide(b, 2, BigDecimal.ROUND_CEILING);
+//        }
+//        cakedto.setValue(gd.toString());
+//        return cakedto.getValue();
+        //endregion
+
     }
 
 
-
     @Override
-    public List<MotionPieDto> pie() {
-        StandardCensor standardCensor = new StandardCensor();
-        List<StandardCensor> receiveTotal =  standardCensorMapper.selectStandardCensorList(standardCensor);
+    public List<MotionPieDto> pie(StandardCensor standardCensor) {
+//        StandardCensor standardCensor = new StandardCensor();
+        List<StandardCensor> receiveTotal = standardCensorMapper.selectStandardCensorList(standardCensor);
         List<MotionPieDto> dto = new ArrayList<>();
         List<SysDictData> dictList = dictTypeService.selectDictDataByType("censor_type");
-        if (receiveTotal.size() != 0) {
-                for (int i = 0; i < dictList.size(); i++) {
-                    int finalI = i;
-                    int v = 0;
-                    v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getType().toString()))
-                            .collect(Collectors.toList()).size();
-                    MotionPieDto item = new MotionPieDto();
-                    item.setName(dictList.get(i).getDictLabel());
-                    item.setValue(v);
-                    dto.add(item);
-                }
+//        if (receiveTotal.size() != 0) {
+        if (receiveTotal != null) {
+            for (int i = 0; i < dictList.size(); i++) {
+                int finalI = i;
+                int v = 0;
+                v = receiveTotal.stream().filter(p -> dictList.get(finalI).getDictValue().equals(p.getType().toString()))
+                        .collect(Collectors.toList()).size();
+                MotionPieDto item = new MotionPieDto();
+                item.setName(dictList.get(i).getDictLabel());
+                item.setValue(v);
+                dto.add(item);
+            }
         }
         return dto;
     }
 
     @Override
-    public MotionLingDto line() {
+    public MotionLingDto line(StandardCensor standardCensor) {
         List<String> monthList = getNearSixMonth();
         MotionLingDto res = new MotionLingDto();
         res.setLabel(monthList);
         List<Integer> yList = new ArrayList<>();
-        StandardCensor cen = new StandardCensor();
-        List<StandardCensor> receiveTotal=standardCensorMapper.selectStandardCensorList(cen);
+//        StandardCensor cen = new StandardCensor();
+        List<StandardCensor> receiveTotal = standardCensorMapper.selectStandardCensorList(standardCensor);
         for (int i = 0; i < monthList.size(); i++) {
             int finalI = i;
             String cntt = monthList.get(finalI);
@@ -419,8 +425,8 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
     }
 
     @Override
-    public List<StandardCensor> selectByTypeList(Integer type) {
-        return standardCensorMapper.selectByTypeList(type);
+    public List<StandardCensor> selectByTypeList(StandardCensor standardCensor) {
+        return standardCensorMapper.selectByTypeList(standardCensor);
     }
 
     /**

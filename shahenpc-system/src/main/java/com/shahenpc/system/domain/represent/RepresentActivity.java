@@ -21,7 +21,8 @@ public class RepresentActivity extends BaseEntity
 
     private RepresentActivityRecord records;
 
-
+    /** 类别名称 */
+    private String activityTypeName;
 
     /** 是否认领 */
     private Boolean isClaim;
@@ -37,14 +38,23 @@ public class RepresentActivity extends BaseEntity
     @Excel(name = "标题")
     private String title;
 
+
+    public String getActivityTypeName() {
+        return activityTypeName;
+    }
+
+    public void setActivityTypeName(String activityTypeName) {
+        this.activityTypeName = activityTypeName;
+    }
+
     /** 开始 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开始", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "开始", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
 
     /** 结束 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "结束", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "结束", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
     /** 地点 */

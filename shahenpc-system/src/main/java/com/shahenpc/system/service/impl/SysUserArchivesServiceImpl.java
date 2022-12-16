@@ -1,15 +1,12 @@
 package com.shahenpc.system.service.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import com.alibaba.fastjson2.JSON;
-import com.shahenpc.common.core.domain.AjaxResult;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.system.domain.oa.dto.MeetingUserIdListDto;
 import com.shahenpc.system.domain.represent.dto.DiscoverUserIdDto;
-import com.shahenpc.system.mapper.oa.OaMeetingMapper;
-import com.shahenpc.system.mapper.oa.OaMeetingSignMapper;
+import com.shahenpc.system.mapper.contactstation.oa.OaMeetingMapper;
+import com.shahenpc.system.mapper.contactstation.oa.OaMeetingSignMapper;
 import com.shahenpc.system.mapper.represent.RepresentDiscoverMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

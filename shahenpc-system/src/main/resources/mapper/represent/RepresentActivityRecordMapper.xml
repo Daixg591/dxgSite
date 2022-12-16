@@ -15,7 +15,8 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="createBy" column="create_by"/>
-        <result property="status" column="status"/>
+<!--        <result property="status" column="status"/>-->
+<!--        <result property="activityGroupId" column="activity_group_id"/>-->
     </resultMap>
 
     <sql id="selectRepresentActivityRecordVo">
@@ -28,8 +29,9 @@
                create_time,
                update_by,
                update_time,
-               create_by,
-               status
+               create_by
+#                status,
+#                activity_group_id
         from represent_activity_record
     </sql>
 
@@ -39,9 +41,10 @@
         <where>
             <if test="activityId != null ">and activity_id = #{activityId}</if>
             <if test="userId != null ">and user_id = #{userId}</if>
-            <if test="content != null  and content != ''">and content = #{content}</if>
+<!--            <if test="content != null  and content != ''">and content = #{content}</if>-->
             <if test="submitTime != null ">and submit_time = #{submitTime}</if>
-            <if test="status != null ">and status = #{status}</if>
+<!--            <if test="status != null ">and status = #{status}</if>-->
+<!--            <if test="activityGroupId != null ">and activity_group_id = #{activityGroupId}</if>-->
         </where>
     </select>
 
@@ -63,7 +66,8 @@
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="createBy != null">create_by,</if>
-            <if test="status != null">status,</if>
+<!--            <if test="status != null">status,</if>-->
+<!--            <if test="activityGroupId != null">activity_group_id,</if>-->
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="activityId != null">#{activityId},</if>
@@ -75,7 +79,8 @@
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="createBy != null">#{createBy},</if>
-            <if test="status != null">#{status},</if>
+<!--            <if test="status != null">#{status},</if>-->
+<!--            <if test="activityGroupId != null">#{activityGroupId},</if>-->
         </trim>
     </insert>
 
@@ -91,7 +96,8 @@
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
-            <if test="status != null">status = #{status},</if>
+<!--            <if test="status != null">status = #{status},</if>-->
+<!--            <if test="activityGroupId != null">activity_group_id = #{activityGroupId},</if>-->
         </trim>
         where record_id = #{recordId}
     </update>
@@ -126,7 +132,8 @@
                r.update_by,
                r.update_time,
                r.create_by,
-               r.status,
+#                r.status,
+#                r.activity_group_id,
                u.nick_name as nickName,
                u.avatar,
                (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type = 'activity_record_status' AND d.dict_value =r.status)AS statusName
@@ -137,17 +144,21 @@
 
     <insert id="insertList" parameterType="java.util.List">
         INSERT INTO represent_activity_record
-            (activity_id,user_id,content,submit_time,remark,create_time,update_by,update_time,create_by,status)
+            (activity_id,user_id,content,submit_time,remark,create_time,update_by,update_time,create_by
+#               ,status,activity_group_id
+             )
             VALUES
            <foreach collection="list" item="item" separator="," index="index">
-               (#{item.activityId},#{item.userId},#{item.content},#{item.submitTime},#{item.remark},#{item.createTime},#{item.updateBy},#{item.updateTime},#{item.createBy},#{item.status})
+               (#{item.activityId},#{item.userId},#{item.content},#{item.submitTime},#{item.remark},#{item.createTime},#{item.updateBy},#{item.updateTime},#{item.createBy}
+#                ,#{item.status},#{item.activityGroupId}
+               )
            </foreach>
     </insert>
 
     <update id="updateMyStatus" parameterType="RepresentActivityRecord">
         update represent_activity_record
         <trim prefix="SET" suffixOverrides=",">
-            <if test="status != null">status = #{status},</if>
+<!--            <if test="status != null">status = #{status},</if>-->
             <if test="content != null">content = #{content},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -163,7 +174,6 @@
             <if test="userId != null ">and user_id = #{userId}</if>
             <if test="content != null  and content != ''">and content = #{content}</if>
             <if test="submitTime != null ">and submit_time = #{submitTime}</if>
-            <if test="status != null ">and status = #{status}</if>
         </where>
     </select>
 </mapper>

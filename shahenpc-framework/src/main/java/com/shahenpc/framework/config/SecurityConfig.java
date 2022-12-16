@@ -113,14 +113,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                         "/wx/user/wxlogin","/wx/user/massesreg","/wx/user/getwxphone").anonymous()
                 //投票
                 .antMatchers("/oa/player/list").permitAll()
+                //代表认领
+                .antMatchers("/represent/record").permitAll()
+                .antMatchers("/system/claim/npcClaim").permitAll()
+                .antMatchers("/system/claim").permitAll()
+                // 代表签到统计
+                .antMatchers("/system/sign/ranking/export").permitAll()
                 //点击投票
                 .antMatchers("/oa/vote/record").permitAll()
+                .antMatchers("/represent/record/*").permitAll()
+                .antMatchers("/represent/record").permitAll()
                 //安卓升级
                 .antMatchers("/system/upgrade/liset").permitAll()
                 // 排名
                 .antMatchers("/represent/ranking/my/ranking").permitAll()
                 //履职日志
                 .antMatchers("/work/log/list").permitAll()
+                //代表认领
+                .antMatchers("/represent/record/my/update").permitAll()
+                // 履职活动/代表认领记录
+                .antMatchers("/represent/record/my/list").permitAll()
+                .antMatchers("/represent/record/list").permitAll()
                 //投票白名单
                 .antMatchers("/oa/vote/*").permitAll()
                 .antMatchers("/app/login","/wx/user/wxlogin","/wx/user/massesreg",

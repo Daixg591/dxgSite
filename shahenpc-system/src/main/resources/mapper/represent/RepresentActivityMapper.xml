@@ -32,7 +32,6 @@
         <result property="submitTime" column="submit_time"/>
         <result property="remark" column="remark"/>
         <result property="createTime" column="create_time"/>
-        <result property="status" column="status"/>
     </resultMap>
 
     <sql id="selectRepresentActivityVo">
@@ -56,6 +55,7 @@
     </sql>
 
     <select id="selectRepresentActivityList" parameterType="RepresentActivity" resultMap="RepresentActivityResult">
+
         <include refid="selectRepresentActivityVo"/>
         <where>
             <if test="activityType != null ">and activity_type = #{activityType}</if>
@@ -76,6 +76,7 @@
         <include refid="selectRepresentActivityVo"/>
         where activity_id = #{activityId}
     </select>
+
 
     <insert id="insertRepresentActivity" parameterType="RepresentActivity" useGeneratedKeys="true"
             keyProperty="activityId">
@@ -115,6 +116,29 @@
             <if test="openFlag != null">#{openFlag},</if>
         </trim>
     </insert>
+
+    <update id="updateStatusBeforeSelectList" parameterType="RepresentActivity">
+        UPDATE represent_activity
+        SET status= CASE
+            WHEN status= 4 THEN 4
+            WHEN start_time  <![CDATA[ > ]]> now() THEN 1
+            WHEN end_time> now() THEN 2
+            WHEN end_time  <![CDATA[ < ]]> now() THEN 3
+            ELSE status END
+        <where>
+            <if test="activityType != null ">and activity_type = #{activityType}</if>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="startTime != null ">and start_time = #{startTime}</if>
+            <if test="endTime != null ">and end_time = #{endTime}</if>
+            <if test="address != null  and address != ''">and address = #{address}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="participateConut != null ">and participate_conut = #{participateConut}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="npcClaim != null  and npcClaim != ''">and npc_claim = #{npcClaim}</if>
+            <if test="openFlag != null and npcClaim != '' ">and open_flag = #{openFlag}</if>
+        </where>
+
+    </update>
 
     <update id="updateRepresentActivity" parameterType="RepresentActivity">
         update represent_activity
@@ -204,7 +228,8 @@
     <select id="appList" parameterType="RepresentActivity" resultMap="activityList">
         select activity_id, activity_type, remark, create_time, update_by, update_time, create_by, title, start_time,
         end_time, address, status, participate_conut, content, npc_claim, open_flag,
-        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_categories' AND d.dict_value = a.activity_type
+        (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_categories' AND d.dict_value =
+        a.activity_type
         )AS activityTypeName,
         (SELECT d.dict_label FROM sys_dict_data d WHERE d.dict_type='activity_status' AND d.dict_value = a.`status` )AS
         statusName
@@ -239,8 +264,8 @@
                a.status,
                a.participate_conut,
                a.content,
-                a.npc_claim,
-                a.open_flag,
+               a.npc_claim,
+               a.open_flag,
                (SELECT d.dict_label
                 FROM sys_dict_data d
                 WHERE d.dict_type = 'activity_categories'
@@ -269,7 +294,7 @@
         where activity_id = #{activityId}
     </select>
 
-    <select id="selectClaimList" parameterType="RepresentActivity" resultMap="RepresentActivityResult" >
+    <select id="selectClaimList" parameterType="RepresentActivity" resultMap="RepresentActivityResult">
         SELECT
         act.activity_id,
         act.activity_type,
@@ -302,19 +327,12 @@
 
 
     <select id="selectByUserId" resultMap="RepresentActivityResult" parameterType="RepresentActivity">
-        SELECT m.* FROM represent_activity_record p LEFT JOIN represent_activity m ON m.activity_id = p.activity_id
+        SELECT DISTINCT m.* FROM represent_activity_claim p LEFT JOIN represent_activity m ON m.activity_id = p.activity_id
         <where>
             and p.user_id = #{userId}
-            <if test="activityType != null ">and activity_type = #{activityType}</if>
-            <if test="title != null  and title != ''">and title = #{title}</if>
-            <if test="startTime != null ">and start_time = #{startTime}</if>
-            <if test="endTime != null ">and end_time = #{endTime}</if>
-            <if test="address != null  and address != ''">and address = #{address}</if>
-            <if test="status != null ">and status = #{status}</if>
-            <if test="participateConut != null ">and participate_conut = #{participateConut}</if>
-            <if test="content != null  and content != ''">and content = #{content}</if>
-            <if test="npcClaim != null  and npcClaim != ''">and npc_claim = #{npcClaim}</if>
-            <if test="openFlag != null and npcClaim != '' ">and open_flag = #{openFlag}</if>
+            <if test="status != null ">and m.status = #{status}</if>
+            <if test="npcClaim != null ">and npc_claim = #{npcClaim}</if>
+            <if test="openFlag != null and openFlag != '' ">and open_flag = #{openFlag}</if>
         </where>
     </select>
 </mapper>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.shahenpc.system.mapper.oa.OaMeetingMapper">
+<mapper namespace="com.shahenpc.system.mapper.contactstation.oa.OaMeetingMapper">
 
     <resultMap type="OaMeeting" id="OaMeetingResult">
         <result property="meetingId"    column="meeting_id"    />
@@ -116,9 +116,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!--=======================================================分割线-->
     <resultMap id="webDetail" type="com.shahenpc.system.domain.oa.dto.MeetingDetailDto" extends="OaMeetingResult">
-        <association property="record" column="meeting_id" select="com.shahenpc.system.mapper.oa.OaMeetingRecordMapper.selectByMeetingId"/>
-        <association property="sign" column="meeting_id" select="com.shahenpc.system.mapper.oa.OaMeetingSignMapper.selectByMeetingId"/>
-        <association property="personnel" column="meeting_id" select="com.shahenpc.system.mapper.oa.OaMeetingPersonnelMapper.selectByMeetingId"/>
+        <association property="record" column="meeting_id" select="com.shahenpc.system.mapper.contactstation.oa.OaMeetingRecordMapper.selectByMeetingId"/>
+        <association property="sign" column="meeting_id" select="com.shahenpc.system.mapper.contactstation.oa.OaMeetingSignMapper.selectByMeetingId"/>
+        <association property="personnel" column="meeting_id" select="com.shahenpc.system.mapper.contactstation.oa.OaMeetingPersonnelMapper.selectByMeetingId"/>
     </resultMap>
     <select id="newDetail" resultMap="webDetail" parameterType="Long" >
         <include refid="selectOaMeetingVo"/>
@@ -168,9 +168,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <resultMap id="appDetail" type="com.shahenpc.system.domain.oa.dto.MeetingAppDetailDto" extends="OaMeetingResult">
-        <association property="record" column="meeting_id" select="com.shahenpc.system.mapper.oa.OaMeetingRecordMapper.selectByMeetingId"/>
-        <association property="sign" column="meeting_id" select="com.shahenpc.system.mapper.oa.OaMeetingSignMapper.selectByMeetingId"/>
-        <association property="personnel" column="meeting_id" select="com.shahenpc.system.mapper.oa.OaMeetingPersonnelMapper.selectByMeetingId"/>
+        <association property="record" column="meeting_id" select="com.shahenpc.system.mapper.contactstation.oa.OaMeetingRecordMapper.selectByMeetingId"/>
+        <association property="sign" column="meeting_id" select="com.shahenpc.system.mapper.contactstation.oa.OaMeetingSignMapper.selectByMeetingId"/>
+        <association property="personnel" column="meeting_id" select="com.shahenpc.system.mapper.contactstation.oa.OaMeetingPersonnelMapper.selectByMeetingId"/>
     </resultMap>
     <select id="appDetail" resultMap="appDetail">
         select

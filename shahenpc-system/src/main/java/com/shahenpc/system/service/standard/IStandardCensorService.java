@@ -99,19 +99,19 @@ public interface IStandardCensorService
      * @param
      * @return
      */
-    String ring(Integer taskName);
+    String ring(StandardCensor standardCensor);
     /**
      * 按类别饼图
      * @param
      * @return
      */
-    List<MotionPieDto> pie();
+    List<MotionPieDto> pie(StandardCensor standardCensor);
     /**
      * 曲线
      * @param
      * @return
      */
-    MotionLingDto line();
+    MotionLingDto line(StandardCensor standardCensor);
 
 
     /**
@@ -119,6 +119,6 @@ public interface IStandardCensorService
      * @param type
      * @return
      */
-    public List<StandardCensor> selectByTypeList(Integer type);
+    public List<StandardCensor> selectByTypeList(StandardCensor standardCensor);
 
 }

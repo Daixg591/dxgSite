@@ -2,10 +2,10 @@ package com.shahenpc.system.service.oa.impl;
 
 import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
-import com.shahenpc.system.mapper.oa.OaVoteMapper;
+import com.shahenpc.system.mapper.contactstation.oa.OaVoteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.shahenpc.system.mapper.oa.OaVotePlayerMapper;
+import com.shahenpc.system.mapper.contactstation.oa.OaVotePlayerMapper;
 import com.shahenpc.system.domain.oa.OaVotePlayer;
 import com.shahenpc.system.service.oa.IOaVotePlayerService;
 

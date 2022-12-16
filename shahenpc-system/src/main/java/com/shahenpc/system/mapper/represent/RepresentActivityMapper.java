@@ -48,6 +48,14 @@ public interface RepresentActivityMapper
      */
     public int insertRepresentActivity(RepresentActivity representActivity);
 
+
+    /**
+     * 查询之前 更新状态
+     * @param representActivity
+     * @return
+     */
+    public int updateStatusBeforeSelectList(RepresentActivity representActivity);
+
     /**
      * 修改代-活动列
      * 

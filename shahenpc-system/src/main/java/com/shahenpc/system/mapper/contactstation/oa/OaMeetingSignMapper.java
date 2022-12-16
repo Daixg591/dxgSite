@@ -1,4 +1,4 @@
-package com.shahenpc.system.mapper.oa;
+package com.shahenpc.system.mapper.contactstation.oa;
 
 import java.util.List;
 import com.shahenpc.system.domain.oa.OaMeetingSign;

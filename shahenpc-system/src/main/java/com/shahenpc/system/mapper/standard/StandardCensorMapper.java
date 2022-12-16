@@ -72,7 +72,11 @@ public interface StandardCensorMapper
 
     public List<StandardCensor> selectByDoneList(Long userId);
 
-    public TotalAndStatyDto selectByTotalAndStay();
+    public TotalAndStatyDto selectByTotalAndStay(StandardCensor standardCensor);
 
-    public List<StandardCensor> selectByTypeList(Integer type);
+
+    public TotalAndStatyDto selectWorkTotal(StandardCensor standardCensor);
+
+
+    public List<StandardCensor> selectByTypeList(StandardCensor standardCensor);
 }

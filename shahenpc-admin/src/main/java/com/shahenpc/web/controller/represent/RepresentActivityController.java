@@ -1,35 +1,35 @@
 package com.shahenpc.web.controller.represent;
 
-import java.util.List;
-import java.util.Objects;
-import javax.servlet.http.HttpServletResponse;
-
-import com.shahenpc.flowable.service.IFlowTaskService;
-import com.shahenpc.system.domain.represent.RepresentActivityRecord;
-import com.shahenpc.system.domain.represent.dto.ActivityAddDto;
-import com.shahenpc.system.domain.represent.dto.ActivityDetailDto;
-import com.shahenpc.system.service.represent.IRepresentActivityRecordService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.shahenpc.common.annotation.Log;
 import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.core.domain.AjaxResult;
-import com.shahenpc.common.enums.BusinessType;
-import com.shahenpc.system.domain.represent.RepresentActivity;
-import com.shahenpc.system.service.represent.IRepresentActivityService;
-import com.shahenpc.common.utils.poi.ExcelUtil;
 import com.shahenpc.common.core.page.TableDataInfo;
-import oshi.util.Util;
+import com.shahenpc.common.enums.BusinessType;
+import com.shahenpc.common.utils.poi.ExcelUtil;
+import com.shahenpc.flowable.service.IFlowTaskService;
+import com.shahenpc.system.domain.represent.RepresentActivity;
+import com.shahenpc.system.domain.represent.RepresentActivityClaim;
+import com.shahenpc.system.domain.represent.RepresentActivityGroup;
+import com.shahenpc.system.domain.represent.RepresentActivityRecord;
+import com.shahenpc.system.domain.represent.dto.ActivityAddDto;
+import com.shahenpc.system.domain.represent.dto.ActivityDetailDto;
+import com.shahenpc.system.domain.represent.dto.ActivityGroupUserDto;
+import com.shahenpc.system.service.ISysDictDataService;
+import com.shahenpc.system.service.ISysUserService;
+import com.shahenpc.system.service.represent.IRepresentActivityClaimService;
+import com.shahenpc.system.service.represent.IRepresentActivityGroupService;
+import com.shahenpc.system.service.represent.IRepresentActivityRecordService;
+import com.shahenpc.system.service.represent.IRepresentActivityService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 代-活动列Controller
@@ -50,6 +50,18 @@ public class RepresentActivityController extends BaseController {
     @Autowired
     private IRepresentActivityRecordService representActivityRecordService;
 
+    @Autowired
+    private IRepresentActivityGroupService groupService;
+
+    @Autowired
+    private ISysDictDataService dictDataService;
+
+    @Autowired
+    private IRepresentActivityClaimService claimService;
+
+    @Autowired
+    private ISysUserService userService;
+
     /**
      * 查询代-活动列列表
      */
@@ -59,45 +71,40 @@ public class RepresentActivityController extends BaseController {
     public TableDataInfo list(RepresentActivity representActivity) {
         startPage();
         representActivity.setNpcClaim(false);
+        representActivityService.updateStatusBeforeSelectList(representActivity);
         List<RepresentActivity> list = representActivityService.selectRepresentActivityList(representActivity);
         for (RepresentActivity activity : list) {
-            RepresentActivityRecord logDto = new RepresentActivityRecord();
-            logDto.setActivityId(activity.getActivityId());
-            logDto.setUserId(getLoginUser().getUser().getUserId());
-            RepresentActivityRecord logList = representActivityRecordService.selectRepresentActivityRecord(logDto);
-            if(logList == null){
+
+            RepresentActivityClaim claimDto = new RepresentActivityClaim();
+            claimDto.setActivityId(activity.getActivityId());
+            claimDto.setUserId(getLoginUser().getUser().getUserId());
+            RepresentActivityClaim claimEntity = claimService.selectRepresentActivityClaim(claimDto);
+            if (claimEntity == null) {
                 activity.setClaim(null);
-            }else if(logList.getStatus() == 2){
-                activity.setClaim(true);
-            }else {
-                activity.setClaim(false);
-            }
+            } else activity.setClaim(claimEntity.getStatus() == 2);
         }
         return getDataTable(list);
     }
+
     @ApiOperation("我的列表")
     @GetMapping("/my/list")
     public TableDataInfo myList(RepresentActivity representActivity) {
-
         startPage();
-        representActivity.setNpcClaim(false);
         representActivity.setUserId(getUserId());
         List<RepresentActivity> list = representActivityService.selectByUserId(representActivity);
         for (RepresentActivity activity : list) {
-            RepresentActivityRecord logDto = new RepresentActivityRecord();
-            logDto.setActivityId(activity.getActivityId());
-            logDto.setUserId(getLoginUser().getUser().getUserId());
-            RepresentActivityRecord logList = representActivityRecordService.selectRepresentActivityRecord(logDto);
-            if(logList == null){
+
+            RepresentActivityClaim claimDto = new RepresentActivityClaim();
+            claimDto.setActivityId(activity.getActivityId());
+            claimDto.setUserId(getLoginUser().getUser().getUserId());
+            RepresentActivityClaim claimEntity = claimService.selectRepresentActivityClaim(claimDto);
+            if (claimEntity == null) {
                 activity.setClaim(null);
-            }else if(logList.getStatus() == 2){
-                activity.setClaim(true);
-            }else {
-                activity.setClaim(false);
-            }
+            } else activity.setClaim(claimEntity.getStatus() == 2);
         }
         return getDataTable(list);
     }
+
 
     @ApiOperation("代表认领列表")
     @PreAuthorize("@ss.hasPermi('represent:activity:list')")
@@ -110,13 +117,13 @@ public class RepresentActivityController extends BaseController {
             logDto.setActivityId(activity.getActivityId());
             logDto.setUserId(getLoginUser().getUser().getUserId());
             RepresentActivityRecord logList = representActivityRecordService.selectRepresentActivityRecord(logDto);
-            if(logList == null){
-                activity.setClaim(null);
-            }else if(logList.getStatus() == 2){
-                activity.setClaim(true);
-            }else {
-                activity.setClaim(false);
-            }
+//            if (logList == null) {
+//                activity.setClaim(null);
+//            } else if (logList.getStatus() == 2) {
+//                activity.setClaim(true);
+//            } else {
+//                activity.setClaim(false);
+//            }
         }
         return getDataTable(list);
     }
@@ -142,33 +149,53 @@ public class RepresentActivityController extends BaseController {
     @PreAuthorize("@ss.hasPermi('represent:activity:query')")
     @GetMapping(value = "/{activityId}")
     public AjaxResult getInfo(@PathVariable("activityId") Long activityId) {
-        ActivityDetailDto dto=  representActivityService.newDetail(activityId);
-        RepresentActivityRecord logDto = new RepresentActivityRecord();
-        logDto.setActivityId(dto.getActivityId());
-        logDto.setUserId(getUserId());
-        RepresentActivityRecord logList = representActivityRecordService.selectRepresentActivityRecord(logDto);
-        if(logList == null){
-            dto.setClaim(null);
-        }else if(logList.getStatus() == 2){
-            dto.setClaim(true);
-        }else {
-            dto.setClaim(false);
+        ActivityDetailDto dto = representActivityService.newDetail(activityId);
+        dto.setActivityTypeName(dictDataService.selectDictLabel("activity_categories", dto.getActivityType().toString()));
+
+        //region // 废弃记录逻辑
+        //        RepresentActivityRecord logDto = new RepresentActivityRecord();
+        //        logDto.setActivityId(dto.getActivityId());
+        //        logDto.setUserId(getUserId());
+        //endregion
+
+        // 返回各用户分组以及分组人数 --》1 查询所有的分组--》2 根据Id查询当前Id下的分组 --》3 根据分组Id查询分组人数集合
+        RepresentActivityGroup groupDto = new RepresentActivityGroup();
+        groupDto.setActivityId(activityId);
+        List<RepresentActivityGroup> groups = groupService.selectRepresentActivityGroupList(groupDto);
+
+        RepresentActivityClaim claimDto = new RepresentActivityClaim();
+        claimDto.setActivityId(activityId);
+        List<RepresentActivityClaim> claimList = claimService.selectClaimList(claimDto);
+
+        dto.setGroupUserList(claimList);
+        if (groups != null && groups.size() > 0) {
+            for (RepresentActivityGroup group : groups) {
+                List<Long> userIds = new ArrayList<>();
+
+                for (RepresentActivityClaim claim : claimList.stream().filter(x -> x.getActivityGroupId().equals(group.getActivityGroupId())).collect(Collectors.toList())) {
+                    userIds.add(claim.getUserId());
+                }
+                group.setUserIds(userIds);
+                group.setMine(false);
+                if (group.getUserIds() != null && group.getUserIds().size() > 0) {
+                    group.setMine(group.getUserIds().contains(getUserId()));
+                }
+            }
+            dto.setGroupList(groups);
         }
+
+        claimDto.setUserId(getUserId());
+        List<RepresentActivityClaim> tempList = claimService.selectRepresentActivityClaimList(claimDto);
+        if (tempList.size() == 0) {
+            dto.setClaim(null);
+        } else dto.setClaim(tempList.stream().anyMatch(x -> x.getStatus() == 2));
+
         return AjaxResult.success(dto);
     }
 
-    /**
-     * 新增代-活动列
-     @ApiOperation("新增")
-     @PreAuthorize("@ss.hasPermi('represent:activity:add')")
-     @Log(title = "代-活动列", businessType = BusinessType.INSERT)
-     @PostMapping public AjaxResult add(@RequestBody RepresentActivity representActivity)
-     {
-     return toAjax(representActivityService.insertRepresentActivity(representActivity));
-     }*/
 
     /**
-     * 修改代-活动列
+     * 修改履职活动
      */
     @ApiOperation("修改")
     @PreAuthorize("@ss.hasPermi('represent:activity:edit')")

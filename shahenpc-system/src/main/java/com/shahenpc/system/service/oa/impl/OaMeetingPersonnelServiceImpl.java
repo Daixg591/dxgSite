@@ -4,7 +4,7 @@ import java.util.List;
 import com.shahenpc.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.shahenpc.system.mapper.oa.OaMeetingPersonnelMapper;
+import com.shahenpc.system.mapper.contactstation.oa.OaMeetingPersonnelMapper;
 import com.shahenpc.system.domain.oa.OaMeetingPersonnel;
 import com.shahenpc.system.service.oa.IOaMeetingPersonnelService;
 

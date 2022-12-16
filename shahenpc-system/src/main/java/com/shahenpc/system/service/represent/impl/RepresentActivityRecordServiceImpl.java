@@ -48,7 +48,8 @@ public class RepresentActivityRecordServiceImpl implements IRepresentActivityRec
 
     @Override
     public RepresentActivityRecord selectRepresentActivityRecord(RepresentActivityRecord representActivityRecord) {
-        return null;
+        return representActivityRecordMapper.selectRepresentActivityRecord(representActivityRecord);
+//        return null;
     }
 
     /**
@@ -77,16 +78,23 @@ public class RepresentActivityRecordServiceImpl implements IRepresentActivityRec
         return representActivityRecordMapper.updateRepresentActivityRecord(representActivityRecord);
     }
 
+    //region // old 废弃
     @Override
     public AjaxResult updateMyStatus(RepresentActivityRecord representActivityRecord) {
-        List<RepresentActivityRecord> record =representActivityRecordMapper.selectRepresentActivityRecordList(representActivityRecord);
-        if(record.size() != 0){
-            representActivityRecord.setUpdateTime(DateUtils.getNowDate());
-            return AjaxResult.success(representActivityRecordMapper.updateMyStatus(representActivityRecord));
-        }else{
-            return AjaxResult.error("活动不存在！");
-        }
+//        int tempStatus=representActivityRecord.getStatus();
+//        representActivityRecord.setStatus(null);
+//        List<RepresentActivityRecord> record =representActivityRecordMapper.selectRepresentActivityRecordList(representActivityRecord);
+//
+//        if(record.size() != 0){
+//            representActivityRecord.setUpdateTime(DateUtils.getNowDate());
+//            representActivityRecord.setStatus(tempStatus);
+//            return AjaxResult.success(representActivityRecordMapper.updateMyStatus(representActivityRecord));
+//        }else{
+//            return AjaxResult.error("活动不存在！");
+//        }
+        return null;
     }
+    //endregion
 
     /**
      * 批量删除代-活动记录

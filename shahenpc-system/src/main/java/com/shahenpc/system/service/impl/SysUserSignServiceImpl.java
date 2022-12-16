@@ -3,6 +3,9 @@ package com.shahenpc.system.service.impl;
 import java.util.List;
 
 import com.shahenpc.common.utils.DateUtils;
+import com.shahenpc.system.domain.represent.SignRankingDto;
+import com.shahenpc.system.domain.represent.dto.DiscoverRankingDto;
+import com.shahenpc.system.domain.represent.vo.SignTimeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.shahenpc.system.mapper.sign.SysUserSignMapper;
@@ -88,9 +91,31 @@ public class SysUserSignServiceImpl implements ISysUserSignService {
         return sysUserSignMapper.deleteSysUserSignBySignId(signId);
     }
 
+    /**
+     * 判断今天是否签到
+     * @param userId
+     * @return
+     */
     @Override
     public boolean isTodaySign(Long userId) {
         return sysUserSignMapper.isTodaySign(userId).size() > 0;
+    }
+
+    /**
+     * 导出签到排名
+     * @return
+     */
+    @Override
+    public  List<SignRankingDto> selectByExportRanking(SignTimeDto dto){
+        return sysUserSignMapper.selectByExportRanking(dto);
+    }
+
+    /**
+     * 签到排名前10条数据统计
+     * @return
+     */
+    public List<SignRankingDto> selectTopRanking(){
+        return sysUserSignMapper.selectTopRanking();
     }
 
 }

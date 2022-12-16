@@ -3,6 +3,10 @@ package com.shahenpc.web.controller.sign;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shahenpc.system.domain.represent.RepresentDiscover;
+import com.shahenpc.system.domain.represent.SignRankingDto;
+import com.shahenpc.system.domain.represent.dto.DiscoverRankingDto;
+import com.shahenpc.system.domain.represent.vo.SignTimeDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -88,11 +92,13 @@ public class SysUserSignController extends BaseController {
 //    @PreAuthorize("@ss.hasPermi('system:sign:add')")
     @Log(title = "代表签到", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody SysUserSign sysUserSign) {
+    public AjaxResult add() {
         if (isTodaySign(getUserId())) {
             return AjaxResult.error("今日已签到！");
         }
-        return toAjax(sysUserSignService.insertSysUserSign(sysUserSign));
+        SysUserSign entity = new SysUserSign();
+        entity.setUserId(getUserId());
+        return toAjax(sysUserSignService.insertSysUserSign(entity));
     }
 
     /**
@@ -124,6 +130,28 @@ public class SysUserSignController extends BaseController {
      */
     private boolean isTodaySign(Long userId) {
         return sysUserSignService.isTodaySign(userId);
+    }
+
+
+    @ApiOperation("排行导出")
+    @PostMapping(value = "/ranking/export")
+    public void RankingExport(HttpServletResponse response, SignTimeDto dto)
+    {
+        List<SignRankingDto> list = sysUserSignService.selectByExportRanking(dto);
+        ExcelUtil<SignRankingDto> util = new ExcelUtil<SignRankingDto>(SignRankingDto.class);
+        //新增时间判断
+        util.exportExcel(response, list, "本周代表签到次数统计");
+    }
+
+    /**
+     * 代表签到前十名
+     * @return
+     */
+    @ApiOperation("代表签到前十名")
+    @GetMapping(value = "/tops")
+    public List<SignRankingDto> selectByExportRanking()
+    {
+        return sysUserSignService.selectTopRanking();
     }
 
 }

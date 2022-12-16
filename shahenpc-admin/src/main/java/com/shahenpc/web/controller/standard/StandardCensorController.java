@@ -84,13 +84,17 @@ public class StandardCensorController extends BaseController
         return AjaxResult.success(standardCensorService.selectByCensorId(censorId));
     }
 
-
+    /**
+     * 全部
+     * @param type
+     * @return
+     */
     @PreAuthorize("@ss.hasPermi('censor:type:list')")
     @GetMapping("/type/list")
-    public TableDataInfo typeList(Integer type)
+    public TableDataInfo typeList(StandardCensor standardCensor)
     {
         startPage();
-        List<StandardCensor> list = standardCensorService.selectByTypeList(type);
+        List<StandardCensor> list = standardCensorService.selectByTypeList(standardCensor);
         return getDataTable(list);
     }
     /**
@@ -180,20 +184,21 @@ public class StandardCensorController extends BaseController
 
     @ApiOperation("按月曲线")
     @GetMapping("/line")
-    public AjaxResult line(){
-        return  AjaxResult.success(standardCensorService.line());
+    public AjaxResult line(StandardCensor standardCensor){
+        return  AjaxResult.success(standardCensorService.line(standardCensor));
     }
 
     @ApiOperation("按类别饼图")
     @GetMapping("/pie")
-    public AjaxResult pie(){
-        return AjaxResult.success(standardCensorService.pie());
+    public AjaxResult pie(StandardCensor standardCensor){
+        return AjaxResult.success(standardCensorService.pie(standardCensor));
     }
 
     @ApiOperation("落实率")
     @GetMapping("/ring")
-    public AjaxResult ring(Integer taskName){
-        return AjaxResult.success(standardCensorService.ring(taskName));
+    public AjaxResult ring(StandardCensor standardCensor){
+        return AjaxResult.success("",standardCensorService.ring(standardCensor));
+
     }
 
     /**

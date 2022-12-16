@@ -1,36 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shahenpc.system.mapper.sign.SysUserSignMapper">
-    
+
     <resultMap type="SysUserSign" id="SysUserSignResult">
-        <result property="signId"    column="sign_id"    />
-        <result property="userId"    column="user_id"    />
-        <result property="remark"    column="remark"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="delFlag"    column="del_flag"    />
+        <result property="signId" column="sign_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="delFlag" column="del_flag"/>
     </resultMap>
 
     <sql id="selectSysUserSignVo">
-        select sign_id, user_id, remark, create_by, create_time, update_by, update_time, del_flag from sys_user_sign
+        select sign_id,
+               user_id,
+               remark,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               del_flag
+        from sys_user_sign
     </sql>
 
     <select id="selectSysUserSignList" parameterType="SysUserSign" resultMap="SysUserSignResult">
         <include refid="selectSysUserSignVo"/>
-        <where>  
-            <if test="userId != null "> and user_id = #{userId}</if>
+        <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
         </where>
     </select>
-    
+
     <select id="selectSysUserSignBySignId" parameterType="Long" resultMap="SysUserSignResult">
         <include refid="selectSysUserSignVo"/>
         where sign_id = #{signId}
     </select>
-        
+
     <insert id="insertSysUserSign" parameterType="SysUserSign">
         insert into sys_user_sign
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -42,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="signId != null">#{signId},</if>
             <if test="userId != null">#{userId},</if>
@@ -52,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateSysUserSign" parameterType="SysUserSign">
@@ -70,21 +78,48 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteSysUserSignBySignId" parameterType="Long">
-        delete from sys_user_sign where sign_id = #{signId}
+        delete
+        from sys_user_sign
+        where sign_id = #{signId}
     </delete>
 
     <delete id="deleteSysUserSignBySignIds" parameterType="String">
-        delete from sys_user_sign where sign_id in 
+        delete from sys_user_sign where sign_id in
         <foreach item="signId" collection="array" open="(" separator="," close=")">
             #{signId}
         </foreach>
     </delete>
 
-<!--    ************************************自定义*************************    -->
+    <!--    ************************************自定义*************************    -->
     <select id="isTodaySign" parameterType="Long" resultMap="SysUserSignResult">
-        select user_id from sys_user_sign where
-        to_days(create_time)=to_days(now())
-        and user_id = #{userId}
+        select user_id
+        from sys_user_sign
+        where to_days(create_time) = to_days(now())
+          and user_id = #{userId}
+    </select>
+
+
+    <select id="selectByExportRanking" resultType="com.shahenpc.system.domain.represent.SignRankingDto">
+        select DISTINCT u.nick_name                                                              as nickName,
+                        (select count(sign_id)
+                         from sys_user_sign aa
+                         where aa.user_id = u.user_id
+                           and YEARWEEK(date_format(create_time, '%Y-%m-%d')) = YEARWEEK(now())) as ranking
+        from sys_user u
+                 LEFT JOIN sys_user_sign s on s.user_id = u.user_id
+        where u.user_type &amp; 1 > 0
+        order by ranking desc
+    </select>
+
+    <select id="selectTopRanking" resultType="com.shahenpc.system.domain.represent.SignRankingDto">
+        select DISTINCT u.nick_name                                                                as nickName,
+                        (select count(sign_id) from sys_user_sign aa where aa.user_id = u.user_id) as ranking
+        from sys_user u
+                 LEFT JOIN sys_user_sign s on s.user_id = u.user_id
+        where u.user_type &amp; 1 > 0
+
+        order by ranking desc
+        LIMIT 10
     </select>
 
 </mapper>

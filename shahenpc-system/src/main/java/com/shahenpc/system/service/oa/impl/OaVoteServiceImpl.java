@@ -6,10 +6,10 @@ import com.shahenpc.common.core.controller.BaseController;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.system.domain.oa.OaVotePlayer;
 import com.shahenpc.system.domain.oa.dto.VoteCount;
-import com.shahenpc.system.mapper.oa.OaVotePlayerMapper;
+import com.shahenpc.system.mapper.contactstation.oa.OaVotePlayerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.shahenpc.system.mapper.oa.OaVoteMapper;
+import com.shahenpc.system.mapper.contactstation.oa.OaVoteMapper;
 import com.shahenpc.system.domain.oa.OaVote;
 import com.shahenpc.system.service.oa.IOaVoteService;
 

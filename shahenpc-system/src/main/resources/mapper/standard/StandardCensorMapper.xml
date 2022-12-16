@@ -5,83 +5,125 @@
 <mapper namespace="com.shahenpc.system.mapper.standard.StandardCensorMapper">
 
     <resultMap type="StandardCensor" id="StandardCensorResult">
-        <result property="censorId"    column="censor_id"    />
-        <result property="reportTitle"    column="report_title"    />
-        <result property="reportType"    column="report_type"    />
-        <result property="fileName"    column="file_name"    />
-        <result property="fileNature"    column="file_nature"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="remark"    column="remark"    />
-        <result property="reportWen"    column="report_wen"    />
-        <result property="reportOrgan"    column="report_organ"    />
-        <result property="passOrgan"    column="pass_organ"    />
-        <result property="recordOrgan"    column="record_organ"    />
-        <result property="announcedTime"    column="announced_time"    />
-        <result property="hairdressingTime"    column="hairdressing_time"    />
-        <result property="administerTime"    column="administer_time"    />
-        <result property="recordTime"    column="record_time"    />
-        <result property="contactName"    column="contact_name"    />
-        <result property="contactPhone"    column="contact_phone"    />
-        <result property="fileList"    column="file_list"    />
-        <result property="type"    column="type"    />
-        <result property="status"    column="status"    />
-        <result property="rate"    column="rate"    />
-        <result property="sendUserId"    column="send_user_id"    />
-        <result property="receiveUserId"    column="receive_user_id"    />
-        <result property="processType"    column="process_type"    />
-        <result property="censorTache"    column="censor_tache"    />
-        <result property="procinsId"    column="procIns_id"    />
-        <result property="deployId"    column="deploy_id"    />
-        <result property="address"    column="address"    />
-        <result property="recordReport"    column="record_report"    />
-        <result property="formalText"    column="formal_text"    />
-        <result property="formulateExplain"    column="formulate_explain"    />
-        <result property="basis"    column="basis"    />
-        <result property="other"    column="other"    />
-        <result property="lapseTime"    column="lapse_time"    />
+        <result property="censorId" column="censor_id"/>
+        <result property="reportTitle" column="report_title"/>
+        <result property="reportType" column="report_type"/>
+        <result property="fileName" column="file_name"/>
+        <result property="fileNature" column="file_nature"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="reportWen" column="report_wen"/>
+        <result property="reportOrgan" column="report_organ"/>
+        <result property="passOrgan" column="pass_organ"/>
+        <result property="recordOrgan" column="record_organ"/>
+        <result property="announcedTime" column="announced_time"/>
+        <result property="hairdressingTime" column="hairdressing_time"/>
+        <result property="administerTime" column="administer_time"/>
+        <result property="recordTime" column="record_time"/>
+        <result property="contactName" column="contact_name"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="fileList" column="file_list"/>
+        <result property="type" column="type"/>
+        <result property="status" column="status"/>
+        <result property="rate" column="rate"/>
+        <result property="sendUserId" column="send_user_id"/>
+        <result property="receiveUserId" column="receive_user_id"/>
+        <result property="processType" column="process_type"/>
+        <result property="censorTache" column="censor_tache"/>
+        <result property="procinsId" column="procIns_id"/>
+        <result property="deployId" column="deploy_id"/>
+        <result property="address" column="address"/>
+        <result property="recordReport" column="record_report"/>
+        <result property="formalText" column="formal_text"/>
+        <result property="formulateExplain" column="formulate_explain"/>
+        <result property="basis" column="basis"/>
+        <result property="other" column="other"/>
+        <result property="lapseTime" column="lapse_time"/>
     </resultMap>
 
     <sql id="selectStandardCensorVo">
-        select censor_id, report_title, report_type, file_name, file_nature, create_by, create_time, update_by, update_time, remark, report_wen, report_organ, pass_organ, record_organ, announced_time, hairdressing_time, administer_time, record_time, contact_name, contact_phone, file_list, type, status, rate, send_user_id, receive_user_id, process_type, censor_tache, procIns_id, deploy_id, address, record_report, formal_text, formulate_explain, basis, other, lapse_time from standard_censor
+        select censor_id,
+               report_title,
+               report_type,
+               file_name,
+               file_nature,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               remark,
+               report_wen,
+               report_organ,
+               pass_organ,
+               record_organ,
+               announced_time,
+               hairdressing_time,
+               administer_time,
+               record_time,
+               contact_name,
+               contact_phone,
+               file_list,
+               type,
+               status,
+               rate,
+               send_user_id,
+               receive_user_id,
+               process_type,
+               censor_tache,
+               procIns_id,
+               deploy_id,
+               address,
+               record_report,
+               formal_text,
+               formulate_explain,
+               basis,
+               other,
+               lapse_time
+        from standard_censor
     </sql>
 
     <select id="selectStandardCensorList" parameterType="StandardCensor" resultMap="StandardCensorResult">
         <include refid="selectStandardCensorVo"/>
         <where>
-            <if test="reportTitle != null  and reportTitle != ''"> and report_title = #{reportTitle}</if>
-            <if test="reportType != null "> and report_type = #{reportType}</if>
-            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
-            <if test="fileNature != null  and fileNature != ''"> and file_nature = #{fileNature}</if>
-            <if test="reportWen != null  and reportWen != ''"> and report_wen = #{reportWen}</if>
-            <if test="reportOrgan != null  and reportOrgan != ''"> and report_organ = #{reportOrgan}</if>
-            <if test="passOrgan != null  and passOrgan != ''"> and pass_organ = #{passOrgan}</if>
-            <if test="recordOrgan != null  and recordOrgan != ''"> and record_organ = #{recordOrgan}</if>
-            <if test="announcedTime != null "> and announced_time = #{announcedTime}</if>
-            <if test="hairdressingTime != null "> and hairdressing_time = #{hairdressingTime}</if>
-            <if test="administerTime != null "> and administer_time = #{administerTime}</if>
-            <if test="recordTime != null "> and record_time = #{recordTime}</if>
-            <if test="contactName != null  and contactName != ''"> and contact_name like concat('%', #{contactName}, '%')</if>
-            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
-            <if test="fileList != null  and fileList != ''"> and file_list = #{fileList}</if>
-            <if test="type != null "> and type = #{type}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="rate != null "> and rate = #{rate}</if>
-            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
-            <if test="receiveUserId != null  and receiveUserId != ''"> and receive_user_id = #{receiveUserId}</if>
-            <if test="processType != null "> and process_type = #{processType}</if>
-            <if test="censorTache != null  and censorTache != ''"> and censor_tache = #{censorTache}</if>
-            <if test="procinsId != null  and procinsId != ''"> and procIns_id = #{procinsId}</if>
-            <if test="deployId != null  and deployId != ''"> and deploy_id = #{deployId}</if>
-            <if test="address != null  and address != ''"> and address = #{address}</if>
-            <if test="recordReport != null  and recordReport != ''"> and record_report = #{recordReport}</if>
-            <if test="formalText != null  and formalText != ''"> and formal_text = #{formalText}</if>
-            <if test="formulateExplain != null  and formulateExplain != ''"> and formulate_explain = #{formulateExplain}</if>
-            <if test="basis != null  and basis != ''"> and basis = #{basis}</if>
-            <if test="other != null  and other != ''"> and other = #{other}</if>
-            <if test="lapseTime != null "> and lapse_time = #{lapseTime}</if>
+            <if test="reportTitle != null  and reportTitle != ''">and report_title = #{reportTitle}</if>
+            <if test="reportType == null ">and report_type != 4</if>
+            <if test="reportType != null ">and report_type = #{reportType}</if>
+            <if test="fileName != null  and fileName != ''">and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="fileNature != null  and fileNature != ''">and file_nature = #{fileNature}</if>
+            <if test="reportWen != null  and reportWen != ''">and report_wen = #{reportWen}</if>
+            <if test="reportOrgan != null  and reportOrgan != ''">and report_organ = #{reportOrgan}</if>
+            <if test="passOrgan != null  and passOrgan != ''">and pass_organ = #{passOrgan}</if>
+            <if test="recordOrgan != null  and recordOrgan != ''">and record_organ = #{recordOrgan}</if>
+            <if test="announcedTime != null ">and announced_time = #{announcedTime}</if>
+            <if test="hairdressingTime != null ">and hairdressing_time = #{hairdressingTime}</if>
+            <if test="administerTime != null ">and administer_time = #{administerTime}</if>
+            <if test="recordTime != null ">and record_time = #{recordTime}</if>
+            <if test="contactName != null  and contactName != ''">and contact_name like concat('%', #{contactName},
+                '%')
+            </if>
+            <if test="contactPhone != null  and contactPhone != ''">and contact_phone = #{contactPhone}</if>
+            <if test="fileList != null  and fileList != ''">and file_list = #{fileList}</if>
+            <if test="type != null ">and type = #{type}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="rate != null ">and rate = #{rate}</if>
+            <if test="sendUserId != null ">and send_user_id = #{sendUserId}</if>
+            <if test="receiveUserId != null  and receiveUserId != ''">and receive_user_id = #{receiveUserId}</if>
+            <if test="processType != null ">and process_type = #{processType}</if>
+            <if test="censorTache != null  and censorTache != ''">and censor_tache = #{censorTache}</if>
+            <if test="procinsId != null  and procinsId != ''">and procIns_id = #{procinsId}</if>
+            <if test="deployId != null  and deployId != ''">and deploy_id = #{deployId}</if>
+            <if test="address != null  and address != ''">and address = #{address}</if>
+            <if test="recordReport != null  and recordReport != ''">and record_report = #{recordReport}</if>
+            <if test="formalText != null  and formalText != ''">and formal_text = #{formalText}</if>
+            <if test="formulateExplain != null  and formulateExplain != ''">and formulate_explain =
+                #{formulateExplain}
+            </if>
+            <if test="basis != null  and basis != ''">and basis = #{basis}</if>
+            <if test="other != null  and other != ''">and other = #{other}</if>
+            <if test="lapseTime != null ">and lapse_time = #{lapseTime}</if>
         </where>
     </select>
 
@@ -214,7 +256,9 @@
     </update>
 
     <delete id="deleteStandardCensorByCensorId" parameterType="Long">
-        delete from standard_censor where censor_id = #{censorId}
+        delete
+        from standard_censor
+        where censor_id = #{censorId}
     </delete>
 
     <delete id="deleteStandardCensorByCensorIds" parameterType="String">
@@ -229,8 +273,10 @@
         where procins_id = #{procinsId}
     </select>
     <!--新详情-->
-    <resultMap id="detail" type="com.shahenpc.system.domain.standard.dto.CemsorDetailDto" extends="StandardCensorResult">
-        <association property="record" column="censor_id" select="com.shahenpc.system.mapper.standard.StandardCensorRecordMapper.selectByCensorId"></association>
+    <resultMap id="detail" type="com.shahenpc.system.domain.standard.dto.CemsorDetailDto"
+               extends="StandardCensorResult">
+        <association property="record" column="censor_id"
+                     select="com.shahenpc.system.mapper.standard.StandardCensorRecordMapper.selectByCensorId"></association>
     </resultMap>
     <select id="selectByCensorId" parameterType="Long" resultMap="detail">
         <include refid="selectStandardCensorVo"/>
@@ -240,43 +286,95 @@
     <!--待办列表-->
     <select id="selectByTodoList" parameterType="StandardCensor" resultMap="StandardCensorResult">
         SELECT
-            c.censor_id, c.report_title, c.report_type, c.file_name, c.file_nature, c.create_by, c.create_time,
-               c.update_by, c.update_time, c.remark, c.report_wen, c.report_organ, c.pass_organ,
-               c.record_organ, c.announced_time, c.hairdressing_time, c.administer_time, c.record_time,
-               c.contact_name, c.contact_phone, c.file_list, c.type, r.status, c.rate,
-               c.send_user_id, c.receive_user_id, c.process_type, c.censor_tache,c.procIns_id, c.deploy_id,
-               c.address, c.record_report, c.formal_text, c.formulate_explain, c.basis, c.other, c.lapse_time
+        c.censor_id, c.report_title, c.report_type, c.file_name, c.file_nature, c.create_by, c.create_time,
+        c.update_by, c.update_time, c.remark, c.report_wen, c.report_organ, c.pass_organ,
+        c.record_organ, c.announced_time, c.hairdressing_time, c.administer_time, c.record_time,
+        c.contact_name, c.contact_phone, c.file_list, c.type, r.status, c.rate,
+        c.send_user_id, c.receive_user_id, c.process_type, c.censor_tache,c.procIns_id, c.deploy_id,
+        c.address, c.record_report, c.formal_text, c.formulate_explain, c.basis, c.other, c.lapse_time
         FROM standard_censor_record r RIGHT JOIN standard_censor c ON c.censor_id = r.censor_id
-        WHERE  c.type = #{type}
-            <if test="receiveUserId != null ">
-                AND r.receive_user_id = #{receiveUserId}
-            </if>
+        WHERE c.type = #{type}
+        <if test="receiveUserId != null ">
+            AND r.receive_user_id = #{receiveUserId}
+        </if>
+        <if test="reportType == null ">and report_type != 4</if>
+        <if test="reportType != null ">and report_type = #{reportType}</if>
         and r.status=0
         GROUP BY c.censor_id ORDER BY r.create_time DESC
     </select>
 
     <!--已办理-->
     <select id="selectByDoneList" parameterType="Long" resultMap="StandardCensorResult">
-        SELECT  c.censor_id, c.report_title, c.report_type, c.file_name, c.file_nature, c.create_by, c.create_time,
-                c.update_by, c.update_time, c.remark, c.report_wen, c.report_organ, c.pass_organ,
-                c.record_organ, c.announced_time, c.hairdressing_time, c.administer_time, c.record_time,
-                c.contact_name, c.contact_phone, c.file_list, c.type, c.status, c.rate,
-                c.send_user_id, c.receive_user_id, c.process_type, c.censor_tache,c.procIns_id, c.deploy_id,
-                c.address, c.record_report, c.formal_text, c.formulate_explain, c.basis, c.other, c.lapse_time
-        FROM standard_censor_record r RIGHT JOIN standard_censor c ON c.censor_id = r.censor_id
-        WHERE r.send_user_id= #{sendUserId} AND r.type != 0 ORDER BY r.create_time DESC
+        SELECT c.censor_id,
+               c.report_title,
+               c.report_type,
+               c.file_name,
+               c.file_nature,
+               c.create_by,
+               c.create_time,
+               c.update_by,
+               c.update_time,
+               c.remark,
+               c.report_wen,
+               c.report_organ,
+               c.pass_organ,
+               c.record_organ,
+               c.announced_time,
+               c.hairdressing_time,
+               c.administer_time,
+               c.record_time,
+               c.contact_name,
+               c.contact_phone,
+               c.file_list,
+               c.type,
+               c.status,
+               c.rate,
+               c.send_user_id,
+               c.receive_user_id,
+               c.process_type,
+               c.censor_tache,
+               c.procIns_id,
+               c.deploy_id,
+               c.address,
+               c.record_report,
+               c.formal_text,
+               c.formulate_explain,
+               c.basis,
+               c.other,
+               c.lapse_time
+        FROM standard_censor_record r
+                 RIGHT JOIN standard_censor c ON c.censor_id = r.censor_id
+        WHERE r.send_user_id = #{sendUserId}
+          AND r.type != 0
+        ORDER BY r.create_time DESC
     </select>
 
     <!--待处理  已处理    总数-->
     <select id="selectByTotalAndStay" resultType="com.shahenpc.system.domain.standard.dto.TotalAndStatyDto">
-        SELECT COUNT(c.censor_id)AS total,
-               COUNT(CASE WHEN c.type IN(1,2,3,4) THEN 1 ELSE NULL END) AS stayTotal
-        FROM  standard_censor c
+        SELECT COUNT(c.censor_id)                                           AS total,
+               COUNT(CASE WHEN c.type IN (1, 2, 3, 4) THEN 1 ELSE NULL END) AS stayTotal
+        FROM standard_censor c
+    </select>
+
+
+    <!--    总数  当前状态数-->
+    <select id="selectWorkTotal" parameterType="StandardCensor"  resultType="com.shahenpc.system.domain.standard.dto.TotalAndStatyDto">
+        select count(
+                       case
+                           when type <![CDATA[>=]]> #{type}
+                               then 1
+                           else null end) as total,
+               count(
+                       case
+                           when type <![CDATA[=]]> #{type}
+                               then 1
+                           else null end) as stayTotal
+        FROM standard_censor
     </select>
 
 
     <!--反馈列表-->
-    <select id="selectByTypeList" parameterType="java.lang.Integer" resultMap="StandardCensorResult">
+    <select id="selectByTypeList" parameterType="StandardCensor" resultMap="StandardCensorResult">
         SELECT
         c.censor_id, c.report_title, c.report_type, c.file_name, c.file_nature, c.create_by, c.create_time,
         c.update_by, c.update_time, c.remark, c.report_wen, c.report_organ, c.pass_organ,
@@ -285,12 +383,51 @@
         c.send_user_id, c.receive_user_id, c.process_type, c.censor_tache,c.procIns_id, c.deploy_id,
         c.address, c.record_report, c.formal_text, c.formulate_explain, c.basis, c.other, c.lapse_time
         FROM standard_censor_record r RIGHT JOIN standard_censor c ON c.censor_id = r.censor_id
-        <if test="type != null">
-            WHERE c.type = #{type}
-            <if test="type != 4">
-                and c.status=0
+
+        <where>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="type != null">
+                and c.type = #{type}
+                <if test="type != 4">
+                    and c.status=0
+                </if>
             </if>
-        </if>
+            <if test="reportTitle != null  and reportTitle != ''">and report_title = #{reportTitle}</if>
+            <if test="reportType == null ">and report_type != 4</if>
+            <if test="reportType != null ">and report_type = #{reportType}</if>
+
+            <if test="fileName != null  and fileName != ''">and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="fileNature != null  and fileNature != ''">and file_nature = #{fileNature}</if>
+            <if test="reportWen != null  and reportWen != ''">and report_wen = #{reportWen}</if>
+            <if test="reportOrgan != null  and reportOrgan != ''">and report_organ = #{reportOrgan}</if>
+            <if test="passOrgan != null  and passOrgan != ''">and pass_organ = #{passOrgan}</if>
+            <if test="recordOrgan != null  and recordOrgan != ''">and record_organ = #{recordOrgan}</if>
+            <if test="announcedTime != null ">and announced_time = #{announcedTime}</if>
+            <if test="hairdressingTime != null ">and hairdressing_time = #{hairdressingTime}</if>
+            <if test="administerTime != null ">and administer_time = #{administerTime}</if>
+            <if test="recordTime != null ">and record_time = #{recordTime}</if>
+            <if test="contactName != null  and contactName != ''">and contact_name like concat('%', #{contactName},'%')
+            </if>
+            <if test="contactPhone != null  and contactPhone != ''">and contact_phone = #{contactPhone}</if>
+            <if test="fileList != null  and fileList != ''">and file_list = #{fileList}</if>
+            <if test="rate != null ">and rate = #{rate}</if>
+            <if test="sendUserId != null ">and send_user_id = #{sendUserId}</if>
+            <if test="receiveUserId != null  and receiveUserId != ''">and receive_user_id = #{receiveUserId}</if>
+            <if test="processType != null ">and process_type = #{processType}</if>
+            <if test="censorTache != null  and censorTache != ''">and censor_tache = #{censorTache}</if>
+            <if test="procinsId != null  and procinsId != ''">and procIns_id = #{procinsId}</if>
+            <if test="deployId != null  and deployId != ''">and deploy_id = #{deployId}</if>
+            <if test="address != null  and address != ''">and address = #{address}</if>
+            <if test="recordReport != null  and recordReport != ''">and record_report = #{recordReport}</if>
+            <if test="formalText != null  and formalText != ''">and formal_text = #{formalText}</if>
+            <if test="formulateExplain != null  and formulateExplain != ''">and formulate_explain =
+                #{formulateExplain}
+            </if>
+            <if test="basis != null  and basis != ''">and basis = #{basis}</if>
+            <if test="other != null  and other != ''">and other = #{other}</if>
+            <if test="lapseTime != null ">and lapse_time = #{lapseTime}</if>
+        </where>
+
         GROUP BY c.censor_id ORDER BY r.create_time DESC
     </select>
 </mapper>

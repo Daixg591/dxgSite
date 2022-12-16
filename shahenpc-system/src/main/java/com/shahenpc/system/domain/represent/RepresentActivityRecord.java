@@ -1,6 +1,7 @@
 package com.shahenpc.system.domain.represent;
 
 import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -10,105 +11,123 @@ import com.shahenpc.common.core.domain.BaseEntity;
 
 /**
  * 代-活动记录对象 represent_activity_record
- * 
+ *
  * @author ruoyi
  * @date 2022-07-21
  */
 @Data
-public class RepresentActivityRecord extends BaseEntity
-{
+public class RepresentActivityRecord extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    private String statusName;
-    /**  */
+//    private String statusName;
+    /**
+     *
+     */
     private Long recordId;
 
-    /** 活动id */
+    /**
+     * 活动id
+     */
     @Excel(name = "活动id")
     private Long activityId;
 
-    /** 参会人 */
+    /**
+     * 参会人
+     */
     @Excel(name = "参会人")
     private Long userId;
 
-    /** 内容 */
+    /**
+     * 内容
+     */
     @Excel(name = "内容")
     private String content;
 
     private String feedBackStatus;
 
-    /** 提交时间 */
+    /**
+     * 提交时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "提交时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date submitTime;
-    /**姓名*/
+    /**
+     * 姓名
+     */
     private String nickName;
-    /**头像*/
+    /**
+     * 头像
+     */
     private String avatar;
 
     /**状态（1.待认领 2.已认领 3.取消）*/
-    private Integer status;
+//    private Integer status;
 
-
-    public void setRecordId(Long recordId) 
-    {
+    /**
+     * 对应的活动分组Id
+     */
+//    private Long activityGroupId;
+//
+//    public Long getActivityGroupId() {
+//        return activityGroupId;
+//    }
+//
+//    public void setActivityGroupId(Long activityGroupId) {
+//        this.activityGroupId = activityGroupId;
+//    }
+    public void setRecordId(Long recordId) {
         this.recordId = recordId;
     }
 
-    public Long getRecordId() 
-    {
+    public Long getRecordId() {
         return recordId;
     }
-    public void setActivityId(Long activityId) 
-    {
+
+    public void setActivityId(Long activityId) {
         this.activityId = activityId;
     }
 
-    public Long getActivityId() 
-    {
+    public Long getActivityId() {
         return activityId;
     }
-    public void setUserId(Long userId) 
-    {
+
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public Long getUserId() 
-    {
+    public Long getUserId() {
         return userId;
     }
-    public void setContent(String content) 
-    {
+
+    public void setContent(String content) {
         this.content = content;
     }
 
-    public String getContent() 
-    {
+    public String getContent() {
         return content;
     }
-    public void setSubmitTime(Date submitTime) 
-    {
+
+    public void setSubmitTime(Date submitTime) {
         this.submitTime = submitTime;
     }
 
-    public Date getSubmitTime() 
-    {
+    public Date getSubmitTime() {
         return submitTime;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("recordId", getRecordId())
-            .append("activityId", getActivityId())
-            .append("userId", getUserId())
-            .append("content", getContent())
-            .append("submitTime", getSubmitTime())
-            .append("remark", getRemark())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("createBy", getCreateBy())
-            .toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("recordId", getRecordId())
+                .append("activityId", getActivityId())
+                .append("userId", getUserId())
+                .append("content", getContent())
+                .append("submitTime", getSubmitTime())
+                .append("remark", getRemark())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .append("createBy", getCreateBy())
+                .toString();
     }
 }

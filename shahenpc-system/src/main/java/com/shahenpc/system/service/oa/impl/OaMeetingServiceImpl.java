@@ -10,13 +10,13 @@ import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.system.domain.oa.OaMeetingPersonnel;
 import com.shahenpc.system.domain.oa.OaMeetingSign;
 import com.shahenpc.system.domain.oa.dto.*;
-import com.shahenpc.system.mapper.oa.OaMeetingPersonnelMapper;
-import com.shahenpc.system.mapper.oa.OaMeetingRecordMapper;
-import com.shahenpc.system.mapper.oa.OaMeetingSignMapper;
+import com.shahenpc.system.mapper.contactstation.oa.OaMeetingPersonnelMapper;
+import com.shahenpc.system.mapper.contactstation.oa.OaMeetingRecordMapper;
+import com.shahenpc.system.mapper.contactstation.oa.OaMeetingSignMapper;
 import com.shahenpc.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.shahenpc.system.mapper.oa.OaMeetingMapper;
+import com.shahenpc.system.mapper.contactstation.oa.OaMeetingMapper;
 import com.shahenpc.system.domain.oa.OaMeeting;
 import com.shahenpc.system.service.oa.IOaMeetingService;
 
