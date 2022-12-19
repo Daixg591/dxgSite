@@ -100,11 +100,11 @@
 
 
     <select id="selectByExportRanking" resultType="com.shahenpc.system.domain.represent.SignRankingDto">
-        select DISTINCT u.nick_name                                                              as nickName,
+        select DISTINCT u.nick_name                                                                    as nickName,
                         (select count(sign_id)
                          from sys_user_sign aa
                          where aa.user_id = u.user_id
-                           and YEARWEEK(date_format(create_time, '%Y-%m-%d')) = YEARWEEK(now())) as ranking
+                         and YEARWEEK(date_format(create_time, '%Y-%m-%d'), 1) = YEARWEEK(now(), 7)) as ranking
         from sys_user u
                  LEFT JOIN sys_user_sign s on s.user_id = u.user_id
         where u.user_type &amp; 1 > 0

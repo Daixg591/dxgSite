@@ -175,6 +175,7 @@ public class RepresentActivityController extends BaseController {
                 for (RepresentActivityClaim claim : claimList.stream().filter(x -> x.getActivityGroupId().equals(group.getActivityGroupId())).collect(Collectors.toList())) {
                     userIds.add(claim.getUserId());
                 }
+                group.setGroupClaimStatus(isClaim(activityId, group.getActivityGroupId()));
                 group.setUserIds(userIds);
                 group.setMine(false);
                 if (group.getUserIds() != null && group.getUserIds().size() > 0) {
@@ -240,5 +241,23 @@ public class RepresentActivityController extends BaseController {
     public AjaxResult cake() {
         return AjaxResult.success(representActivityService.pie());
     }
+
+
+    /**
+     *  判断用户是否已认领的私有方法
+     * @param activityId  活动id
+     * @param groupId 分组id
+     * @return true已认领，false未认领
+     */
+    private boolean isClaim(Long activityId, Long groupId) {
+        RepresentActivityClaim claimDto = new RepresentActivityClaim();
+        if (activityId != null) claimDto.setActivityId(activityId);
+        if (groupId != null) claimDto.setActivityGroupId(groupId);
+        claimDto.setStatus(2);
+        claimDto.setUserId(getUserId());
+        List<RepresentActivityClaim> tempList = claimService.selectRepresentActivityClaimList(claimDto);
+        return tempList.size() > 0;
+    }
+
 
 }

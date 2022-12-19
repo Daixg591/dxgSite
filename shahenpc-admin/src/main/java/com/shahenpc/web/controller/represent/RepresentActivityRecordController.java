@@ -89,7 +89,9 @@ public class RepresentActivityRecordController extends BaseController
     {
         representActivityRecord.setCreateBy(getNickName());
         representActivityRecord.setUserId(getUserId());
-        return toAjax(representActivityRecordService.insertRepresentActivityRecord(representActivityRecord));
+        representActivityRecordService.insertRepresentActivityRecord(representActivityRecord);
+
+        return AjaxResult.success(representActivityRecord.getRecordId());
     }
 
     /**
