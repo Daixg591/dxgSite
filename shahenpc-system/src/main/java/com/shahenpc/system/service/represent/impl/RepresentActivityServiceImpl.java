@@ -260,7 +260,7 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService {
     public int newUpdate(ActivityAddDto dto) {
         int a = representActivityMapper.updateRepresentActivity(dto);
 
-        //region Description
+        //region  Description
         //        RepresentActivityRecord recordDto = new RepresentActivityRecord();
 //        recordDto.setActivityId(dto.getActivityId());
 //        List<RepresentActivityRecord> oldRecordList = representActivityRecordMapper.selectRepresentActivityRecordList(recordDto).stream().filter(x -> x.getContent() != null).collect(Collectors.toList());
@@ -319,7 +319,7 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService {
             }
 
         } else {
-            List<RepresentActivityClaim> RecordDate = new ArrayList<RepresentActivityClaim>();
+            List<RepresentActivityClaim> recordDate = new ArrayList<RepresentActivityClaim>();
             for (RepresentActivityClaim item : dto.getGroupUserList()) {
                 item.setActivityId(dto.getActivityId());
                 item.setUpdateTime(DateUtils.getNowDate());
@@ -329,10 +329,10 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService {
                 } else {
                     item.setStatus(2);
                 }
-
-                resList = getContentRecordList(oldRecordList, RecordDate);
-                newList = getAddRecordList(oldRecordList, RecordDate);
+                recordDate.add(item);
             }
+            resList = newList(getContentRecordList(oldRecordList, recordDate));
+            newList = newList(getAddRecordList(oldRecordList, recordDate));
             List<RepresentActivityClaim> resData = new ArrayList<RepresentActivityClaim>();
             resData.addAll(resList);
             resData.addAll(newList);
@@ -403,7 +403,7 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService {
         );
     }
 
-    //region // 废弃 获取新旧集合的补集数据
+    //region  获取新旧集合的补集数据
 
     /**
      * 获取新旧集合的补集数据
