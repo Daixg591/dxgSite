@@ -89,7 +89,7 @@
         <include refid="selectStandardCensorVo"/>
         <where>
             <if test="reportTitle != null  and reportTitle != ''">and report_title = #{reportTitle}</if>
-            <if test="reportType == null ">and report_type != 4</if>
+            <!-- <if test="reportType == null ">and report_type != 4</if>
             <if test="reportType != null ">and report_type = #{reportType}</if>
             <if test="fileName != null  and fileName != ''">and file_name like concat('%', #{fileName}, '%')</if>
             <if test="fileNature != null  and fileNature != ''">and file_nature = #{fileNature}</if>
@@ -297,7 +297,7 @@
         <if test="receiveUserId != null ">
             AND r.receive_user_id = #{receiveUserId}
         </if>
-        <if test="reportType == null ">and report_type != 4</if>
+        <!-- <if test="reportType == null ">and report_type != 4</if> -->
         <if test="reportType != null ">and report_type = #{reportType}</if>
         and r.status=0
         GROUP BY c.censor_id ORDER BY r.create_time DESC
@@ -393,7 +393,7 @@
                 </if>
             </if>
             <if test="reportTitle != null  and reportTitle != ''">and report_title = #{reportTitle}</if>
-            <if test="reportType == null ">and report_type != 4</if>
+            <!-- <if test="reportType == null ">and report_type != 4</if> -->
             <if test="reportType != null ">and report_type = #{reportType}</if>
 
             <if test="fileName != null  and fileName != ''">and file_name like concat('%', #{fileName}, '%')</if>

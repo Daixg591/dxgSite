@@ -1,10 +1,7 @@
 package com.shahenpc.system.service.represent.impl;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.shahenpc.common.core.domain.entity.SysDictData;
@@ -418,7 +415,8 @@ public class RepresentActivityServiceImpl implements IRepresentActivityService {
         for (RepresentActivityClaim newItem : newList) {
             boolean isExist = false;
             for (RepresentActivityClaim oldItem : oldList) {
-                if (oldItem.getUserId().equals(newItem.getUserId()) && oldItem.getActivityGroupId().equals(newItem.getActivityGroupId())) {
+
+                if (oldItem.getUserId().equals(newItem.getUserId()) && oldItem.getActivityGroupId() == newItem.getActivityGroupId()) {
                     isExist = true;
                 }
             }
