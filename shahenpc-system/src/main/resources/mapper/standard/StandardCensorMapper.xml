@@ -89,7 +89,7 @@
         <include refid="selectStandardCensorVo"/>
         <where>
             <if test="reportTitle != null  and reportTitle != ''">and report_title = #{reportTitle}</if>
-            <!-- <if test="reportType == null ">and report_type != 4</if>
+            <!-- <if test="reportType == null ">and report_type != 4</if> -->
             <if test="reportType != null ">and report_type = #{reportType}</if>
             <if test="fileName != null  and fileName != ''">and file_name like concat('%', #{fileName}, '%')</if>
             <if test="fileNature != null  and fileNature != ''">and file_nature = #{fileNature}</if>
@@ -267,7 +267,7 @@
             #{censorId}
         </foreach>
     </delete>
-    <!--====================分割线=================================-->
+    <!-- ====================分割线================================= -->
     <select id="selectByProcessId" resultMap="StandardCensorResult">
         <include refid="selectStandardCensorVo"/>
         where procins_id = #{procinsId}
