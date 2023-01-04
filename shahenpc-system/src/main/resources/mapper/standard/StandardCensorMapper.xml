@@ -125,6 +125,7 @@
             <if test="other != null  and other != ''">and other = #{other}</if>
             <if test="lapseTime != null ">and lapse_time = #{lapseTime}</if>
         </where>
+        order by announced_time desc, record_time desc, create_time desc
     </select>
 
     <select id="selectStandardCensorByCensorId" parameterType="Long" resultMap="StandardCensorResult">
@@ -300,7 +301,7 @@
         <!-- <if test="reportType == null ">and report_type != 4</if> -->
         <if test="reportType != null ">and report_type = #{reportType}</if>
         and r.status=0
-        GROUP BY c.censor_id ORDER BY r.create_time DESC
+        GROUP BY c.censor_id ORDER BY c.announced_time DESC, c.record_time DESC, c.create_time DESC
     </select>
 
     <!--已办理-->
@@ -346,7 +347,7 @@
                  RIGHT JOIN standard_censor c ON c.censor_id = r.censor_id
         WHERE r.send_user_id = #{sendUserId}
           AND r.type != 0
-        ORDER BY r.create_time DESC
+        ORDER BY c.announced_time DESC, c.record_time DESC, c.create_time DESC
     </select>
 
     <!--待处理  已处理    总数-->
@@ -428,6 +429,6 @@
             <if test="lapseTime != null ">and lapse_time = #{lapseTime}</if>
         </where>
 
-        GROUP BY c.censor_id ORDER BY r.create_time DESC
+        GROUP BY c.censor_id ORDER BY c.announced_time DESC, c.record_time DESC, c.create_time DESC
     </select>
 </mapper>

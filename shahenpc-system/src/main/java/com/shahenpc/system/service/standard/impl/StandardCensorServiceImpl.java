@@ -126,7 +126,8 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
         vo.setType(standardCensor.getType());
         vo.setReceiveUserId(getUserId());//当前人
 
-        if (!standardCensor.getType().equals(Constants.CENSOR_TYPE_4)) {
+        if (!standardCensor.getType().equals(Constants.CENSOR_TYPE_4) &&
+                !standardCensor.getType().equals(Constants.CENSOR_TYPE_0)) {
             // 反馈的时候不修改 因为没有.....
             StandardCensorRecord recordId = standardCensorRecordMapper.selectByRecordId(vo);
             updateRecord.setRecordId(recordId.getRecordId());
@@ -137,7 +138,9 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
             standardCensorRecordMapper.updateStandardCensorRecord(updateRecord);
         }
         //
-        if (standardCensor.getType().equals(Constants.CENSOR_TYPE_1)) {
+        if (standardCensor.getType().equals(Constants.CENSOR_TYPE_0)) {
+            standardCensor.setType(Constants.CENSOR_TYPE_1);
+        } else if (standardCensor.getType().equals(Constants.CENSOR_TYPE_1)) {
             standardCensor.setType(Constants.CENSOR_TYPE_2);
         } else if (standardCensor.getType().equals(Constants.CENSOR_TYPE_2)) {
             standardCensor.setType(Constants.CENSOR_TYPE_3);
@@ -219,13 +222,15 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
                 standardCensorMapper.updateStandardCensor(standardCensor);
             }
             return AjaxResult.success();
-        } else {
+        } else if (!standardCensor.getType().equals(Constants.CENSOR_TYPE_1)) {
             standardCensor.setType(Constants.CENSOR_TYPE_3);
         }
 
         //endregion
+        if (!standardCensor.getType().equals(Constants.CENSOR_TYPE_1)) {
+            standardCensor.setReceiveUserId(null);
+        }
 
-        standardCensor.setReceiveUserId(null);
 
         int su = standardCensorMapper.updateStandardCensor(standardCensor);
 
@@ -239,11 +244,11 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
             }
             //endregion
 
-            for (String itme : standardCensor.getApprovalUserId()) {
+            for (String item : standardCensor.getApprovalUserId()) {
                 //发送人
                 standardCensorRecord.setSendUserId(standardCensor.getSendUserId());
                 //接收人
-                standardCensorRecord.setReceiveUserId(Long.valueOf(itme));
+                standardCensorRecord.setReceiveUserId(Long.valueOf(item));
                 //绑定id
                 standardCensorRecord.setCensorId(standardCensor.getCensorId());
                 //回复
@@ -268,8 +273,11 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
             standardCensor.setType(Constants.CENSOR_TYPE_2);
         } else if (vo.getType().equals(Constants.CENSOR_TYPE_2)) {
             standardCensor.setType(Constants.CENSOR_TYPE_1);
+        } else if (vo.getType().equals(Constants.CENSOR_TYPE_1)) {
+            standardCensor.setType(Constants.CENSOR_TYPE_0);
         }
-        StandardCensorRecord sup = standardCensorRecordMapper.selectBySuperior(vo.getCensorId(), standardCensor.getType());
+//        StandardCensorRecord sup = standardCensorRecordMapper.selectBySuperior(vo.getCensorId(), standardCensor.getType());
+        StandardCensorRecord sup = standardCensorRecordMapper.selectBySuperior(vo.getCensorId(), vo.getType());
         //修改当前状态
         StandardCensorRecord update = standardCensorRecordMapper.selectBySuperior(vo.getCensorId(), vo.getType());
         update.setStatus(Constants.CENSOR_TYPE_STATUS_3);
@@ -280,21 +288,22 @@ public class StandardCensorServiceImpl extends BaseController implements IStanda
         if (sup != null) {
             standardCensor.setReceiveUserId(sup.getReceiveUserId().toString());
             standardCensor.setCensorId(vo.getCensorId());
-            if (standardCensorMapper.updateStandardCensor(standardCensor) > 0) {
-                StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
-                //发送人
-                standardCensorRecord.setSendUserId(vo.getUserId());
-                //接收人
-                standardCensorRecord.setReceiveUserId(sup.getReceiveUserId());
-                //绑定id
-                standardCensorRecord.setCensorId(vo.getCensorId());
-                //回复
-                standardCensorRecord.setType(standardCensor.getType());
-                standardCensorRecord.setCreateTime(DateUtils.getNowDate());
-                standardCensorRecord.setCreateBy(vo.getCreateBy());
-                standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord);
-                return AjaxResult.success();
-            }
+            int updateRes = standardCensorMapper.updateStandardCensor(standardCensor);
+            if (updateRes > 0) return AjaxResult.success();
+//            if (standardCensorMapper.updateStandardCensor(standardCensor) > 0) {
+//                StandardCensorRecord standardCensorRecord = new StandardCensorRecord();
+//                //发送人
+//                standardCensorRecord.setSendUserId(vo.getUserId());
+//                //接收人
+//                standardCensorRecord.setReceiveUserId(sup.getReceiveUserId());
+//                //绑定id
+//                standardCensorRecord.setCensorId(vo.getCensorId());
+//                //回复
+//                standardCensorRecord.setType(standardCensor.getType());
+//                standardCensorRecord.setCreateTime(DateUtils.getNowDate());
+//                standardCensorRecord.setCreateBy(vo.getCreateBy());
+//                standardCensorRecordMapper.insertStandardCensorRecord(standardCensorRecord);
+//            }
         }
         return AjaxResult.error();
     }

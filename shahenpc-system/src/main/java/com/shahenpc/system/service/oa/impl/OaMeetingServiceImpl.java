@@ -100,11 +100,11 @@ public class OaMeetingServiceImpl extends BaseController implements IOaMeetingSe
     public int newAdd(MeetingAddDto request) {
         request.setCreateTime(DateUtils.getNowDate());
         int success= oaMeetingMapper.insertOaMeeting(request);
-        for (Long userId :request.getPersonnel()){
+        for (OaMeetingSign omSign :request.getPersonnel()){
             OaMeetingPersonnel item = new OaMeetingPersonnel();
             item.setMeetingId(request.getMeetingId());
             item.setCreateTime(DateUtils.getNowDate());
-            item.setUserId(userId);
+            item.setUserId(omSign.getUserId());
            int personn = oaMeetingPersonnelMapper.insertOaMeetingPersonnel(item);
             OaMeetingSign sign = new OaMeetingSign();
             if(request.getIsSign() == 0){
@@ -113,7 +113,7 @@ public class OaMeetingServiceImpl extends BaseController implements IOaMeetingSe
             sign.setPersonnelId((long)personn);
             sign.setCreateTime(DateUtils.getNowDate());
             sign.setMeetingId(request.getMeetingId());
-            sign.setUserId(userId);
+            sign.setUserId(omSign.getUserId());
             oaMeetingSignMapper.insertOaMeetingSign(sign);
         }
         return success;
@@ -127,11 +127,11 @@ public class OaMeetingServiceImpl extends BaseController implements IOaMeetingSe
         //修改会议
         request.setUpdateTime(DateUtils.getNowDate());
         int success= oaMeetingMapper.updateOaMeeting(request);
-        for (Long userId :request.getPersonnel()){
+        for (OaMeetingSign omSign :request.getPersonnel()){
             OaMeetingPersonnel item = new OaMeetingPersonnel();
             item.setMeetingId(request.getMeetingId());
             item.setCreateTime(DateUtils.getNowDate());
-            item.setUserId(userId);
+            item.setUserId(omSign.getUserId());
             int personn = oaMeetingPersonnelMapper.insertOaMeetingPersonnel(item);
             OaMeetingSign sign = new OaMeetingSign();
             if(request.getIsSign() == 0){
@@ -140,7 +140,10 @@ public class OaMeetingServiceImpl extends BaseController implements IOaMeetingSe
             sign.setPersonnelId((long)personn);
             sign.setCreateTime(DateUtils.getNowDate());
             sign.setMeetingId(request.getMeetingId());
-            sign.setUserId(userId);
+            sign.setUserId(omSign.getUserId());
+            sign.setStatus(omSign.getStatus());
+            sign.setSignTime(omSign.getSignTime());
+            sign.setCreateTime(omSign.getCreateTime());
             oaMeetingSignMapper.insertOaMeetingSign(sign);
         }
         return success;

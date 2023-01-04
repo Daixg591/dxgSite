@@ -42,7 +42,7 @@ spring:
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://192.168.0.13:3306/cy_shahenpc?useUnicode=true&character_set_server=utf8mb4&zeroDateTimeBehavior=convertToNull&useSSL=true
+                url: jdbc:mysql://192.168.0.8:3306/cy_shahenpc?useUnicode=true&character_set_server=utf8mb4&zeroDateTimeBehavior=convertToNull&useSSL=true
                 username: root
                 password: root
             # 从库数据源

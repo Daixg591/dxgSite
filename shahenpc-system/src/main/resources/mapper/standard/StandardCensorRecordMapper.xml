@@ -130,6 +130,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!--查询记录id-->
     <select id="selectByRecordId" parameterType="com.shahenpc.system.domain.standard.vo.RecordByRecordIdVo" resultMap="StandardCensorRecordResult">
         <include refid="selectStandardCensorRecordVo"/>
-         WHERE censor_id=#{censorId} AND type =#{type} AND receive_user_id = #{receiveUserId} AND status != 1
+         WHERE censor_id=#{censorId} AND type =#{type} AND receive_user_id = #{receiveUserId} AND status != 1 and status != 3
     </select>
 </mapper>
