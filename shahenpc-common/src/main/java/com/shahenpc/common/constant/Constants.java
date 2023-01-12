@@ -41,7 +41,7 @@ public class Constants
     /**
      * 公共 调用 视频会议
      */
-    public static final String SHIPINGHUIYI_URL="http://218.28.249.133:8899/fcm/mobile";
+    public static final String SHIPINGHUIYI_URL="http://218.28.249.134:8899/fcm/mobile";
 
 
     public static final Integer DISCOVER_PROCESS_TYPE_3=3;

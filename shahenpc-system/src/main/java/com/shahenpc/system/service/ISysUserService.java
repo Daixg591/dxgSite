@@ -5,6 +5,7 @@ import java.util.List;
 import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.system.domain.data.dto.DataCountDto;
 import com.shahenpc.system.domain.dto.MyArchivesDto;
+import com.shahenpc.system.domain.dto.NewLevelVo;
 import com.shahenpc.system.domain.dto.NpcCakeDto;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo;
 
@@ -239,5 +240,5 @@ public interface ISysUserService
     public String selectByPassword(Long userId);
 
     public MyArchivesDto Archives(Long userId);
-
+    List<NpcCakeDto> selectByNewLevel();
 }

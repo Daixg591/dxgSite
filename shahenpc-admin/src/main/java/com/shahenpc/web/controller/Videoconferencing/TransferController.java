@@ -8,10 +8,7 @@ import com.shahenpc.system.domain.video.videoEntity;
 import com.shahenpc.system.domain.wxsmallprogram.dto.SmProCodeDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,34 +26,55 @@ public class TransferController {
     @PostMapping("/list")
     public static String list(@RequestBody videoEntity entity) throws IOException {
         JSONObject json = new JSONObject();
-        json.put("username","usertest3");
-        json.put("password","usertest3");
-        String res= HttpUtils.sendPostByVideo(Constants.SHIPINGHUIYI_URL+"/user/login",json.toString());
+        json.put("username", "usertest3");
+        json.put("password", "usertest3");
+        String res = HttpUtils.sendPostByVideo(Constants.SHIPINGHUIYI_URL + "/user/login", json.toString());
         JSONObject jsonObject = JSONObject.parseObject(res);
-        System.out.println("jsonObject>>==>"+jsonObject);
+        System.out.println("jsonObject>>==>" + jsonObject);
         JSONObject dataJson = JSONObject.parseObject(jsonObject.get("data").toString());
         System.out.println(dataJson.get("token"));
-        String param = "page="+entity.getPage()+"&size="+entity.getSize();
+        String param = "page=" + entity.getPage() + "&size=" + entity.getSize();
         System.out.println(param);
-        String list = HttpUtils.sendGetByVideos(Constants.SHIPINGHUIYI_URL+"/conferenceAppointment/list",param,null,dataJson.get("token").toString());
+        String list = HttpUtils.sendGetByVideos(Constants.SHIPINGHUIYI_URL + "/conferenceAppointment/list", param, null, dataJson.get("token").toString());
         return list;
     }
+
+    @ApiOperation("app登录及视频会议详情")
+    @GetMapping("/videoDetail/{templateId}")
+    public static String videoDetail(@PathVariable(value = "templateId", required = false) Integer templateId) throws IOException {
+        JSONObject json = new JSONObject();
+        json.put("username", "usertest3");
+        json.put("password", "usertest3");
+        String res = HttpUtils.sendPostByVideo(Constants.SHIPINGHUIYI_URL + "/user/login", json.toString());
+        JSONObject jsonObject = JSONObject.parseObject(res);
+        System.out.println("jsonObject>>==>" + jsonObject);
+        JSONObject dataJson = JSONObject.parseObject(jsonObject.get("data").toString());
+//        System.out.println(dataJson.get("token"));
+        return HttpUtils.sendGetByVideos(
+                Constants.SHIPINGHUIYI_URL + "/conferenceAppointment/getCurrentConferenceInfo",
+                "templateId=" + templateId,
+                null,
+                dataJson.get("token").toString());
+    }
+
+
     @ApiOperation("app登录")
     @PostMapping("/login")
     public static String login() throws IOException {
         JSONObject json = new JSONObject();
-        json.put("username","usertest3");
-        json.put("password","usertest3");
-        String res= HttpUtils.sendPostByVideo(Constants.SHIPINGHUIYI_URL+"/user/login",json.toString());
+        json.put("username", "usertest3");
+        json.put("password", "usertest3");
+        String res = HttpUtils.sendPostByVideo(Constants.SHIPINGHUIYI_URL + "/user/login", json.toString());
         return res;
     }
+
     @ApiOperation("pc登录")
     @PostMapping("/pc/login")
     public static String pcLogin() throws IOException {
         JSONObject json = new JSONObject();
-        json.put("username","usertest31");
-        json.put("password","usertest31");
-        String res= HttpUtils.sendPostByVideo(Constants.SHIPINGHUIYI_URL+"/user/login",json.toString());
+        json.put("username", "usertest31");
+        json.put("password", "usertest31");
+        String res = HttpUtils.sendPostByVideo(Constants.SHIPINGHUIYI_URL + "/user/login", json.toString());
         return res;
     }
 
@@ -66,14 +84,23 @@ public class TransferController {
        /* JSONObject json = new JSONObject();
         json.put("username",entity.getUsername());
         json.put("password",entity.getUsername());*/
-        String res= HttpUtils.sendPostByVideos(Constants.SHIPINGHUIYI_URL+entity.getUrl(),entity.getData(),entity.getToken());
+        String res = HttpUtils.sendPostByVideos(Constants.SHIPINGHUIYI_URL + entity.getUrl(), entity.getData(), entity.getToken());
         return res;
     }
 
     @ApiOperation("视频会议登录")
+    @PutMapping("/putUrl")
+    public static String putUrl(@RequestBody videoEntity entity) throws IOException {
+
+        String res = HttpUtils.sendPutByVideos(Constants.SHIPINGHUIYI_URL + entity.getUrl(), entity.getData(), entity.getToken());
+        return res;
+    }
+
+
+    @ApiOperation("视频会议登录")
     @PostMapping("/geturl")
     public static String getUrl(@RequestBody videoEntity entity) throws IOException {
-        String res= HttpUtils.sendGetByVideos(Constants.SHIPINGHUIYI_URL+entity.getUrl(),entity.getData(),null,entity.getToken());
+        String res = HttpUtils.sendGetByVideos(Constants.SHIPINGHUIYI_URL + entity.getUrl(), entity.getData(), null, entity.getToken());
         return res;
     }
 

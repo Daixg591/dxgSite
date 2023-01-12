@@ -2,6 +2,7 @@ package com.shahenpc.system.mapper;
 
 import java.util.List;
 
+import com.shahenpc.system.domain.dto.NewLevelVo;
 import com.shahenpc.system.domain.wxsmallprogram.vo.WxUserInfoVo;
 import org.apache.ibatis.annotations.Param;
 import com.shahenpc.common.core.domain.entity.SysUser;
@@ -163,4 +164,6 @@ public interface SysUserMapper
 
 
     public Long selectByZhengFuBan();
+
+    public NewLevelVo selectByNewLevel();
 }

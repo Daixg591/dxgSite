@@ -377,12 +377,21 @@ public class SysUserController extends BaseController {
     }
 
     /**
+     * 获取各个代表级别下的人员数量
+     */
+    @ApiOperation("代表级别饼状图")
+    @GetMapping("/newLevel/count")
+    public AjaxResult getLevelCount() {
+        return AjaxResult.success(userService.selectByNewLevel());
+    }
+
+
+    /**
      * 人大代表年龄分布
      */
     @ApiOperation("年龄饼图")
     @GetMapping("/age/cake/{identity}")
     public AjaxResult ageCake(@PathVariable("identity") String identity) {
-
         return AjaxResult.success(userService.ageCake(identity));
     }
 

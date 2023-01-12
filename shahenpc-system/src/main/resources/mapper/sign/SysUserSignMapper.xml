@@ -107,7 +107,7 @@
                          and YEARWEEK(date_format(create_time, '%Y-%m-%d'), 1) = YEARWEEK(now(), 7)) as ranking
         from sys_user u
                  LEFT JOIN sys_user_sign s on s.user_id = u.user_id
-        where u.user_type &amp; 1 > 0
+        where u.user_type &amp; 5 > 0
         order by ranking desc
     </select>
 
@@ -116,7 +116,7 @@
                         (select count(sign_id) from sys_user_sign aa where aa.user_id = u.user_id) as ranking
         from sys_user u
                  LEFT JOIN sys_user_sign s on s.user_id = u.user_id
-        where u.user_type &amp; 1 > 0
+        where u.user_type &amp; 5 > 0
 
         order by ranking desc
         LIMIT 10

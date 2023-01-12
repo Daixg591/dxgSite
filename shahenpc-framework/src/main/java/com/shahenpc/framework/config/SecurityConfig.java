@@ -143,6 +143,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
                 // App签到
                 .antMatchers("/system/sign/*").permitAll()
+                .antMatchers("/system/video/videoDetail/*").permitAll()
+
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()

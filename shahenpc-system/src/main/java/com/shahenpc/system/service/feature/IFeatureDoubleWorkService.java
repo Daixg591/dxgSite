@@ -3,6 +3,7 @@ package com.shahenpc.system.service.feature;
 import java.util.List;
 
 import com.shahenpc.common.core.domain.AjaxResult;
+import com.shahenpc.system.domain.dto.NewLevelVo;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.feature.dto.*;
 import com.shahenpc.system.domain.feature.vo.DoubleFallbackVo;
@@ -108,4 +109,6 @@ public interface IFeatureDoubleWorkService
 
 
     public List<TodoListDto> translateList(Long userId);
+
+
 }

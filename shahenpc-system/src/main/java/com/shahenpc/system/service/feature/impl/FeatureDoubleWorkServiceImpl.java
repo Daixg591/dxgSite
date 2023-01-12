@@ -6,6 +6,7 @@ import com.shahenpc.common.core.domain.entity.SysDictData;
 import com.shahenpc.common.core.domain.entity.SysUser;
 import com.shahenpc.common.utils.DateUtils;
 import com.shahenpc.common.utils.SensitiveWordUtil;
+import com.shahenpc.system.domain.dto.NewLevelVo;
 import com.shahenpc.system.domain.feature.FeatureDoubleWork;
 import com.shahenpc.system.domain.feature.FeatureDoubleWorkTrace;
 import com.shahenpc.system.domain.feature.dto.*;
@@ -510,5 +511,6 @@ public class FeatureDoubleWorkServiceImpl implements IFeatureDoubleWorkService
         }
         return resultList;
     }
+
 
 }
